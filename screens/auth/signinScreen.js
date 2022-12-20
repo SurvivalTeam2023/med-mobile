@@ -24,8 +24,8 @@ const SigninScreen = ({ navigation }) => {
       .post(
         "http://dev.mediatation.tokyo/api/auth/getToken",
         {
-          username: "",
-          password: "",
+          username: state.userName,
+          password: state.password,
         },
         {
           headers: {
@@ -35,13 +35,6 @@ const SigninScreen = ({ navigation }) => {
       )
       .then((res) => {
         console.log(res.data);
-        if (res.data.status === "success") {
-          localStorage.setItem("username", res.data.username);
-          localStorage.setItem("token", res.data.token);
-          navigation.navigate("Settings");
-        } else {
-          setError(res.data.error);
-        }
       })
       .catch((err) => console.log(err));
   };
@@ -68,14 +61,14 @@ const SigninScreen = ({ navigation }) => {
 
   const [state, setState] = useState({
     showPassword: false,
-    username: null,
+    userName: null,
     password: null,
     backClickCount: 0,
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showPassword, username, password, backClickCount } = state;
+  const { showPassword, userName, password, backClickCount } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -301,8 +294,8 @@ const SigninScreen = ({ navigation }) => {
       <View style={styles.userNameTextFieldWrapStyle}>
         <MaterialIcons name="person" color={Colors.grayColor} size={20} />
         <TextInput
-          value={username}
-          onChangeText={(text) => updateState({ username: text })}
+          value={userName}
+          onChangeText={(text) => updateState({ userName: text })}
           selectionColor={Colors.grayColor}
           placeholder="User Name"
           placeholderTextColor={Colors.grayColor}
