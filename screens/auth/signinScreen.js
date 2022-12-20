@@ -19,13 +19,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 
 const SigninScreen = ({ navigation }) => {
-  const login = async () => {
-    await axios
+  const login = async (userName, password) => {
+    console.log("username", userName);
+    console.log("password", password);
+    return await axios
       .post(
         "http://dev.mediatation.tokyo/api/auth/getToken",
         {
-          username: state.userName,
-          password: state.password,
+          username: userName,
+          password: password,
         },
         {
           headers: {
@@ -34,9 +36,10 @@ const SigninScreen = ({ navigation }) => {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        console.log("res", res?.data);
+        return res?.data;
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("er", err));
   };
 
   const backAction = () => {
@@ -240,7 +243,16 @@ const SigninScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={login}
+        onPress={async () => {
+          const result = await login(userName, password);
+          console.log("result", result);
+          if (result) {
+            alert("login successful");
+            navigation.push("ChooseMusic");
+          } else {
+            alert("Wrong username or password");
+          }
+        }}
       >
         <LinearGradient
           start={{ x: 1, y: 0 }}
