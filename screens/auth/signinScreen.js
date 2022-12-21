@@ -20,11 +20,9 @@ import axios from "axios";
 
 const SigninScreen = ({ navigation }) => {
   const login = async (userName, password) => {
-    console.log("username", userName);
-    console.log("password", password);
     return await axios
       .post(
-        "http://dev.mediatation.tokyo/api/auth/getToken",
+        "http://18.143.101.197/api/auth/getToken",
         {
           username: userName,
           password: password,
