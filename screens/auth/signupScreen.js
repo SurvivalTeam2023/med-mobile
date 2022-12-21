@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { SafeAreaView, View, StatusBar, TouchableOpacity, TextInput, Text, ScrollView, Image, StyleSheet } from "react-native";
 import { Colors, Fonts, Sizes, } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons, } from '@expo/vector-icons';
@@ -7,22 +8,49 @@ import MaskedView from '@react-native-masked-view/masked-view';
 
 const SignupScreen = ({ navigation }) => {
 
+    const signup = async (userName, emailAddress, password, rePassword) => {
+        console.log('username', userName)
+        console.log('email', emailAddress);
+        console.log('password', password);
+        console.log('rePassword', rePassword);
+        return await axios
+            .post(
+                "http://dev.mediatation.tokyo/api/user/user",
+                {
+                    username: userName,
+                    email: emailAddress,
+                    password: password,
+                    repassword: rePassword,
+                },
+                {
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("res", res?.data);
+                return res?.data;
+            })
+            .catch((err) => console.log("er", err));
+    };
+
     const [state, setState] = useState({
         showPassword: false,
-        fullName: null,
-        phoneNumber: null,
+        userName: null,
         emailAddress: null,
         password: null,
+        rePassword: null,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
 
     const {
         showPassword,
-        fullName,
-        phoneNumber,
+        userName,
         emailAddress,
         password,
+        rePassword
     } = state;
 
     return (
@@ -62,10 +90,10 @@ const SignupScreen = ({ navigation }) => {
                         style={{ flex: 1 }}
                     />
                 </MaskedView>
-                {fullNameTextField()}
-                {phoneNumberTextField()}
+                {userNameTextField()}
                 {emailAddressTextField()}
                 {passwordTextField()}
+                {repasswordTextField()}
                 {signupButton()}
                 {orIndicator()}
                 {socialMediaOptions()}
@@ -87,31 +115,6 @@ const SignupScreen = ({ navigation }) => {
                     onChangeText={(text) => updateState({ emailAddress: text })}
                     selectionColor={Colors.grayColor}
                     placeholder="Email Address"
-                    placeholderTextColor={Colors.grayColor}
-                    style={{
-                        marginLeft: Sizes.fixPadding,
-                        flex: 1,
-                        ...Fonts.blackColor14Bold
-                    }}
-                />
-            </View>
-        )
-    }
-
-    function phoneNumberTextField() {
-        return (
-            <View style={styles.textFieldWrapStyle}>
-                <MaterialIcons
-                    name="phone-android"
-                    color={Colors.grayColor}
-                    size={20}
-                />
-                <TextInput
-                    keyboardType="numeric"
-                    value={phoneNumber}
-                    onChangeText={(text) => updateState({ phoneNumber: text })}
-                    selectionColor={Colors.grayColor}
-                    placeholder="Phone Number"
                     placeholderTextColor={Colors.grayColor}
                     style={{
                         marginLeft: Sizes.fixPadding,
@@ -225,7 +228,17 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity
                 style={styles.signupButtonStyle}
                 activeOpacity={0.9}
-                onPress={() => navigation.push('ChooseMusic')}
+                // onPress={() => navigation.push('ChooseMusic')}
+                onPress={async () => {
+                    const result = await signup(userName, emailAddress, password, rePassword);
+                    console.log("result", result);
+                    if (result) {
+                        alert("signup successful");
+                        navigation.push("Signin");
+                    } else {
+                        alert("Register Failed");
+                    }
+                }}
             >
                 <LinearGradient
                     start={{ x: 1, y: 0 }}
@@ -282,7 +295,45 @@ const SignupScreen = ({ navigation }) => {
         )
     }
 
-    function fullNameTextField() {
+    function repasswordTextField() {
+        return (
+            <View style={styles.passwordTextFieldWrapstyle}>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}>
+                    <MaterialIcons
+                        name="lock-open"
+                        size={20}
+                        color={Colors.grayColor}
+                    />
+                    <TextInput
+                        value={rePassword}
+                        onChangeText={(text) => updateState({ rePassword: text })}
+                        secureTextEntry={showPassword}
+                        selectionColor={Colors.grayColor}
+                        placeholder='Re Enter Password'
+                        placeholderTextColor={Colors.grayColor}
+                        style={{
+                            flex: 1,
+                            ...Fonts.blackColor13Bold,
+                            marginLeft: Sizes.fixPadding,
+                        }}
+                    />
+
+                </View>
+                <MaterialCommunityIcons
+                    name={showPassword ? 'eye-outline' : "eye-off-outline"}
+                    color={Colors.grayColor}
+                    size={20}
+                    onPress={() => updateState({ showPassword: !showPassword })}
+                />
+            </View>
+        )
+    }
+
+    function userNameTextField() {
         return (
             <View style={{
                 marginTop: Sizes.fixPadding * 2.5,
@@ -294,10 +345,10 @@ const SignupScreen = ({ navigation }) => {
                     size={20}
                 />
                 <TextInput
-                    value={fullName}
-                    onChangeText={(text) => updateState({ fullName: text })}
+                    value={userName}
+                    onChangeText={(text) => updateState({ userName: text })}
                     selectionColor={Colors.grayColor}
-                    placeholder="Full Name"
+                    placeholder="User Name"
                     placeholderTextColor={Colors.grayColor}
                     style={{
                         marginLeft: Sizes.fixPadding,
