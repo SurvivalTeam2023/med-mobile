@@ -15,7 +15,7 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 
-//a
+//aaa
 const SignupScreen = ({ navigation }) => {
   const [state, setState] = useState({
     showPassword: false,
