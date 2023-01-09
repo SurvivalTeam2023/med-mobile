@@ -1,21 +1,23 @@
-import { CallAPI } from "core/api";
+import { CallAPI } from "../core/api/baseAxios";
 
-export const getTokenApi = () => {
+export const loginApi = async (payload) => {
+  const { username, password } = payload;
   const url = "/auth/token";
-  return CallAPI.post(url, {
+  return await CallAPI.post(url, {
     username,
     password,
   });
 };
 
-export const registerUserApi = () => {
+export const registerUserApi = async () => {
   const url = "/user/user";
-  return CallAPI.post(url, data);
+  return await CallAPI.post(url, data);
 };
 
-export const getRefreshTokenApi = () => {
+export const getRefreshTokenApi = async (payload) => {
+  const { refreshToken } = payload;
   const url = "/update-token";
-  return CallAPI.post(url, {
+  return await CallAPI.post(url, {
     refresh_token: refreshToken,
   });
 };

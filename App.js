@@ -19,64 +19,71 @@ import chooseMusicScreen from "./screens/chooseMusic/chooseMusicScreen";
 import splashScreen from "./screens/splashScreen";
 import { store } from "./core/store/store";
 import { Provider } from "react-redux";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
+const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            ...TransitionPresets.SlideFromRightIOS,
-          }}
-        >
-          <Stack.Screen name="Loading" component={LoadingScreen} />
-          <Stack.Screen
-            name="Splash"
-            component={splashScreen}
-            options={{ ...TransitionPresets.DefaultTransition }}
-          />
-          <Stack.Screen
-            name="Signin"
-            component={signinScreen}
-            options={{ ...TransitionPresets.DefaultTransition }}
-          />
-          <Stack.Screen name="Signup" component={signupScreen} />
-          <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
-          <Stack.Screen
-            name="BottomTabBar"
-            component={bottomTabBarScreen}
-            options={{ ...TransitionPresets.DefaultTransition }}
-          />
-          <Stack.Screen name="Search" component={searchScreen} />
-          <Stack.Screen name="Tracks" component={tracksScreen} />
-          <Stack.Screen
-            name="NowPlaying"
-            component={nowPlayingScreen}
-            sharedElements={(route, otherRoute, showing) => {
-              const item = route.params.item;
-              return [item.id];
+        <QueryClientProvider client={queryClient}>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              ...TransitionPresets.SlideFromRightIOS,
             }}
-          />
-          <Stack.Screen
-            name="TopArtist"
-            component={topArtistScreen}
-            sharedElements={(route, otherRoute, showing) => {
-              const item = route.params.item;
-              return [item.id];
-            }}
-          />
-          <Stack.Screen name="Subscribe" component={subscribeScreen} />
-          <Stack.Screen
-            name="ExploreSubscription"
-            component={exploreSubscription}
-          />
-          <Stack.Screen name="PaymentFailed" component={paymentFailedScreen} />
-        </Stack.Navigator>
+          >
+            <Stack.Screen name="Loading" component={LoadingScreen} />
+            <Stack.Screen
+              name="Splash"
+              component={splashScreen}
+              options={{ ...TransitionPresets.DefaultTransition }}
+            />
+            <Stack.Screen
+              name="Signin"
+              component={signinScreen}
+              options={{ ...TransitionPresets.DefaultTransition }}
+            />
+            <Stack.Screen name="Signup" component={signupScreen} />
+            <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
+            <Stack.Screen
+              name="BottomTabBar"
+              component={bottomTabBarScreen}
+              options={{ ...TransitionPresets.DefaultTransition }}
+            />
+            <Stack.Screen name="Search" component={searchScreen} />
+            <Stack.Screen name="Tracks" component={tracksScreen} />
+            <Stack.Screen
+              name="NowPlaying"
+              component={nowPlayingScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const item = route.params.item;
+                return [item.id];
+              }}
+            />
+            <Stack.Screen
+              name="TopArtist"
+              component={topArtistScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const item = route.params.item;
+                return [item.id];
+              }}
+            />
+            <Stack.Screen name="Subscribe" component={subscribeScreen} />
+            <Stack.Screen
+              name="ExploreSubscription"
+              component={exploreSubscription}
+            />
+            <Stack.Screen
+              name="PaymentFailed"
+              component={paymentFailedScreen}
+            />
+          </Stack.Navigator>
+        </QueryClientProvider>
       </NavigationContainer>
     </Provider>
   );
