@@ -7,7 +7,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { useFocusEffect } from "@react-navigation/native";
 
 const SigninScreen = ({ navigation }) => {
-
+    
     const backAction = () => {
         backClickCount == 1 ? BackHandler.exitApp() : _spring();
         return true;

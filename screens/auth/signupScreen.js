@@ -9,20 +9,20 @@ const SignupScreen = ({ navigation }) => {
 
     const [state, setState] = useState({
         showPassword: false,
-        fullName: null,
-        phoneNumber: null,
+        username: null,
         emailAddress: null,
         password: null,
+        rePassword: null,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
 
     const {
         showPassword,
-        fullName,
-        phoneNumber,
+        username,
         emailAddress,
         password,
+        rePassword,
     } = state;
 
     return (
@@ -62,10 +62,10 @@ const SignupScreen = ({ navigation }) => {
                         style={{ flex: 1 }}
                     />
                 </MaskedView>
-                {fullNameTextField()}
-                {phoneNumberTextField()}
+                {usernameTextField()}
                 {emailAddressTextField()}
                 {passwordTextField()}
+                {rePasswordTextField()}
                 {signupButton()}
                 {orIndicator()}
                 {socialMediaOptions()}
@@ -98,30 +98,30 @@ const SignupScreen = ({ navigation }) => {
         )
     }
 
-    function phoneNumberTextField() {
-        return (
-            <View style={styles.textFieldWrapStyle}>
-                <MaterialIcons
-                    name="phone-android"
-                    color={Colors.grayColor}
-                    size={20}
-                />
-                <TextInput
-                    keyboardType="numeric"
-                    value={phoneNumber}
-                    onChangeText={(text) => updateState({ phoneNumber: text })}
-                    selectionColor={Colors.grayColor}
-                    placeholder="Phone Number"
-                    placeholderTextColor={Colors.grayColor}
-                    style={{
-                        marginLeft: Sizes.fixPadding,
-                        flex: 1,
-                        ...Fonts.blackColor14Bold
-                    }}
-                />
-            </View>
-        )
-    }
+    // function phoneNumberTextField() {
+    //     return (
+    //         <View style={styles.textFieldWrapStyle}>
+    //             <MaterialIcons
+    //                 name="phone-android"
+    //                 color={Colors.grayColor}
+    //                 size={20}
+    //             />
+    //             <TextInput
+    //                 keyboardType="numeric"
+    //                 value={phoneNumber}
+    //                 onChangeText={(text) => updateState({ phoneNumber: text })}
+    //                 selectionColor={Colors.grayColor}
+    //                 placeholder="Phone Number"
+    //                 placeholderTextColor={Colors.grayColor}
+    //                 style={{
+    //                     marginLeft: Sizes.fixPadding,
+    //                     flex: 1,
+    //                     ...Fonts.blackColor14Bold
+    //                 }}
+    //             />
+    //         </View>
+    //     )
+    // }
 
     function alreadyHaveAccountInfo() {
         return (
@@ -281,8 +281,45 @@ const SignupScreen = ({ navigation }) => {
             </View>
         )
     }
+    function rePasswordTextField() {
+        return (
+            <View style={styles.passwordTextFieldWrapstyle}>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}>
+                    <MaterialIcons
+                        name="lock-open"
+                        size={20}
+                        color={Colors.grayColor}
+                    />
+                    <TextInput
+                        value={rePassword}
+                        onChangeText={(text) => updateState({ rePassword: text })}
+                        secureTextEntry={showPassword}
+                        selectionColor={Colors.grayColor}
+                        placeholder='Confirm Password'
+                        placeholderTextColor={Colors.grayColor}
+                        style={{
+                            flex: 1,
+                            ...Fonts.blackColor13Bold,
+                            marginLeft: Sizes.fixPadding,
+                        }}
+                    />
 
-    function fullNameTextField() {
+                </View>
+                <MaterialCommunityIcons
+                    name={showPassword ? 'eye-outline' : "eye-off-outline"}
+                    color={Colors.grayColor}
+                    size={20}
+                    onPress={() => updateState({ showPassword: !showPassword })}
+                />
+            </View>
+        )
+    }
+
+    function usernameTextField() {
         return (
             <View style={{
                 marginTop: Sizes.fixPadding * 2.5,
@@ -294,10 +331,10 @@ const SignupScreen = ({ navigation }) => {
                     size={20}
                 />
                 <TextInput
-                    value={fullName}
-                    onChangeText={(text) => updateState({ fullName: text })}
+                    value={username}
+                    onChangeText={(text) => updateState({ username: text })}
                     selectionColor={Colors.grayColor}
-                    placeholder="Full Name"
+                    placeholder="Username"
                     placeholderTextColor={Colors.grayColor}
                     style={{
                         marginLeft: Sizes.fixPadding,
