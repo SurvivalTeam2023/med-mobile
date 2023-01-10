@@ -57,6 +57,22 @@ const SigninScreen = ({ navigation }) => {
     //store store
     //store localstorage
     //forward page
+    const dataRaw = data['data']
+    const access_token = dataRaw['access_token']
+    //store to Redux store
+    dispatch(userAction.storeToken(store.token = access_token))
+    //store to storage
+      try {
+        SyncStorage.set('access_token', access_token);
+        console.log(SyncStorage.getAllKeys())
+      } catch (e) {
+        return e
+      }
+    console.log("error",error);
+
+    //forward page
+
+    navigation.push('HomePage')
     console.log(error);
   };
   return (
