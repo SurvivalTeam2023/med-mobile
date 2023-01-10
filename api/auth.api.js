@@ -9,9 +9,15 @@ export const loginApi = (payload) => {
   });
 };
 
-export const registerUserApi = () => {
+export const registerUserApi = (payload) => {
   const url = "/user/user";
-  return CallAPI.post(url, data);
+  const { username, email, password, repassword } = payload;
+  return CallAPI.post(url, {
+    username, 
+    email, 
+    password, 
+    repassword
+  });
 };
 
 export const getRefreshTokenApi = (payload) => {

@@ -49,7 +49,8 @@ const App = () => {
               component={signinScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
-            <Stack.Screen name="Signup" component={signupScreen} />
+            <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen name="SignIn" component={signinScreen} />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
             <Stack.Screen
               name="BottomTabBar"

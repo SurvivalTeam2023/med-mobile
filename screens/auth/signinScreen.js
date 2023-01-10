@@ -67,7 +67,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          navigation.push("Signup");
+          navigation.push("HomePage");
         },
         onError: (error) => {
           console.log("error", error);
@@ -153,7 +153,7 @@ const SigninScreen = ({ navigation }) => {
           <TouchableOpacity
             style={{ flex: 0.3 }}
             activeOpacity={0.9}
-            onPress={() => navigation.push("Signup")}
+            onPress={() => navigation.push("SignUp")}
           >
             <MaskedView
               style={{ flex: 0.3, height: 18 }}
@@ -245,7 +245,7 @@ const SigninScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={() => (handleLogin() ? navigation.push("HomePage") : null)}
+        onPress={() => {handleLogin()}}
       >
         <LinearGradient
           start={{ x: 1, y: 0 }}

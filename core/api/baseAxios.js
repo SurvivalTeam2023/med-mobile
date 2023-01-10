@@ -16,7 +16,7 @@ CallAPI.interceptors.request.use((req) => {
   if (token && req.headers)
     req.headers[KEYS.HEADER_AUTHORIZATION] = `Bearer ${token}`;
   //trace log
-  // console.log("Starting Request", JSON.stringify(req, null, 2));
+  console.log("Starting Request", JSON.stringify(req, null, 2));
   return req;
 });
 
