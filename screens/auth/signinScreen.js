@@ -19,6 +19,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { loginApi } from "../../api/auth.api";
 import { useLogin } from "../../hooks/auth.hook";
 import { TOKEN_KEY_STORAGE } from "../../constants/config";
+import { useDispatch } from "react-redux";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -50,18 +51,26 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const { mutate, data, isSuccess } = useLogin();
+  const dispatch = useDispatch()
   const handleLogin = () => {
     mutate({
       username: state["userName"],
       password: state["password"],
     });
+    
     if (isSuccess) {
-      const dataRaw = data["data"];
-      const access_token = dataRaw["access_token"];
-      dispatch(userAction.storeToken(access_token));
-      SyncStorage.set(TOKEN_KEY_STORAGE, access_token);
-      console.log(SyncStorage.getAllKeys());
-      navigation.push("HomePage");
+      try{
+        const dataRaw = data["data"];
+        const access_token = dataRaw["access_token"];
+        dispatch(userAction.storeToken(access_token));
+        SyncStorage.set(TOKEN_KEY_STORAGE, access_token);
+        console.log("run here")
+        console.log(SyncStorage.getAllKeys())
+        return true;
+      }catch(e){
+        console.log(e)
+      }
+      
     }
   };
   return (
@@ -234,7 +243,7 @@ const SigninScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={() => handleLogin()}
+        onPress={() => handleLogin()?navigation.push("HomePage"):null}
       >
         <LinearGradient
           start={{ x: 1, y: 0 }}

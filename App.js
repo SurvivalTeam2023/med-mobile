@@ -20,6 +20,7 @@ import splashScreen from "./screens/splashScreen";
 import { store } from "./core/store/store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ExploreScreen from "./screens/explore/exploreScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -57,6 +58,7 @@ const App = () => {
             />
             <Stack.Screen name="Search" component={searchScreen} />
             <Stack.Screen name="Tracks" component={tracksScreen} />
+            <Stack.Screen name="HomePage" component={ExploreScreen} />
             <Stack.Screen
               name="NowPlaying"
               component={nowPlayingScreen}
