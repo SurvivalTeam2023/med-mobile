@@ -18,6 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
 import { loginApi } from "../../api/auth.api";
 import { useLogin } from "../../hooks/auth.hook";
+import { TOKEN_KEY_STORAGE } from "../../constants/config";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -48,32 +49,20 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-  const { mutate, isError, error, data } = useLogin();
+  const { mutate, data, isSuccess } = useLogin();
   const handleLogin = () => {
     mutate({
       username: state["userName"],
       password: state["password"],
     });
-    //store store
-    //store localstorage
-    //forward page
-    const dataRaw = data['data']
-    const access_token = dataRaw['access_token']
-    //store to Redux store
-    dispatch(userAction.storeToken(store.token = access_token))
-    //store to storage
-      try {
-        SyncStorage.set('access_token', access_token);
-        console.log(SyncStorage.getAllKeys())
-      } catch (e) {
-        return e
-      }
-    console.log("error",error);
-
-    //forward page
-
-    navigation.push('HomePage')
-    console.log(error);
+    if (isSuccess) {
+      const dataRaw = data["data"];
+      const access_token = dataRaw["access_token"];
+      dispatch(userAction.storeToken(access_token));
+      SyncStorage.set(TOKEN_KEY_STORAGE, access_token);
+      console.log(SyncStorage.getAllKeys());
+      navigation.push("HomePage");
+    }
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
