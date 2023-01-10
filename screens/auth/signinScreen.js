@@ -16,17 +16,18 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
-import { loginApi } from "../../api/auth.api";
 import { useLogin } from "../../hooks/auth.hook";
 import { TOKEN_KEY_STORAGE } from "../../constants/config";
 import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
-
+  const { mutate } = useLogin();
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -50,28 +51,29 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-  const { mutate, data, isSuccess } = useLogin();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleLogin = () => {
-    mutate({
-      username: state["userName"],
-      password: state["password"],
-    });
-    
-    if (isSuccess) {
-      try{
-        const dataRaw = data["data"];
-        const access_token = dataRaw["access_token"];
-        dispatch(userAction.storeToken(access_token));
-        SyncStorage.set(TOKEN_KEY_STORAGE, access_token);
-        console.log("run here")
-        console.log(SyncStorage.getAllKeys())
-        return true;
-      }catch(e){
-        console.log(e)
+    mutate(
+      {
+        username: state["userName"],
+        password: state["password"],
+      },
+      {
+        onSuccess: (data) => {
+          const dataRaw = data["data"];
+          const access_token = dataRaw["access_token"];
+          dispatch(userAction.storeToken(access_token));
+          AsyncStorage.setItem(
+            TOKEN_KEY_STORAGE,
+            JSON.stringify({ token: access_token })
+          );
+          navigation.push("Signup");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
       }
-      
-    }
+    );
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -243,7 +245,7 @@ const SigninScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={() => handleLogin()?navigation.push("HomePage"):null}
+        onPress={() => (handleLogin() ? navigation.push("HomePage") : null)}
       >
         <LinearGradient
           start={{ x: 1, y: 0 }}

@@ -4,6 +4,7 @@ import { getRefreshTokenApi, loginApi, registerUserApi } from "../api/auth.api";
 export const useLogin = (payload) =>
   useMutation({
     mutationFn: (payload) => loginApi(payload),
+    onSuccess: (data) => data,
   });
 
 export const useRegisterUser = (payload) =>
