@@ -7,31 +7,6 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { useGetGenreList } from "../../hooks/genre.hook";
 
 const { width } = Dimensions.get('window');
-const { mutate } = useGetGenreList();
-const showData = () => {
-    useEffect(() => {
-        mutate(
-            {
-              onSuccess: (data) => {
-              //   const dataRaw = data["data"];
-              //   const access_token = dataRaw["access_token"];
-              //   dispatch(userAction.storeToken(access_token));
-              //   AsyncStorage.setItem(
-              //     TOKEN_KEY_STORAGE,
-              //     JSON.stringify({ token: access_token })
-              //   );
-              //   navigation.push("ChooseMusic");
-              console.log(data)
-              },
-              onError: (error) => {
-                console.log("error", error);
-              },
-            }
-          );
-    })
-}
-
-
 const musicsList = [
     {
         id: '1',
@@ -90,20 +65,35 @@ const musicsList = [
 ];
 
 const ChooseMusicScreen = ({ navigation }) => {
+    const { mutate } = useGetGenreList();
+    const fetchData = () => {
+        mutate({
+            onSuccess: (data) => {
+            const dataRaw = data['data']
+            console.log('raw', dataRaw)
+              },
+            onError: (error) => {
+                console.log("error", error);
+              },
+        })
+    }
+        
+    useEffect( () => {
+         fetchData()
+      }, [])
+   
+    
 
     const [state, setState] = useState({
-        showPassword: false,
-        userName: null,
-        password: null,
+        // showPassword: false,
+        // userName: null,
+        // password: null,
         musicsData: musicsList,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
 
     const {
-        showPassword,
-        userName,
-        password,
         musicsData,
     } = state;
 
@@ -136,6 +126,7 @@ const ChooseMusicScreen = ({ navigation }) => {
             return item;
         });
         updateState({ musicsData: newList })
+       
     }
 
     function musics() {
@@ -191,7 +182,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                                 textAlign: 'center',
                                 ...Fonts.blackColor14SemiBold
                             }}>
-                                {item.songType}
+                                {item.name}
                             </Text>
                         }
                     >
@@ -209,7 +200,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                                 marginTop: Sizes.fixPadding - 8.0,
                                 color: "transparent"
                             }}>
-                                {item.songType}
+                                {item.name}
                             </Text>
                         </LinearGradient>
                     </MaskedView>
@@ -219,7 +210,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                         marginTop: Sizes.fixPadding - 8.0,
                         ...Fonts.blackColor14SemiBold
                     }}>
-                        {item.songType}
+                        {item.name}
                     </Text>
                 }
             </View>
