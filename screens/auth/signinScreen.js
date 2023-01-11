@@ -67,7 +67,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          navigation.push("HomePage");
+          navigation.push("ChooseMusic");
         },
         onError: (error) => {
           console.log("error", error);

@@ -1,11 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, FlatList, Dimensions, ImageBackground, StatusBar, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { Colors, Fonts, Sizes, } from "../../constants/styles";
 import { MaterialIcons, } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
+import { useGetGenreList } from "../../hooks/genre.hook";
 
 const { width } = Dimensions.get('window');
+const { mutate } = useGetGenreList();
+const showData = () => {
+    useEffect(() => {
+        mutate(
+            {
+              onSuccess: (data) => {
+              //   const dataRaw = data["data"];
+              //   const access_token = dataRaw["access_token"];
+              //   dispatch(userAction.storeToken(access_token));
+              //   AsyncStorage.setItem(
+              //     TOKEN_KEY_STORAGE,
+              //     JSON.stringify({ token: access_token })
+              //   );
+              //   navigation.push("ChooseMusic");
+              console.log(data)
+              },
+              onError: (error) => {
+                console.log("error", error);
+              },
+            }
+          );
+    })
+}
+
 
 const musicsList = [
     {
