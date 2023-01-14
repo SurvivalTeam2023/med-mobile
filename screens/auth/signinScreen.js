@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   BackHandler,
   SafeAreaView,
@@ -17,10 +17,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
 import { useLogin } from "../../hooks/auth.hook";
-import { TOKEN_KEY_STORAGE } from "../../constants/config";
+import { useLoginWithGmail } from "../../hooks/auth.hook";
+import { EXPO_CLIENT_ID, TOKEN_KEY_STORAGE, WEB_CLIENT_ID } from "../../constants/config";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Google from 'expo-auth-session/providers/google';
+import axios from 'axios'
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -28,6 +31,8 @@ const SigninScreen = ({ navigation }) => {
     return true;
   };
   const { mutate } = useLogin();
+  const { mutateAsync } = useLoginWithGmail();
+
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -36,6 +41,8 @@ const SigninScreen = ({ navigation }) => {
     }, [backAction])
   );
 
+
+  
   function _spring() {
     updateState({ backClickCount: 1 });
     setTimeout(() => {
@@ -47,7 +54,9 @@ const SigninScreen = ({ navigation }) => {
     showPassword: false,
     userName: null,
     password: null,
+    email: null,
     backClickCount: 0,
+   
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
@@ -75,6 +84,66 @@ const SigninScreen = ({ navigation }) => {
       }
     );
   };
+
+  
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+      expoClientId: EXPO_CLIENT_ID,
+      webClientId: WEB_CLIENT_ID
+  });
+  
+//variable can be get in the function below
+let token = null;  
+let email = null;
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+       const { authentication } = response;
+       const subject_token = response.authentication.accessToken
+       token = subject_token
+
+      //username is email so we get email from api and pass it to handleLoginWithGmail function
+      axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token='+`${subject_token}`)
+      .then(function(response){
+        const userDetails = response.data['email']
+
+        // const subject_token = `${subject_token}`
+        console.log(userDetails)
+        email = userDetails
+        console.log('email', email)
+        handleLoginWithGmail()
+    })
+    }
+  }, [response]);
+
+  // console.log('response', response) 
+  // console.log('request', request)
+
+
+  const handleLoginWithGmail =  () => {
+    mutateAsync(
+      {
+        subject_token: token,
+        username:  email,
+      },
+      {
+        onSuccess: (data) => {
+          const dataRaw = data["data"];
+          const access_token = dataRaw["access_token"];
+          dispatch(userAction.storeToken(access_token));
+          AsyncStorage.setItem(
+            TOKEN_KEY_STORAGE,
+            JSON.stringify({ token: access_token })
+          );
+          navigation.push("HomePage");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -187,42 +256,38 @@ const SigninScreen = ({ navigation }) => {
             ...styles.socialMediaIconsStyle,
           }}
         >
-          <Image
-            source={require("../../assets/images/icon/facebook-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View
-          style={{
-            backgroundColor: "#EA4335",
-            ...styles.socialMediaIconsStyle,
-            marginHorizontal: Sizes.fixPadding - 5.0,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/google-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-        <View
-          style={{
-            backgroundColor: "#00A1F2",
-            ...styles.socialMediaIconsStyle,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/twitter-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
+        <TouchableOpacity onPress={() => promptAsync()}>
+            <Text style={styles.connexionText}>Connect with Google</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
   }
-
+//   <View
+//   style={{
+//     backgroundColor: "#EA4335",
+//     ...styles.socialMediaIconsStyle,
+//     marginHorizontal: Sizes.fixPadding - 5.0,
+//   }}
+// >
+//   <Image
+//     source={require("../../assets/images/icon/google-icon.png")}
+//     style={{ width: 15.0, height: 15.0 }}
+//     resizeMode="contain"
+//   />
+// </View>
+// <View
+//   style={{
+//     backgroundColor: "#00A1F2",
+//     ...styles.socialMediaIconsStyle,
+//   }}
+// >
+//   <Image
+//     source={require("../../assets/images/icon/twitter-icon.png")}
+//     style={{ width: 15.0, height: 15.0 }}
+//     resizeMode="contain"
+//   />
+// </View>
   function orIndicator() {
     return (
       <View style={styles.orWrapStyle}>

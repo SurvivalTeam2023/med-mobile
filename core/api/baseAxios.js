@@ -22,20 +22,7 @@ CallAPI.interceptors.request.use((req) => {
 
 CallAPI.interceptors.response.use(async (res) => {
   const { status } = res;
-  //   if (status === 401) {
-  // const response = await getRefreshTokenApi(
-  //   store.getState().user.token?.refresh_token || ""
-  // );
-  // if (response?.status === 401) {
-  //   //TODO: logout user
-  //   return res;
-  // }
-
-  // if (response) {
-  //   saveAuthKeyIntoLocalStorage(response.data);
-  //   store.dispatch(userActions.setToken(response.data));
-  // }
-  //   }
+  
   //trace log
   console.log("Response:", JSON.stringify(res, null, 2));
   return res;
