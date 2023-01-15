@@ -252,12 +252,17 @@ let email = null;
       <View style={styles.socialMediaIconsWrapStyle}>
         <View
           style={{
-            backgroundColor: "#4267B2",
+            backgroundColor: "#EA4335",
             ...styles.socialMediaIconsStyle,
+            marginHorizontal: Sizes.fixPadding - 5.0,
           }}
         >
-        <TouchableOpacity onPress={() => promptAsync()}>
-            <Text style={styles.connexionText}>Connect with Google</Text>
+          <TouchableOpacity onPress={() => promptAsync()}>
+            <Image
+                source={require("../../assets/images/icon/google-icon.png")}
+                style={{ width: 15.0, height: 15.0 }}
+                resizeMode="contain"
+              />
           </TouchableOpacity>
         </View>
       </View>
@@ -274,7 +279,7 @@ let email = null;
 //     source={require("../../assets/images/icon/google-icon.png")}
 //     style={{ width: 15.0, height: 15.0 }}
 //     resizeMode="contain"
-//   />
+//   /> 
 // </View>
 // <View
 //   style={{
