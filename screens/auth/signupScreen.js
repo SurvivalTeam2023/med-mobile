@@ -17,7 +17,6 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
 
 const SignupScreen = ({ navigation }) => {
-  //signup
   const [state, setState] = useState({
     showPassword: false,
     username: null,
