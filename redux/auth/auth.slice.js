@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { removeTokenFromStorage } from "../../utils/app.util";
+import {
+  parseTokenToUsername,
+  removeTokenFromStorage,
+} from "../../utils/app.util";
 
 const initialState = {
   isTriedLogin: false,
+  username: null,
   user: null,
   token: null,
 };
@@ -15,6 +19,7 @@ const reducer = createSlice({
       state.user = payload;
     },
     storeToken: (state, { payload }) => {
+      state.username = parseTokenToUsername(payload);
       state.token = payload;
     },
     removeTOken: (state, { payload }) => {

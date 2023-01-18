@@ -28,7 +28,10 @@ import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
+<<<<<<< HEAD
 import { store } from "../../core/store/store";
+=======
+>>>>>>> d1de035608f677dfada00f93bed0a216ea691805
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -66,6 +69,7 @@ const SigninScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetUserByNameApi();
 
   const getUserByNameApi = () => {
+<<<<<<< HEAD
     {
       username: state["userName"];
     }
@@ -77,6 +81,15 @@ const SigninScreen = ({ navigation }) => {
     if (isError) {
       console.log("error", error);
     }
+=======
+    if (isSuccess) {
+      console.log("username", data["data"]);
+    }
+
+    if (isError) {
+      console.log("error", error);
+    }
+>>>>>>> d1de035608f677dfada00f93bed0a216ea691805
   };
 
   const handleLogin = () => {
