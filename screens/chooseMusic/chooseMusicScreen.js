@@ -7,7 +7,8 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { useGetGenreList } from "../../hooks/genre.hook";
 
 const { width } = Dimensions.get('window');
-const musicsList = [
+
+let musicsList = [
     {
         id: '1',
         image: require('../../assets/images/songsCoverPicks/coverImage21.png'),
@@ -65,21 +66,23 @@ const musicsList = [
 ];
 
 const ChooseMusicScreen = ({ navigation }) => {
-    const { mutate } = useGetGenreList();
-    const fetchData = () => {
-        mutate({
-            onSuccess: (data) => {
-            const dataRaw = data['data']
-            console.log('raw', dataRaw)
-              },
-            onError: (error) => {
-                console.log("error", error);
-              },
-        })
+    // const [genreList, setGenreList] = useState([])
+    const {data, error, isSuccess, isError} = useGetGenreList()
+
+const fectchData = () => {
+
+    if(isSuccess){
+        updateState({musicsData: data['data']})
     }
+
+    if(isError){
+        console.log('error', error)
+    }
+} 
+
         
     useEffect( () => {
-         fetchData()
+        fectchData()
       }, [])
    
     
@@ -88,7 +91,7 @@ const ChooseMusicScreen = ({ navigation }) => {
         // showPassword: false,
         // userName: null,
         // password: null,
-        musicsData: musicsList,
+        musicsData: null,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
