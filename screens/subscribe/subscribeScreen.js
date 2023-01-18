@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, View, ScrollView, StatusBar, TouchableOpacity, Image, Text, StyleSheet, ImageBackground } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { Icon } from 'react-native-gradient-icon';
+import { useGetSubscriptionType } from "../../hooks/subscription.hook";
+import { isError } from "react-query";
 
-const subscribePackageList = [
+let subscribePackageList = [
     {
         id: '1',
         packType: 'Starter Pack',
@@ -35,6 +37,24 @@ const subscriptionAllowsList = [
 ];
 
 const SubscribeScreen = ({ navigation }) => {
+    const {data, error, isSuccess} = useGetSubscriptionType()
+
+const fectchData = () => {
+
+    if(isSuccess){
+        console.log('dcmm', data['data'])
+        subscribePackageList = data['data']
+    }
+
+    if(isError){
+        console.log('error', error)
+    }
+} 
+
+        
+    useEffect( () => {
+        fectchData()
+      }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -52,6 +72,8 @@ const SubscribeScreen = ({ navigation }) => {
             </View>
         </SafeAreaView>
     )
+
+        
 
     function subscriptionAllowsInfo() {
         return (
@@ -108,13 +130,13 @@ const SubscribeScreen = ({ navigation }) => {
                                 justifyContent: 'flex-end', flex: 1,
                             }}>
                                 <Text style={{ marginBottom: Sizes.fixPadding - 8.0, ...Fonts.whiteColor15Bold }}>
-                                    {item.packType}
+                                    {item.name}
                                 </Text>
                                 <Text style={{ ...Fonts.whiteColor22Light }}>
-                                    {item.validityInMonths} MONTHS
+                                    {item.desc} 
                                 </Text>
                                 <Text style={{ alignSelf: 'flex-end', ...Fonts.whiteColor22Light }}>
-                                    $ {item.amount}
+                                    $ {item.cost}
                                 </Text>
                             </View>
                         </ImageBackground>

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import { getRefreshTokenApi, loginApi, loginWithGoogleApi, registerUserApi } from "../api/auth.api";
 
 export const useLogin = (payload) =>
