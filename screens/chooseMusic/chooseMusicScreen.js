@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, FlatList, Dimensions, ImageBackground, StatusBar, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { Colors, Fonts, Sizes, } from "../../constants/styles";
 import { MaterialIcons, } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
+import { useGetGenreList } from "../../hooks/genre.hook";
 
 const { width } = Dimensions.get('window');
 
-const musicsList = [
+let musicsList = [
     {
         id: '1',
         image: require('../../assets/images/songsCoverPicks/coverImage21.png'),
@@ -65,20 +66,37 @@ const musicsList = [
 ];
 
 const ChooseMusicScreen = ({ navigation }) => {
+    // const [genreList, setGenreList] = useState([])
+    const {data, error, isSuccess, isError} = useGetGenreList()
+
+const fectchData = () => {
+
+    if(isSuccess){
+        updateState({musicsData: data['data']})
+    }
+
+    if(isError){
+        console.log('error', error)
+    }
+} 
+
+        
+    useEffect( () => {
+        fectchData()
+      }, [])
+   
+    
 
     const [state, setState] = useState({
-        showPassword: false,
-        userName: null,
-        password: null,
-        musicsData: musicsList,
+        // showPassword: false,
+        // userName: null,
+        // password: null,
+        musicsData: null,
     })
 
     const updateState = (data) => setState((state) => ({ ...state, ...data }))
 
     const {
-        showPassword,
-        userName,
-        password,
         musicsData,
     } = state;
 
@@ -111,6 +129,7 @@ const ChooseMusicScreen = ({ navigation }) => {
             return item;
         });
         updateState({ musicsData: newList })
+       
     }
 
     function musics() {
@@ -166,7 +185,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                                 textAlign: 'center',
                                 ...Fonts.blackColor14SemiBold
                             }}>
-                                {item.songType}
+                                {item.name}
                             </Text>
                         }
                     >
@@ -184,7 +203,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                                 marginTop: Sizes.fixPadding - 8.0,
                                 color: "transparent"
                             }}>
-                                {item.songType}
+                                {item.name}
                             </Text>
                         </LinearGradient>
                     </MaskedView>
@@ -194,7 +213,7 @@ const ChooseMusicScreen = ({ navigation }) => {
                         marginTop: Sizes.fixPadding - 8.0,
                         ...Fonts.blackColor14SemiBold
                     }}>
-                        {item.songType}
+                        {item.name}
                     </Text>
                 }
             </View>
