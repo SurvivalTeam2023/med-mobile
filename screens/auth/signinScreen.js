@@ -18,13 +18,16 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
 import { useGetUserByNameApi, useLogin } from "../../hooks/auth.hook";
 import { useLoginWithGmail } from "../../hooks/auth.hook";
-import { EXPO_CLIENT_ID, TOKEN_KEY_STORAGE, WEB_CLIENT_ID } from "../../constants/config";
+import {
+  EXPO_CLIENT_ID,
+  TOKEN_KEY_STORAGE,
+  WEB_CLIENT_ID,
+} from "../../constants/config";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Google from 'expo-auth-session/providers/google';
-import axios from 'axios'
-import { store } from "../../core/store/store";
+import * as Google from "expo-auth-session/providers/google";
+import axios from "axios";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -42,8 +45,6 @@ const SigninScreen = ({ navigation }) => {
     }, [backAction])
   );
 
-
-  
   function _spring() {
     updateState({ backClickCount: 1 });
     setTimeout(() => {
@@ -57,26 +58,23 @@ const SigninScreen = ({ navigation }) => {
     password: null,
     email: null,
     backClickCount: 0,
-   
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const dispatch = useDispatch();
-  const {data, error, isSuccess, isError} = useGetUserByNameApi();
+  const { data, error, isSuccess, isError } = useGetUserByNameApi();
 
   const getUserByNameApi = () => {
-
-    if(isSuccess){
-        console.log('username',data['data']) 
+    if (isSuccess) {
+      console.log("username", data["data"]);
     }
 
-    if(isError){
-        console.log('error', error)
+    if (isError) {
+      console.log("error", error);
     }
-} 
+  };
 
   const handleLogin = () => {
-    
     mutate(
       {
         username: state["userName"],
@@ -101,46 +99,47 @@ const SigninScreen = ({ navigation }) => {
     );
   };
 
-  
-
   const [request, response, promptAsync] = Google.useAuthRequest({
-      expoClientId: EXPO_CLIENT_ID,
-      webClientId: WEB_CLIENT_ID
+    expoClientId: EXPO_CLIENT_ID,
+    webClientId: WEB_CLIENT_ID,
   });
-  
-//variable can be get in the function below
-let token = null;  
-let email = null;
+
+  //variable can be get in the function below
+  let token = null;
+  let email = null;
 
   useEffect(() => {
-    if (response?.type === 'success') {
-       const { authentication } = response;
-       const subject_token = response.authentication.accessToken
-       token = subject_token
+    if (response?.type === "success") {
+      const { authentication } = response;
+      const subject_token = response.authentication.accessToken;
+      token = subject_token;
 
       //username is email so we get email from api and pass it to handleLoginWithGmail function
-      axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token='+`${subject_token}`)
-      .then(function(response){
-        const userDetails = response.data['email']
+      axios
+        .get(
+          "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
+            `${subject_token}`
+        )
+        .then(function (response) {
+          const userDetails = response.data["email"];
 
-        // const subject_token = `${subject_token}`
-        console.log(userDetails)
-        email = userDetails
-        console.log('email', email)
-        handleLoginWithGmail()
-    })
+          // const subject_token = `${subject_token}`
+          console.log(userDetails);
+          email = userDetails;
+          console.log("email", email);
+          handleLoginWithGmail();
+        });
     }
   }, [response]);
 
-  // console.log('response', response) 
+  // console.log('response', response)
   // console.log('request', request)
 
-
-  const handleLoginWithGmail =  () => {
+  const handleLoginWithGmail = () => {
     mutateAsync(
       {
         subject_token: token,
-        username:  email,
+        username: email,
       },
       {
         onSuccess: (data) => {
@@ -275,40 +274,40 @@ let email = null;
         >
           <TouchableOpacity onPress={() => promptAsync()}>
             <Image
-                source={require("../../assets/images/icon/google-icon.png")}
-                style={{ width: 15.0, height: 15.0 }}
-                resizeMode="contain"
-              />
+              source={require("../../assets/images/icon/google-icon.png")}
+              style={{ width: 15.0, height: 15.0 }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
       </View>
     );
   }
-//   <View
-//   style={{
-//     backgroundColor: "#EA4335",
-//     ...styles.socialMediaIconsStyle,
-//     marginHorizontal: Sizes.fixPadding - 5.0,
-//   }}
-// >
-//   <Image
-//     source={require("../../assets/images/icon/google-icon.png")}
-//     style={{ width: 15.0, height: 15.0 }}
-//     resizeMode="contain"
-//   /> 
-// </View>
-// <View
-//   style={{
-//     backgroundColor: "#00A1F2",
-//     ...styles.socialMediaIconsStyle,
-//   }}
-// >
-//   <Image
-//     source={require("../../assets/images/icon/twitter-icon.png")}
-//     style={{ width: 15.0, height: 15.0 }}
-//     resizeMode="contain"
-//   />
-// </View>
+  //   <View
+  //   style={{
+  //     backgroundColor: "#EA4335",
+  //     ...styles.socialMediaIconsStyle,
+  //     marginHorizontal: Sizes.fixPadding - 5.0,
+  //   }}
+  // >
+  //   <Image
+  //     source={require("../../assets/images/icon/google-icon.png")}
+  //     style={{ width: 15.0, height: 15.0 }}
+  //     resizeMode="contain"
+  //   />
+  // </View>
+  // <View
+  //   style={{
+  //     backgroundColor: "#00A1F2",
+  //     ...styles.socialMediaIconsStyle,
+  //   }}
+  // >
+  //   <Image
+  //     source={require("../../assets/images/icon/twitter-icon.png")}
+  //     style={{ width: 15.0, height: 15.0 }}
+  //     resizeMode="contain"
+  //   />
+  // </View>
   function orIndicator() {
     return (
       <View style={styles.orWrapStyle}>
@@ -331,7 +330,9 @@ let email = null;
       <TouchableOpacity
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={() => {handleLogin()}}
+        onPress={() => {
+          handleLogin();
+        }}
       >
         <LinearGradient
           start={{ x: 1, y: 0 }}
