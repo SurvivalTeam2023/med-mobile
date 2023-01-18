@@ -8,6 +8,14 @@ export const loginApi = (payload) => {
     password,
   });
 };
+export const loginWithGoogleApi = (payload) => {
+  const {subject_token, username} = payload;
+  const url = "/user/google";
+  return CallAPI.post(url, {
+    subject_token,
+    username,
+  });
+};
 
 export const registerUserApi = (payload) => {
   const url = "/user/user";
@@ -19,6 +27,8 @@ export const registerUserApi = (payload) => {
     repassword
   });
 };
+
+
 
 export const getRefreshTokenApi = (payload) => {
   const { refreshToken } = payload;

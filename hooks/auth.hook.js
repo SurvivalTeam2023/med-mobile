@@ -1,9 +1,14 @@
 import { useMutation } from "react-query";
-import { getRefreshTokenApi, loginApi, registerUserApi } from "../api/auth.api";
+import { getRefreshTokenApi, loginApi, loginWithGoogleApi, registerUserApi } from "../api/auth.api";
+
 
 export const useLogin = (payload) =>
   useMutation({
     mutationFn: (payload) => loginApi(payload),
+  });
+export const useLoginWithGmail = (payload) =>
+  useMutation({
+    mutationFn: (payload) => loginWithGoogleApi(payload),
   });
 
 export const useRegisterUser = (payload) =>
