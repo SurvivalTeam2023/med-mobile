@@ -9,7 +9,7 @@ export const loginApi = (payload) => {
   });
 };
 export const loginWithGoogleApi = (payload) => {
-  const {subject_token, username} = payload;
+  const { subject_token, username } = payload;
   const url = "/user/google";
   return CallAPI.post(url, {
     subject_token,
@@ -21,18 +21,18 @@ export const registerUserApi = (payload) => {
   const url = "/user/user";
   const { username, email, password, repassword } = payload;
   return CallAPI.post(url, {
-    username, 
-    email, 
-    password, 
-    repassword
+    username,
+    email,
+    password,
+    repassword,
   });
 };
 
-export const findUserByNameApi = (payload) => {
+export const getUserByNameApi = (payload) => {
   const url = "/user/username";
-  const { username} = payload;
+  const { username } = payload;
   return CallAPI.get(url, {
-    username
+    username,
   });
 };
 
@@ -43,5 +43,3 @@ export const getRefreshTokenApi = (payload) => {
     refresh_token: refreshToken,
   });
 };
-
-
