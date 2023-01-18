@@ -16,7 +16,7 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
-import { useLogin } from "../../hooks/auth.hook";
+import { useGetUserByNameApi, useLogin } from "../../hooks/auth.hook";
 import { useLoginWithGmail } from "../../hooks/auth.hook";
 import { EXPO_CLIENT_ID, TOKEN_KEY_STORAGE, WEB_CLIENT_ID } from "../../constants/config";
 import { useDispatch } from "react-redux";
@@ -24,6 +24,7 @@ import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from 'expo-auth-session/providers/google';
 import axios from 'axios'
+import { store } from "../../core/store/store";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -61,6 +62,19 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const dispatch = useDispatch();
+  const {data, error, isSuccess, isError} = useGetUserByNameApi();
+
+  const getUserByNameApi = () => {
+
+    if(isSuccess){
+        console.log('username',data['data']) 
+    }
+
+    if(isError){
+        console.log('error', error)
+    }
+} 
+
   const handleLogin = () => {
     
     mutate(

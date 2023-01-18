@@ -5,3 +5,16 @@ export const getSubscriptionType = (payload) => {
     const url = "/subscriptionTypes";
     return CallAPI.get(url);
 };
+
+
+export const createSubscriptionApi = (payload) => {
+    const url = "/subscriptions";
+    const {userId, subscriptionTypeId, status} = payload
+    return CallAPI.post(url, {
+        userId,
+        subscriptionTypeId,
+        status
+      });
+};
+
+

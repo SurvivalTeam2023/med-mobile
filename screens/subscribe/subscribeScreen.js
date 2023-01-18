@@ -5,7 +5,7 @@ import { MaterialIcons, } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { Icon } from 'react-native-gradient-icon';
-import { useGetSubscriptionType } from "../../hooks/subscription.hook";
+import { useCreateSubscriptionApi, useGetSubscriptionType } from "../../hooks/subscription.hook";
 import { isError } from "react-query";
 
 let subscribePackageList = [
@@ -42,7 +42,6 @@ const SubscribeScreen = ({ navigation }) => {
 const fectchData = () => {
 
     if(isSuccess){
-        console.log('dcmm', data['data'])
         subscribePackageList = data['data']
     }
 

@@ -28,7 +28,13 @@ export const registerUserApi = (payload) => {
   });
 };
 
-
+export const findUserByNameApi = (payload) => {
+  const url = "/user/username";
+  const { username} = payload;
+  return CallAPI.get(url, {
+    username
+  });
+};
 
 export const getRefreshTokenApi = (payload) => {
   const { refreshToken } = payload;
@@ -37,3 +43,5 @@ export const getRefreshTokenApi = (payload) => {
     refresh_token: refreshToken,
   });
 };
+
+
