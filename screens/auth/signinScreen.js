@@ -31,6 +31,7 @@ import axios from "axios";
 import { store } from "../../core/store/store";
 
 const SigninScreen = ({ navigation }) => {
+  console.log("Happy New Year");
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -62,22 +63,8 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
+
   const dispatch = useDispatch();
-  const { data, error, isSuccess, isError } = useGetUserByNameApi();
-
-  const getUserByNameApi = () => {
-    {
-      username: state["userName"];
-    }
-
-    if (isSuccess) {
-      console.log("username", data["data"]);
-    }
-
-    if (isError) {
-      console.log("error", error);
-    }
-  };
 
   const handleLogin = () => {
     mutate(

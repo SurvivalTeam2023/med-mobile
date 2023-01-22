@@ -20,6 +20,8 @@ import {
   useGetSubscriptionType,
 } from "../../hooks/subscription.hook";
 import { isError } from "react-query";
+import { useGetUserByNameApi } from "../../hooks/user.hook";
+import { store } from "../../core/store/store";
 
 let subscribePackageList = [
   {
@@ -51,7 +53,24 @@ const subscriptionAllowsList = [
 
 const SubscribeScreen = ({ navigation }) => {
   const { data, error, isSuccess } = useGetSubscriptionType();
-
+  const { mutate } = useGetUserByNameApi();
+  const userName = store.getState().user.username;
+  console.log("memay", userName);
+  const getUsername = () => {
+    mutate(
+      {
+        username: `${userName}`,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("userInfo", data["data"]);
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
+  };
   const fectchData = () => {
     if (isSuccess) {
       subscribePackageList = data["data"];
@@ -131,7 +150,9 @@ const SubscribeScreen = ({ navigation }) => {
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigation.push("ExploreSubscription")}
+          onPress={() => {
+            getUsername(), navigation.push("ExploreSubscription");
+          }}
         >
           <ImageBackground
             source={require("../../assets/images/card-design.png")}

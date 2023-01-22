@@ -16,10 +16,10 @@ export const CallAPI = axios.create({
   },
 });
 
-CallAPI.interceptors.request.use((req) => {
-  const token =
-    store?.getState().user.token?.access_token ||
-    AsyncStorage.getItem(TOKEN_KEY_STORAGE);
+CallAPI.interceptors.request.use(async (req) => {
+  const token = store?.getState().user.token;
+  // || (await AsyncStorage.getItem(TOKEN_KEY_STORAGE));
+  // ;
   if (token && req.headers);
   req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   //trace log
