@@ -32,6 +32,7 @@ import { store } from "../../core/store/store";
 
 const SigninScreen = ({ navigation }) => {
   console.log("Happy New Year");
+  console.log("Chúc mừng năm mới :3");
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
