@@ -28,14 +28,6 @@ export const registerUserApi = (payload) => {
   });
 };
 
-export const getUserByNameApi = (payload) => {
-  const url = "/user/username";
-  const { username } = payload;
-  return CallAPI.get(url, {
-    username,
-  });
-};
-
 export const getRefreshTokenApi = (payload) => {
   const { refreshToken } = payload;
   const url = "/update-token";

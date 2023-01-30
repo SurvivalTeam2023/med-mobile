@@ -16,7 +16,7 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
-import { useGetUserByNameApi, useLogin } from "../../hooks/auth.hook";
+import { useLogin } from "../../hooks/auth.hook";
 import { useLoginWithGmail } from "../../hooks/auth.hook";
 import {
   EXPO_CLIENT_ID,
@@ -28,6 +28,7 @@ import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
+import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 
 const SigninScreen = ({ navigation }) => {
@@ -63,6 +64,19 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const dispatch = useDispatch();
+  const { userData, isError, isSuccess } = useGetUserByNameApi();
+
+  const getUserInfo = () => {
+    if (isSuccess) {
+      const userInfo = userData["data"];
+      dispatch(userAction.storeUser(userInfo));
+      console.log("user", store.getState().user.user.user_db);
+    }
+
+    if (isError) {
+      console.log("error", isError);
+    }
+  };
 
   const handleLogin = () => {
     mutate(
@@ -76,6 +90,7 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
+          getUserInfo();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })

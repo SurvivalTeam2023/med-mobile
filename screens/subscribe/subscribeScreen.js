@@ -20,6 +20,7 @@ import {
   useGetSubscriptionType,
 } from "../../hooks/subscription.hook";
 import { isError } from "react-query";
+import { store } from "../../core/store/store";
 
 let subscribePackageList = [
   {
@@ -51,6 +52,24 @@ const subscriptionAllowsList = [
 
 const SubscribeScreen = ({ navigation }) => {
   const { data, error, isSuccess } = useGetSubscriptionType();
+  let subcriptionTypeId = null;
+
+  const { mutate } = useCreateSubscriptionApi();
+  const createSubscription = (subcriptionTypeId) => {
+    const userId = store.getState().user.user.user_db.id;
+    mutate(
+      { userId: `${userId}`, subcriptionTypeId: subcriptionTypeId },
+
+      {
+        onSuccess: () => {
+          navigation.push("ExploreSubscription");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
+  };
 
   const fectchData = () => {
     if (isSuccess) {
@@ -125,13 +144,20 @@ const SubscribeScreen = ({ navigation }) => {
       </View>
     );
   }
-
   function packages() {
     return subscribePackageList.map((item) => (
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigation.push("ExploreSubscription")}
+          // onPress={() => {
+          //   // setSubscriptionTypeId(`${item.id}`);
+          //   getUsername();
+          //   alert("success");
+          // }}
+          onPress={() => {
+            console.log("dcm", (subcriptionTypeId = item.id));
+            createSubscription((subcriptionTypeId = item.id));
+          }}
         >
           <ImageBackground
             source={require("../../assets/images/card-design.png")}

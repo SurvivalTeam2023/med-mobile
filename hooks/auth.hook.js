@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from "react-query";
-import {getRefreshTokenApi, getUserByNameApi, loginApi, loginWithGoogleApi, registerUserApi } from "../api/auth.api";
-
+import {
+  getRefreshTokenApi,
+  loginApi,
+  loginWithGoogleApi,
+  registerUserApi,
+} from "../api/auth.api";
 
 export const useLogin = (payload) =>
   useMutation({
@@ -20,14 +24,3 @@ export const useRefreshToken = (payload) =>
   useMutation({
     mutationFn: (payload) => getRefreshTokenApi(payload),
   });
-
-export const useGetUserByNameApi = (payload) =>
-useQuery({
-  queryKey: ['getUsername'],
-  queryFn: async (payload) => {
-    const data = await getUserByNameApi(payload)
-    return data
-  },
-})
-
-

@@ -11,3 +11,13 @@ export const useGetUserByNameApi = (payload) => {
   });
   return { userData, ...rest };
 };
+
+// export const useGetUserByNameApi = () =>
+//   useQuery({
+//     queryKey: ["getUsername"],
+//     queryFn: async (payload) => {
+//       const data = await getUserByNameApi(payload);
+//       console.log("memay", data);
+//       return data;
+//     },
+//   });
