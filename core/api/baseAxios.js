@@ -17,9 +17,10 @@ export const CallAPI = axios.create({
 });
 
 CallAPI.interceptors.request.use((req) => {
-  const token =
-    store?.getState().user.token?.access_token ||
-    AsyncStorage.getItem(TOKEN_KEY_STORAGE);
+  const token = store?.getState().user.token;
+
+  console.log("dmm", store?.getState().user.token);
+  // AsyncStorage.getItem(TOKEN_KEY_STORAGE);
   if (token && req.headers);
   req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   //trace log

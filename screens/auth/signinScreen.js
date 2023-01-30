@@ -63,21 +63,6 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const dispatch = useDispatch();
-  const { data, error, isSuccess, isError } = useGetUserByNameApi();
-
-  const getUserByNameApi = () => {
-    {
-      username: state["userName"];
-    }
-
-    if (isSuccess) {
-      console.log("username", data["data"]);
-    }
-
-    if (isError) {
-      console.log("error", error);
-    }
-  };
 
   const handleLogin = () => {
     mutate(
