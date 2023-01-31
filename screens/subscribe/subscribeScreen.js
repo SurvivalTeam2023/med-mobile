@@ -52,9 +52,8 @@ const subscriptionAllowsList = [
 
 const SubscribeScreen = ({ navigation }) => {
   const { data, error, isSuccess } = useGetSubscriptionType();
-  let subcriptionTypeId = null;
-
   const { mutate } = useCreateSubscriptionApi();
+
   const createSubscription = (subcriptionTypeId) => {
     const userId = store.getState().user.user.user_db.id;
     mutate(
@@ -149,13 +148,7 @@ const SubscribeScreen = ({ navigation }) => {
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
-          // onPress={() => {
-          //   // setSubscriptionTypeId(`${item.id}`);
-          //   getUsername();
-          //   alert("success");
-          // }}
           onPress={() => {
-            console.log("dcm", (subcriptionTypeId = item.id));
             createSubscription((subcriptionTypeId = item.id));
           }}
         >

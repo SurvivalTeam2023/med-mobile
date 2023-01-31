@@ -64,15 +64,16 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
   const dispatch = useDispatch();
-  const { userData, isError, isSuccess } = useGetUserByNameApi();
+  const { userData, isError, isSuccess, isLoading } = useGetUserByNameApi();
 
   const getUserInfo = () => {
     if (isSuccess) {
       const userInfo = userData["data"];
       dispatch(userAction.storeUser(userInfo));
-      console.log("user", store.getState().user.user.user_db);
     }
-
+    if (isLoading) {
+      return true;
+    }
     if (isError) {
       console.log("error", isError);
     }
@@ -127,8 +128,6 @@ const SigninScreen = ({ navigation }) => {
         )
         .then(function (response) {
           const userDetails = response.data["email"];
-
-          // const subject_token = `${subject_token}`
           console.log(userDetails);
           email = userDetails;
           console.log("email", email);
@@ -136,9 +135,6 @@ const SigninScreen = ({ navigation }) => {
         });
     }
   }, [response]);
-
-  // console.log('response', response)
-  // console.log('request', request)
 
   const handleLoginWithGmail = () => {
     mutateAsync(
