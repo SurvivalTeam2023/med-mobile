@@ -56,6 +56,7 @@ const SubscribeScreen = ({ navigation }) => {
 
   const createSubscription = (subcriptionTypeId) => {
     const userId = store.getState().user.user.user_db.id;
+
     mutate(
       { userId: `${userId}`, subcriptionTypeId: subcriptionTypeId },
 

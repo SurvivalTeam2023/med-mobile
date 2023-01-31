@@ -38,7 +38,8 @@ const SigninScreen = ({ navigation }) => {
   };
   const { mutate } = useLogin();
   const { mutateAsync } = useLoginWithGmail();
-
+  const dispatch = useDispatch();
+  const { userData, isError, isSuccess, refetch } = useGetUserByNameApi();
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -63,21 +64,17 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-  const dispatch = useDispatch();
-  const { userData, isError, isSuccess, isLoading } = useGetUserByNameApi();
 
-  const getUserInfo = () => {
-    if (isSuccess) {
-      const userInfo = userData["data"];
-      dispatch(userAction.storeUser(userInfo));
-    }
-    if (isLoading) {
-      return true;
-    }
-    if (isError) {
-      console.log("error", isError);
-    }
-  };
+  if (isSuccess) {
+    const userInfo = userData["data"];
+    dispatch(userAction.storeUser(userInfo));
+    const test = store.getState().user.user;
+    console.log("mano", test);
+  }
+
+  if (isError) {
+    console.log("error", isError);
+  }
 
   const handleLogin = () => {
     mutate(
@@ -91,7 +88,7 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
-          getUserInfo();
+          refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
