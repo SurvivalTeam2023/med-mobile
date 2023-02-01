@@ -1,4 +1,4 @@
-import { getSubscriptionType } from "../api/subscriptionType.api";
+import { createSubscriptionApi, getSubscriptionType } from "../api/subscriptionType.api";
 import {  useMutation, useQuery } from "react-query";
 export const useGetSubscriptionType = (payload) =>
 useQuery({
@@ -8,3 +8,8 @@ useQuery({
     return data
   },
 })
+
+export const useCreateSubscriptionApi = (payload) =>
+  useMutation({
+    mutationFn: (payload) => createSubscriptionApi(payload),
+  });

@@ -9,7 +9,7 @@ export const loginApi = (payload) => {
   });
 };
 export const loginWithGoogleApi = (payload) => {
-  const {subject_token, username} = payload;
+  const { subject_token, username } = payload;
   const url = "/user/google";
   return CallAPI.post(url, {
     subject_token,
@@ -21,14 +21,12 @@ export const registerUserApi = (payload) => {
   const url = "/user/user";
   const { username, email, password, repassword } = payload;
   return CallAPI.post(url, {
-    username, 
-    email, 
-    password, 
-    repassword
+    username,
+    email,
+    password,
+    repassword,
   });
 };
-
-
 
 export const getRefreshTokenApi = (payload) => {
   const { refreshToken } = payload;

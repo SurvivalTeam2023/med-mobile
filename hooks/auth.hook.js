@@ -1,6 +1,10 @@
-import { useMutation } from "react-query";
-import { getRefreshTokenApi, loginApi, loginWithGoogleApi, registerUserApi } from "../api/auth.api";
-
+import { useMutation, useQuery } from "react-query";
+import {
+  getRefreshTokenApi,
+  loginApi,
+  loginWithGoogleApi,
+  registerUserApi,
+} from "../api/auth.api";
 
 export const useLogin = (payload) =>
   useMutation({
@@ -20,5 +24,3 @@ export const useRefreshToken = (payload) =>
   useMutation({
     mutationFn: (payload) => getRefreshTokenApi(payload),
   });
-
-
