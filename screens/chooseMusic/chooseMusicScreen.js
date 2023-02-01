@@ -95,9 +95,6 @@ const ChooseMusicScreen = ({ navigation }) => {
   //   }, []);
 
   const [state, setState] = useState({
-    // showPassword: false,
-    // userName: null,
-    // password: null,
     musicsData: musicsList,
   });
 

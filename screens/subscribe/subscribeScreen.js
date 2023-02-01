@@ -51,9 +51,15 @@ const subscriptionAllowsList = [
 ];
 
 const SubscribeScreen = ({ navigation }) => {
-  const { data, error, isSuccess } = useGetSubscriptionType();
+  const { data, error, isSuccess, isError } = useGetSubscriptionType();
   const { mutate } = useCreateSubscriptionApi();
+  if (isSuccess) {
+    subscribePackageList = data["data"];
+  }
 
+  if (isError) {
+    console.log("error", error);
+  }
   const createSubscription = (subcriptionTypeId) => {
     const userId = store.getState().user.user.user_db.id;
 
@@ -71,19 +77,13 @@ const SubscribeScreen = ({ navigation }) => {
     );
   };
 
-  const fectchData = () => {
-    if (isSuccess) {
-      subscribePackageList = data["data"];
-    }
+  // const fectchData = () => {
 
-    if (isError) {
-      console.log("error", error);
-    }
-  };
+  // };
 
-  useEffect(() => {
-    fectchData();
-  }, []);
+  // useEffect(() => {
+  //   fectchData();
+  // }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
