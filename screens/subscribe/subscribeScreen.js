@@ -60,11 +60,11 @@ const SubscribeScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-  const createSubscription = (subcriptionTypeId) => {
+  const createSubscription = (planId) => {
     const userId = store.getState().user.user.user_db.id;
 
     mutate(
-      { userId: `${userId}`, subcriptionTypeId: subcriptionTypeId },
+      { userId: `${userId}`, planId: planId },
 
       {
         onSuccess: () => {
@@ -150,7 +150,7 @@ const SubscribeScreen = ({ navigation }) => {
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => {
-            createSubscription((subcriptionTypeId = item.id));
+            createSubscription((planId = item.id));
           }}
         >
           <ImageBackground
