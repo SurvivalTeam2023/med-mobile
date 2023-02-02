@@ -79,26 +79,23 @@ let musicsList = [
 const ChooseMusicScreen = ({ navigation }) => {
   // const [genreList, setGenreList] = useState([])
   const { data, error, isSuccess, isError } = useGetGenreList();
+  if (isSuccess) {
+    musicsList = data["data"];
+  }
 
-  const fectchData = () => {
-    if (isSuccess) {
-      updateState({ musicsData: data["data"] });
-    }
+  if (isError) {
+    console.log("error", error);
+  }
+  //   const fectchData = () => {
 
-    if (isError) {
-      console.log("error", error);
-    }
-  };
+  //   };
+  //   fectchData();
+  //   useEffect(() => {
 
-  useEffect(() => {
-    fectchData();
-  }, []);
+  //   }, []);
 
   const [state, setState] = useState({
-    // showPassword: false,
-    // userName: null,
-    // password: null,
-    musicsData: null,
+    musicsData: musicsList,
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -125,14 +122,14 @@ const ChooseMusicScreen = ({ navigation }) => {
   );
 
   function updateMusics({ id }) {
-    const newList = musicsData.map((item) => {
+    const newList = musicsList.map((item) => {
       if (item.id === id) {
         const updatedItem = { ...item, selected: !item.selected };
         return updatedItem;
       }
       return item;
     });
-    updateState({ musicsData: newList });
+    updateState({ musicsList: newList });
   }
 
   function musics() {
@@ -226,7 +223,7 @@ const ChooseMusicScreen = ({ navigation }) => {
     return (
       <FlatList
         scrollEnabled={false}
-        data={musicsData}
+        data={musicsList}
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         numColumns={3}
