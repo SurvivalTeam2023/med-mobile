@@ -19,6 +19,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
+import { useGetFavorite } from "../../hooks/favorite.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -95,7 +96,7 @@ const recentlyPlayedList = [
   },
 ];
 
-const forYouList = [
+let forYouList = [
   {
     id: "1f",
     image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
@@ -193,10 +194,24 @@ const ExploreScreen = ({ navigation }) => {
 
   if (isSuccess) {
     playlists = data["data"].items;
-    // console.log("testing", playlists);
   }
   if (isError) {
     console.log("error", error);
+  }
+
+  const {
+    data: dataFavorite,
+    isSuccess: successFavorite,
+    isError: isErrorFavorite,
+    error: errorFavorite,
+  } = useGetFavorite();
+
+  if (successFavorite) {
+    forYouList = dataFavorite["data"];
+    console.log("dataFavorite", forYouList);
+  }
+  if (isErrorFavorite) {
+    console.log("error", errorFavorite);
   }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -365,7 +380,7 @@ const ExploreScreen = ({ navigation }) => {
                   ...Fonts.blackColor12SemiBold,
                 }}
               >
-                {item.description}
+                {item.name}
               </Text>
             </TouchableOpacity>
           ))}
@@ -389,7 +404,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>For You</Text>
+          <Text style={styles.titleStyle}>Favorited</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}

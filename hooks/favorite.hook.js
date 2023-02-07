@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getPlaylistAPI } from "../api/playlist.api";
+import { getFavoriteAPI } from "../api/favorite.api";
 
 export const useGetFavorite = (payload) =>
   useQuery({
