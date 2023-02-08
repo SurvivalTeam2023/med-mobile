@@ -7,9 +7,10 @@ export const getSubscriptionType = (payload) => {
 
 export const createSubscriptionApi = (payload) => {
   const url = "/subscriptions";
-  const { userId, planId } = payload;
+  const { userId, planId, startDate } = payload;
   return CallAPI.post(url, {
     userId,
     planId,
+    startDate,
   });
 };

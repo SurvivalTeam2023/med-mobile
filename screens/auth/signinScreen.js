@@ -68,8 +68,6 @@ const SigninScreen = ({ navigation }) => {
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
-    const test = store.getState().user.user;
-    console.log("mano", test);
   }
 
   if (isError) {
