@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import {
   BackHandler,
   SafeAreaView,
@@ -10,14 +10,11 @@ import {
   ScrollView,
   Image,
   StyleSheet,
-  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Button } from "react-native-paper";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { SCRIPT_PROVIDER_OPTIONS } from "../../constants/config";
 
 const paymentScreen = ({ navigation }) => {
   const [clickedPaypal, setClickedPaypal] = useState(false);
