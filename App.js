@@ -10,7 +10,6 @@ import searchScreen from "./screens/search/searchScreen";
 import tracksScreen from "./screens/tracks/tracksScreen";
 import nowPlayingScreen from "./screens/nowPlaying/nowPlayingScreen";
 import topArtistScreen from "./screens/topArtist/topArtistScreen";
-import subscribeScreen from "./screens/subscribe/subscribeScreen";
 import exploreSubscription from "./screens/exploreSubscription/exploreSubscription";
 import paymentFailedScreen from "./screens/paymentFailed/paymentFailedScreen";
 import signinScreen from "./screens/auth/signinScreen";
@@ -21,6 +20,8 @@ import { store } from "./core/store/store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ExploreScreen from "./screens/explore/exploreScreen";
+import PaymentScreen from "./screens/payment/paymentScreen";
+import SubscribeScreen from "./screens/subscribe/subscribeScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -76,7 +77,10 @@ const App = () => {
                 return [item.id];
               }}
             />
-            <Stack.Screen name="Subscribe" component={subscribeScreen} />
+
+            <Stack.Screen name="Subscribe" component={SubscribeScreen} />
+
+            <Stack.Screen name="Payment" component={PaymentScreen} />
             <Stack.Screen
               name="ExploreSubscription"
               component={exploreSubscription}

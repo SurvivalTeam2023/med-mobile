@@ -19,8 +19,9 @@ import {
   useCreateSubscriptionApi,
   useGetSubscriptionType,
 } from "../../hooks/subscription.hook";
-import { isError } from "react-query";
 import { store } from "../../core/store/store";
+import moment from "moment";
+import { useState } from "react";
 
 let subscribePackageList = [
   {
@@ -53,6 +54,7 @@ const subscriptionAllowsList = [
 const SubscribeScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetSubscriptionType();
   const { mutate } = useCreateSubscriptionApi();
+  const [currentDate, setCurrentDate] = useState("");
   if (isSuccess) {
     subscribePackageList = data["data"];
   }
@@ -60,15 +62,15 @@ const SubscribeScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-  const createSubscription = (subcriptionTypeId) => {
+  const createSubscription = (planId) => {
     const userId = store.getState().user.user.user_db.id;
 
     mutate(
-      { userId: `${userId}`, subcriptionTypeId: subcriptionTypeId },
+      { userId: `${userId}`, planId: planId, startDate: currentDate },
 
       {
         onSuccess: () => {
-          navigation.push("ExploreSubscription");
+          navigation.push("Payment");
         },
         onError: (error) => {
           console.log("error", error);
@@ -77,13 +79,15 @@ const SubscribeScreen = ({ navigation }) => {
     );
   };
 
-  // const fectchData = () => {
+  useEffect(() => {
+    // get current time
 
-  // };
+    var date = moment().utcOffset("+03:00").format("YYYY-MM-DD");
 
-  // useEffect(() => {
-  //   fectchData();
-  // }, []);
+    // or get time ' hh:mm:ss a'
+
+    setCurrentDate(date);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -150,7 +154,7 @@ const SubscribeScreen = ({ navigation }) => {
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => {
-            createSubscription((subcriptionTypeId = item.id));
+            createSubscription((planId = item.id));
           }}
         >
           <ImageBackground
