@@ -97,27 +97,27 @@ const recentlyPlayedList = [
 ];
 
 let forYouList = [
-  {
-    id: "1f",
-    image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-    albumName: "Don't call me up",
-    artist: "Mabel",
-    isFavorite: false,
-  },
-  {
-    id: "2f",
-    image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-    albumName: "Sugar and brownies",
-    artist: "Dharia",
-    isFavorite: false,
-  },
-  {
-    id: "3f",
-    image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-    albumName: "Pretty girl",
-    artist: "Maggie Lindemann",
-    isFavorite: false,
-  },
+  // {
+  //   id: "1f",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
+  //   albumName: "Don't call me up",
+  //   artist: "Mabel",
+  //   isFavorite: false,
+  // },
+  // {
+  //   id: "2f",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
+  //   albumName: "Sugar and brownies",
+  //   artist: "Dharia",
+  //   isFavorite: false,
+  // },
+  // {
+  //   id: "3f",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
+  //   albumName: "Pretty girl",
+  //   artist: "Maggie Lindemann",
+  //   isFavorite: false,
+  // },
 ];
 
 let playlists = [
@@ -194,6 +194,7 @@ const ExploreScreen = ({ navigation }) => {
 
   if (isSuccess) {
     playlists = data["data"].items;
+    console.log('dataPlaylist', playlists)
   }
   if (isError) {
     console.log("error", error);
@@ -411,7 +412,7 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        {forYouData.map((item) => (
+        {forYouList.map((item) => (
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
@@ -419,9 +420,9 @@ const ExploreScreen = ({ navigation }) => {
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item.id}>
+                <SharedElement id={item.genreId.id}>
                   <Image
-                    source={item.image}
+                    source={item.genreId.image}
                     style={{
                       width: 50.0,
                       height: 50.0,
@@ -431,19 +432,19 @@ const ExploreScreen = ({ navigation }) => {
                 </SharedElement>
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.albumName}
+                    {item.genreId.name}
                   </Text>
                   <Text style={{ ...Fonts.grayColor10Medium }}>
                     {item.artist}
                   </Text>
                 </View>
               </View>
-              <MaterialIcons
+              {/* <MaterialIcons
                 name={item.isFavorite ? "favorite" : "favorite-border"}
                 color={Colors.grayColor}
                 size={18}
                 onPress={() => updateForYou({ id: item.id })}
-              />
+              /> */}
             </TouchableOpacity>
           </View>
         ))}
