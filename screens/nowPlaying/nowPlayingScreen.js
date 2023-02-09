@@ -7,6 +7,8 @@ import { Icon } from 'react-native-gradient-icon';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Slider } from '@rneui/themed';
 import { SharedElement } from 'react-navigation-shared-element';
+import {Audio} from "expo-av";
+
 
 const nextOnList = [
     {
@@ -46,9 +48,58 @@ const nextOnList = [
     },
 ];
 
+const soundObject = new Audio.Sound();
+
 const NowPlayingScreen = ({ navigation, route }) => {
 
+    // state = {
+    //     playingStatus: "nosound",
+    //   };
+
+    // const playSong = async () => {
+    //     const {sound} = await Audio.Sound.createAsync(
+    //         require(("../../assets/sounds/sheesh.mp3")),
+    //         {
+    //             shouldPlay: true,
+    //             isLooping: false,
+    //         }
+    //     );
+    //     this.setState({
+    //         playingStatus: "playing"
+    //     });
+    // }
+    
     const item = route.params.item;
+
+    const [playing, setPlaying] = useState(false);
+    const [soundPlaying] = useState(false);
+    const [loaded, setLoaded] = useState(false);
+
+    const playSong = async (key) => {
+        console.log(key, playing, soundPlaying, loaded);
+        try {
+          if (!playing && !loaded) {
+            setPlaying(true);
+            setLoaded(true);
+            await soundObject.loadAsync(
+                require("../../assets/sounds/SoundHelix.mp3"),
+                {
+                    shouldPlay: true
+                }
+                );
+          } else if (loaded && playing){
+            await soundObject.pauseAsync();
+            setPlaying(false);
+            setLoaded(true);
+          } else if (loaded && !playing){
+            setPlaying(true);
+            setLoaded(true);
+            await soundObject.playAsync();
+          }
+        } catch (e){
+          console.log('The error: ', e);
+        }
+      };
 
     const [state, setState] = useState({
         songRunningInPercentage: 60,
@@ -69,6 +120,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
             <StatusBar backgroundColor={Colors.primaryColor} />
+            
             <View style={{ flex: 1 }}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
@@ -233,7 +285,8 @@ const NowPlayingScreen = ({ navigation, route }) => {
                 </View>
                 <TouchableOpacity
                     activeOpacity={0.9}
-                    onPress={() => updateState({ pauseSong: !pauseSong })}
+                    // onPress={() => updateState({pauseSong: !pauseSong})}
+                    onPress={() => playSong(item.key, item.soundPath)}
                 >
                     <LinearGradient
                         start={{ x: 0, y: 0.1 }}
@@ -245,7 +298,8 @@ const NowPlayingScreen = ({ navigation, route }) => {
                         style={styles.pausePlayButtonWrapStyle}
                     >
                         <MaterialIcons
-                            name={pauseSong ? "pause" : 'play-arrow'}
+                            // name={pauseSong ? "pause" : 'play-arrow'}
+                            name={playing && item.key === soundPlaying ? "pause" : "play-arrow"}
                             color={Colors.whiteColor}
                             size={25}
                         />
