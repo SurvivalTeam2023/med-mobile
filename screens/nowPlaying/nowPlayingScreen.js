@@ -82,9 +82,9 @@ const NowPlayingScreen = ({ navigation, route }) => {
             setPlaying(true);
             setLoaded(true);
             await soundObject.loadAsync(
-                require("../../assets/sounds/SoundHelix.mp3"),
+                {uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},
                 {
-                    shouldPlay: true
+                    shouldPlay: truer
                 }
                 );
           } else if (loaded && playing){
