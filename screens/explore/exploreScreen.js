@@ -20,6 +20,7 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetFavorite } from "../../hooks/favorite.hook";
+import { useGetGenreList } from "../../hooks/genre.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -46,7 +47,7 @@ let recommendedList = [
   },
 ];
 
-const popularSongsList = [
+let popularSongsList = [
   {
     id: "1s",
     image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
@@ -138,7 +139,7 @@ let playlists = [
   },
 ];
 
-const albumsList = [
+let albumsList = [
   {
     id: "1",
     image: require("../../assets/images/audio.png"),
@@ -194,7 +195,7 @@ const ExploreScreen = ({ navigation }) => {
 
   if (isSuccess) {
     playlists = data["data"].items;
-    console.log('dataPlaylist', playlists)
+    console.log("dataPlaylist", playlists);
   }
   if (isError) {
     console.log("error", error);
@@ -214,6 +215,36 @@ const ExploreScreen = ({ navigation }) => {
   if (isErrorFavorite) {
     console.log("error", errorFavorite);
   }
+
+  const {
+    data: dataGenre,
+    isSuccess: successGenre,
+    isError: isErrorGenre,
+    error: errorGenre,
+  } = useGetGenreList();
+
+  if (successGenre) {
+    albumsList = dataGenre["data"];
+    console.log("dataGenre", forYouList);
+  }
+  if (isErrorGenre) {
+    console.log("error", errorGenre);
+  }
+
+  // const {
+  //   data: dataRecently,
+  //   isSuccess: successRecently,
+  //   isError: isErrorRecently,
+  //   error: errorRecently,
+  // } = useGetRecently();
+
+  // if (successRecently) {
+  //   recentlyPlayedList = dataRecently["data"];
+  //   // console.log("dataRecenly", forYouList);
+  // }
+  // if (isErrorRecently) {
+  //   console.log("error", errorRecently);
+  // }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
@@ -294,7 +325,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Albums</Text>
+          <Text style={styles.titleStyle}>Genre</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -335,7 +366,7 @@ const ExploreScreen = ({ navigation }) => {
                   ...Fonts.blackColor12SemiBold,
                 }}
               >
-                {item.category}
+                {item.name}
               </Text>
             </TouchableOpacity>
           ))}
@@ -390,16 +421,16 @@ const ExploreScreen = ({ navigation }) => {
     );
   }
 
-  function updateForYou({ id }) {
-    const newList = forYouData.map((item) => {
-      if (item.id === id) {
-        const updatedItem = { ...item, isFavorite: !item.isFavorite };
-        return updatedItem;
-      }
-      return item;
-    });
-    updateState({ forYouData: newList });
-  }
+  // function updateForYou({ id }) {
+  //   const newList = forYouData.map((item) => {
+  //     if (item.id === id) {
+  //       const updatedItem = { ...item, isFavorite: !item.isFavorite };
+  //       return updatedItem;
+  //     }
+  //     return item;
+  //   });
+  //   updateState({ forYouData: newList });
+  // }
 
   function forYouInfo() {
     return (
@@ -523,7 +554,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Popular Song</Text>
+          <Text style={styles.titleStyle}>Some Tracks</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
