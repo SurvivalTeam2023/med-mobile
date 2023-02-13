@@ -17,6 +17,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { SharedElement } from "react-navigation-shared-element";
 import { Audio } from "expo-av";
+import { useCreateHisoryApi } from "../../hooks/history.hook";
 
 const nextOnList = [
   {
@@ -56,59 +57,67 @@ const nextOnList = [
   },
 ];
 
-const soundObject = new Audio.Sound();
-
 const NowPlayingScreen = ({ navigation, route }) => {
-  // state = {
-  //     playingStatus: "nosound",
-  //   };
-
-  // const playSong = async () => {
-  //     const {sound} = await Audio.Sound.createAsync(
-  //         require(("../../assets/sounds/sheesh.mp3")),
-  //         {
-  //             shouldPlay: true,
-  //             isLooping: false,
-  //         }
-  //     );
-  //     this.setState({
-  //         playingStatus: "playing"
-  //     });
-  // }
-
   const item = route.params.item;
+  const [sound, setSound] = React.useState();
+  const [isPlaying, setIsPlaying] = useState(true);
+  let isLoaded = false;
+  const { mutate } = useCreateHisoryApi();
 
-  const [playing, setPlaying] = useState(false);
-  const [soundPlaying] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const saveHistory = () => {
+    mutate(
+      {
+        audioId: 11,
+      },
 
-  const playSong = async (key) => {
-    console.log(key, playing, soundPlaying, loaded);
-    try {
-      if (!playing && !loaded) {
-        setPlaying(true);
-        setLoaded(true);
-        await soundObject.loadAsync(
-          {
-            uri: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-          },
-          {
-            shouldPlay: true,
-          }
-        );
-      } else if (loaded && playing) {
-        await soundObject.pauseAsync();
-        setPlaying(false);
-        setLoaded(true);
-      } else if (loaded && !playing) {
-        setPlaying(true);
-        setLoaded(true);
-        await soundObject.playAsync();
+      {
+        onSuccess: (data) => {
+          console.log("Created!!!");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
       }
-    } catch (e) {
-      console.log("The error: ", e);
+    );
+  };
+
+  const playSound = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        {
+          uri: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        },
+        { shouldPlay: false }
+      );
+      isLoaded = (await sound.getStatusAsync()).isLoaded;
+      if (isPlaying && isLoaded) {
+        setIsPlaying(false);
+        setSound(sound);
+        sound.playAsync();
+        console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
+        const isPLayed = (await sound.getStatusAsync()).isPlaying;
+        if (isPLayed) {
+          saveHistory();
+        }
+      } else if (!isPlaying && isLoaded) {
+        await sound.pauseAsync();
+        setSound(sound);
+        console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.log("error", error);
     }
   };
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   const [state, setState] = useState({
     songRunningInPercentage: 60,
@@ -285,11 +294,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
         <View style={styles.forwardBackwardButtonWrapStyle}>
           <MaterialIcons name="arrow-left" size={30} color="black" />
         </View>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          // onPress={() => updateState({pauseSong: !pauseSong})}
-          onPress={() => playSong(item.key, item.soundPath)}
-        >
+        <TouchableOpacity activeOpacity={0.9} onPress={() => playSound()}>
           <LinearGradient
             start={{ x: 0, y: 0.1 }}
             end={{ x: 0, y: 1 }}
@@ -297,10 +302,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
             style={styles.pausePlayButtonWrapStyle}
           >
             <MaterialIcons
-              // name={pauseSong ? "pause" : 'play-arrow'}
-              name={
-                playing && item.key === soundPlaying ? "pause" : "play-arrow"
-              }
+              name={isPlaying ? "play-arrow" : "pause"}
               color={Colors.whiteColor}
               size={25}
             />
