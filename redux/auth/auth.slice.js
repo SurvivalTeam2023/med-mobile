@@ -9,6 +9,7 @@ const initialState = {
   username: null,
   user: null,
   token: null,
+  audio: null,
 };
 const reducer = createSlice({
   name: "user",
@@ -25,6 +26,9 @@ const reducer = createSlice({
     removeTOken: (state, { payload }) => {
       removeTokenFromStorage();
       state.token = null;
+    },
+    storeAudio: (state, { payload }) => {
+      state.audio = payload;
     },
   },
 });
