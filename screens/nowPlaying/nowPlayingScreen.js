@@ -17,6 +17,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { SharedElement } from "react-navigation-shared-element";
 import { Audio } from "expo-av";
+import { useCreateHisoryApi } from "../../hooks/history.hook";
 
 const nextOnList = [
   {
@@ -62,6 +63,26 @@ const NowPlayingScreen = ({ navigation, route }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   let status = null;
   let isLoaded = false;
+  let duration = null;
+  const { mutate } = useCreateHisoryApi();
+
+  const saveHistory = () => {
+    mutate(
+      {
+        audioId: 11,
+      },
+
+      {
+        onSuccess: (data) => {
+          console.log("Created!!!");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
+  };
+
   const playSound = async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(
@@ -70,21 +91,20 @@ const NowPlayingScreen = ({ navigation, route }) => {
         },
         { shouldPlay: false }
       );
-      status = (await sound.getStatusAsync()).shouldPlay;
       isLoaded = (await sound.getStatusAsync()).isLoaded;
-      console.log("status", status);
-      console.log("load", isLoaded);
       if (isPlaying && isLoaded) {
         setIsPlaying(false);
         setSound(sound);
         sound.playAsync();
         console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
-      } else if (!isPlaying) {
+        const isPLayed = (await sound.getStatusAsync()).isPlaying;
+        if (isPLayed) {
+          saveHistory();
+        }
+      } else if (!isPlaying && isLoaded) {
         await sound.pauseAsync();
         setSound(sound);
         console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
-        // status = (await sound.getStatusAsync()).shouldPlay;
-        // console.log("status", status);
         setIsPlaying(true);
       }
     } catch (error) {
