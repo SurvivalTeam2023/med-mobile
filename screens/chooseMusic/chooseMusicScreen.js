@@ -77,7 +77,6 @@ let musicsList = [
 ];
 
 const ChooseMusicScreen = ({ navigation }) => {
-  // const [genreList, setGenreList] = useState([])
   const { data, error, isSuccess, isError } = useGetGenreList();
   if (isSuccess) {
     musicsList = data["data"];
@@ -86,13 +85,6 @@ const ChooseMusicScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-  //   const fectchData = () => {
-
-  //   };
-  //   fectchData();
-  //   useEffect(() => {
-
-  //   }, []);
 
   const [state, setState] = useState({
     musicsData: musicsList,
