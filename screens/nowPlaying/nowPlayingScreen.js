@@ -61,9 +61,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
   const item = route.params.item;
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
-  let status = null;
   let isLoaded = false;
-  let duration = null;
   const { mutate } = useCreateHisoryApi();
 
   const saveHistory = () => {
