@@ -17,10 +17,11 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
+import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
 
 const { width } = Dimensions.get("window");
 
-const songOptionsList = [
+let songOptionsList = [
   "Share",
   "Track Details",
   "Add to Playlist",
@@ -115,6 +116,21 @@ const TracksScreen = ({ navigation }) => {
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
   });
+
+  const {
+    data: dataTracksFromPlaylist,
+    isSuccess: successTracksFromPlaylist,
+    isError: isErrorTracksFromPlaylist,
+    error: errorTracksFromPlaylist,
+  } = useGetTracksFromPlaylist();
+
+  if (successTracksFromPlaylist) {
+    tracksList = dataTracksFromPlaylist["data"];
+    console.log("dataListtrack", tracksList);
+  }
+  if (isErrorTracksFromPlaylist) {
+    console.log("error", errorTracksFromPlaylist);
+  }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
@@ -271,9 +287,7 @@ const TracksScreen = ({ navigation }) => {
               </LinearGradient>
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
-              <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                {item.songName}
-              </Text>
+              <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
               <Text style={{ ...Fonts.grayColor11Medium }}>{item.artist}</Text>
             </View>
           </View>
