@@ -21,6 +21,8 @@ import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetFavorite } from "../../hooks/favorite.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
+import { setPlaylistId } from "../../redux/auth/playlist.slice";
+import { useDispatch } from "react-redux";
 
 const { width } = Dimensions.get("window");
 
@@ -121,23 +123,7 @@ let forYouList = [
   // },
 ];
 
-let playlists = [
-  {
-    id: "1",
-    image: require("../../assets/images/songsCoverPicks/coverImage13.png"),
-    sortCategory: "Recently added",
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/songsCoverPicks/coverImage13.png"),
-    sortCategory: "Most played",
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/songsCoverPicks/coverImage13.png"),
-    sortCategory: "Favorite tracks",
-  },
-];
+let playlists = [];
 
 let albumsList = [
   {
@@ -184,6 +170,8 @@ const topArtistList = [
   },
 ];
 
+let idPlaylist = [];
+
 const ExploreScreen = ({ navigation }) => {
   const [state, setState] = useState({
     forYouData: forYouList,
@@ -195,11 +183,20 @@ const ExploreScreen = ({ navigation }) => {
 
   if (isSuccess) {
     playlists = data["data"].items;
-    console.log("dataPlaylist", playlists);
   }
   if (isError) {
     console.log("error", error);
   }
+  const dispatch = useDispatch();
+
+  const handlePlaylistPress = (playlistId) => {
+    try {
+      dispatch(setPlaylistId(playlistId));
+      console.log("playlist id taken", playlistId);
+    } catch (error) {
+      console.log("Error saving selected playlist ID", error);
+    }
+  };
 
   const {
     data: dataFavorite,
@@ -210,7 +207,6 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successFavorite) {
     forYouList = dataFavorite["data"];
-    console.log("dataFavorite", forYouList);
   }
   if (isErrorFavorite) {
     console.log("error", errorFavorite);
@@ -225,7 +221,6 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successGenre) {
     albumsList = dataGenre["data"];
-    console.log("dataGenre", forYouList);
   }
   if (isErrorGenre) {
     console.log("error", errorGenre);
@@ -396,8 +391,11 @@ const ExploreScreen = ({ navigation }) => {
           {playlists.map((item) => (
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => navigation.push("Tracks")}
               key={`${item.id}`}
+              onPress={() => {
+                handlePlaylistPress(item.id);
+                navigation.push("Tracks");
+              }}
             >
               <Image
                 source={item.imageUrl}
