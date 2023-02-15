@@ -80,6 +80,7 @@ const ChooseMusicScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
   if (isSuccess) {
     musicsList = data["data"];
+    const test = console.log("List", typeof musicsList[0].image);
   }
 
   if (isError) {
@@ -139,7 +140,7 @@ const ChooseMusicScreen = ({ navigation }) => {
           onPress={() => updateMusics({ id: item.id })}
         >
           <ImageBackground
-            source={item.image}
+            source={{ uri: `${item.image}` }}
             style={{
               width: width / 3.6,
               height: width / 3.6,
