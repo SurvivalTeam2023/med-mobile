@@ -91,7 +91,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          navigation.push("ChooseMusic");
+          navigation.push("Quiz");
         },
         onError: (error) => {
           console.log("error", error);
