@@ -11,7 +11,8 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { Colors, Fonts, Sizes } from "../../constants/styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Colors } from "../../constants/styles";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -28,9 +29,7 @@ const QuizScreen = () => {
           <Separator />
         </View>
         <View style={styles.info}>
-          <Text style={{ paddingHorizontal: 5, fontSize: 16 }}>
-            Let's know more about yourself
-          </Text>
+          <Text style={{ fontSize: 16 }}>Let's know more about yourself</Text>
           <Image
             style={styles.logo}
             source={{
@@ -40,7 +39,7 @@ const QuizScreen = () => {
         </View>
 
         <Modal
-          animationType={"fade"}
+          animationType={"slide"}
           transparent={false}
           visible={showModal}
           onRequestClose={() => {
@@ -50,13 +49,105 @@ const QuizScreen = () => {
           {/*All views of Modal*/}
           {/*Animation can be slide, slide, none*/}
           <View style={styles.modal}>
-            <Text style={styles.text}>Modal is open!</Text>
-            <Button
-              title="Click To Close Modal"
+            <View style={styles.title}>
+              <Text style={styles.titleText}>Quiz</Text>
+              <Separator />
+            </View>
+
+            <View style={styles.quizInfo}>
+              <View style={styles.questionInfo}>
+                <Text style={{ marginLeft: 8, marginTop: 5 }}>Question</Text>
+              </View>
+              <View style={styles.answerInfo}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                    paddingTop: 5,
+                    paddingLeft: 5,
+                  }}
+                >
+                  <View>
+                    <TouchableOpacity style={styles.roundButton1}>
+                      <Text>A</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    <Text style={{ paddingLeft: 5 }}>Answer</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.answerInfo}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                    paddingTop: 5,
+                    paddingLeft: 5,
+                  }}
+                >
+                  <View>
+                    <TouchableOpacity style={styles.roundButton1}>
+                      <Text>A</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    <Text style={{ paddingLeft: 5 }}>Answer</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.answerInfo}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                    paddingTop: 5,
+                    paddingLeft: 5,
+                  }}
+                >
+                  <View>
+                    <TouchableOpacity style={styles.roundButton1}>
+                      <Text>A</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    <Text style={{ paddingLeft: 5 }}>Answer</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.answerInfo}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                    paddingTop: 5,
+                    paddingLeft: 5,
+                  }}
+                >
+                  <View>
+                    <TouchableOpacity style={styles.roundButton1}>
+                      <Text>A</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    <Text style={{ paddingLeft: 5 }}>Answer</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <Pressable
+              style={styles.nextBtn}
               onPress={() => {
                 setShowModal(!showModal);
               }}
-            />
+            >
+              <Text>Next</Text>
+            </Pressable>
           </View>
         </Modal>
         {/*Button will change state to true and view will re-render*/}
@@ -66,7 +157,7 @@ const QuizScreen = () => {
             setShowModal(!showModal);
           }}
         >
-          <Text style={{ color: "" }}>Getting started</Text>
+          <Text>Getting started</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -85,8 +176,7 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#00ff00",
-    padding: 100,
+    backgroundColor: "#223864",
   },
   text: {
     color: "#3f2949",
@@ -94,16 +184,28 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "#D9D9D9",
-    fontSize: 24,
+    fontSize: 20,
+    textAlign: "left",
   },
   title: {
     marginTop: 50,
+    width: 400,
+    height: 30,
   },
   startBtn: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 32,
+    backgroundColor: "#D8E2E8",
+    borderRadius: 40,
+  },
+  nextBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 50,
+    marginBottom: 50,
     backgroundColor: "#D8E2E8",
     borderRadius: 40,
   },
@@ -127,6 +229,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     borderRadius: 50,
+  },
+  questionInfo: {
+    backgroundColor: "#D8E2E8",
+    flex: 1,
+    flexDirection: "column",
+    width: 400,
+    maxHeight: 200,
+    justifyContent: "flex-start",
+    borderRadius: 20,
+  },
+  answerInfo: {
+    alignContent: "center",
+    backgroundColor: "#D8E2E8",
+    marginTop: 40,
+    width: 400,
+    height: 50,
+    borderRadius: 20,
+  },
+  quizInfo: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  roundButton1: {
+    width: 38,
+    height: 38,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: "orange",
   },
 });
 
