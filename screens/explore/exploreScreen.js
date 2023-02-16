@@ -207,6 +207,7 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successFavorite) {
     forYouList = dataFavorite["data"];
+    console.log("list favorite", forYouList);
   }
   if (isErrorFavorite) {
     console.log("error", errorFavorite);
@@ -451,7 +452,7 @@ const ExploreScreen = ({ navigation }) => {
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <SharedElement id={item.genreId.id}>
                   <Image
-                    source={item.genreId.image}
+                    source={{ uri: `${item.genreId.image}` }}
                     style={{
                       width: 50.0,
                       height: 50.0,
