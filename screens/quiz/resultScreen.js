@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 
@@ -12,8 +13,8 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Colors } from "../../constants/styles";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Colors, Fonts, Sizes } from "../../constants/styles";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -26,145 +27,114 @@ const ResultScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
 
-      <View style={styles.container}>
-        <View style={styles.info}>
-          <Text style={{ fontSize: 24 }}>Thank you for your answer </Text>
-          <Image
-            style={styles.logo}
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/3063/3063835.png",
-            }}
-          />
-        </View>
-
-        {/*Button will change state to true and view will re-render*/}
-        <Pressable
-          style={styles.startBtn}
-          onPress={() => {
-            navigation.navigate("ChooseMusic");
-          }}
+      <View>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
         >
-          <Text>Enjoyyy</Text>
-        </Pressable>
+          {cornerImage()}
+          <ScrollView
+            scrollEnabled={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+            }}
+          >
+            {quizResultTitle()}
+            {doneResultBtn()}
+          </ScrollView>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
-};
 
+  function quizResultTitle() {
+    return (
+      <LinearGradient
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 0 }}
+        colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+        style={styles.resultInfo}
+      >
+        <Text style={styles.resultInfoStyle}>Thank you for your answers</Text>
+        <View style={{ alignItems: "center" }}>
+          <Image
+            style={styles.logo}
+            source={{
+              uri: "https://cdn2.iconfinder.com/data/icons/working-at-home/512/N_P_182Artboard_1_copy_11-512.png",
+            }}
+          />
+        </View>
+      </LinearGradient>
+    );
+  }
+
+  function doneResultBtn() {
+    return (
+      <TouchableOpacity
+        style={styles.doneQuizButtonStyle}
+        activeOpacity={0.9}
+        onPress={() => {
+          navigation.navigate("ChooseMusic");
+        }}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 3 }}
+          end={{ x: 0, y: 2 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.doneQuizGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoyyyy</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+};
+function cornerImage() {
+  return (
+    <View>
+      <Image
+        source={require("../../assets/images/corner-design.png")}
+        style={{
+          width: "100%",
+          height: 170,
+        }}
+      />
+    </View>
+  );
+}
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#223864",
-    marginTop: 30,
-    paddingBottom: 50,
-  },
-  modal: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#223864",
-  },
-  text: {
-    color: "#3f2949",
-    marginTop: 10,
-  },
-  titleText: {
-    color: "#D9D9D9",
-    fontSize: 26,
-  },
-  titleQuizText: {
-    color: "#D9D9D9",
-    fontSize: 16,
-    textAlign: "left",
-  },
-  title: {
-    marginTop: 50,
-  },
-  titleQuiz: {
-    marginTop: 50,
-    width: 400,
-    height: 30,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  startBtn: {
-    alignItems: "center",
+  resultInfo: {
+    paddingVertical: Sizes.fixPadding + 50.0,
+    marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    backgroundColor: "#D8E2E8",
-    borderRadius: 40,
-  },
-  nextBtn: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    marginBottom: 50,
-    backgroundColor: "#D8E2E8",
-    borderRadius: 40,
+    borderRadius: Sizes.fixPadding + 40.0,
   },
-  separator: {
-    marginVertical: 20,
-    marginHorizontal: -80,
-    borderBottomColor: "#D9D9D9",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  resultInfoStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor18Bold,
+    textAlign: "center",
   },
+
   logo: {
-    width: 90,
-    height: 80,
+    width: 150,
+    height: 150,
+    tintColor: "white",
   },
-  info: {
-    backgroundColor: "#D8E2E8",
-    flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 50,
-    marginVertical: 200,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderRadius: 50,
+
+  doneQuizButtonStyle: {
+    justifyContent: "center",
+    marginTop: Sizes.fixPadding * 10.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+    borderRadius: Sizes.fixPadding - 4.0,
   },
-  questionInfo: {
-    backgroundColor: "#D8E2E8",
-    flex: 1,
-    flexDirection: "column",
-    width: 400,
-    maxHeight: 200,
-    justifyContent: "flex-start",
-    borderRadius: 20,
-  },
-  answerInfo: {
-    alignContent: "center",
-    backgroundColor: "#D8E2E8",
-    marginTop: 40,
-    width: 400,
-    height: 50,
-    borderRadius: 20,
-  },
-  answerInfoChoose: {
-    alignContent: "center",
-    backgroundColor: "#D8E2E8",
-    marginTop: 40,
-    width: 400,
-    backgroundColor: "green",
-    height: 50,
-    borderRadius: 20,
-  },
-  quizInfo: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  roundButton1: {
-    width: 38,
-    height: 38,
+  doneQuizGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
-    borderRadius: 100,
-    backgroundColor: "orange",
+    borderRadius: Sizes.fixPadding + 20.0,
   },
 });
 

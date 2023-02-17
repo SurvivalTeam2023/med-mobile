@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-
 import {
   Modal,
   Button,
@@ -12,14 +11,20 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Colors } from "../../constants/styles";
-
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import { Colors, Fonts, Sizes } from "../../constants/styles";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 const Separator = () => <View style={styles.separator} />;
 
 const questions = [
   {
-    question: "WHAT IS YOUR NAME ??",
+    question:
+      "This is an example true or false question. This question is required to be answered to submit the quiz. True or False 3+3=6? ??",
     options: [
       {
         id: 0,
@@ -140,172 +145,305 @@ const QuizScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-
-      <View style={styles.container}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>How was your day ?</Text>
-          <Separator />
-        </View>
-        <View style={styles.info}>
-          <Text style={{ fontSize: 16 }}>Let's know more about yourself</Text>
-          <Image
-            style={styles.logo}
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/1858/1858095.png",
+      <View>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {cornerImage()}
+          <ScrollView
+            scrollEnabled={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
             }}
-          />
-        </View>
-
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={showModal}
-          onRequestClose={() => {
-            console.log("Modal has been closed.");
-          }}
-        >
-          {/*All views of Modal*/}
-          {/*Animation can be slide, slide, none*/}
-          <View style={styles.modal}>
-            <View style={styles.titleQuiz}>
-              <Text style={styles.titleQuizText}>Your Progress</Text>
-              <Text style={styles.titleQuizText}>
-                ({index}/{totalQuestions}) answered
-              </Text>
-              <Separator />
-            </View>
-
-            <View style={styles.quizInfo}>
-              <View style={styles.questionInfo}>
-                <Text style={{ marginLeft: 8, marginTop: 5 }}>
-                  {currentQuestion?.question}
-                </Text>
-              </View>
-              {currentQuestion?.options.map((item, index) => (
-                <Pressable
-                  onPress={() =>
-                    selectedAnswerIndex === null &&
-                    setSelectedAnswerIndex(index)
-                  }
-                  style={
-                    selectedAnswerIndex === index && isSelected
-                      ? styles.answerInfoChoose
-                      : styles.answerInfo
-                  }
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                      paddingTop: 5,
-                      paddingLeft: 5,
-                    }}
-                  >
-                    <View>
-                      <TouchableOpacity style={styles.roundButton1}>
-                        <Text>{item.options}</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View>
-                      <Text style={{ paddingLeft: 5 }}>{item.answer}</Text>
-                    </View>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <View>
-              {index + 1 >= questions.length ? (
-                <Pressable
-                  style={styles.nextBtn}
-                  onPress={() => {
-                    setShowModal(!showModal), navigation.navigate("Result");
-                  }}
-                >
-                  <Text>Done</Text>
-                </Pressable>
-              ) : isSelected === null ? null : (
-                <Pressable
-                  style={styles.nextBtn}
-                  onPress={() => {
-                    setIndex(index + 1);
-                  }}
-                >
-                  <Text>Next</Text>
-                </Pressable>
-              )}
-            </View>
-          </View>
-        </Modal>
-        {/*Button will change state to true and view will re-render*/}
-        <Pressable
-          style={styles.startBtn}
-          onPress={() => {
-            setShowModal(!showModal);
-          }}
-        >
-          <Text>Getting started</Text>
-        </Pressable>
+          >
+            {startQuizTitle()}
+            {startQuizInfo()}
+            {startQuizBtn()}
+          </ScrollView>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
+
+  function startQuizTitle() {
+    return (
+      <View>
+        <View>
+          <MaskedView
+            style={{ height: 60 }}
+            maskElement={
+              <Text style={{ textAlign: "center", ...Fonts.bold26 }}>
+                How was your day ...
+              </Text>
+            }
+          >
+            <LinearGradient
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 0 }}
+              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+              style={{ flex: 1 }}
+            />
+          </MaskedView>
+          <Separator />
+        </View>
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.startQuizInfo}
+        >
+          <Text style={styles.titleInfoStyle}>
+            Let's know more about yourself
+          </Text>
+          <View style={{ alignItems: "center", paddingTop: 80 }}>
+            <Image
+              style={styles.logo}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/1858/1858095.png",
+              }}
+            />
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  }
+  function startQuizInfo() {
+    return (
+      <Modal
+        animationType={"slide"}
+        transparent={false}
+        visible={showModal}
+        onRequestClose={() => {
+          console.log("Modal has been closed.");
+        }}
+      >
+        {/*All views of Modal*/}
+        {/*Animation can be slide, slide, none*/}
+        <View>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {cornerImage()}
+            <ScrollView
+              scrollEnabled={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: "center",
+              }}
+            >
+              {quizzingTitle()}
+              {quizzingInfo()}
+            </ScrollView>
+          </ScrollView>
+        </View>
+      </Modal>
+    );
+  }
+
+  function startQuizBtn() {
+    return (
+      <TouchableOpacity
+        style={styles.startQuizButtonStyle}
+        activeOpacity={0.9}
+        onPress={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 3 }}
+          end={{ x: 0, y: 2 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.startQuizGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+  function cornerImage() {
+    return (
+      <View>
+        <Image
+          source={require("../../assets/images/corner-design.png")}
+          style={{
+            width: "100%",
+            height: 170,
+          }}
+        />
+      </View>
+    );
+  }
+  function quizzingTitle() {
+    return (
+      <View style={styles.titleQuiz}>
+        <Text style={styles.titleQuizText}>
+          Your Progress: ({index}/{totalQuestions}) answered
+        </Text>
+        <Separator />
+      </View>
+    );
+  }
+
+  function quizzingInfo() {
+    return (
+      <View style={styles.quizInfo}>
+        <View style={styles.questionInfo}>
+          <Text
+            style={{
+              alignItems: "baseline",
+              paddingLeft: 5,
+              ...Fonts.blackColor18SemiBold,
+            }}
+          >
+            {currentQuestion?.question}
+          </Text>
+        </View>
+        {currentQuestion?.options.map((item, index) => (
+          <Pressable
+            onPress={() =>
+              selectedAnswerIndex === null && setSelectedAnswerIndex(index)
+            }
+            style={
+              selectedAnswerIndex === index && isSelected
+                ? styles.answerInfoChoose
+                : styles.answerInfo
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "baseline",
+                paddingTop: 5,
+                paddingLeft: 5,
+              }}
+            >
+              <View>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => {
+                    handleLogin();
+                  }}
+                >
+                  <LinearGradient
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: 0, y: 0 }}
+                    colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+                    style={styles.roundButton1}
+                  >
+                    <Text
+                      style={{
+                        ...Fonts.whiteColor18Bold,
+                        paddingLeft: 7,
+                      }}
+                    >
+                      {item.options}
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={{ paddingLeft: 5, ...Fonts.blackColor16SemiBold }}>
+                  {item.answer}
+                </Text>
+              </View>
+            </View>
+          </Pressable>
+        ))}
+        {index + 1 >= questions.length ? (
+          <Pressable
+            onPress={() => {
+              setShowModal(!showModal), navigation.navigate("Result");
+            }}
+          >
+            <LinearGradient
+              start={{ x: 1, y: 3 }}
+              end={{ x: 0, y: 2 }}
+              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+              style={styles.nextQuizBtnGradientStyle}
+            >
+              <Text style={{ ...Fonts.whiteColor16Bold }}>Done</Text>
+            </LinearGradient>
+          </Pressable>
+        ) : isSelected === null ? null : (
+          <Pressable
+            onPress={() => {
+              setIndex(index + 1);
+            }}
+          >
+            <LinearGradient
+              start={{ x: 1, y: 3 }}
+              end={{ x: 0, y: 2 }}
+              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+              style={styles.nextQuizBtnGradientStyle}
+            >
+              <Text style={{ ...Fonts.whiteColor16Bold }}>Next</Text>
+            </LinearGradient>
+          </Pressable>
+        )}
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  titleInfoStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor20Bold,
+    textAlign: "center",
+  },
+  quizzingTitleStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor18Bold,
+    textAlign: "center",
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 50.0,
+    marginHorizontal: Sizes.fixPadding + 10.0,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#223864",
-    marginTop: 30,
-    paddingBottom: 50,
+    borderRadius: Sizes.fixPadding + 40.0,
   },
-  modal: {
-    flex: 1,
+  startQuizGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#223864",
+    borderRadius: Sizes.fixPadding + 20.0,
   },
-  text: {
-    color: "#3f2949",
-    marginTop: 10,
+
+  nextQuizBtnGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: Sizes.fixPadding + 20.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+
+    borderRadius: Sizes.fixPadding + 20.0,
   },
-  titleText: {
-    color: "#D9D9D9",
-    fontSize: 26,
+  startQuizButtonStyle: {
+    justifyContent: "center",
+    marginTop: Sizes.fixPadding * 10.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+    borderRadius: Sizes.fixPadding - 4.0,
   },
+
   titleQuizText: {
-    color: "#D9D9D9",
-    fontSize: 16,
-    textAlign: "left",
+    ...Fonts.blackColor20Bold,
+    textAlign: "justify",
   },
-  title: {
-    marginTop: 50,
-  },
+
   titleQuiz: {
-    marginTop: 50,
-    width: 400,
+    width: 350,
     height: 30,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
   },
-  startBtn: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    backgroundColor: "#D8E2E8",
-    borderRadius: 40,
-  },
-  nextBtn: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    marginBottom: 50,
-    backgroundColor: "#D8E2E8",
-    borderRadius: 40,
-  },
+
   separator: {
     marginVertical: 20,
     marginHorizontal: -80,
@@ -315,26 +453,13 @@ const styles = StyleSheet.create({
   logo: {
     width: 90,
     height: 80,
+    justifyContent: "center",
+    tintColor: "white",
   },
-  info: {
-    backgroundColor: "#D8E2E8",
-    flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 50,
-    marginVertical: 200,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderRadius: 50,
-  },
+
   questionInfo: {
-    backgroundColor: "#D8E2E8",
-    flex: 1,
-    flexDirection: "column",
-    width: 400,
-    maxHeight: 200,
+    marginTop: 15,
     justifyContent: "flex-start",
-    borderRadius: 20,
   },
   answerInfo: {
     alignContent: "center",
@@ -360,11 +485,8 @@ const styles = StyleSheet.create({
   roundButton1: {
     width: 38,
     height: 38,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
+    padding: 5,
     borderRadius: 100,
-    backgroundColor: "orange",
   },
 });
 
