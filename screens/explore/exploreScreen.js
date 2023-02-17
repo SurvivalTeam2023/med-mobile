@@ -21,6 +21,7 @@ import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetFavorite } from "../../hooks/favorite.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
+import { useGetHistory } from "../../hooks/history.hook";
 import { setPlaylistId } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
 
@@ -76,7 +77,7 @@ let popularSongsList = [
   },
 ];
 
-const recentlyPlayedList = [
+let recentlyPlayedList = [
   {
     id: "r1",
     image: require("../../assets/images/songsCoverPicks/coverImage12.png"),
@@ -192,7 +193,6 @@ const ExploreScreen = ({ navigation }) => {
   const handlePlaylistPress = (playlistId) => {
     try {
       dispatch(setPlaylistId(playlistId));
-      console.log("playlist id taken", playlistId);
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }
@@ -207,7 +207,6 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successFavorite) {
     forYouList = dataFavorite["data"];
-    console.log("list favorite", forYouList);
   }
   if (isErrorFavorite) {
     console.log("error", errorFavorite);
@@ -227,20 +226,20 @@ const ExploreScreen = ({ navigation }) => {
     console.log("error", errorGenre);
   }
 
-  // const {
-  //   data: dataRecently,
-  //   isSuccess: successRecently,
-  //   isError: isErrorRecently,
-  //   error: errorRecently,
-  // } = useGetRecently();
+  const {
+    data: dataRecently,
+    isSuccess: successRecently,
+    isError: isErrorRecently,
+    error: errorRecently,
+  } = useGetHistory();
 
-  // if (successRecently) {
-  //   recentlyPlayedList = dataRecently["data"];
-  //   // console.log("dataRecenly", forYouList);
-  // }
-  // if (isErrorRecently) {
-  //   console.log("error", errorRecently);
-  // }
+  if (successRecently) {
+    recentlyPlayedList = dataRecently["data"];
+    console.log("dataRecently", recentlyPlayedList);
+  }
+  if (isErrorRecently) {
+    console.log("errorgivaybro?", errorRecently);
+  }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
@@ -490,7 +489,7 @@ const ExploreScreen = ({ navigation }) => {
       >
         <SharedElement id={item.id}>
           <Image
-            source={item.image}
+            source={{ uri: `${item.audioId.imageUrl}` }}
             style={styles.recentlyPalyedSongImageStyle}
           />
         </SharedElement>
@@ -500,7 +499,7 @@ const ExploreScreen = ({ navigation }) => {
             ...Fonts.blackColor12SemiBold,
           }}
         >
-          {item.albumName}
+          {item.audioId.name}
         </Text>
       </TouchableOpacity>
     );
