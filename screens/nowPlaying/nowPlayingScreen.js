@@ -18,6 +18,10 @@ import { Slider } from "@rneui/themed";
 import { SharedElement } from "react-navigation-shared-element";
 import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
+import { store } from "../../core/store/store";
 
 const nextOnList = [
   {
@@ -63,7 +67,6 @@ const NowPlayingScreen = ({ navigation, route }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   let isLoaded = false;
   const { mutate } = useCreateHisoryApi();
-
   const saveHistory = () => {
     mutate(
       {

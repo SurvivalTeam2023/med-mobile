@@ -30,6 +30,7 @@ import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
+import { Audio } from "expo-av";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -131,6 +132,10 @@ const SigninScreen = ({ navigation }) => {
     }
   }, [response]);
 
+  // useEffect(() => {
+  //   storeConfig();
+  // }, []);
+
   const handleLoginWithGmail = () => {
     mutateAsync(
       {
@@ -153,6 +158,36 @@ const SigninScreen = ({ navigation }) => {
         },
       }
     );
+  };
+
+  let configOptions = {
+    allowsRecordingIOS: false,
+    playsInSilentModeIOS: true,
+    shouldDuckAndroid: true,
+    staysActiveInBackground: true,
+    playThroughEarpieceAndroid: true,
+  };
+
+  const configAudio = async () => {
+    try {
+      await Audio.setAudioModeAsync(configOptions);
+      console.log("Configed");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const storeConfig = async () => {
+    try {
+      const value = await AsyncStorage.getItem("Configuration");
+      if (value == null) {
+        // value previously stored
+        configAudio();
+        dispatch(userAction.storeAudio(configOptions));
+      }
+    } catch (e) {
+      // error reading value
+    }
   };
 
   return (
@@ -327,7 +362,7 @@ const SigninScreen = ({ navigation }) => {
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          handleLogin();
+          storeConfig(), handleLogin();
         }}
       >
         <LinearGradient
