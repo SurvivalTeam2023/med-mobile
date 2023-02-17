@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 50.0,
+    paddingVertical: Sizes.fixPadding + 30.0,
     marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
     alignItems: "center",
@@ -451,8 +451,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   logo: {
-    width: 90,
-    height: 80,
+    width: 80,
+    height: 70,
     justifyContent: "center",
     tintColor: "white",
   },
