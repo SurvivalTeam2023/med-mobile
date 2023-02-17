@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 150,
-    height: 150,
+    width: 80,
+    height: 70,
     tintColor: "white",
   },
 

@@ -101,6 +101,33 @@ const questions = [
       },
     ],
   },
+  {
+    question:
+      " This is an example multiple response (checkbox) question. There are two correct answers. What is 8+8?",
+    options: [
+      {
+        id: 0,
+        options: "A",
+        answer: "Liem nao ",
+      },
+      {
+        id: 1,
+        options: "B",
+        answer: "Liem hai hon",
+      },
+
+      {
+        id: 2,
+        options: "C",
+        answer: "Liem dep trai",
+      },
+      {
+        id: 3,
+        options: "D",
+        answer: "Liem si~",
+      },
+    ],
+  },
 ];
 
 const QuizScreen = () => {
@@ -117,7 +144,6 @@ const QuizScreen = () => {
   const [answerStatus, setAnswerStatus] = useState(null);
 
   //answers
-  const [answers, setAnswer] = useState([]);
   const [isSelected, setIsSelected] = useState(null);
   //selected answer
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
@@ -128,7 +154,6 @@ const QuizScreen = () => {
 
   useEffect(() => {
     setIsSelected(true);
-    answers.push({ questions: index + 1 });
   }, [selectedAnswerIndex]);
 
   useEffect(() => {
@@ -136,12 +161,7 @@ const QuizScreen = () => {
     setIsSelected(null);
   }, [index]);
 
-  useEffect(() => {
-    if (index + 1 > data.length) {
-      navigation.navigate("ChooseMusic");
-    }
-  }, [currentQuestion]);
-
+  console.log("index", index);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -280,7 +300,7 @@ const QuizScreen = () => {
     return (
       <View style={styles.titleQuiz}>
         <Text style={styles.titleQuizText}>
-          Your Progress: ({index}/{totalQuestions}) answered
+          Your Progress: ({index + 1}/{totalQuestions}) answered
         </Text>
         <Separator />
       </View>
@@ -303,9 +323,9 @@ const QuizScreen = () => {
         </View>
         {currentQuestion?.options.map((item, index) => (
           <Pressable
-            onPress={() =>
-              selectedAnswerIndex === null && setSelectedAnswerIndex(index)
-            }
+            onPressIn={() => {
+              selectedAnswerIndex === null && setSelectedAnswerIndex(index);
+            }}
             style={
               selectedAnswerIndex === index && isSelected
                 ? styles.answerInfoChoose
@@ -322,12 +342,7 @@ const QuizScreen = () => {
               }}
             >
               <View>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => {
-                    handleLogin();
-                  }}
-                >
+                <TouchableOpacity activeOpacity={0.9}>
                   <LinearGradient
                     start={{ x: 1, y: 0 }}
                     end={{ x: 0, y: 0 }}
@@ -403,7 +418,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 50.0,
+    paddingVertical: Sizes.fixPadding + 30.0,
     marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
     alignItems: "center",
@@ -451,8 +466,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   logo: {
-    width: 90,
-    height: 80,
+    width: 80,
+    height: 90,
     justifyContent: "center",
     tintColor: "white",
   },
