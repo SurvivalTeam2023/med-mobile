@@ -22,6 +22,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import ExploreScreen from "./screens/explore/exploreScreen";
 import PaymentScreen from "./screens/payment/paymentScreen";
 import SubscribeScreen from "./screens/subscribe/subscribeScreen";
+import QuizScreen from "./screens/quiz/quizScreen";
+import ResultScreen from "./screens/quiz/resultScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -52,7 +54,9 @@ const App = () => {
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
             <Stack.Screen name="SignIn" component={signinScreen} />
+            <Stack.Screen name="Quiz" component={QuizScreen} />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
+            <Stack.Screen name="Result" component={ResultScreen} />
             <Stack.Screen
               name="BottomTabBar"
               component={bottomTabBarScreen}
