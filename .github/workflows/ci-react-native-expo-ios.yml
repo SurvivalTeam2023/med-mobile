@@ -16,6 +16,8 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
+      - name: Install expo-cli
+        run: npm install -g expo-cli
       - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
@@ -23,6 +25,10 @@ jobs:
           node-version: '14.x'
       - name: Install dependencies
         run: yarn install
+      - name: Add expo-cli to PATH
+        run: echo "$PATH:$HOME/.npm-global/bin" >> $GITHUB_ENV
+      - name: Test expo-cli installation
+        run: expo whoami
       - name: Build Expo app
         env:
           EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}

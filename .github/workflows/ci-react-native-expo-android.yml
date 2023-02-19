@@ -13,8 +13,9 @@ jobs:
           age: '1 days'
   build:
     runs-on: ubuntu-latest
-
     steps:
+    - name: Install expo-cli
+      run: npm install -g expo-cli
     - uses: actions/checkout@v2
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
@@ -22,5 +23,9 @@ jobs:
         node-version: '14.x'
     - name: Install dependencies
       run: npm install
+    - name: Add expo-cli to PATH
+      run: echo "$PATH:$HOME/.npm-global/bin" >> $GITHUB_ENV
+    - name: Test expo-cli installation
+      run: expo whoami
     - name: Build APK
       run: expo build:android
