@@ -1,0 +1,36 @@
+name: React Native Expo CI
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+jobs:
+  Remove-Antifact:
+    name: Remove artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear useless artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+        with:
+          age: '1 days'
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Install dependencies
+        run: yarn install
+      - name: Build Expo app
+        env:
+          EXPO_CLI_USERNAME: ${{ secrets.EXPO_CLI_USERNAME }}
+          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_CLI_PASSWORD }}
+        run: expo build:ios -t archive
+      - name: Upload Expo app
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-build
+          path: ./ios/build/your-app-name.ipa
+
