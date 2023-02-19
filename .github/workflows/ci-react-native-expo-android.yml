@@ -1,0 +1,26 @@
+name: Android CI
+
+on: push
+
+jobs:
+  Remove-Antifact:
+    name: Remove artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear useless artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+        with:
+          age: '1 days'
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+    - name: Install dependencies
+      run: npm install
+    - name: Build APK
+      run: expo build:android
