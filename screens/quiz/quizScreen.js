@@ -136,7 +136,7 @@ const QuizScreen = () => {
   // const [points, setPoints] = useState(0);
   const data = questions;
   const totalQuestions = data.length;
-
+  const [selected, setSelected] = useState(false);
   //Index of question
   const [index, setIndex] = useState(0);
 
@@ -152,9 +152,7 @@ const QuizScreen = () => {
   console.log(currentQuestion);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    setIsSelected(true);
-  }, [selectedAnswerIndex]);
+  // useEffect(() => {}, [selectedAnswerIndex]);
 
   useEffect(() => {
     setSelectedAnswerIndex(null);
@@ -265,22 +263,30 @@ const QuizScreen = () => {
 
   function startQuizBtn() {
     return (
-      <TouchableOpacity
-        style={styles.startQuizButtonStyle}
-        activeOpacity={0.9}
-        onPress={() => {
-          setShowModal(!showModal);
-        }}
-      >
-        <LinearGradient
-          start={{ x: 1, y: 3 }}
-          end={{ x: 0, y: 2 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.startQuizGradientStyle}
+      <View>
+        <TouchableOpacity
+          style={styles.startQuizButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => {
+            setShowModal(!showModal);
+          }}
         >
-          <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+          <LinearGradient
+            start={{ x: 1, y: 3 }}
+            end={{ x: 0, y: 2 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.startQuizGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <Pressable
+          onPress={() => setSelected(!selected)}
+          style={{ backgroundColor: selected ? "green" : "transparent" }}
+        >
+          <Text>Press me</Text>
+        </Pressable>
+      </View>
     );
   }
   function cornerImage() {
@@ -324,7 +330,8 @@ const QuizScreen = () => {
         {currentQuestion?.options.map((item, index) => (
           <Pressable
             onPressIn={() => {
-              selectedAnswerIndex === null && setSelectedAnswerIndex(index);
+              setSelectedAnswerIndex(index);
+              setIsSelected(!isSelected);
             }}
             style={
               selectedAnswerIndex === index && isSelected
@@ -481,6 +488,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D8E2E8",
     marginTop: 40,
     width: 400,
+    marginHorizontal: 5,
     height: 50,
     borderRadius: 20,
   },
@@ -488,6 +496,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     backgroundColor: "#D8E2E8",
     marginTop: 40,
+    marginHorizontal: 5,
     width: 400,
     backgroundColor: "green",
     height: 50,
