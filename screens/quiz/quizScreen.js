@@ -19,9 +19,13 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { useGetQuestionBankApi } from "../../hooks/question.hook";
+import { store } from "../../core/store/store";
+import { useDispatch } from "react-redux";
+import { questionAction } from "../../redux/auth/question.slice";
 const Separator = () => <View style={styles.separator} />;
 
-const questions = [
+let questions = [
   {
     question:
       "This is an example true or false question. This question is required to be answered to submit the quiz. True or False 3+3=6? ??",
@@ -132,14 +136,16 @@ const questions = [
 
 const QuizScreen = () => {
   const navigation = useNavigation();
-  //points
+  const dispatch = useDispatch();
+
   // const [points, setPoints] = useState(0);
-  const data = questions;
-  const totalQuestions = data.length;
+  const { data, error, isSuccess, isError } = useGetQuestionBankApi();
+  let dataQuest = questions;
+  let totalQuestions = dataQuest.length;
   const [selected, setSelected] = useState(false);
   //Index of question
   const [index, setIndex] = useState(0);
-
+  let answer = [];
   //answer status (Choose)
   const [answerStatus, setAnswerStatus] = useState(null);
 
@@ -148,11 +154,44 @@ const QuizScreen = () => {
   //selected answer
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
 
-  const currentQuestion = data[index];
+  let currentQuestion = dataQuest[index];
   console.log(currentQuestion);
+  let questionData = null;
   const [showModal, setShowModal] = useState(false);
 
-  // useEffect(() => {}, [selectedAnswerIndex]);
+  let questionId = null;
+  let optionId = null;
+  let selectedId = null;
+  if (isSuccess) {
+    const dataRaw = JSON.parse(
+      JSON.stringify(data["data"].questionBankQuestion)
+    );
+    const dataFormat = dataRaw.map((item, index) => {
+      return {
+        id: item["question"].id,
+        detail: item["question"].question,
+        status: item["question"].status,
+        option: item["question"].option,
+      };
+    });
+
+    console.log("test", dataFormat);
+    questionData = dataFormat[index];
+    questions = dataFormat;
+    optionId = questionData.option.map((item) => {
+      return item.id;
+    });
+
+    // dataQuest = dataFormat;
+    // currentQuestion = dataQuest[index];
+  }
+  if (isError) {
+    console.log("error", error);
+  }
+
+  questionId = questionData.id;
+  dispatch(questionAction.storeOptionId(optionId));
+  dispatch(questionAction.storeQuestionId(questionId));
 
   useEffect(() => {
     setSelectedAnswerIndex(null);
@@ -264,7 +303,7 @@ const QuizScreen = () => {
   function startQuizBtn() {
     return (
       <View>
-        <TouchableOpacity
+        <Pressable
           style={styles.startQuizButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
@@ -279,12 +318,6 @@ const QuizScreen = () => {
           >
             <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
           </LinearGradient>
-        </TouchableOpacity>
-        <Pressable
-          onPress={() => setSelected(!selected)}
-          style={{ backgroundColor: selected ? "green" : "transparent" }}
-        >
-          <Text>Press me</Text>
         </Pressable>
       </View>
     );
@@ -302,6 +335,7 @@ const QuizScreen = () => {
       </View>
     );
   }
+
   function quizzingTitle() {
     return (
       <View style={styles.titleQuiz}>
@@ -324,14 +358,22 @@ const QuizScreen = () => {
               ...Fonts.blackColor18SemiBold,
             }}
           >
-            {currentQuestion?.question}
+            {questionData?.detail}
           </Text>
         </View>
-        {currentQuestion?.options.map((item, index) => (
+        {questionData?.option.map((item, index) => (
           <Pressable
-            onPressIn={() => {
+            key={item.id}
+            onPress={() => {
               setSelectedAnswerIndex(index);
               setIsSelected(!isSelected);
+              const selectedId = (e) => e === item.id;
+              const optArr = store.getState().question.optionId;
+              if (optArr.some(selectedId)) {
+                dispatch(questionAction.storeOptionId(item.id));
+                console.log("dcmmm", store.getState().question);
+              }
+              console.log("here");
             }}
             style={
               selectedAnswerIndex === index && isSelected
@@ -341,35 +383,19 @@ const QuizScreen = () => {
           >
             <View
               style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "baseline",
                 paddingTop: 5,
                 paddingLeft: 5,
               }}
             >
               <View>
-                <TouchableOpacity activeOpacity={0.9}>
-                  <LinearGradient
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: 0, y: 0 }}
-                    colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-                    style={styles.roundButton1}
-                  >
-                    <Text
-                      style={{
-                        ...Fonts.whiteColor18Bold,
-                        paddingLeft: 7,
-                      }}
-                    >
-                      {item.options}
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <Text style={{ paddingLeft: 5, ...Fonts.blackColor16SemiBold }}>
-                  {item.answer}
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    ...Fonts.blackColor16SemiBold,
+                    marginTop: 8,
+                  }}
+                >
+                  {item.option}
                 </Text>
               </View>
             </View>
