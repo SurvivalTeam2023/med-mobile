@@ -369,7 +369,6 @@ const QuizScreen = () => {
                 dispatch(questionAction.storeOptionId(item.id));
                 console.log("dcmmm", store.getState().question);
               }
-              console.log("here");
             }}
             style={
               selectedAnswerIndex === index && isSelected
