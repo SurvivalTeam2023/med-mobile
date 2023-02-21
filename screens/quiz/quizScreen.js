@@ -23,6 +23,7 @@ import { useGetQuestionBankApi } from "../../hooks/question.hook";
 import { store } from "../../core/store/store";
 import { useDispatch } from "react-redux";
 import { questionAction } from "../../redux/auth/question.slice";
+import { formatQuestionData } from "../../utils/app.util";
 const Separator = () => <View style={styles.separator} />;
 
 let questions = [
@@ -137,64 +138,49 @@ let questions = [
 const QuizScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  // const [points, setPoints] = useState(0);
-  const { data, error, isSuccess, isError } = useGetQuestionBankApi();
-  let dataQuest = questions;
-  let totalQuestions = dataQuest.length;
-  const [selected, setSelected] = useState(false);
   //Index of question
   const [index, setIndex] = useState(0);
-  let answer = [];
-  //answer status (Choose)
-  const [answerStatus, setAnswerStatus] = useState(null);
-
   //answers
   const [isSelected, setIsSelected] = useState(null);
   //selected answer
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-
-  let currentQuestion = dataQuest[index];
-  console.log(currentQuestion);
-  let questionData = null;
   const [showModal, setShowModal] = useState(false);
+  const { data, error, isSuccess, isError } = useGetQuestionBankApi();
 
+  let questionData = null;
+  let totalQuestions = null;
   let questionId = null;
   let optionId = null;
-  if (isSuccess) {
-    const dataRaw = JSON.parse(
-      JSON.stringify(data["data"].questionBankQuestion)
-    );
-    const dataFormat = dataRaw.map((item, index) => {
-      return {
-        id: item["question"].id,
-        detail: item["question"].question,
-        status: item["question"].status,
-        option: item["question"].option,
-      };
-    });
 
-    console.log("test", dataFormat);
+  if (isSuccess) {
+    const dataRaw = data["data"].questionBankQuestion;
+    const dataFormat = formatQuestionData(dataRaw);
+    totalQuestions = dataFormat.length;
     questionData = dataFormat[index];
     questions = dataFormat;
     optionId = questionData.option.map((item) => {
       return item.id;
     });
+    //set questionId with value from received data above to store to Redux
+    questionId = questionData.id;
   }
+
   if (isError) {
     console.log("error", error);
   }
 
-  questionId = questionData.id;
+  //store questionId and optionId to Redux state
   dispatch(questionAction.storeOptionId(optionId));
   dispatch(questionAction.storeQuestionId(questionId));
+
+  //get optionArray from Redux store
+  const optArr = store.getState().question.optionId;
 
   useEffect(() => {
     setSelectedAnswerIndex(null);
     setIsSelected(null);
   }, [index]);
 
-  console.log("index", index);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -354,7 +340,7 @@ const QuizScreen = () => {
               ...Fonts.blackColor18SemiBold,
             }}
           >
-            {questionData?.detail}
+            {questionData?.question}
           </Text>
         </View>
         {questionData?.option.map((item, index) => (
@@ -364,10 +350,8 @@ const QuizScreen = () => {
               setSelectedAnswerIndex(index);
               setIsSelected(!isSelected);
               const selectedId = (e) => e === item.id;
-              const optArr = store.getState().question.optionId;
               if (optArr.some(selectedId)) {
                 dispatch(questionAction.storeOptionId(item.id));
-                console.log("dcmmm", store.getState().question);
               }
             }}
             style={

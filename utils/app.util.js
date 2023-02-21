@@ -10,3 +10,16 @@ export const parseTokenToUsername = (token) => {
   let token_decoded = jwtDecode(token);
   return token_decoded["preferred_username"];
 };
+
+export const formatQuestionData = (originRaw) => {
+  const dataRaw = JSON.parse(JSON.stringify(originRaw));
+  const dataFormat = dataRaw.map((item) => {
+    return {
+      id: item["question"].id,
+      question: item["question"].question,
+      status: item["question"].status,
+      option: item["question"].option,
+    };
+  });
+  return dataFormat;
+};
