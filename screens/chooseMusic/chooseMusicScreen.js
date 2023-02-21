@@ -17,6 +17,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 
+import { useDispatch } from "react-redux";
+import { setGenreId } from "../../redux/auth/favorite.slice";
+import { useCreateFavoriteApi } from "../../hooks/favorite.hook";
+import { store } from "../../core/store/store";
 const { width } = Dimensions.get("window");
 
 let musicsList = [
@@ -78,14 +82,41 @@ let musicsList = [
 
 const ChooseMusicScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
+  const { mutate } = useCreateFavoriteApi();
   if (isSuccess) {
     musicsList = data["data"];
-    const test = console.log("List", typeof musicsList[0].image);
   }
-
   if (isError) {
     console.log("error", error);
   }
+  const dispatch = useDispatch();
+
+  const handleGenrePress = (genreId) => {
+    try {
+      dispatch(setGenreId(genreId));
+      console.log("genreId saved", genreId);
+    } catch (error) {
+      console.log("Error saving selected genre ID", error);
+    }
+  };
+
+  const createFavorite = () => {
+    const genreIdSaved = +store.getState().favorite.genreId;
+    console.log("get genreId saved", genreIdSaved);
+
+    mutate(
+      { genreId: +`${genreIdSaved}` },
+
+      {
+        onSuccess: () => {
+          navigation.push("ChooseMusic");
+        },
+        onError: (error) => {
+          console.log("error creating favorite", error);
+        },
+      }
+    );
+  };
 
   const [state, setState] = useState({
     musicsData: musicsList,
@@ -137,7 +168,11 @@ const ChooseMusicScreen = ({ navigation }) => {
       >
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => updateMusics({ id: item.id })}
+          onPress={() => {
+            updateMusics({ id: item.id });
+            handleGenrePress(item.id);
+            createFavorite();
+          }}
         >
           <ImageBackground
             source={{ uri: `${item.image}` }}

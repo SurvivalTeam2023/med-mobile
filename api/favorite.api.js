@@ -4,6 +4,14 @@ import { store } from "../core/store/store";
 export const getFavoriteAPI = (payload) => {
   const userId = store.getState().user.user.user_db.id;
   const queryParam = `/` + `${userId}`;
-  const url = "/Favorite" + `${queryParam}`;
+  const url = "/favorite" + `${queryParam}`;
   return CallAPI.get(url);
+};
+
+export const createFavoriteApi = (payload) => {
+  const url = "/favorite";
+  const { genreId } = payload;
+  return CallAPI.post(url, {
+    genreId,
+  });
 };

@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { getFavoriteAPI } from "../api/favorite.api";
+import { useQuery, useMutation } from "react-query";
+import { getFavoriteAPI, createFavoriteApi } from "../api/favorite.api";
 
 export const useGetFavorite = (payload) =>
   useQuery({
@@ -8,4 +8,9 @@ export const useGetFavorite = (payload) =>
       const data = await getFavoriteAPI();
       return data;
     },
+  });
+
+export const useCreateFavoriteApi = () =>
+  useMutation({
+    mutationFn: (payload) => createFavoriteApi(payload),
   });
