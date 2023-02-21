@@ -161,7 +161,6 @@ const QuizScreen = () => {
 
   let questionId = null;
   let optionId = null;
-  let selectedId = null;
   if (isSuccess) {
     const dataRaw = JSON.parse(
       JSON.stringify(data["data"].questionBankQuestion)
@@ -181,9 +180,6 @@ const QuizScreen = () => {
     optionId = questionData.option.map((item) => {
       return item.id;
     });
-
-    // dataQuest = dataFormat;
-    // currentQuestion = dataQuest[index];
   }
   if (isError) {
     console.log("error", error);
