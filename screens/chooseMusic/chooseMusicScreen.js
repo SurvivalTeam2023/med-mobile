@@ -93,8 +93,6 @@ const ChooseMusicScreen = ({ navigation }) => {
   }
 
   const createFavorite = () => {
-    console.log("get genreId saved", selectedGenreIds);
-
     mutate(
       { genreId: [selectedGenreIds] },
 
@@ -124,7 +122,6 @@ const ChooseMusicScreen = ({ navigation }) => {
   const selectedGenreIds = musicsData
     .filter((item) => item.selected === true)
     .map((item) => item.id);
-  console.log("selected genreId", selectedGenreIds);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
