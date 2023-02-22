@@ -138,19 +138,16 @@ let questions = [
 const QuizScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  //Index of question
   const [index, setIndex] = useState(0);
-  //answers
   const [isSelected, setIsSelected] = useState(null);
-  //selected answer
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { data, error, isSuccess, isError } = useGetQuestionBankApi();
 
-  let questionData = null;
-  let totalQuestions = null;
-  let questionId = null;
-  let optionId = null;
+  let questionData;
+  let totalQuestions;
+  let questionId;
+  let optionId;
 
   if (isSuccess) {
     const dataRaw = data["data"].questionBankQuestion;
@@ -161,7 +158,6 @@ const QuizScreen = () => {
     optionId = questionData.option.map((item) => {
       return item.id;
     });
-    //set questionId with value from received data above to store to Redux
     questionId = questionData.id;
   }
 
@@ -169,11 +165,8 @@ const QuizScreen = () => {
     console.log("error", error);
   }
 
-  //store questionId and optionId to Redux state
   dispatch(questionAction.storeOptionId(optionId));
   dispatch(questionAction.storeQuestionId(questionId));
-
-  //get optionArray from Redux store
   const optArr = store.getState().question.optionId;
 
   useEffect(() => {
@@ -191,7 +184,7 @@ const QuizScreen = () => {
         >
           {cornerImage()}
           <ScrollView
-            scrollEnabled={false}
+            scrollEnabled={true}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: "center",
@@ -267,7 +260,7 @@ const QuizScreen = () => {
           >
             {cornerImage()}
             <ScrollView
-              scrollEnabled={false}
+              scrollEnabled={true}
               contentContainerStyle={{
                 flexGrow: 1,
                 justifyContent: "center",
@@ -348,7 +341,7 @@ const QuizScreen = () => {
             key={item.id}
             onPress={() => {
               setSelectedAnswerIndex(index);
-              setIsSelected(!isSelected);
+              setIsSelected(true);
               const selectedId = (e) => e === item.id;
               if (optArr.some(selectedId)) {
                 dispatch(questionAction.storeOptionId(item.id));
@@ -396,20 +389,38 @@ const QuizScreen = () => {
             </LinearGradient>
           </Pressable>
         ) : isSelected === null ? null : (
-          <Pressable
-            onPress={() => {
-              setIndex(index + 1);
-            }}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 3 }}
-              end={{ x: 0, y: 2 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-              style={styles.nextQuizBtnGradientStyle}
+          <View>
+            <Pressable
+              onPress={() => {
+                setIndex(index + 1);
+              }}
             >
-              <Text style={{ ...Fonts.whiteColor16Bold }}>Next</Text>
-            </LinearGradient>
-          </Pressable>
+              <LinearGradient
+                start={{ x: 1, y: 3 }}
+                end={{ x: 0, y: 2 }}
+                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+                style={styles.nextQuizBtnGradientStyle}
+              >
+                <Text style={{ ...Fonts.whiteColor16Bold }}>Next</Text>
+              </LinearGradient>
+            </Pressable>
+            {index == 0 ? null : (
+              <Pressable
+                onPress={() => {
+                  setIndex(index - 1);
+                }}
+              >
+                <LinearGradient
+                  start={{ x: 1, y: 3 }}
+                  end={{ x: 0, y: 2 }}
+                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+                  style={styles.backQuizBtnGradientStyle}
+                >
+                  <Text style={{ ...Fonts.whiteColor16Bold }}>Back</Text>
+                </LinearGradient>
+              </Pressable>
+            )}
+          </View>
         )}
       </View>
     );
@@ -441,6 +452,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding + 20.0,
+    marginTop: Sizes.fixPadding - 40.0,
   },
 
   nextQuizBtnGradientStyle: {
@@ -450,6 +462,15 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding + 20.0,
     marginHorizontal: Sizes.fixPadding * 10.0,
 
+    borderRadius: Sizes.fixPadding + 20.0,
+  },
+  backQuizBtnGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: Sizes.fixPadding + 20.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+    marginBottom: Sizes.fixPadding * 5.0,
     borderRadius: Sizes.fixPadding + 20.0,
   },
   startQuizButtonStyle: {
