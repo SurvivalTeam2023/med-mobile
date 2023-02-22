@@ -235,7 +235,6 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successRecently) {
     recentlyPlayedList = dataRecently["data"];
-    console.log("dataRecently", recentlyPlayedList);
   }
   if (isErrorRecently) {
     console.log("errorgivaybro?", errorRecently);
