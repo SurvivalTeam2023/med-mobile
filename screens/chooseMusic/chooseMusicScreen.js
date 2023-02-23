@@ -17,11 +17,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 
-import { useDispatch } from "react-redux";
-import { setGenreId } from "../../redux/auth/favorite.slice";
-import { useCreateFavoriteApi } from "../../hooks/favorite.hook";
-import { store } from "../../core/store/store";
-import { useSelector } from "react-redux";
+import {
+  useIsFavoriteExisted,
+  useCreateFavoriteApi,
+} from "../../hooks/favorite.hook";
 
 const { width } = Dimensions.get("window");
 

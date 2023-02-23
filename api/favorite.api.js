@@ -8,6 +8,11 @@ export const getFavoriteAPI = (payload) => {
   return CallAPI.get(url);
 };
 
+export const isFavoriteExisted = (payload) => {
+  const url = "/favorite";
+  return CallAPI.get(url);
+};
+
 export const createFavoriteApi = (payload) => {
   const url = "/favorite";
   const { genreId } = payload;
