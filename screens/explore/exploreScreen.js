@@ -78,26 +78,26 @@ let popularSongsList = [
 ];
 
 let recentlyPlayedList = [
-  {
-    id: "r1",
-    image: require("../../assets/images/songsCoverPicks/coverImage12.png"),
-    albumName: "Wathered",
-  },
-  {
-    id: "r2",
-    image: require("../../assets/images/songsCoverPicks/coverImage11.png"),
-    albumName: "Circles",
-  },
-  {
-    id: "r3",
-    image: require("../../assets/images/songsCoverPicks/coverImage10.png"),
-    albumName: "Sugar&brownies",
-  },
-  {
-    id: "r4",
-    image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-    albumName: "Pretty girl",
-  },
+  // {
+  //   id: "r1",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage12.png"),
+  //   albumName: "Wathered",
+  // },
+  // {
+  //   id: "r2",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage11.png"),
+  //   albumName: "Circles",
+  // },
+  // {
+  //   id: "r3",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage10.png"),
+  //   albumName: "Sugar&brownies",
+  // },
+  // {
+  //   id: "r4",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
+  //   albumName: "Pretty girl",
+  // },
 ];
 
 let forYouList = [
@@ -235,7 +235,6 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successRecently) {
     recentlyPlayedList = dataRecently["data"];
-    console.log("dataRecently", recentlyPlayedList);
   }
   if (isErrorRecently) {
     console.log("errorgivaybro?", errorRecently);
@@ -499,6 +498,7 @@ const ExploreScreen = ({ navigation }) => {
             ...Fonts.blackColor12SemiBold,
           }}
         >
+          {item.name}
           {item.audioId.name}
         </Text>
       </TouchableOpacity>
