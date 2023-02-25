@@ -19,6 +19,7 @@ export const formatQuestionData = (originRaw) => {
       question: item["question"].question,
       status: item["question"].status,
       option: item["question"].option,
+      selected: null,
     };
   });
   return dataFormat;

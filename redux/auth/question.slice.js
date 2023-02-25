@@ -1,19 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  questionId: null,
-  optionId: null,
+  answer: [],
 };
 
 const reducer = createSlice({
   name: "question",
   initialState,
   reducers: {
-    storeOptionId: (state, action) => {
-      state.optionId = action.payload;
-    },
-    storeQuestionId: (state, action) => {
-      state.questionId = action.payload;
+    storeAnswer: (state, action) => {
+      const { questionId, optionId } = action.payload;
+      if (
+        state.answer
+          .map((obj) => {
+            return obj.questionId;
+          })
+          .includes(questionId) &&
+        !state.answer
+          .map((obj) => {
+            return obj.optionId;
+          })
+          .includes(optionId)
+      ) {
+        state.answer = [
+          ...state.answer.filter((obj) => {
+            return obj.questionId !== questionId;
+          }),
+          action.payload,
+        ];
+      } else {
+        state.answer = [
+          ...state.answer,
+          { questionId: questionId, optionId: optionId },
+        ];
+      }
     },
   },
 });
