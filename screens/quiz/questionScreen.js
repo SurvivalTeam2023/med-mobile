@@ -6,7 +6,6 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  Image,
   Pressable,
   ImageBackground,
 } from "react-native";
@@ -139,8 +138,6 @@ const QuestionScreen = () => {
 
   let questionData;
   let totalQuestions;
-  let questionId;
-  let optionId;
 
   if (isSuccess) {
     const dataRaw = data["data"].questionBankQuestion;
@@ -171,7 +168,6 @@ const QuestionScreen = () => {
   };
   useEffect(() => {
     setSelectedAnswerIndex(null);
-    console.log("render");
   }, [index]);
 
   return (
