@@ -17,83 +17,110 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 
+import {
+  useIsFavoriteExisted,
+  useCreateFavoriteApi,
+} from "../../hooks/favorite.hook";
+
 const { width } = Dimensions.get("window");
 
 let musicsList = [
-  {
-    id: "1",
-    image: require("../../assets/images/songsCoverPicks/coverImage21.png"),
-    songType: "HINDI",
-    selected: true,
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/songsCoverPicks/coverImage22.png"),
-    songType: "ENGLISH",
-    selected: false,
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/songsCoverPicks/coverImage17.png"),
-    songType: "PUNJABI",
-    selected: false,
-  },
-  {
-    id: "4",
-    image: require("../../assets/images/songsCoverPicks/coverImage23.png"),
-    songType: "POP MUSIC",
-    selected: false,
-  },
-  {
-    id: "5",
-    image: require("../../assets/images/songsCoverPicks/coverImage24.png"),
-    songType: "PODCASTS",
-    selected: false,
-  },
-  {
-    id: "6",
-    image: require("../../assets/images/songsCoverPicks/coverImage25.png"),
-    songType: "TOP HITS",
-    selected: false,
-  },
-  {
-    id: "7",
-    image: require("../../assets/images/songsCoverPicks/coverImage26.png"),
-    songType: "MIX SONGS",
-    selected: false,
-  },
-  {
-    id: "8",
-    image: require("../../assets/images/songsCoverPicks/coverImage2.png"),
-    songType: "PARTY SONGS",
-    selected: false,
-  },
-  {
-    id: "9",
-    image: require("../../assets/images/songsCoverPicks/coverImage27.png"),
-    songType: "LOVE SONGS",
-    selected: false,
-  },
+  // {
+  //   id: "1",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage21.png"),
+  //   songType: "HINDI",
+  //   selected: true,
+  // },
+  // {
+  //   id: "2",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage22.png"),
+  //   songType: "ENGLISH",
+  //   selected: false,
+  // },
+  // {
+  //   id: "3",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage17.png"),
+  //   songType: "PUNJABI",
+  //   selected: false,
+  // },
+  // {
+  //   id: "4",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage23.png"),
+  //   songType: "POP MUSIC",
+  //   selected: false,
+  // },
+  // {
+  //   id: "5",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage24.png"),
+  //   songType: "PODCASTS",
+  //   selected: false,
+  // },
+  // {
+  //   id: "6",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage25.png"),
+  //   songType: "TOP HITS",
+  //   selected: false,
+  // },
+  // {
+  //   id: "7",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage26.png"),
+  //   songType: "MIX SONGS",
+  //   selected: false,
+  // },
+  // {
+  //   id: "8",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage2.png"),
+  //   songType: "PARTY SONGS",
+  //   selected: false,
+  // },
+  // {
+  //   id: "9",
+  //   image: require("../../assets/images/songsCoverPicks/coverImage27.png"),
+  //   songType: "LOVE SONGS",
+  //   selected: false,
+  // },
 ];
 
 const ChooseMusicScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
+  const { mutate } = useCreateFavoriteApi();
   if (isSuccess) {
     musicsList = data["data"];
-    const test = console.log("List", typeof musicsList[0].image);
   }
-
   if (isError) {
     console.log("error", error);
   }
 
+  const createFavorite = () => {
+    mutate(
+      { genreId: [selectedGenreIds] },
+
+      {
+        onSuccess: () => {
+          navigation.push("BottomTabBar");
+        },
+        onError: (error) => {
+          console.log("error creating favorite", error);
+        },
+      }
+    );
+  };
+
   const [state, setState] = useState({
-    musicsData: musicsList,
+    musicsData: [],
   });
+
+  useEffect(() => {
+    setState({ musicsData: musicsList });
+  }, [musicsList]);
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { musicsData } = state;
+
+  const selectedGenreIds = musicsData
+    .filter((item) => item.selected === true)
+    .map((item) => item.id);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -115,14 +142,15 @@ const ChooseMusicScreen = ({ navigation }) => {
   );
 
   function updateMusics({ id }) {
-    const newList = musicsList.map((item) => {
+    const newList = musicsData.map((item) => {
+      ({ ...item, selected: false });
       if (item.id === id) {
         const updatedItem = { ...item, selected: !item.selected };
         return updatedItem;
       }
       return item;
     });
-    updateState({ musicsList: newList });
+    updateState({ musicsData: newList });
   }
 
   function musics() {
@@ -137,7 +165,12 @@ const ChooseMusicScreen = ({ navigation }) => {
       >
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => updateMusics({ id: item.id })}
+          style={item.selected ? styles.selectedItem : styles.item}
+          onPress={() => {
+            updateMusics({ id: item.id });
+            // handleGenrePress(item.id);
+            // createFavorite();
+          }}
         >
           <ImageBackground
             source={{ uri: `${item.image}` }}
@@ -216,7 +249,7 @@ const ChooseMusicScreen = ({ navigation }) => {
     return (
       <FlatList
         scrollEnabled={false}
-        data={musicsList}
+        data={musicsData}
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         numColumns={3}
@@ -275,7 +308,10 @@ const ChooseMusicScreen = ({ navigation }) => {
           Skip
         </Text>
         <Text
-          onPress={() => navigation.push("BottomTabBar")}
+          onPress={() => {
+            createFavorite();
+            // navigation.push("BottomTabBar");
+          }}
           style={{ ...Fonts.grayColor15Medium }}
         >
           Next
