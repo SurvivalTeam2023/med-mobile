@@ -25,6 +25,8 @@ import SubscribeScreen from "./screens/subscribe/subscribeScreen";
 import QuizScreen from "./screens/quiz/quizScreen";
 import ResultScreen from "./screens/quiz/resultScreen";
 import QuestionScreen from "./screens/quiz/questionScreen";
+import ManageArtistAlbumScreen from "./screens/manageAlbum/manageAlbum";
+import artistTracksScreen from "./screens/manageAlbum/artistTrack";
 
 LogBox.ignoreAllLogs();
 
@@ -57,6 +59,11 @@ const App = () => {
             <Stack.Screen name="SignIn" component={signinScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
+            <Stack.Screen
+              name="ManageArtistAlbum"
+              component={ManageArtistAlbumScreen}
+            />
+            <Stack.Screen name="ArtistTrack" component={artistTracksScreen} />
             <Stack.Screen name="Question" component={QuestionScreen} />
             <Stack.Screen name="Result" component={ResultScreen} />
             <Stack.Screen

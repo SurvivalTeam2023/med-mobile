@@ -241,6 +241,7 @@ const SigninScreen = ({ navigation }) => {
         {userNameTextField()}
         {passwordTextField()}
         {signinButton()}
+        {manageButton()}
         {orIndicator()}
         {socialMediaOptions()}
         {dontHaveAccountInfo()}
@@ -363,6 +364,26 @@ const SigninScreen = ({ navigation }) => {
         activeOpacity={0.9}
         onPress={() => {
           storeConfig(), handleLogin();
+        }}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.signinButtonGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN IN</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+  function manageButton() {
+    return (
+      <TouchableOpacity
+        style={styles.signinButtonStyle}
+        activeOpacity={0.9}
+        onPress={() => {
+          navigation.push("ManageArtistAlbum");
         }}
       >
         <LinearGradient
