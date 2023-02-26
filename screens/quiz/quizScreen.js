@@ -2,8 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
-  Modal,
-  Button,
   View,
   Text,
   SafeAreaView,
@@ -11,155 +9,17 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import {
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+
 const Separator = () => <View style={styles.separator} />;
-
-const questions = [
-  {
-    question:
-      "This is an example true or false question. This question is required to be answered to submit the quiz. True or False 3+3=6? ??",
-    options: [
-      {
-        id: 0,
-        options: "A",
-        answer: "Tony",
-      },
-      {
-        id: 1,
-        options: "B",
-        answer: "Ezekel",
-      },
-
-      {
-        id: 2,
-        options: "C",
-        answer: "Tonyyy",
-      },
-      {
-        id: 3,
-        options: "D",
-        answer: "Fuck you Tony",
-      },
-    ],
-  },
-  {
-    question: " You see that fire over there ??",
-    options: [
-      {
-        id: 0,
-        options: "A",
-        answer: "Don't you dare ",
-      },
-      {
-        id: 1,
-        options: "B",
-        answer: "Don't you say it",
-      },
-
-      {
-        id: 2,
-        options: "C",
-        answer: "I built it last night",
-      },
-      {
-        id: 3,
-        options: "D",
-        answer: "...And next to it",
-      },
-    ],
-  },
-  {
-    question: " Biet ong Liem ko",
-    options: [
-      {
-        id: 0,
-        options: "A",
-        answer: "Liem nao ",
-      },
-      {
-        id: 1,
-        options: "B",
-        answer: "Liem hai hon",
-      },
-
-      {
-        id: 2,
-        options: "C",
-        answer: "Liem dep trai",
-      },
-      {
-        id: 3,
-        options: "D",
-        answer: "Liem si~",
-      },
-    ],
-  },
-  {
-    question:
-      " This is an example multiple response (checkbox) question. There are two correct answers. What is 8+8?",
-    options: [
-      {
-        id: 0,
-        options: "A",
-        answer: "Liem nao ",
-      },
-      {
-        id: 1,
-        options: "B",
-        answer: "Liem hai hon",
-      },
-
-      {
-        id: 2,
-        options: "C",
-        answer: "Liem dep trai",
-      },
-      {
-        id: 3,
-        options: "D",
-        answer: "Liem si~",
-      },
-    ],
-  },
-];
 
 const QuizScreen = () => {
   const navigation = useNavigation();
-  //points
-  // const [points, setPoints] = useState(0);
-  const data = questions;
-  const totalQuestions = data.length;
-  const [selected, setSelected] = useState(false);
-  //Index of question
-  const [index, setIndex] = useState(0);
 
-  //answer status (Choose)
-  const [answerStatus, setAnswerStatus] = useState(null);
-
-  //answers
-  const [isSelected, setIsSelected] = useState(null);
-  //selected answer
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-
-  const currentQuestion = data[index];
-  console.log(currentQuestion);
-  const [showModal, setShowModal] = useState(false);
-
-  // useEffect(() => {}, [selectedAnswerIndex]);
-
-  useEffect(() => {
-    setSelectedAnswerIndex(null);
-    setIsSelected(null);
-  }, [index]);
-
-  console.log("index", index);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -170,14 +30,13 @@ const QuizScreen = () => {
         >
           {cornerImage()}
           <ScrollView
-            scrollEnabled={false}
+            scrollEnabled={true}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: "center",
             }}
           >
             {startQuizTitle()}
-            {startQuizInfo()}
             {startQuizBtn()}
           </ScrollView>
         </ScrollView>
@@ -227,48 +86,15 @@ const QuizScreen = () => {
       </View>
     );
   }
-  function startQuizInfo() {
-    return (
-      <Modal
-        animationType={"slide"}
-        transparent={false}
-        visible={showModal}
-        onRequestClose={() => {
-          console.log("Modal has been closed.");
-        }}
-      >
-        {/*All views of Modal*/}
-        {/*Animation can be slide, slide, none*/}
-        <View>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
-          >
-            {cornerImage()}
-            <ScrollView
-              scrollEnabled={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "center",
-              }}
-            >
-              {quizzingTitle()}
-              {quizzingInfo()}
-            </ScrollView>
-          </ScrollView>
-        </View>
-      </Modal>
-    );
-  }
 
   function startQuizBtn() {
     return (
       <View>
-        <TouchableOpacity
+        <Pressable
           style={styles.startQuizButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            setShowModal(!showModal);
+            navigation.navigate("Question");
           }}
         >
           <LinearGradient
@@ -279,13 +105,24 @@ const QuizScreen = () => {
           >
             <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
           </LinearGradient>
-        </TouchableOpacity>
-        <Pressable
-          onPress={() => setSelected(!selected)}
-          style={{ backgroundColor: selected ? "green" : "transparent" }}
-        >
-          <Text>Press me</Text>
         </Pressable>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <Ionicons
+            onPress={() => {
+              navigation.navigate("ChooseMusic");
+            }}
+            name="arrow-forward"
+            size={28}
+            color="black"
+          />
+          <Text style={{ ...Fonts.blackColor16Bold, marginTop: 5 }}>Skip</Text>
+        </View>
       </View>
     );
   }
@@ -299,113 +136,6 @@ const QuizScreen = () => {
             height: 170,
           }}
         />
-      </View>
-    );
-  }
-  function quizzingTitle() {
-    return (
-      <View style={styles.titleQuiz}>
-        <Text style={styles.titleQuizText}>
-          Your Progress: ({index + 1}/{totalQuestions}) answered
-        </Text>
-        <Separator />
-      </View>
-    );
-  }
-
-  function quizzingInfo() {
-    return (
-      <View style={styles.quizInfo}>
-        <View style={styles.questionInfo}>
-          <Text
-            style={{
-              alignItems: "baseline",
-              paddingLeft: 5,
-              ...Fonts.blackColor18SemiBold,
-            }}
-          >
-            {currentQuestion?.question}
-          </Text>
-        </View>
-        {currentQuestion?.options.map((item, index) => (
-          <Pressable
-            onPressIn={() => {
-              setSelectedAnswerIndex(index);
-              setIsSelected(!isSelected);
-            }}
-            style={
-              selectedAnswerIndex === index && isSelected
-                ? styles.answerInfoChoose
-                : styles.answerInfo
-            }
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "baseline",
-                paddingTop: 5,
-                paddingLeft: 5,
-              }}
-            >
-              <View>
-                <TouchableOpacity activeOpacity={0.9}>
-                  <LinearGradient
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: 0, y: 0 }}
-                    colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-                    style={styles.roundButton1}
-                  >
-                    <Text
-                      style={{
-                        ...Fonts.whiteColor18Bold,
-                        paddingLeft: 7,
-                      }}
-                    >
-                      {item.options}
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <Text style={{ paddingLeft: 5, ...Fonts.blackColor16SemiBold }}>
-                  {item.answer}
-                </Text>
-              </View>
-            </View>
-          </Pressable>
-        ))}
-        {index + 1 >= questions.length ? (
-          <Pressable
-            onPress={() => {
-              setShowModal(!showModal), navigation.navigate("Result");
-            }}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 3 }}
-              end={{ x: 0, y: 2 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-              style={styles.nextQuizBtnGradientStyle}
-            >
-              <Text style={{ ...Fonts.whiteColor16Bold }}>Done</Text>
-            </LinearGradient>
-          </Pressable>
-        ) : isSelected === null ? null : (
-          <Pressable
-            onPress={() => {
-              setIndex(index + 1);
-            }}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 3 }}
-              end={{ x: 0, y: 2 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-              style={styles.nextQuizBtnGradientStyle}
-            >
-              <Text style={{ ...Fonts.whiteColor16Bold }}>Next</Text>
-            </LinearGradient>
-          </Pressable>
-        )}
       </View>
     );
   }
@@ -436,6 +166,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding + 20.0,
+    marginTop: Sizes.fixPadding - 40.0,
   },
 
   nextQuizBtnGradientStyle: {
@@ -445,6 +176,15 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding + 20.0,
     marginHorizontal: Sizes.fixPadding * 10.0,
 
+    borderRadius: Sizes.fixPadding + 20.0,
+  },
+  backQuizBtnGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: Sizes.fixPadding + 20.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+    marginBottom: Sizes.fixPadding * 5.0,
     borderRadius: Sizes.fixPadding + 20.0,
   },
   startQuizButtonStyle: {

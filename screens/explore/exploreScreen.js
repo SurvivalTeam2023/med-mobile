@@ -488,7 +488,7 @@ const ExploreScreen = ({ navigation }) => {
       >
         <SharedElement id={item.id}>
           <Image
-            source={{ uri: `${item.audioId.imageUrl}` }}
+            source={{ uri: `${item.audioId?.imageUrl}` }}
             style={styles.recentlyPalyedSongImageStyle}
           />
         </SharedElement>
