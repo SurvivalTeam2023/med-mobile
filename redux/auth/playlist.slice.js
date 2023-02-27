@@ -4,7 +4,7 @@ const initialState = {
   playlistId: null,
 };
 
-const playlistSlice = createSlice({
+const reducer = createSlice({
   name: "playlist",
   initialState,
   reducers: {
@@ -14,5 +14,7 @@ const playlistSlice = createSlice({
   },
 });
 
-export const { setPlaylistId } = playlistSlice.actions;
-export const playlistReducer = playlistSlice.reducer;
+export const playlistAction = {
+  ...reducer.actions,
+};
+export const playlistReducer = reducer.reducer;
