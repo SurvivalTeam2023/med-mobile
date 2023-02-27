@@ -17,11 +17,9 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 
-const Separator = () => <View style={styles.separator} />;
 let isFavoriteExisted = [];
 
 const ResultScreen = ({ navigation }) => {
-  // const navigation = useNavigation();
   const {
     data: dataIsFavoriteExisted,
     isSuccess: successIsFavoriteExisted,
@@ -30,7 +28,6 @@ const ResultScreen = ({ navigation }) => {
   } = useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
-    console.log("isFavoriteExisted", isFavoriteExisted.exists);
   }
   if (isErrorIsFavoriteExisted) {
     console.log("error", errorIsFavoriteExisted);
@@ -44,8 +41,6 @@ const ResultScreen = ({ navigation }) => {
       navigation.push("ChooseMusic");
     }
   };
-
-  const [showModal, setShowModal] = useState(false);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -95,7 +90,7 @@ const ResultScreen = ({ navigation }) => {
 
   function doneResultBtn() {
     return (
-      <TouchableOpacity
+      <Pressable
         style={styles.doneQuizButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
@@ -111,7 +106,7 @@ const ResultScreen = ({ navigation }) => {
         >
           <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoyyyy</Text>
         </LinearGradient>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 };

@@ -100,6 +100,31 @@ const SigninScreen = ({ navigation }) => {
       }
     );
   };
+  const handleLoginToManage = () => {
+    mutate(
+      {
+        username: state["userName"],
+        password: state["password"],
+      },
+
+      {
+        onSuccess: (data) => {
+          const dataRaw = data["data"];
+          const access_token = dataRaw["access_token"];
+          dispatch(userAction.storeToken(access_token));
+          refetch();
+          AsyncStorage.setItem(
+            TOKEN_KEY_STORAGE,
+            JSON.stringify({ token: access_token })
+          );
+          navigation.push("ManageArtistAlbum");
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
+  };
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
@@ -241,6 +266,7 @@ const SigninScreen = ({ navigation }) => {
         {userNameTextField()}
         {passwordTextField()}
         {signinButton()}
+        {manageButton()}
         {orIndicator()}
         {socialMediaOptions()}
         {dontHaveAccountInfo()}
@@ -372,6 +398,26 @@ const SigninScreen = ({ navigation }) => {
           style={styles.signinButtonGradientStyle}
         >
           <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN IN</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+  function manageButton() {
+    return (
+      <TouchableOpacity
+        style={styles.signinButtonStyle}
+        activeOpacity={0.9}
+        onPress={() => {
+          handleLoginToManage();
+        }}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.signinButtonGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
         </LinearGradient>
       </TouchableOpacity>
     );

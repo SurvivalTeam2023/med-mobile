@@ -171,8 +171,6 @@ const topArtistList = [
   },
 ];
 
-let idPlaylist = [];
-
 const ExploreScreen = ({ navigation }) => {
   const [state, setState] = useState({
     forYouData: forYouList,
@@ -346,8 +344,8 @@ const ExploreScreen = ({ navigation }) => {
                 }}
               >
                 <Image
-                  source={item.image}
-                  resizeMode="contain"
+                  source={{ uri: item.image }}
+                  resizeMode="stretch"
                   style={{
                     width: width / (albumsList.length + 0.8),
                     height: 100,
@@ -397,7 +395,7 @@ const ExploreScreen = ({ navigation }) => {
               }}
             >
               <Image
-                source={item.imageUrl}
+                source={{ uri: item.imageUrl }}
                 style={{
                   width: width / (playlists.length + 0.8),
                   ...styles.playListImageStyle,
