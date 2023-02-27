@@ -235,7 +235,7 @@ const QuestionScreen = () => {
     if (index + 1 < questions?.length) {
       setIndex(index + 1);
     } else {
-      navigation.navigate("Result");
+      return true;
     }
   }
 
