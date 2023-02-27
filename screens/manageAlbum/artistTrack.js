@@ -126,7 +126,6 @@ const artistTracksScreen = ({ navigation }) => {
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
-    console.log("dataListtrack", tracksList);
   }
   if (isErrorTracksFromPlaylist) {
     console.log("errorTrack", errorTracksFromPlaylist);

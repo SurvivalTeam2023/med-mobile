@@ -17,7 +17,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 
-let isFavoriteExisted = [];
+let isFavoriteExisted;
 
 const ResultScreen = ({ navigation }) => {
   const {
