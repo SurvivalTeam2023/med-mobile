@@ -18,6 +18,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
+import { useDispatch } from "react-redux";
+import { playlistAction } from "../../redux/auth/playlist.slice";
 
 const { width } = Dimensions.get("window");
 
@@ -53,9 +55,17 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
   });
   const { data, isSuccess, isError, error } = useGetPlaylist();
 
+  const dispatch = useDispatch();
+  const handlePlaylistPress = (playlistId) => {
+    try {
+      dispatch(playlistAction.setPlaylistId(playlistId));
+    } catch (error) {
+      console.log("Error saving selected playlist ID", error);
+    }
+  };
   if (isSuccess) {
     album = data["data"].items;
-    console.log("alooo", album[0]);
+    console.log("alooo", album);
   }
   if (isError) {
     console.log("error", error);
@@ -85,7 +95,9 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("ArtistTrack")}
+        onPress={() => {
+          handlePlaylistPress(item.id), navigation.push("ArtistTrack");
+        }}
       >
         <ImageBackground
           source={{ uri: `${item.imageUrl}` }}

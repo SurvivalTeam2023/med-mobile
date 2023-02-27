@@ -129,7 +129,7 @@ const artistTracksScreen = ({ navigation }) => {
     console.log("dataListtrack", tracksList);
   }
   if (isErrorTracksFromPlaylist) {
-    console.log("error", errorTracksFromPlaylist);
+    console.log("errorTrack", errorTracksFromPlaylist);
   }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -150,63 +150,8 @@ const artistTracksScreen = ({ navigation }) => {
           {tracks()}
         </ScrollView>
       </View>
-      {currentlyPlayedSong()}
     </SafeAreaView>
   );
-
-  function currentlyPlayedSong() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item: { id: "image" } })}
-        style={styles.currentlyPlayedSongInfoWrapStyle}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <SharedElement id="image">
-            <Image
-              source={require("../../assets/images/songsCoverPicks/coverImage16.png")}
-              style={{
-                width: 55.0,
-                height: 55.0,
-                borderRadius: Sizes.fixPadding - 5.0,
-              }}
-            />
-          </SharedElement>
-          <View style={{ marginLeft: Sizes.fixPadding }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                maxWidth: width / 3.0,
-                ...Fonts.blackColor15Bold,
-              }}
-            >
-              Dunya
-            </Text>
-            <Text style={{ ...Fonts.grayColor11Medium }}>Mahir Skekh</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-left" size={30} color="black" />
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => updateState({ pauseSong: !pauseSong })}
-            style={styles.pausePlayButtonWrapStyle}
-          >
-            <MaterialIcons
-              name={pauseSong ? "pause" : "play-arrow"}
-              size={30}
-              color="black"
-            />
-          </TouchableOpacity>
-          <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-right" size={30} color="black" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
 
   function tracks() {
     const CustomMenu = () => {
@@ -288,9 +233,7 @@ const artistTracksScreen = ({ navigation }) => {
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
               <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
-              <Text style={{ ...Fonts.grayColor11Medium }}>
-                {item.artist_name}
-              </Text>
+              <Text style={{ ...Fonts.grayColor11Medium }}>{item.artist}</Text>
             </View>
           </View>
           <CustomMenu />

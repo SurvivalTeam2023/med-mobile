@@ -331,7 +331,7 @@ const ExploreScreen = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          {albumsList.map((item) => (
+          {albumsList?.map((item) => (
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => navigation.push("Tracks")}
@@ -385,7 +385,7 @@ const ExploreScreen = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          {playlists.map((item) => (
+          {playlists?.map((item) => (
             <TouchableOpacity
               activeOpacity={0.9}
               key={`${item.id}`}
@@ -397,7 +397,7 @@ const ExploreScreen = ({ navigation }) => {
               <Image
                 source={{ uri: item.imageUrl }}
                 style={{
-                  width: width / (playlists.length + 0.8),
+                  width: width / (playlists?.length + 0.8),
                   ...styles.playListImageStyle,
                 }}
               />
@@ -438,7 +438,7 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        {forYouList.map((item) => (
+        {forYouList?.map((item) => (
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
