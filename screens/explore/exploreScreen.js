@@ -339,7 +339,7 @@ const ExploreScreen = ({ navigation }) => {
             >
               <View
                 style={{
-                  width: width / (albumsList.length + 0.8),
+                  width: width / (albumsList?.length + 0.8),
                   ...styles.albumImageWrapStyle,
                 }}
               >
@@ -347,7 +347,7 @@ const ExploreScreen = ({ navigation }) => {
                   source={{ uri: item.image }}
                   resizeMode="stretch"
                   style={{
-                    width: width / (albumsList.length + 0.8),
+                    width: width / (albumsList?.length + 0.8),
                     height: 100,
                   }}
                 />
@@ -390,12 +390,12 @@ const ExploreScreen = ({ navigation }) => {
               activeOpacity={0.9}
               key={`${item.id}`}
               onPress={() => {
-                handlePlaylistPress(item.id);
+                handlePlaylistPress(item?.id);
                 navigation.push("Tracks");
               }}
             >
               <Image
-                source={{ uri: item.imageUrl }}
+                source={{ uri: item?.imageUrl }}
                 style={{
                   width: width / (playlists?.length + 0.8),
                   ...styles.playListImageStyle,
