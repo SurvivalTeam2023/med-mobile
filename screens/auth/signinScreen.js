@@ -115,7 +115,7 @@ const SigninScreen = ({ navigation }) => {
     refetchQuiz();
     refetchExistFav();
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
-      navigation.push("ChooseMusic");
+      navigation.push("BottomTabBar");
     } else if (
       isQuestionValid.isValid === false &&
       isFavoriteExisted.exists === true
