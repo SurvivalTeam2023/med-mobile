@@ -142,9 +142,9 @@ const ChooseMusicScreen = ({ navigation }) => {
   );
 
   function updateMusics({ id }) {
-    const newList = musicsData.map((item) => {
+    const newList = musicsData?.map((item) => {
       ({ ...item, selected: false });
-      if (item.id === id) {
+      if (item?.id === id) {
         const updatedItem = { ...item, selected: !item.selected };
         return updatedItem;
       }
@@ -167,7 +167,7 @@ const ChooseMusicScreen = ({ navigation }) => {
           activeOpacity={0.9}
           style={item.selected ? styles.selectedItem : styles.item}
           onPress={() => {
-            updateMusics({ id: item.id });
+            updateMusics({ id: item?.id });
             // handleGenrePress(item.id);
             // createFavorite();
           }}

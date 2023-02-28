@@ -144,7 +144,7 @@ let albumsList = [
   },
 ];
 
-const topArtistList = [
+let topArtistList = [
   {
     id: "1a",
     image: require("../../assets/images/artist/artist1.png"),
@@ -339,17 +339,19 @@ const ExploreScreen = ({ navigation }) => {
             >
               <View
                 style={{
-                  width: width / (albumsList?.length + 0.8),
-                  ...styles.albumImageWrapStyle,
+                  width: width / (albumsList.length + 0.8),
+                  ...styles.recentlyPalyedSongImageStyle,
                 }}
               >
                 <Image
-                  source={{ uri: item.image }}
-                  resizeMode="stretch"
-                  style={{
-                    width: width / (albumsList?.length + 0.8),
-                    height: 100,
-                  }}
+                  source={{ uri: `${item.image}` }}
+                  // resizeMode="stretch"
+                  // style={{
+                  //   width: width / (albumsList.length + 0.5),
+                  //   height: 100,
+                  //   borderRadius: Sizes.fixPadding - 5.0,
+                  // }}
+                  style={styles.recentlyPalyedSongImageStyle}
                 />
               </View>
               <Text
@@ -446,7 +448,7 @@ const ExploreScreen = ({ navigation }) => {
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item.genreId.id}>
+                <SharedElement id={item?.genreId.id}>
                   <Image
                     source={{ uri: `${item.genreId.image}` }}
                     style={{
@@ -795,7 +797,7 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding - 5.0,
   },
   albumImageWrapStyle: {
-    alignSelf: "center",
+    // alignSelf: "center",
     backgroundColor: Colors.whiteColor,
     borderWidth: 2.0,
     borderColor: Colors.lightGrayColor,
