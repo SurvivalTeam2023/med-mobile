@@ -125,8 +125,7 @@ const TracksScreen = ({ navigation }) => {
   } = useGetTracksFromPlaylist();
 
   if (successTracksFromPlaylist) {
-    tracksList = dataTracksFromPlaylist["data"].items;
-    console.log("dataListtrack", tracksList);
+    tracksList = dataTracksFromPlaylist["data"];
   }
   if (isErrorTracksFromPlaylist) {
     console.log("error", errorTracksFromPlaylist);
@@ -288,7 +287,9 @@ const TracksScreen = ({ navigation }) => {
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
               <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
-              <Text style={{ ...Fonts.grayColor11Medium }}>{item.artist_name}</Text>
+              <Text style={{ ...Fonts.grayColor11Medium }}>
+                {item.artist_name}
+              </Text>
             </View>
           </View>
           <CustomMenu />

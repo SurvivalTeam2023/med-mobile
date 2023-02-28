@@ -14,35 +14,35 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-// import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
+import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 
 const Separator = () => <View style={styles.separator} />;
-// let isFavoriteExisted = [];
+let isFavoriteExisted = [];
 
 const QuizScreen = () => {
   const navigation = useNavigation();
-  // const {
-  //   data: dataIsFavoriteExisted,
-  //   isSuccess: successIsFavoriteExisted,
-  //   isError: isErrorIsFavoriteExisted,
-  //   error: errorIsFavoriteExisted,
-  // } = useIsFavoriteExisted();
-  // if (successIsFavoriteExisted) {
-  //   isFavoriteExisted = dataIsFavoriteExisted["data"];
-  //   console.log("isFavoriteExisted", isFavoriteExisted);
-  // }
-  // if (isErrorIsFavoriteExisted) {
-  //   console.log("error", errorIsFavoriteExisted);
-  // }
+  const {
+    data: dataIsFavoriteExisted,
+    isSuccess: successIsFavoriteExisted,
+    isError: isErrorIsFavoriteExisted,
+    error: errorIsFavoriteExisted,
+  } = useIsFavoriteExisted();
+  if (successIsFavoriteExisted) {
+    isFavoriteExisted = dataIsFavoriteExisted["data"];
+    console.log("isFavoriteExisted", isFavoriteExisted);
+  }
+  if (isErrorIsFavoriteExisted) {
+    console.log("error", errorIsFavoriteExisted);
+  }
 
-  // const onPressHandler = () => {
-  //   if (isFavoriteExisted.exists === true) {
-  //     navigation.navigate("BottomTabBar");
-  //   }
-  //   if (isFavoriteExisted.exists === false) {
-  //     navigation.navigate("ChooseMusic");
-  //   }
-  // };
+  const onPressHandler = () => {
+    if (isFavoriteExisted.exists === true) {
+      navigation.navigate("BottomTabBar");
+    }
+    if (isFavoriteExisted.exists === false) {
+      navigation.navigate("ChooseMusic");
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -138,8 +138,8 @@ const QuizScreen = () => {
         >
           <Ionicons
             onPress={() => {
-              navigation.navigate("HomePage");
-              // onPressHandler();
+              // navigation.navigate("HomePage");
+              onPressHandler();
             }}
             name="arrow-forward"
             size={28}

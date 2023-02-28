@@ -24,6 +24,7 @@ import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetHistory } from "../../hooks/history.hook";
 import { setPlaylistId } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
+import { setGenreId } from "../../redux/auth/favorite.slice";
 
 const { width } = Dimensions.get("window");
 
@@ -191,6 +192,14 @@ const ExploreScreen = ({ navigation }) => {
   const handlePlaylistPress = (playlistId) => {
     try {
       dispatch(setPlaylistId(playlistId));
+    } catch (error) {
+      console.log("Error saving selected playlist ID", error);
+    }
+  };
+
+  const handleFavoritedPress = (genreId) => {
+    try {
+      dispatch(setGenreId(genreId));
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }
@@ -444,7 +453,10 @@ const ExploreScreen = ({ navigation }) => {
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => navigation.push("NowPlaying", { item })}
+              onPress={() => {
+                handleFavoritedPress(item.genreId.id);
+                navigation.push("NowPlaying", { item });
+              }}
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
