@@ -31,6 +31,11 @@ import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { Audio } from "expo-av";
+import { useIsValidQuiz } from "../../hooks/question.hook";
+import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
+
+let isQuestionValid;
+let isFavoriteExisted;
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -41,6 +46,22 @@ const SigninScreen = ({ navigation }) => {
   const { mutateAsync } = useLoginWithGmail();
   const dispatch = useDispatch();
   const { userData, isError, isSuccess, refetch } = useGetUserByNameApi();
+
+  const {
+    data: dataIsValidQuiz,
+    isSuccess: successIsValidQuiz,
+    isError: isErrorIsValidQuiz,
+    error: errorIsValidQuiz,
+    refetch: refetchQuiz,
+  } = useIsValidQuiz();
+
+  const {
+    data: dataIsFavoriteExisted,
+    isSuccess: successIsFavoriteExisted,
+    isError: isErrorIsFavoriteExisted,
+    error: errorIsFavoriteExisted,
+    refetch: refetchExistFav,
+  } = useIsFavoriteExisted();
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -75,6 +96,49 @@ const SigninScreen = ({ navigation }) => {
     console.log("error", isError);
   }
 
+  if (successIsFavoriteExisted) {
+    isFavoriteExisted = dataIsFavoriteExisted["data"];
+  }
+  if (isErrorIsFavoriteExisted) {
+    console.log("error", errorIsFavoriteExisted);
+  }
+
+  if (successIsValidQuiz) {
+    isQuestionValid = dataIsValidQuiz["data"];
+  }
+  if (isErrorIsValidQuiz) {
+    console.log("error", errorIsValidQuiz);
+  }
+
+  const validate = () => {
+    // isFavExisted();
+    refetchQuiz();
+    refetchExistFav();
+    if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
+      navigation.push("BottomTabBar");
+    } else if (
+      isQuestionValid.isValid === false &&
+      isFavoriteExisted.exists === true
+    ) {
+      navigation.push("Quiz");
+    } else if (
+      isQuestionValid.isValid === true &&
+      isFavoriteExisted.exists === false
+    ) {
+      navigation.push("ChooseMusic");
+    } else if (
+      isQuestionValid.isValid === false &&
+      isFavoriteExisted.exists === false
+    ) {
+      navigation.push("Quiz");
+    }
+    // if (isValid.isValid === false && isFavoriteExisted.exists === true) {
+    //   navigation.push("Quiz");
+    // }
+    // if (isValid.isValid === true && isFavoriteExisted.exists === false) {
+    //   navigation.push("ChooseMusic");
+    // }
+  };
   const handleLogin = () => {
     mutate(
       {
@@ -92,7 +156,8 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          navigation.push("Quiz");
+
+          validate();
         },
         onError: (error) => {
           console.log("error", error);
@@ -176,7 +241,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          navigation.push("ChooseMusic");
+          validate();
         },
         onError: (error) => {
           console.log("error", error);

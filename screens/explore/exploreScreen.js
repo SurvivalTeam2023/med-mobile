@@ -392,12 +392,12 @@ const ExploreScreen = ({ navigation }) => {
               activeOpacity={0.9}
               key={`${item.id}`}
               onPress={() => {
-                handlePlaylistPress(item.id);
+                handlePlaylistPress(item?.id);
                 navigation.push("Tracks");
               }}
             >
               <Image
-                source={{ uri: item.imageUrl }}
+                source={{ uri: item?.imageUrl }}
                 style={{
                   width: width / (playlists?.length + 0.8),
                   ...styles.playListImageStyle,
