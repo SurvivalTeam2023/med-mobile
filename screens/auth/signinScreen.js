@@ -98,7 +98,6 @@ const SigninScreen = ({ navigation }) => {
 
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
-    console.log("pleasee", isFavoriteExisted);
   }
   if (isErrorIsFavoriteExisted) {
     console.log("error", errorIsFavoriteExisted);
@@ -106,7 +105,6 @@ const SigninScreen = ({ navigation }) => {
 
   if (successIsValidQuiz) {
     isQuestionValid = dataIsValidQuiz["data"];
-    console.log(isQuestionValid);
   }
   if (isErrorIsValidQuiz) {
     console.log("error", errorIsValidQuiz);
@@ -243,7 +241,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          onPressHandler();
+          validate();
         },
         onError: (error) => {
           console.log("error", error);

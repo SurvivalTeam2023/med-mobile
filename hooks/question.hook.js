@@ -14,7 +14,6 @@ export const useIsValidQuiz = (payload) =>
     queryKey: ["getValidQuiz"],
     queryFn: async () => {
       const data = await isValidQuiz();
-      console.log("dcm", data);
       return data;
     },
     enabled: false,
