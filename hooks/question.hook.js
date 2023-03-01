@@ -1,5 +1,9 @@
-import { useQuery } from "react-query";
-import { getQuestionBankApi, isValidQuiz } from "../api/question.api";
+import { useMutation, useQuery } from "react-query";
+import {
+  getQuestionBankApi,
+  isValidQuiz,
+  setQuizStatus,
+} from "../api/question.api";
 
 export const useGetQuestionBankApi = (payload) =>
   useQuery({
@@ -17,4 +21,8 @@ export const useIsValidQuiz = (payload) =>
       return data;
     },
     enabled: false,
+  });
+export const useSetQuizStatus = (payload) =>
+  useMutation({
+    mutationFn: (payload) => setQuizStatus(payload),
   });
