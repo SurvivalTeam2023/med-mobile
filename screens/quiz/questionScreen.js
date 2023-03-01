@@ -12,7 +12,10 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { useGetQuestionBankApi } from "../../hooks/question.hook";
+import {
+  useGetQuestionBankApi,
+  useSetQuizStatus,
+} from "../../hooks/question.hook";
 import { store } from "../../core/store/store";
 import { useDispatch } from "react-redux";
 import { questionAction } from "../../redux/auth/question.slice";
@@ -135,27 +138,37 @@ const QuestionScreen = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const { data, error, isSuccess, isError } = useGetQuestionBankApi();
+  const { mutate } = useSetQuizStatus();
 
   let questionData;
   let totalQuestions;
+
+  const setQuizStatus = () => {
+    mutate({
+      onSuccess: (data) => {},
+      onError: (error) => {
+        console.log("error", error);
+      },
+    });
+  };
 
   if (isSuccess) {
     const dataRaw = data["data"].questionBankQuestion;
     const dataFormat = formatQuestionData(dataRaw);
     totalQuestions = dataFormat.length;
     questionData = dataFormat[index];
+    const questionBankId = dataRaw.map((obj) => obj.questionBankId)[0];
+    dispatch(questionAction.storeQuestionBankId(questionBankId));
 
     questions = dataFormat;
   }
   if (isError) {
     console.log("error", error);
   }
-
   const pickOption = (question_id, option_id, index) => {
     const questionId = questions.map((item) => {
       return item.id;
     });
-
     if (questionId.includes(question_id)) {
       dispatch(
         questionAction.storeAnswer({
@@ -304,7 +317,7 @@ const QuestionScreen = () => {
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() => {
-              navigation.navigate("Result");
+              setQuizStatus(), navigation.navigate("Result");
             }}
           >
             <LinearGradient

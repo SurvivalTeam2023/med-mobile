@@ -33,9 +33,9 @@ import { store } from "../../core/store/store";
 import { Audio } from "expo-av";
 import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
-
-let isQuestionValid;
-let isFavoriteExisted;
+import { Pressable } from "react-native";
+import { isValidQuiz } from "../../api/question.api";
+import { questionAction } from "../../redux/auth/question.slice";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -62,6 +62,7 @@ const SigninScreen = ({ navigation }) => {
     error: errorIsFavoriteExisted,
     refetch: refetchExistFav,
   } = useIsFavoriteExisted();
+
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -76,6 +77,10 @@ const SigninScreen = ({ navigation }) => {
       updateState({ backClickCount: 0 });
     }, 1000);
   }
+  // useEffect(() => {
+
+  //   }
+  // }, [successIsValidQuiz, successIsFavoriteExisted]);
 
   const [state, setState] = useState({
     showPassword: false,
@@ -87,6 +92,10 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
 
+  //null to compare
+  let isQuestionValid = null;
+  let isFavoriteExisted = null;
+
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
@@ -95,7 +104,6 @@ const SigninScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", isError);
   }
-
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
   }
@@ -106,14 +114,24 @@ const SigninScreen = ({ navigation }) => {
   if (successIsValidQuiz) {
     isQuestionValid = dataIsValidQuiz["data"];
   }
+
   if (isErrorIsValidQuiz) {
     console.log("error", errorIsValidQuiz);
   }
+  useEffect(() => {
+    if (isQuestionValid !== null && isFavoriteExisted !== null) {
+      isQuestionValid = null;
+      isFavoriteExisted = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isQuestionValid && isFavoriteExisted) {
+      validate();
+    }
+  }, [isQuestionValid, isFavoriteExisted]);
 
   const validate = () => {
-    // isFavExisted();
-    refetchQuiz();
-    refetchExistFav();
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
       navigation.push("BottomTabBar");
     } else if (
@@ -132,12 +150,6 @@ const SigninScreen = ({ navigation }) => {
     ) {
       navigation.push("Quiz");
     }
-    // if (isValid.isValid === false && isFavoriteExisted.exists === true) {
-    //   navigation.push("Quiz");
-    // }
-    // if (isValid.isValid === true && isFavoriteExisted.exists === false) {
-    //   navigation.push("ChooseMusic");
-    // }
   };
   const handleLogin = () => {
     mutate(
@@ -156,8 +168,11 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-
+          refetchQuiz();
+          refetchExistFav();
           validate();
+          console.log("isQuestionValid", isQuestionValid);
+          console.log("isFavoriteExisted", isFavoriteExisted);
         },
         onError: (error) => {
           console.log("error", error);
@@ -165,6 +180,7 @@ const SigninScreen = ({ navigation }) => {
       }
     );
   };
+
   const handleLoginToManage = () => {
     mutate(
       {
@@ -182,6 +198,7 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
+
           navigation.push("ManageArtistAlbum");
         },
         onError: (error) => {
@@ -195,7 +212,6 @@ const SigninScreen = ({ navigation }) => {
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
   });
-
   //variable can be get in the function below
   let token = null;
   let email = null;
@@ -216,7 +232,6 @@ const SigninScreen = ({ navigation }) => {
           const userDetails = response.data["email"];
           console.log(userDetails);
           email = userDetails;
-          console.log("email", email);
           handleLoginWithGmail();
         });
     }
@@ -405,31 +420,7 @@ const SigninScreen = ({ navigation }) => {
       </View>
     );
   }
-  //   <View
-  //   style={{
-  //     backgroundColor: "#EA4335",
-  //     ...styles.socialMediaIconsStyle,
-  //     marginHorizontal: Sizes.fixPadding - 5.0,
-  //   }}
-  // >
-  //   <Image
-  //     source={require("../../assets/images/icon/google-icon.png")}
-  //     style={{ width: 15.0, height: 15.0 }}
-  //     resizeMode="contain"
-  //   />
-  // </View>
-  // <View
-  //   style={{
-  //     backgroundColor: "#00A1F2",
-  //     ...styles.socialMediaIconsStyle,
-  //   }}
-  // >
-  //   <Image
-  //     source={require("../../assets/images/icon/twitter-icon.png")}
-  //     style={{ width: 15.0, height: 15.0 }}
-  //     resizeMode="contain"
-  //   />
-  // </View>
+
   function orIndicator() {
     return (
       <View style={styles.orWrapStyle}>
@@ -449,11 +440,12 @@ const SigninScreen = ({ navigation }) => {
 
   function signinButton() {
     return (
-      <TouchableOpacity
+      <Pressable
         style={styles.signinButtonStyle}
         activeOpacity={0.9}
-        onPress={() => {
-          storeConfig(), handleLogin();
+        onPressIn={() => {
+          handleLogin();
+          storeConfig();
         }}
       >
         <LinearGradient
@@ -464,7 +456,7 @@ const SigninScreen = ({ navigation }) => {
         >
           <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN IN</Text>
         </LinearGradient>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
   function manageButton() {
