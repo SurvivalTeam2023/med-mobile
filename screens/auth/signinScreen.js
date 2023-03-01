@@ -106,7 +106,6 @@ const SigninScreen = ({ navigation }) => {
   }
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
-    dispatch(questionAction.storeIsValidQuiz(isQuestionValid));
   }
   if (isErrorIsFavoriteExisted) {
     console.log("error", errorIsFavoriteExisted);
@@ -119,6 +118,18 @@ const SigninScreen = ({ navigation }) => {
   if (isErrorIsValidQuiz) {
     console.log("error", errorIsValidQuiz);
   }
+  useEffect(() => {
+    if (isQuestionValid !== null && isFavoriteExisted !== null) {
+      isQuestionValid = null;
+      isFavoriteExisted = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isQuestionValid && isFavoriteExisted) {
+      validate();
+    }
+  }, [isQuestionValid, isFavoriteExisted]);
 
   const validate = () => {
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
@@ -159,11 +170,7 @@ const SigninScreen = ({ navigation }) => {
           );
           refetchQuiz();
           refetchExistFav();
-          if (successIsValidQuiz && successIsFavoriteExisted) {
-            const isQuestionValid = dataIsValidQuiz["data"];
-            const isFavoriteExisted = dataIsFavoriteExisted["data"];
-            validate(isQuestionValid, isFavoriteExisted);
-          }
+          validate();
           console.log("isQuestionValid", isQuestionValid);
           console.log("isFavoriteExisted", isFavoriteExisted);
         },
