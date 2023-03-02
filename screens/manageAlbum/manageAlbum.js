@@ -46,7 +46,28 @@ let forYouList = [
   //   isFavorite: false,
   // },
 ];
-let album = [];
+let album = [
+  {
+    id: "1r",
+    image: require("../../assets/images/songsCoverPicks/coverImage1.png"),
+    category: "Morning chill",
+  },
+  {
+    id: "2r",
+    image: require("../../assets/images/songsCoverPicks/coverImage2.png"),
+    category: "Daily Mix",
+  },
+  {
+    id: "3r",
+    image: require("../../assets/images/songsCoverPicks/coverImage3.png"),
+    category: "Top Trending",
+  },
+  {
+    id: "4r",
+    image: require("../../assets/images/songsCoverPicks/coverImage4.png"),
+    category: "Pop Music",
+  },
+];
 const ManageArtistAlbumScreen = ({ navigation }) => {
   const [state, setState] = useState({
     forYouData: forYouList,
@@ -65,7 +86,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
   };
   if (isSuccess) {
     album = data["data"].items;
-    console.log("alooo", album);
+    console.log("album", album);
   }
   if (isError) {
     console.log("error", error);
@@ -105,7 +126,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             width: 130.0,
             height: 120.0,
             marginTop: Sizes.fixPadding + 5.0,
-            marginRight: Sizes.fixPadding * 10,
+            marginRight: Sizes.fixPadding,
           }}
           borderRadius={Sizes.fixPadding - 5.0}
         >
@@ -143,9 +164,8 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
-          horizontal={false}
-          numColumns={2}
-          contentContainerStyle={{ paddingLeft: Sizes.fixPadding * 2.5 }}
+          horizontal
+          contentContainerStyle={{ paddingLeft: Sizes.fixPadding * 1.5 }}
         />
       </View>
     );

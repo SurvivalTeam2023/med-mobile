@@ -10,6 +10,14 @@ export const parseTokenToUsername = (token) => {
   let token_decoded = jwtDecode(token);
   return token_decoded["preferred_username"];
 };
+export const parseTokenToRole = (token) => {
+  let token_decoded = jwtDecode(token);
+  const resource_access = token_decoded["resource_access"];
+  const med_app = resource_access["med-app"];
+  const roles = med_app["roles"];
+  const artist_role = roles.find((item) => item === "artist");
+  return artist_role;
+};
 
 export const formatQuestionData = (originRaw) => {
   const dataRaw = JSON.parse(JSON.stringify(originRaw));

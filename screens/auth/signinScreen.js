@@ -36,6 +36,7 @@ import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Pressable } from "react-native";
 import { isValidQuiz } from "../../api/question.api";
 import { questionAction } from "../../redux/auth/question.slice";
+import { ARTIST_ROLE } from "../../constants/role";
 
 const SigninScreen = ({ navigation }) => {
   const backAction = () => {
@@ -168,11 +169,15 @@ const SigninScreen = ({ navigation }) => {
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          refetchQuiz();
-          refetchExistFav();
-          validate();
-          console.log("isQuestionValid", isQuestionValid);
-          console.log("isFavoriteExisted", isFavoriteExisted);
+          const role = store.getState().user.artist_role;
+
+          if (role === ARTIST_ROLE) {
+            navigation.push("ManageArtistAlbum");
+          } else {
+            refetchQuiz();
+            refetchExistFav();
+            validate();
+          }
         },
         onError: (error) => {
           console.log("error", error);
@@ -181,32 +186,30 @@ const SigninScreen = ({ navigation }) => {
     );
   };
 
-  const handleLoginToManage = () => {
-    mutate(
-      {
-        username: state["userName"],
-        password: state["password"],
-      },
+  // const handleLoginToManage = () => {
+  //   mutate(
+  //     {
+  //       username: state["userName"],
+  //       password: state["password"],
+  //     },
 
-      {
-        onSuccess: (data) => {
-          const dataRaw = data["data"];
-          const access_token = dataRaw["access_token"];
-          dispatch(userAction.storeToken(access_token));
-          refetch();
-          AsyncStorage.setItem(
-            TOKEN_KEY_STORAGE,
-            JSON.stringify({ token: access_token })
-          );
-
-          navigation.push("ManageArtistAlbum");
-        },
-        onError: (error) => {
-          console.log("error", error);
-        },
-      }
-    );
-  };
+  //     {
+  //       onSuccess: (data) => {
+  //         const dataRaw = data["data"];
+  //         const access_token = dataRaw["access_token"];
+  //         dispatch(userAction.storeToken(access_token));
+  //         refetch();
+  //         AsyncStorage.setItem(
+  //           TOKEN_KEY_STORAGE,
+  //           JSON.stringify({ token: access_token })
+  //         );
+  //       },
+  //       onError: (error) => {
+  //         console.log("error", error);
+  //       },
+  //     }
+  //   );
+  // };
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
@@ -346,7 +349,6 @@ const SigninScreen = ({ navigation }) => {
         {userNameTextField()}
         {passwordTextField()}
         {signinButton()}
-        {manageButton()}
         {orIndicator()}
         {socialMediaOptions()}
         {dontHaveAccountInfo()}
@@ -459,26 +461,26 @@ const SigninScreen = ({ navigation }) => {
       </Pressable>
     );
   }
-  function manageButton() {
-    return (
-      <TouchableOpacity
-        style={styles.signinButtonStyle}
-        activeOpacity={0.9}
-        onPress={() => {
-          handleLoginToManage();
-        }}
-      >
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.signinButtonGradientStyle}
-        >
-          <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    );
-  }
+  // function manageButton() {
+  //   return (
+  //     <TouchableOpacity
+  //       style={styles.signinButtonStyle}
+  //       activeOpacity={0.9}
+  //       onPress={() => {
+  //         handleLoginToManage();
+  //       }}
+  //     >
+  //       <LinearGradient
+  //         start={{ x: 1, y: 0 }}
+  //         end={{ x: 0, y: 0 }}
+  //         colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+  //         style={styles.signinButtonGradientStyle}
+  //       >
+  //         <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
+  //       </LinearGradient>
+  //     </TouchableOpacity>
+  //   );
+  // }
 
   function passwordTextField() {
     return (
