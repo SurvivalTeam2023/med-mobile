@@ -86,7 +86,6 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
   };
   if (isSuccess) {
     album = data["data"].items;
-    console.log("album", album);
   }
   if (isError) {
     console.log("error", error);
