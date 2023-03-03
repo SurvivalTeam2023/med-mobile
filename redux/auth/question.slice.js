@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  questionBankId: null,
   answer: [],
+  isValidQuiz: null,
 };
 
 const reducer = createSlice({
@@ -34,6 +36,12 @@ const reducer = createSlice({
           { questionId: questionId, optionId: optionId },
         ];
       }
+    },
+    storeQuestionBankId: (state, action) => {
+      state.questionBankId = action.payload;
+    },
+    storeIsValidQuiz: (state, action) => {
+      state.isValidQuiz = action.payload;
     },
   },
 });

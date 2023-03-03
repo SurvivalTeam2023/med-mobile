@@ -71,6 +71,7 @@ const App = () => {
               component={bottomTabBarScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
+            <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
             <Stack.Screen name="Search" component={searchScreen} />
             <Stack.Screen name="Tracks" component={tracksScreen} />
             <Stack.Screen name="HomePage" component={ExploreScreen} />

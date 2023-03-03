@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   Image,
+  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -212,27 +213,28 @@ const artistTracksScreen = ({ navigation }) => {
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <SharedElement id={item.id}>
-              <LinearGradient
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                colors={[
-                  "rgba(255, 124, 0,0.9)",
-                  "rgba(255, 124, 0,0.7)",
-                  "rgba(255, 124, 0,0.4)",
-                  "rgba(41, 10, 89, 0.9)",
-                ]}
-                style={styles.musicIconWrapStyle}
-              >
-                <MaterialIcons
-                  name="music-note"
-                  color={Colors.whiteColor}
-                  size={24}
-                />
-              </LinearGradient>
+              <ImageBackground
+                source={{ uri: `${item.imageUrl}` }}
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                borderRadius={Sizes.fixPadding - 5.0}
+              ></ImageBackground>
             </SharedElement>
-            <View style={{ marginLeft: Sizes.fixPadding }}>
+            <View
+              style={{
+                marginLeft: Sizes.fixPadding,
+              }}
+            >
               <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
-              <Text style={{ ...Fonts.grayColor11Medium }}>{item.artist}</Text>
+              <Text
+                style={{
+                  ...Fonts.grayColor11Medium,
+                }}
+              >
+                {item.length}
+              </Text>
             </View>
           </View>
           <CustomMenu />

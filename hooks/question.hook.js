@@ -1,5 +1,9 @@
-import { useQuery } from "react-query";
-import { getQuestionBankApi } from "../api/question.api";
+import { useMutation, useQuery } from "react-query";
+import {
+  getQuestionBankApi,
+  isValidQuiz,
+  setQuizStatus,
+} from "../api/question.api";
 
 export const useGetQuestionBankApi = (payload) =>
   useQuery({
@@ -8,4 +12,17 @@ export const useGetQuestionBankApi = (payload) =>
       const data = await getQuestionBankApi();
       return data;
     },
+  });
+export const useIsValidQuiz = (payload) =>
+  useQuery({
+    queryKey: ["getValidQuiz"],
+    queryFn: async () => {
+      const data = await isValidQuiz();
+      return data;
+    },
+    enabled: false,
+  });
+export const useSetQuizStatus = (payload) =>
+  useMutation({
+    mutationFn: (payload) => setQuizStatus(payload),
   });

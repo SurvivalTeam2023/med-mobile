@@ -25,6 +25,7 @@ const ResultScreen = ({ navigation }) => {
     isSuccess: successIsFavoriteExisted,
     isError: isErrorIsFavoriteExisted,
     error: errorIsFavoriteExisted,
+    refetch: refetchFav,
   } = useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
@@ -34,6 +35,7 @@ const ResultScreen = ({ navigation }) => {
   }
 
   const onPressHandler = () => {
+    refetchFav();
     if (isFavoriteExisted.exists === true) {
       navigation.push("BottomTabBar");
     }

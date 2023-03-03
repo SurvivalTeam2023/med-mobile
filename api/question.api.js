@@ -1,6 +1,19 @@
 import { CallAPI } from "../core/api/baseAxios";
+import { store } from "../core/store/store";
 
 export const getQuestionBankApi = (payload) => {
   const url = "/questionBank";
   return CallAPI.post(url);
+};
+
+export const isValidQuiz = (payload) => {
+  const url = "/questionBank";
+  return CallAPI.get(url);
+};
+
+export const setQuizStatus = (payload) => {
+  const questionBankId = store.getState().question.questionBankId;
+  const queryParam = `/` + `${questionBankId}`;
+  const url = "/questionBank" + `${queryParam}`;
+  return CallAPI.patch(url);
 };
