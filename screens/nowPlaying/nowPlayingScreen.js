@@ -22,49 +22,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import { store } from "../../core/store/store";
+import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
-const nextOnList = [
-  {
-    id: "1",
-    image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-    albumName: "Don't call me up",
-    artist: "Mabel",
-    isFavorite: false,
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-    albumName: "Sugar and brownies",
-    artist: "Dharia",
-    isFavorite: false,
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-    albumName: "Pretty girl",
-    artist: "Maggie Lindemann",
-    isFavorite: false,
-  },
-  {
-    id: "4",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    albumName: "Shape of you",
-    artist: "Ed Shreean",
-    isFavorite: false,
-  },
-  {
-    id: "5",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    albumName: "Shape of you",
-    artist: "Ed Shreean",
-    isFavorite: false,
-  },
-];
+let nextOnList = [];
 
 const NowPlayingScreen = ({ navigation, route }) => {
+  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
+  if (isSuccess) {
+    nextOnList = data["data"];
+  }
+  if (isError) {
+    console.log("error", error);
+  }
+
   const item = route.params.item;
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
+  // const [songIndex, setSongIndex] = useState(0);
+  // const [songIndexList, setSongIndexList] = useState(0);
   let isLoaded = false;
   const { mutate } = useCreateHisoryApi();
   const saveHistory = () => {
@@ -83,12 +58,11 @@ const NowPlayingScreen = ({ navigation, route }) => {
       }
     );
   };
-
   const playSound = async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(
         {
-          uri: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+          uri: "https://public-med-bucket-v1.s3.ap-southeast-1.amazonaws.com/6524bdcd-2f20-4e45-a573-4efcf9433057-mong-mot-ngay-anh-nho-den-em-the-heroes-2022-than-tuong-doi-than-tuong.mp3",
         },
         { shouldPlay: false }
       );
@@ -113,6 +87,19 @@ const NowPlayingScreen = ({ navigation, route }) => {
     }
   };
 
+  // function playNextSong() {
+  //   if (songIndex < nextOnListData.length - 1) {
+  //     setSongIndex(songIndex + 1);
+  //     playSound();
+  //   } else {
+  //     setSongIndex(0);
+  //   }
+  // }
+
+  // function handleNextOnList() {
+  //   setSongIndexList(songIndexList + 1);
+  // }
+
   React.useEffect(() => {
     return sound
       ? () => {
@@ -125,9 +112,13 @@ const NowPlayingScreen = ({ navigation, route }) => {
   const [state, setState] = useState({
     songRunningInPercentage: 60,
     pauseSong: true,
-    nextOnListData: nextOnList,
+    nextOnListData: [],
     currentSongInFavorite: true,
   });
+
+  React.useEffect(() => {
+    setState({ nextOnListData: nextOnList });
+  }, [nextOnList]);
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
@@ -137,7 +128,6 @@ const NowPlayingScreen = ({ navigation, route }) => {
     nextOnListData,
     currentSongInFavorite,
   } = state;
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -182,10 +172,14 @@ const NowPlayingScreen = ({ navigation, route }) => {
         </Text>
         {nextOnListData.map((item) => (
           <View key={`${item.id}`}>
-            <View style={styles.nextOnTheListInfoWrapStyle}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {}}
+              style={styles.nextOnTheListInfoWrapStyle}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={item.image}
+                  source={{ uri: `${item.audio.imageUrl}` }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -194,20 +188,20 @@ const NowPlayingScreen = ({ navigation, route }) => {
                 />
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.albumName}
+                    {item.audio.name}
                   </Text>
                   <Text style={{ ...Fonts.grayColor10Medium }}>
-                    {item.artist}
+                    {item.audio.artist.artist_name}
                   </Text>
                 </View>
               </View>
-              <MaterialIcons
+              {/* <MaterialIcons
                 name={item.isFavorite ? "favorite" : "favorite-border"}
                 color={Colors.grayColor}
                 size={18}
                 onPress={() => updateForYou({ id: item.id })}
-              />
-            </View>
+              /> */}
+            </TouchableOpacity>
           </View>
         ))}
       </View>
@@ -235,7 +229,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
           size={20}
           color={Colors.blackColor}
         />
-        <Text style={{ ...Fonts.grayColor10SemiBold }}>LYRICS</Text>
+        <Text style={{ ...Fonts.grayColor10SemiBold }}>Lyrics</Text>
       </View>
     );
   }
@@ -338,8 +332,12 @@ const NowPlayingScreen = ({ navigation, route }) => {
             }}
           />
         </SharedElement>
-        <Text style={{ ...Fonts.blackColor14Bold }}>Kamado Tanjiro no Uta</Text>
-        <Text style={{ ...Fonts.grayColor10Medium }}>Nami Nakagowa</Text>
+        <Text style={{ ...Fonts.blackColor14Bold }}>
+          {/* {nextOnList.audio.name} */}
+        </Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>
+          {/* {nextOnList.audio.artist.artist_name} */}
+        </Text>
       </View>
     );
   }
