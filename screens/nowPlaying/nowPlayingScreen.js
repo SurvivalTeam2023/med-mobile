@@ -15,30 +15,25 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
-import { SharedElement } from "react-navigation-shared-element";
 import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
-import { userAction } from "../../redux/auth/auth.slice";
-import { store } from "../../core/store/store";
 import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
 let nextOnList = [];
 
-const NowPlayingScreen = ({ navigation, route }) => {
+const NowPlayingScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
   if (isSuccess) {
     nextOnList = data["data"];
+    console.log("nextOnList", nextOnList);
   }
   if (isError) {
     console.log("error", error);
   }
-
-  const item = route.params.item;
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
-  // const [songIndex, setSongIndex] = useState(0);
+  const [songIndex, setSongIndex] = useState(0);
+  // console.log("songIndex", songIndex);
   // const [songIndexList, setSongIndexList] = useState(0);
   let isLoaded = false;
   const { mutate } = useCreateHisoryApi();
@@ -58,6 +53,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
       }
     );
   };
+
   const playSound = async () => {
     try {
       const { sound } = await Audio.Sound.createAsync(
@@ -146,16 +142,16 @@ const NowPlayingScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 
-  function updateForYou({ id }) {
-    const newList = nextOnListData.map((item) => {
-      if (item.id === id) {
-        const updatedItem = { ...item, isFavorite: !item.isFavorite };
-        return updatedItem;
-      }
-      return item;
-    });
-    updateState({ nextOnListData: newList });
-  }
+  // function updateForYou({ id }) {
+  //   const newList = nextOnListData.map((item) => {
+  //     if (item.id === id) {
+  //       const updatedItem = { ...item, isFavorite: !item.isFavorite };
+  //       return updatedItem;
+  //     }
+  //     return item;
+  //   });
+  //   updateState({ nextOnListData: newList });
+  // }
 
   function nextOnTheLists() {
     return (
@@ -179,7 +175,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={{ uri: `${item.audio.imageUrl}` }}
+                  source={{ uri: item.audio.imageUrl }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -321,22 +317,20 @@ const NowPlayingScreen = ({ navigation, route }) => {
   function songNameWithPoster() {
     return (
       <View style={{ alignItems: "center" }}>
-        <SharedElement id={item.id}>
-          <Image
-            source={require("../../assets/images/songsCoverPicks/coverImage17.png")}
-            style={{
-              marginVertical: Sizes.fixPadding,
-              width: 190.0,
-              height: 210.0,
-              borderRadius: Sizes.fixPadding - 5.0,
-            }}
-          />
-        </SharedElement>
+        <Image
+          source={require("../../assets/images/songsCoverPicks/coverImage17.png")}
+          style={{
+            marginVertical: Sizes.fixPadding,
+            width: 190.0,
+            height: 210.0,
+            borderRadius: Sizes.fixPadding - 5.0,
+          }}
+        />
         <Text style={{ ...Fonts.blackColor14Bold }}>
-          {/* {nextOnList.audio.name} */}
+          {nextOnList[songIndex]?.audio.name}
         </Text>
         <Text style={{ ...Fonts.grayColor10Medium }}>
-          {/* {nextOnList.audio.artist.artist_name} */}
+          {nextOnList[songIndex]?.audio.artist.artist_name}
         </Text>
       </View>
     );
