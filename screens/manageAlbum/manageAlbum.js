@@ -215,7 +215,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
         </MaskedView>
         <Menu
           visible={showOptions}
-          style={{ height: 150.0, backgroundColor: Colors.whiteColor }}
+          style={{ backgroundColor: Colors.whiteColor }}
           anchor={
             <MaterialIcons
               name="more-vert"
@@ -234,56 +234,30 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
               ...Fonts.blackColor12SemiBold,
             }}
             onPress={() => {
-              updateState({ showOptions: false });
+              updateState({ showOptions: false }),
+                navigation.push("CreateAlbum");
             }}
           >
-            View By Album Artist
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 40.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Sound Quality and Effects
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 70.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Tracks
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 100.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Contact Us
+            Add New Album
           </MenuItem>
         </Menu>
       </View>
     );
   }
 };
-
+// <MenuItem
+// pressColor="transparent"
+// textStyle={{
+//   marginRight: Sizes.fixPadding * 3.0,
+//   marginTop: Sizes.fixPadding - 100.0,
+//   ...Fonts.blackColor12SemiBold,
+// }}
+// onPress={() => {
+//   updateState({ showOptions: false });
+// }}
+// >
+// Contact Us
+// </MenuItem>
 const styles = StyleSheet.create({
   headerWrapStyle: {
     flexDirection: "row",
