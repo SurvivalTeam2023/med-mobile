@@ -44,7 +44,6 @@ const CreateAudioArtistScreen = ({ navigation }) => {
   }
 
   const { mutate } = useCreateAudioForArtistAPI();
-
   const handleCreateAudio = () => {
     mutate(
       {
@@ -53,7 +52,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
         status: "ACTIVE",
         length: state["length"],
         playlistId: [store.getState().playlist.playlistId],
-        genreId: [2],
+        genreId: store.getState().genreArtist.genreArtistId,
       },
 
       {
@@ -166,7 +165,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
           value={audioName}
           onChangeText={(text) => updateState({ audioName: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Album Name"
+          placeholder="Audio Name"
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
