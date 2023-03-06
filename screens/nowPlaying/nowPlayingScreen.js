@@ -50,34 +50,6 @@ const NowPlayingScreen = ({ navigation }) => {
     );
   };
 
-  // const playSound = async () => {
-  //   try {
-  //     const { sound } = await Audio.Sound.createAsync(
-  //       {
-  //         uri: nextOnList[songIndex].audio.file.url,
-  //       },
-  //       { shouldPlay: false }
-  //     );
-  //     isLoaded = (await sound.getStatusAsync()).isLoaded;
-  //     if (isPlaying && isLoaded) {
-  //       setIsPlaying(false);
-  //       setSound(sound);
-  //       sound.playAsync();
-  //       console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
-  //       const isPLayed = (await sound.getStatusAsync()).isPlaying;
-  //       if (isPLayed) {
-  //         saveHistory();
-  //       }
-  //     } else if (!isPlaying && isLoaded) {
-  //       await sound.pauseAsync();
-  //       setSound(sound);
-  //       console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
-  //       setIsPlaying(true);
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // };
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync({
       uri: nextOnList[songIndex].audio.file.url,
