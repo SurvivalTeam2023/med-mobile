@@ -28,6 +28,7 @@ import QuestionScreen from "./screens/quiz/questionScreen";
 import ManageArtistAlbumScreen from "./screens/manageAlbum/manageAlbum";
 import artistTracksScreen from "./screens/manageAlbum/artistTrack";
 import CreateAlbumScreen from "./screens/createAlbum/createAlbumScreen";
+import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -65,6 +66,10 @@ const App = () => {
               component={ManageArtistAlbumScreen}
             />
             <Stack.Screen name="ArtistTrack" component={artistTracksScreen} />
+            <Stack.Screen
+              name="CreateAudioArtist"
+              component={CreateAudioArtistScreen}
+            />
             <Stack.Screen name="CreateAlbum" component={CreateAlbumScreen} />
             <Stack.Screen name="Question" component={QuestionScreen} />
             <Stack.Screen name="Result" component={ResultScreen} />
