@@ -19,6 +19,7 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -352,8 +353,8 @@ const artistTracksScreen = ({ navigation }) => {
         </Menu>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialIcons
-            name="shuffle"
+          <Ionicons
+            name="add-outline"
             size={20}
             color="black"
             style={{ marginRight: Sizes.fixPadding }}
