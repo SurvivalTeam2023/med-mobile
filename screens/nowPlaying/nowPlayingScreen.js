@@ -25,7 +25,6 @@ const NowPlayingScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
   if (isSuccess) {
     nextOnList = data["data"];
-    console.log("nextOnList", nextOnList);
   }
   if (isError) {
     console.log("error", error);
@@ -33,9 +32,6 @@ const NowPlayingScreen = ({ navigation }) => {
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
-  // console.log("songIndex", songIndex);
-  // const [songIndexList, setSongIndexList] = useState(0);
-  let isLoaded = false;
   const { mutate } = useCreateHisoryApi();
   const saveHistory = () => {
     mutate(
@@ -54,47 +50,61 @@ const NowPlayingScreen = ({ navigation }) => {
     );
   };
 
+  // const playSound = async () => {
+  //   try {
+  //     const { sound } = await Audio.Sound.createAsync(
+  //       {
+  //         uri: nextOnList[songIndex].audio.file.url,
+  //       },
+  //       { shouldPlay: false }
+  //     );
+  //     isLoaded = (await sound.getStatusAsync()).isLoaded;
+  //     if (isPlaying && isLoaded) {
+  //       setIsPlaying(false);
+  //       setSound(sound);
+  //       sound.playAsync();
+  //       console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
+  //       const isPLayed = (await sound.getStatusAsync()).isPlaying;
+  //       if (isPLayed) {
+  //         saveHistory();
+  //       }
+  //     } else if (!isPlaying && isLoaded) {
+  //       await sound.pauseAsync();
+  //       setSound(sound);
+  //       console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
+  //       setIsPlaying(true);
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error);
+  //   }
+  // };
   const playSound = async () => {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        {
-          uri: "https://public-med-bucket-v1.s3.ap-southeast-1.amazonaws.com/6524bdcd-2f20-4e45-a573-4efcf9433057-mong-mot-ngay-anh-nho-den-em-the-heroes-2022-than-tuong-doi-than-tuong.mp3",
-        },
-        { shouldPlay: false }
-      );
-      isLoaded = (await sound.getStatusAsync()).isLoaded;
-      if (isPlaying && isLoaded) {
-        setIsPlaying(false);
-        setSound(sound);
-        sound.playAsync();
-        console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
-        const isPLayed = (await sound.getStatusAsync()).isPlaying;
-        if (isPLayed) {
-          saveHistory();
-        }
-      } else if (!isPlaying && isLoaded) {
-        await sound.pauseAsync();
-        setSound(sound);
-        console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
+    const { sound } = await Audio.Sound.createAsync({
+      uri: nextOnList[songIndex].audio.file.url,
+    });
+    setIsPlaying(false);
+    setSound(sound);
+
+    await sound.playAsync();
   };
 
-  // function playNextSong() {
-  //   if (songIndex < nextOnListData.length - 1) {
-  //     setSongIndex(songIndex + 1);
-  //     playSound();
-  //   } else {
-  //     setSongIndex(0);
-  //   }
-  // }
+  const stopSound = async () => {
+    setIsPlaying(true);
+    await sound.pauseAsync();
+  };
 
-  // function handleNextOnList() {
-  //   setSongIndexList(songIndexList + 1);
-  // }
+  function playNextSong() {
+    if (songIndex < nextOnList.length - 1) {
+      setSongIndex(songIndex + 1);
+      playSound();
+    } else {
+      setSongIndex(0);
+    }
+  }
+
+  const handleSongPress = (index) => {
+    setSongIndex(index);
+  };
 
   React.useEffect(() => {
     return sound
@@ -108,22 +118,12 @@ const NowPlayingScreen = ({ navigation }) => {
   const [state, setState] = useState({
     songRunningInPercentage: 60,
     pauseSong: true,
-    nextOnListData: [],
     currentSongInFavorite: true,
   });
 
-  React.useEffect(() => {
-    setState({ nextOnListData: nextOnList });
-  }, [nextOnList]);
-
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const {
-    songRunningInPercentage,
-    pauseSong,
-    nextOnListData,
-    currentSongInFavorite,
-  } = state;
+  const { songRunningInPercentage, pauseSong, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -142,17 +142,6 @@ const NowPlayingScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  // function updateForYou({ id }) {
-  //   const newList = nextOnListData.map((item) => {
-  //     if (item.id === id) {
-  //       const updatedItem = { ...item, isFavorite: !item.isFavorite };
-  //       return updatedItem;
-  //     }
-  //     return item;
-  //   });
-  //   updateState({ nextOnListData: newList });
-  // }
-
   function nextOnTheLists() {
     return (
       <View>
@@ -164,13 +153,17 @@ const NowPlayingScreen = ({ navigation }) => {
             ...Fonts.blackColor15Bold,
           }}
         >
-          Next on the list
+          Tracks list
         </Text>
-        {nextOnListData.map((item) => (
+        {nextOnList.map((item, index) => (
           <View key={`${item.id}`}>
             <TouchableOpacity
+              key={index}
               activeOpacity={0.9}
-              onPress={() => {}}
+              onPress={() => {
+                handleSongPress(index);
+                stopSound();
+              }}
               style={styles.nextOnTheListInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -191,12 +184,6 @@ const NowPlayingScreen = ({ navigation }) => {
                   </Text>
                 </View>
               </View>
-              {/* <MaterialIcons
-                name={item.isFavorite ? "favorite" : "favorite-border"}
-                color={Colors.grayColor}
-                size={18}
-                onPress={() => updateForYou({ id: item.id })}
-              /> */}
             </TouchableOpacity>
           </View>
         ))}
@@ -287,7 +274,10 @@ const NowPlayingScreen = ({ navigation }) => {
         <View style={styles.forwardBackwardButtonWrapStyle}>
           <MaterialIcons name="arrow-left" size={30} color="black" />
         </View>
-        <TouchableOpacity activeOpacity={0.9} onPress={() => playSound()}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => (isPlaying ? playSound() : stopSound())}
+        >
           <LinearGradient
             start={{ x: 0, y: 0.1 }}
             end={{ x: 0, y: 1 }}
@@ -318,7 +308,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={require("../../assets/images/songsCoverPicks/coverImage17.png")}
+          source={{ uri: `${nextOnList[songIndex]?.audio.imageUrl}` }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,
@@ -364,7 +354,7 @@ const NowPlayingScreen = ({ navigation }) => {
   function songTimeInfo() {
     return (
       <View style={styles.songTimeInfoWrapStyle}>
-        <Text style={{ ...Fonts.grayColor10Medium }}>2:20</Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>0:00</Text>
         <Text style={{ ...Fonts.grayColor10Medium }}>3:58</Text>
       </View>
     );
