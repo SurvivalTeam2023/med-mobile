@@ -15,57 +15,23 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
-import { SharedElement } from "react-navigation-shared-element";
 import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
-import { userAction } from "../../redux/auth/auth.slice";
-import { store } from "../../core/store/store";
+import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
-const nextOnList = [
-  {
-    id: "1",
-    image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-    albumName: "Don't call me up",
-    artist: "Mabel",
-    isFavorite: false,
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-    albumName: "Sugar and brownies",
-    artist: "Dharia",
-    isFavorite: false,
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-    albumName: "Pretty girl",
-    artist: "Maggie Lindemann",
-    isFavorite: false,
-  },
-  {
-    id: "4",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    albumName: "Shape of you",
-    artist: "Ed Shreean",
-    isFavorite: false,
-  },
-  {
-    id: "5",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    albumName: "Shape of you",
-    artist: "Ed Shreean",
-    isFavorite: false,
-  },
-];
+let nextOnList = [];
 
-const NowPlayingScreen = ({ navigation, route }) => {
-  const item = route.params.item;
+const NowPlayingScreen = ({ navigation }) => {
+  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
+  if (isSuccess) {
+    nextOnList = data["data"];
+  }
+  if (isError) {
+    console.log("error", error);
+  }
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
-  let isLoaded = false;
+  const [songIndex, setSongIndex] = useState(0);
   const { mutate } = useCreateHisoryApi();
   const saveHistory = () => {
     mutate(
@@ -85,32 +51,31 @@ const NowPlayingScreen = ({ navigation, route }) => {
   };
 
   const playSound = async () => {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        {
-          uri: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        },
-        { shouldPlay: false }
-      );
-      isLoaded = (await sound.getStatusAsync()).isLoaded;
-      if (isPlaying && isLoaded) {
-        setIsPlaying(false);
-        setSound(sound);
-        sound.playAsync();
-        console.log("Playing Sound", (await sound.getStatusAsync()).isPlaying);
-        const isPLayed = (await sound.getStatusAsync()).isPlaying;
-        if (isPLayed) {
-          saveHistory();
-        }
-      } else if (!isPlaying && isLoaded) {
-        await sound.pauseAsync();
-        setSound(sound);
-        console.log("Pausing Sound", (await sound.getStatusAsync()).isPlaying);
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.log("error", error);
+    const { sound } = await Audio.Sound.createAsync({
+      uri: nextOnList[songIndex].audio.file.url,
+    });
+    setIsPlaying(false);
+    setSound(sound);
+
+    await sound.playAsync();
+  };
+
+  const stopSound = async () => {
+    setIsPlaying(true);
+    await sound.pauseAsync();
+  };
+
+  function playNextSong() {
+    if (songIndex < nextOnList.length - 1) {
+      setSongIndex(songIndex + 1);
+      playSound();
+    } else {
+      setSongIndex(0);
     }
+  }
+
+  const handleSongPress = (index) => {
+    setSongIndex(index);
   };
 
   React.useEffect(() => {
@@ -125,19 +90,12 @@ const NowPlayingScreen = ({ navigation, route }) => {
   const [state, setState] = useState({
     songRunningInPercentage: 60,
     pauseSong: true,
-    nextOnListData: nextOnList,
     currentSongInFavorite: true,
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const {
-    songRunningInPercentage,
-    pauseSong,
-    nextOnListData,
-    currentSongInFavorite,
-  } = state;
-
+  const { songRunningInPercentage, pauseSong, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -156,17 +114,6 @@ const NowPlayingScreen = ({ navigation, route }) => {
     </SafeAreaView>
   );
 
-  function updateForYou({ id }) {
-    const newList = nextOnListData.map((item) => {
-      if (item.id === id) {
-        const updatedItem = { ...item, isFavorite: !item.isFavorite };
-        return updatedItem;
-      }
-      return item;
-    });
-    updateState({ nextOnListData: newList });
-  }
-
   function nextOnTheLists() {
     return (
       <View>
@@ -178,14 +125,22 @@ const NowPlayingScreen = ({ navigation, route }) => {
             ...Fonts.blackColor15Bold,
           }}
         >
-          Next on the list
+          Tracks list
         </Text>
-        {nextOnListData.map((item) => (
+        {nextOnList.map((item, index) => (
           <View key={`${item.id}`}>
-            <View style={styles.nextOnTheListInfoWrapStyle}>
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.9}
+              onPress={() => {
+                handleSongPress(index);
+                stopSound();
+              }}
+              style={styles.nextOnTheListInfoWrapStyle}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={item.image}
+                  source={{ uri: item.audio.imageUrl }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -194,20 +149,14 @@ const NowPlayingScreen = ({ navigation, route }) => {
                 />
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.albumName}
+                    {item.audio.name}
                   </Text>
                   <Text style={{ ...Fonts.grayColor10Medium }}>
-                    {item.artist}
+                    {item.audio.artist.artist_name}
                   </Text>
                 </View>
               </View>
-              <MaterialIcons
-                name={item.isFavorite ? "favorite" : "favorite-border"}
-                color={Colors.grayColor}
-                size={18}
-                onPress={() => updateForYou({ id: item.id })}
-              />
-            </View>
+            </TouchableOpacity>
           </View>
         ))}
       </View>
@@ -235,7 +184,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
           size={20}
           color={Colors.blackColor}
         />
-        <Text style={{ ...Fonts.grayColor10SemiBold }}>LYRICS</Text>
+        <Text style={{ ...Fonts.grayColor10SemiBold }}>Lyrics</Text>
       </View>
     );
   }
@@ -297,7 +246,10 @@ const NowPlayingScreen = ({ navigation, route }) => {
         <View style={styles.forwardBackwardButtonWrapStyle}>
           <MaterialIcons name="arrow-left" size={30} color="black" />
         </View>
-        <TouchableOpacity activeOpacity={0.9} onPress={() => playSound()}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => (isPlaying ? playSound() : stopSound())}
+        >
           <LinearGradient
             start={{ x: 0, y: 0.1 }}
             end={{ x: 0, y: 1 }}
@@ -327,19 +279,21 @@ const NowPlayingScreen = ({ navigation, route }) => {
   function songNameWithPoster() {
     return (
       <View style={{ alignItems: "center" }}>
-        <SharedElement id={item.id}>
-          <Image
-            source={require("../../assets/images/songsCoverPicks/coverImage17.png")}
-            style={{
-              marginVertical: Sizes.fixPadding,
-              width: 190.0,
-              height: 210.0,
-              borderRadius: Sizes.fixPadding - 5.0,
-            }}
-          />
-        </SharedElement>
-        <Text style={{ ...Fonts.blackColor14Bold }}>Kamado Tanjiro no Uta</Text>
-        <Text style={{ ...Fonts.grayColor10Medium }}>Nami Nakagowa</Text>
+        <Image
+          source={{ uri: `${nextOnList[songIndex]?.audio.imageUrl}` }}
+          style={{
+            marginVertical: Sizes.fixPadding,
+            width: 190.0,
+            height: 210.0,
+            borderRadius: Sizes.fixPadding - 5.0,
+          }}
+        />
+        <Text style={{ ...Fonts.blackColor14Bold }}>
+          {nextOnList[songIndex]?.audio.name}
+        </Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>
+          {nextOnList[songIndex]?.audio.artist.artist_name}
+        </Text>
       </View>
     );
   }
@@ -372,7 +326,7 @@ const NowPlayingScreen = ({ navigation, route }) => {
   function songTimeInfo() {
     return (
       <View style={styles.songTimeInfoWrapStyle}>
-        <Text style={{ ...Fonts.grayColor10Medium }}>2:20</Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>0:00</Text>
         <Text style={{ ...Fonts.grayColor10Medium }}>3:58</Text>
       </View>
     );
