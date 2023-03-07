@@ -18,7 +18,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
+import { Ionicons } from "@expo/vector-icons";
+import { useGetAudioForArtistAPI } from "../../hooks/playlistTracks.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -123,7 +124,7 @@ const artistTracksScreen = ({ navigation }) => {
     isSuccess: successTracksFromPlaylist,
     isError: isErrorTracksFromPlaylist,
     error: errorTracksFromPlaylist,
-  } = useGetTracksFromPlaylist();
+  } = useGetAudioForArtistAPI();
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
@@ -352,11 +353,14 @@ const artistTracksScreen = ({ navigation }) => {
         </Menu>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialIcons
-            name="shuffle"
+          <Ionicons
+            name="add-outline"
             size={20}
             color="black"
             style={{ marginRight: Sizes.fixPadding }}
+            onPress={() => {
+              navigation.push("SelectGenreArtist");
+            }}
           />
           <MaterialCommunityIcons
             name="arrow-right-drop-circle"
@@ -374,7 +378,7 @@ const artistTracksScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.push("ManageArtistAlbum")}
           >
             <Icon
               start={{ x: 0, y: 1 }}
