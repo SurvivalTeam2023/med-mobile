@@ -7,3 +7,14 @@ export const getPlaylistAPI = (payload) => {
   const url = "/playlist" + `${queryParam}`;
   return CallAPI.get(url);
 };
+
+export const createPlaylistAPI = (payload) => {
+  const { name, imageUrl, status, description } = payload;
+  const url = "/playlist";
+  return CallAPI.post(url, {
+    name,
+    imageUrl,
+    status,
+    description,
+  });
+};
