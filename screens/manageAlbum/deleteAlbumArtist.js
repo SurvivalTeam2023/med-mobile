@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,41 +11,22 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Menu, MenuItem } from "react-native-material-menu";
-import { useGetPlaylist } from "../../hooks/playlist.hook";
+import {
+  useDeletePlaylistAPI,
+  useGetPlaylist,
+} from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
+import { AntDesign } from "@expo/vector-icons";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
-let forYouList = [
-  // {
-  //   id: "1f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-  //   albumName: "Don't call me up",
-  //   artist: "Mabel",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "2f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-  //   albumName: "Sugar and brownies",
-  //   artist: "Dharia",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "3f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-  //   albumName: "Pretty girl",
-  //   artist: "Maggie Lindemann",
-  //   isFavorite: false,
-  // },
-];
 let album = [
   {
     id: "1r",
@@ -68,33 +49,55 @@ let album = [
     category: "Pop Music",
   },
 ];
-let activeAlbum;
-const ManageArtistAlbumScreen = ({ navigation }) => {
-  const [state, setState] = useState({
-    forYouData: forYouList,
-    pauseSong: true,
-    showOptions: false,
-  });
+const DeleteAlbumArtist = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetPlaylist();
-
   const dispatch = useDispatch();
-  const handlePlaylistPress = (playlistId) => {
-    try {
-      dispatch(playlistAction.setPlaylistId(playlistId));
-    } catch (error) {
-      console.log("Error saving selected playlist ID", error);
-    }
-  };
+  const { mutate } = useDeletePlaylistAPI();
   if (isSuccess) {
-    album = data["data"].items;
-    activeAlbum = album.filter((item) => item.status === "ACTIVE");
+    album = data["data"].items.filter((item) => item.status === "ACTIVE");
   }
   if (isError) {
     console.log("error", error);
   }
-  const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showOptions } = state;
+  const [albumList, setAlbumList] = useState([]);
+  useEffect(() => {
+    setAlbumList(album);
+  }, []);
+
+  function updateAlbum() {
+    const playlistId = store.getState().playlist.playlistId;
+    const updateAlbum = albumList.filter((item) => item.id !== playlistId);
+    setAlbumList(updateAlbum);
+  }
+
+  const deleteAlbum = () => {
+    mutate({
+      onSuccess: (data) => {},
+      onError: (error) => {
+        alert("Some errors happened please try again later");
+        console.log("error", error);
+      },
+    });
+    updateAlbum();
+  };
+
+  const showConfirmDialog = () => {
+    return Alert.alert("Are your sure?", "Do you want to delete this album", [
+      // The "Yes" button
+      {
+        text: "Yes",
+        onPress: async () => {
+          deleteAlbum();
+        },
+      },
+      // The "No" button
+      // Does nothing but dismiss the dialog when tapped
+      {
+        text: "No",
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -106,7 +109,6 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
         >
           {cornerImage()}
           {header()}
-          {searchBar()}
           {recommendedInfo()}
         </ScrollView>
       </View>
@@ -118,7 +120,8 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          handlePlaylistPress(item.id), navigation.push("ArtistTrack");
+          dispatch(playlistAction.setPlaylistId(item.id));
+          showConfirmDialog();
         }}
       >
         <ImageBackground
@@ -152,38 +155,18 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
 
     return (
       <View>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Album List</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
-        </View>
         <FlatList
-          data={activeAlbum}
+          data={albumList}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={{ paddingLeft: Sizes.fixPadding * 1.5 }}
+          horizontal={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            marginTop: Sizes.fixPadding * 2.0,
+          }}
         />
       </View>
-    );
-  }
-
-  function searchBar() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Search")}
-        style={styles.searchBarWrapStyle}
-      >
-        <Text style={{ ...Fonts.grayColor15Medium }}>
-          Search for artist,song or lyrics...
-        </Text>
-        <MaterialIcons name="search" color={Colors.grayColor} size={25} />
-      </TouchableOpacity>
     );
   }
 
@@ -197,6 +180,15 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             height: 170,
           }}
         />
+        <AntDesign
+          onPress={() => {
+            navigation.push("ManageArtistAlbum");
+          }}
+          style={{ width: 30 }}
+          name="left"
+          size={27}
+          color="black"
+        />
       </View>
     );
   }
@@ -206,7 +198,11 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Manage Album</Text>}
+          maskElement={
+            <Text style={{ ...Fonts.bold22, justifyContent: "center" }}>
+              Select Album to delete
+            </Text>
+          }
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
@@ -215,69 +211,14 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        <Menu
-          visible={showOptions}
-          style={{ backgroundColor: Colors.whiteColor }}
-          anchor={
-            <MaterialIcons
-              name="more-vert"
-              size={24}
-              color={Colors.blackColor}
-              style={{ alignSelf: "flex-end" }}
-              onPress={() => updateState({ showOptions: true })}
-            />
-          }
-          onRequestClose={() => updateState({ showOptions: false })}
-        >
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false }),
-                navigation.push("CreateAlbum");
-            }}
-          >
-            Add New Album
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false }),
-                navigation.push("DeleteAlbumArtist");
-            }}
-          >
-            Delete Album
-          </MenuItem>
-        </Menu>
       </View>
     );
   }
 };
-// <MenuItem
-// pressColor="transparent"
-// textStyle={{
-//   marginRight: Sizes.fixPadding * 3.0,
-//   marginTop: Sizes.fixPadding - 100.0,
-//   ...Fonts.blackColor12SemiBold,
-// }}
-// onPress={() => {
-//   updateState({ showOptions: false });
-// }}
-// >
-// Contact Us
-// </MenuItem>
 const styles = StyleSheet.create({
   headerWrapStyle: {
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: Sizes.fixPadding * 2.0,
+    marginHorizontal: Sizes.fixPadding * 6.5,
     marginTop: Sizes.fixPadding - 30.0,
   },
   searchBarWrapStyle: {
@@ -344,4 +285,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ManageArtistAlbumScreen;
+export default DeleteAlbumArtist;

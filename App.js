@@ -30,6 +30,7 @@ import artistTracksScreen from "./screens/manageAlbum/artistTrack";
 import CreateAlbumScreen from "./screens/createAlbum/createAlbumScreen";
 import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
+import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
 
 LogBox.ignoreAllLogs();
 
@@ -72,6 +73,10 @@ const App = () => {
               component={CreateAudioArtistScreen}
             />
             <Stack.Screen name="CreateAlbum" component={CreateAlbumScreen} />
+            <Stack.Screen
+              name="DeleteAlbumArtist"
+              component={DeleteAlbumArtist}
+            />
             <Stack.Screen
               name="SelectGenreArtist"
               component={SelectGenreArtistScreen}

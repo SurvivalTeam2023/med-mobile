@@ -168,8 +168,6 @@ const ChooseMusicScreen = ({ navigation }) => {
           style={item.selected ? styles.selectedItem : styles.item}
           onPress={() => {
             updateMusics({ id: item?.id });
-            // handleGenrePress(item.id);
-            // createFavorite();
           }}
         >
           <ImageBackground
@@ -252,7 +250,7 @@ const ChooseMusicScreen = ({ navigation }) => {
         data={musicsData}
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
-        numColumns={3}
+        horizontal={false}
         columnWrapperStyle={{
           flexDirection: "row",
           justifyContent: "space-between",

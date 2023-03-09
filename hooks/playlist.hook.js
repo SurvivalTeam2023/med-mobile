@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from "react-query";
-import { createPlaylistAPI, getPlaylistAPI } from "../api/playlist.api";
+import {
+  createPlaylistAPI,
+  deletePlaylistAPI,
+  getPlaylistAPI,
+} from "../api/playlist.api";
 
 export const useGetPlaylist = (payload) =>
   useQuery({
@@ -13,4 +17,9 @@ export const useGetPlaylist = (payload) =>
 export const useCreatePlaylistAPI = (payload) =>
   useMutation({
     mutationFn: (payload) => createPlaylistAPI(payload),
+  });
+
+export const useDeletePlaylistAPI = (payload) =>
+  useMutation({
+    mutationFn: (payload) => deletePlaylistAPI(payload),
   });

@@ -8,6 +8,12 @@ export const getPlaylistAPI = (payload) => {
   return CallAPI.get(url);
 };
 
+export const deletePlaylistAPI = (payload) => {
+  const playlistId = store.getState().playlist.playlistId;
+  const url = "/playlist/" + `${playlistId}`;
+  return CallAPI.delete(url);
+};
+
 export const createPlaylistAPI = (payload) => {
   const { name, imageUrl, status, description } = payload;
   const url = "/playlist";
