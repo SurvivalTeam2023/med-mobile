@@ -33,8 +33,6 @@ let songOptionsList = [
 
 let tracksList = [];
 
-let genreList = [];
-
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const TracksScreen = ({ navigation }) => {
@@ -53,7 +51,6 @@ const TracksScreen = ({ navigation }) => {
 
   if (successTracksFromGenre) {
     tracksList = dataTracksFromGenre["data"];
-    console.log("genreList", tracksList);
   }
   if (isErrorTracksFromGenre) {
     console.log("error", errorTracksFromGenre);

@@ -18,7 +18,6 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
-import { useGetTracksFromGenre } from "../../hooks/genreTracks.api";
 
 const { width } = Dimensions.get("window");
 
@@ -109,8 +108,6 @@ let tracksList = [
   // },
 ];
 
-let genreList = [];
-
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const TracksScreen = ({ navigation }) => {
@@ -133,20 +130,6 @@ const TracksScreen = ({ navigation }) => {
   if (isErrorTracksFromPlaylist) {
     console.log("error", errorTracksFromPlaylist);
   }
-
-  // const {
-  //   data: dataTracksFromGenre,
-  //   isSuccess: successTracksFromGenre,
-  //   isError: isErrorTracksFromGenre,
-  //   error: errorTracksFromGenre,
-  // } = useGetTracksFromGenre();
-
-  // if (successTracksFromGenre) {
-  //   genreList = dataTracksFromGenre["data"].items;
-  // }
-  // if (isErrorTracksFromGenre) {
-  //   console.log("error", errorTracksFromGenre);
-  // }
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
