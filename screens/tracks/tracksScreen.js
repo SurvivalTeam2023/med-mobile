@@ -18,6 +18,7 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
+import { useGetTracksFromGenre } from "../../hooks/genreTracks.api";
 
 const { width } = Dimensions.get("window");
 
@@ -31,82 +32,84 @@ let songOptionsList = [
 ];
 
 let tracksList = [
-  {
-    id: "1",
-    songName: "Leave Me Lonely",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "2",
-    songName: "There's Nothing Holdin' Me Back",
-    artist: "Shawn Menders",
-  },
-  {
-    id: "3",
-    songName: "Yeh Dosti Hum Nahi Todenge",
-    artist: "Kishore Kumar And RD Barman",
-  },
-  {
-    id: "4",
-    songName: "Bhanware Ki Gunjan",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "5",
-    songName: "Dangerous Woman",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "6",
-    songName: "Party Rock Anthem",
-    artist: "GoonRock",
-  },
-  {
-    id: "7",
-    songName: "What Makes You Beautiful",
-    artist: "One Direction",
-  },
-  {
-    id: "8",
-    songName: "Neele Neele Ambar Par",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "9",
-    songName: "Rim Jhim Gire Sawan",
-    artist: "Hasrat Jaipuri",
-  },
-  {
-    id: "10",
-    songName: "Aate Jaate Khoobsurat Awara Sadko",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "11",
-    songName: "Leave Me Lonely",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "12",
-    songName: "There's Nothing Holdin' Me Back",
-    artist: "Shawn Menders",
-  },
-  {
-    id: "13",
-    songName: "Dangerous Woman",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "14",
-    songName: "Aate Jaate Khoobsurat Awara Sadko",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "15",
-    songName: "Party Rock Anthem",
-    artist: "GoonRock",
-  },
+  // {
+  //   id: "1",
+  //   songName: "Leave Me Lonely",
+  //   artist: "Ariana Grande",
+  // },
+  // {
+  //   id: "2",
+  //   songName: "There's Nothing Holdin' Me Back",
+  //   artist: "Shawn Menders",
+  // },
+  // {
+  //   id: "3",
+  //   songName: "Yeh Dosti Hum Nahi Todenge",
+  //   artist: "Kishore Kumar And RD Barman",
+  // },
+  // {
+  //   id: "4",
+  //   songName: "Bhanware Ki Gunjan",
+  //   artist: "Kishore Kumar",
+  // },
+  // {
+  //   id: "5",
+  //   songName: "Dangerous Woman",
+  //   artist: "Ariana Grande",
+  // },
+  // {
+  //   id: "6",
+  //   songName: "Party Rock Anthem",
+  //   artist: "GoonRock",
+  // },
+  // {
+  //   id: "7",
+  //   songName: "What Makes You Beautiful",
+  //   artist: "One Direction",
+  // },
+  // {
+  //   id: "8",
+  //   songName: "Neele Neele Ambar Par",
+  //   artist: "Kishore Kumar",
+  // },
+  // {
+  //   id: "9",
+  //   songName: "Rim Jhim Gire Sawan",
+  //   artist: "Hasrat Jaipuri",
+  // },
+  // {
+  //   id: "10",
+  //   songName: "Aate Jaate Khoobsurat Awara Sadko",
+  //   artist: "Kishore Kumar",
+  // },
+  // {
+  //   id: "11",
+  //   songName: "Leave Me Lonely",
+  //   artist: "Ariana Grande",
+  // },
+  // {
+  //   id: "12",
+  //   songName: "There's Nothing Holdin' Me Back",
+  //   artist: "Shawn Menders",
+  // },
+  // {
+  //   id: "13",
+  //   songName: "Dangerous Woman",
+  //   artist: "Ariana Grande",
+  // },
+  // {
+  //   id: "14",
+  //   songName: "Aate Jaate Khoobsurat Awara Sadko",
+  //   artist: "Kishore Kumar",
+  // },
+  // {
+  //   id: "15",
+  //   songName: "Party Rock Anthem",
+  //   artist: "GoonRock",
+  // },
 ];
+
+let genreList = [];
 
 const sortOptions = ["Name", "Date Added", "Artist"];
 
@@ -125,12 +128,25 @@ const TracksScreen = ({ navigation }) => {
   } = useGetTracksFromPlaylist();
 
   if (successTracksFromPlaylist) {
-    tracksList = dataTracksFromPlaylist["data"];
+    tracksList = dataTracksFromPlaylist["data"].items;
   }
   if (isErrorTracksFromPlaylist) {
     console.log("error", errorTracksFromPlaylist);
   }
 
+  // const {
+  //   data: dataTracksFromGenre,
+  //   isSuccess: successTracksFromGenre,
+  //   isError: isErrorTracksFromGenre,
+  //   error: errorTracksFromGenre,
+  // } = useGetTracksFromGenre();
+
+  // if (successTracksFromGenre) {
+  //   genreList = dataTracksFromGenre["data"].items;
+  // }
+  // if (isErrorTracksFromGenre) {
+  //   console.log("error", errorTracksFromGenre);
+  // }
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
