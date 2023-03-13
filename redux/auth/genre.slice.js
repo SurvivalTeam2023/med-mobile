@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  favoriteId: [],
+  genreId: null,
 };
 
 const reducer = createSlice({
   name: "genre",
   initialState,
   reducers: {
-    setFavoriteId: (state, action) => {
-      state.favoriteId = action.payload;
+    setGenreId: (state, action) => {
+      state.genreId = action.payload;
     },
   },
 });
 
-export const favoriteAction = {
+export const genreAction = {
   ...reducer.actions,
 };
-export const favoriteReducer = reducer.reducer;
+export const genreReducer = reducer.reducer;

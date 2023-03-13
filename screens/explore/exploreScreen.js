@@ -23,8 +23,10 @@ import { useGetFavorite } from "../../hooks/favorite.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetHistory } from "../../hooks/history.hook";
 import { setPlaylistId } from "../../redux/auth/playlist.slice";
+import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
-import { setGenreId } from "../../redux/auth/favorite.slice";
+import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
+import { genreAction } from "../../redux/auth/genre.slice";
 
 const { width } = Dimensions.get("window");
 
@@ -191,15 +193,23 @@ const ExploreScreen = ({ navigation }) => {
 
   const handlePlaylistPress = (playlistId) => {
     try {
-      dispatch(setPlaylistId(playlistId));
+      dispatch(playlistAction.setPlaylistId(playlistId));
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }
   };
 
-  const handleFavoritedPress = (genreId) => {
+  const handleGenrePress = (genreId) => {
     try {
-      dispatch(setGenreId(genreId));
+      dispatch(genreAction.setGenreId(genreId));
+    } catch (error) {
+      console.log("Error saving selected genre ID", error);
+    }
+  };
+
+  const handleFavoritedPress = (favoriteId) => {
+    try {
+      dispatch(favoriteAction.setFavoriteId(favoriteId));
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }
@@ -323,6 +333,30 @@ const ExploreScreen = ({ navigation }) => {
   }
 
   function albumsInfo() {
+    const renderItem = ({ item }) => (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => {
+          handleGenrePress(item?.id);
+          navigation.push("GenreTracks");
+        }}
+      >
+        <SharedElement id={item.id}>
+          <Image
+            source={{ uri: `${item?.image}` }}
+            style={styles.recentlyPalyedSongImageStyle}
+          />
+        </SharedElement>
+        <Text
+          style={{
+            marginTop: Sizes.fixPadding - 7.0,
+            ...Fonts.blackColor12SemiBold,
+          }}
+        >
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    );
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
@@ -333,110 +367,70 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        <View
-          style={{
-            marginHorizontal: Sizes.fixPadding * 2.0,
-            flexDirection: "row",
-            justifyContent: "space-between",
+        <FlatList
+          data={albumsList}
+          keyExtractor={(item) => `${item.id}`}
+          renderItem={renderItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingLeft: Sizes.fixPadding * 2.0,
+            paddingRight: Sizes.fixPadding,
           }}
-        >
-          {albumsList?.map((item) => (
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => navigation.push("Tracks")}
-              key={`${item.id}`}
-            >
-              <View
-                style={{
-                  width: width / (albumsList.length + 0.8),
-                  ...styles.recentlyPalyedSongImageStyle,
-                }}
-              >
-                <Image
-                  source={{ uri: `${item.image}` }}
-                  // resizeMode="stretch"
-                  // style={{
-                  //   width: width / (albumsList.length + 0.5),
-                  //   height: 100,
-                  //   borderRadius: Sizes.fixPadding - 5.0,
-                  // }}
-                  style={styles.recentlyPalyedSongImageStyle}
-                />
-              </View>
-              <Text
-                style={{
-                  marginTop: Sizes.fixPadding - 7.0,
-                  ...Fonts.blackColor12SemiBold,
-                }}
-              >
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        />
       </View>
     );
   }
 
   function playListInfo() {
+    const renderItem = ({ item }) => (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => {
+          handlePlaylistPress(item?.id);
+          navigation.push("Tracks");
+        }}
+      >
+        <SharedElement id={item.id}>
+          <Image
+            source={{ uri: `${item?.imageUrl}` }}
+            style={styles.recentlyPalyedSongImageStyle}
+          />
+        </SharedElement>
+        <Text
+          style={{
+            marginTop: Sizes.fixPadding - 7.0,
+            ...Fonts.blackColor12SemiBold,
+          }}
+        >
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    );
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Playlists</Text>
+          <Text style={styles.titleStyle}>Playlist</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
             size={25}
           />
         </View>
-        <View
-          style={{
-            marginHorizontal: Sizes.fixPadding * 2.0,
-            flexDirection: "row",
-            justifyContent: "space-between",
+        <FlatList
+          data={playlists}
+          keyExtractor={(item) => `${item.id}`}
+          renderItem={renderItem}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingLeft: Sizes.fixPadding * 2.0,
+            paddingRight: Sizes.fixPadding,
           }}
-        >
-          {playlists?.map((item) => (
-            <TouchableOpacity
-              activeOpacity={0.9}
-              key={`${item.id}`}
-              onPress={() => {
-                handlePlaylistPress(item?.id);
-                navigation.push("Tracks");
-              }}
-            >
-              <Image
-                source={{ uri: item?.imageUrl }}
-                style={{
-                  width: width / (playlists?.length + 0.8),
-                  ...styles.playListImageStyle,
-                }}
-              />
-              <Text
-                style={{
-                  marginTop: Sizes.fixPadding - 7.0,
-                  ...Fonts.blackColor12SemiBold,
-                }}
-              >
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        />
       </View>
     );
   }
-
-  // function updateForYou({ id }) {
-  //   const newList = forYouData.map((item) => {
-  //     if (item.id === id) {
-  //       const updatedItem = { ...item, isFavorite: !item.isFavorite };
-  //       return updatedItem;
-  //     }
-  //     return item;
-  //   });
-  //   updateState({ forYouData: newList });
-  // }
 
   function forYouInfo() {
     return (
@@ -809,7 +803,7 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding - 5.0,
   },
   albumImageWrapStyle: {
-    // alignSelf: "center",
+    alignSelf: "center",
     backgroundColor: Colors.whiteColor,
     borderWidth: 2.0,
     borderColor: Colors.lightGrayColor,

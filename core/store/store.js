@@ -5,6 +5,7 @@ import { favoriteReducer } from "../../redux/auth/favorite.slice";
 import { genreArtistReducer } from "../../redux/auth/genreArtist.slice";
 import { playlistReducer } from "../../redux/auth/playlist.slice";
 import { questionReducer } from "../../redux/auth/question.slice";
+import { genreReducer } from "../../redux/auth/genre.slice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -12,6 +13,7 @@ export const store = configureStore({
     question: questionReducer,
     favorite: favoriteReducer,
     genreArtist: genreArtistReducer,
+    genre: genreReducer,
   },
 });
 export const useAppDispatch = () => useDispatch;

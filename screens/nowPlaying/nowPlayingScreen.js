@@ -127,7 +127,7 @@ const NowPlayingScreen = ({ navigation }) => {
         >
           Tracks list
         </Text>
-        {nextOnList.map((item, index) => (
+        {nextOnList?.map((item, index) => (
           <View key={`${item.id}`}>
             <TouchableOpacity
               key={index}
