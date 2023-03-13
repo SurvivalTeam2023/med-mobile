@@ -25,7 +25,7 @@ import { useGetHistory } from "../../hooks/history.hook";
 import { setPlaylistId } from "../../redux/auth/playlist.slice";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
-import { setGenreId } from "../../redux/auth/favorite.slice";
+import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
 import { genreAction } from "../../redux/auth/genre.slice";
 
 const { width } = Dimensions.get("window");
@@ -202,15 +202,14 @@ const ExploreScreen = ({ navigation }) => {
   const handleGenrePress = (genreId) => {
     try {
       dispatch(genreAction.setGenreId(genreId));
-      console.log("handleGenrePress", genreId);
     } catch (error) {
       console.log("Error saving selected genre ID", error);
     }
   };
 
-  const handleFavoritedPress = (genreId) => {
+  const handleFavoritedPress = (favoriteId) => {
     try {
-      dispatch(setGenreId(genreId));
+      dispatch(favoriteAction.setFavoriteId(favoriteId));
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }
@@ -804,7 +803,7 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding - 5.0,
   },
   albumImageWrapStyle: {
-    // alignSelf: "center",
+    alignSelf: "center",
     backgroundColor: Colors.whiteColor,
     borderWidth: 2.0,
     borderColor: Colors.lightGrayColor,

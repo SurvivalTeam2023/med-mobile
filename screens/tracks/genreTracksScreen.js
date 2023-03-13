@@ -18,7 +18,7 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
-import { useGetTracksFromGenre } from "../../hooks/genreTracks.api";
+import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -211,10 +211,10 @@ const TracksScreen = ({ navigation }) => {
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
               <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                {item.audio.name}
+                {item?.audio.name}
               </Text>
               <Text style={{ ...Fonts.grayColor11Medium }}>
-                {item.audio.artist.artist_name}
+                {item?.audio.artist.artist_name}
               </Text>
             </View>
           </View>
