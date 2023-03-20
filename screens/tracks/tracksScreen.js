@@ -18,6 +18,9 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
+import { Modal } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 
 const { width } = Dimensions.get("window");
 
@@ -30,83 +33,7 @@ let songOptionsList = [
   "Set as",
 ];
 
-let tracksList = [
-  // {
-  //   id: "1",
-  //   songName: "Leave Me Lonely",
-  //   artist: "Ariana Grande",
-  // },
-  // {
-  //   id: "2",
-  //   songName: "There's Nothing Holdin' Me Back",
-  //   artist: "Shawn Menders",
-  // },
-  // {
-  //   id: "3",
-  //   songName: "Yeh Dosti Hum Nahi Todenge",
-  //   artist: "Kishore Kumar And RD Barman",
-  // },
-  // {
-  //   id: "4",
-  //   songName: "Bhanware Ki Gunjan",
-  //   artist: "Kishore Kumar",
-  // },
-  // {
-  //   id: "5",
-  //   songName: "Dangerous Woman",
-  //   artist: "Ariana Grande",
-  // },
-  // {
-  //   id: "6",
-  //   songName: "Party Rock Anthem",
-  //   artist: "GoonRock",
-  // },
-  // {
-  //   id: "7",
-  //   songName: "What Makes You Beautiful",
-  //   artist: "One Direction",
-  // },
-  // {
-  //   id: "8",
-  //   songName: "Neele Neele Ambar Par",
-  //   artist: "Kishore Kumar",
-  // },
-  // {
-  //   id: "9",
-  //   songName: "Rim Jhim Gire Sawan",
-  //   artist: "Hasrat Jaipuri",
-  // },
-  // {
-  //   id: "10",
-  //   songName: "Aate Jaate Khoobsurat Awara Sadko",
-  //   artist: "Kishore Kumar",
-  // },
-  // {
-  //   id: "11",
-  //   songName: "Leave Me Lonely",
-  //   artist: "Ariana Grande",
-  // },
-  // {
-  //   id: "12",
-  //   songName: "There's Nothing Holdin' Me Back",
-  //   artist: "Shawn Menders",
-  // },
-  // {
-  //   id: "13",
-  //   songName: "Dangerous Woman",
-  //   artist: "Ariana Grande",
-  // },
-  // {
-  //   id: "14",
-  //   songName: "Aate Jaate Khoobsurat Awara Sadko",
-  //   artist: "Kishore Kumar",
-  // },
-  // {
-  //   id: "15",
-  //   songName: "Party Rock Anthem",
-  //   artist: "GoonRock",
-  // },
-];
+let tracksList = [];
 
 const sortOptions = ["Name", "Date Added", "Artist"];
 
@@ -126,10 +53,40 @@ const TracksScreen = ({ navigation }) => {
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
+    console.log("tracksList", tracksList);
   }
   if (isErrorTracksFromPlaylist) {
     console.log("error", errorTracksFromPlaylist);
   }
+
+  const handleOptionSelect = (option) => {
+    // Perform action based on selected option
+    switch (option) {
+      case "Share":
+        console.log("Share option selected");
+        break;
+      case "Track Details":
+        setIsModalVisible(true);
+        break;
+      case "Add to Playlist":
+        console.log("Add to playlist option selected");
+        break;
+      case "Album":
+        console.log("Album option selected");
+        break;
+      case "Artist":
+        console.log("Artist option selected");
+        break;
+      case "Set as":
+        console.log("Set as option selected");
+        break;
+      default:
+        console.log("Invalid option selected");
+    }
+  };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
@@ -207,7 +164,7 @@ const TracksScreen = ({ navigation }) => {
   }
 
   function tracks() {
-    const CustomMenu = () => {
+    const CustomMenu = ({ item }) => {
       var _menu = null;
 
       const setMenuRef = (ref) => {
@@ -223,41 +180,73 @@ const TracksScreen = ({ navigation }) => {
       };
 
       return (
-        <Menu
-          ref={setMenuRef}
-          anchor={
-            <MaterialIcons
-              name="more-vert"
-              color={Colors.grayColor}
-              size={20}
-              onPress={showMenu}
-            />
-          }
-          style={{
-            paddingTop: Sizes.fixPadding,
-            backgroundColor: Colors.whiteColor,
-          }}
-        >
-          {songOptionsList.map((item, index) => (
-            <View key={`${index}`}>
-              <MenuItem
-                pressColor="transparent"
-                style={{ height: 30.0 }}
-                textStyle={{
-                  marginRight: Sizes.fixPadding * 5.0,
-                  ...Fonts.blackColor12SemiBold,
-                }}
-                onPress={hideMenu}
-              >
-                {item}
-              </MenuItem>
-            </View>
-          ))}
-        </Menu>
+        <View>
+          <Modal
+            visible={isModalVisible}
+            animationType="fade"
+            transparent={true}
+          >
+            <BlurView intensity={200} style={StyleSheet.absoluteFill}>
+              <View style={styles.modalContainer}>
+                <View style={styles.header}>
+                  <Text style={styles.headerText}>Track Details</Text>
+                </View>
+                <Text style={styles.headerSubtext}>Track Name</Text>
+                <Text>{item?.name}</Text>
+                <Text style={styles.headerSubtext}>Artist</Text>
+                <Text>{item?.artist.artist_name}</Text>
+                <TouchableOpacity
+                  onPress={() => setIsModalVisible(false)}
+                  style={{
+                    position: "absolute",
+                    top: 20,
+                    right: 20,
+                  }}
+                >
+                  <Ionicons name="ios-close" size={32} color="black" />
+                </TouchableOpacity>
+              </View>
+            </BlurView>
+          </Modal>
+          <Menu
+            ref={setMenuRef}
+            anchor={
+              <MaterialIcons
+                name="more-vert"
+                color={Colors.grayColor}
+                size={20}
+                onPress={showMenu}
+              />
+            }
+            style={{
+              paddingTop: Sizes.fixPadding,
+              backgroundColor: Colors.whiteColor,
+            }}
+          >
+            {songOptionsList.map((item, index) => (
+              <View key={`${index}`}>
+                <MenuItem
+                  pressColor="transparent"
+                  style={{ height: 30.0 }}
+                  textStyle={{
+                    marginRight: Sizes.fixPadding * 5.0,
+                    ...Fonts.blackColor12SemiBold,
+                  }}
+                  onPress={() => {
+                    hideMenu();
+                    handleOptionSelect(item);
+                  }}
+                >
+                  {item}
+                </MenuItem>
+              </View>
+            ))}
+          </Menu>
+        </View>
       );
     };
 
-    return tracksList.map((item) => (
+    return tracksList?.map((item) => (
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
@@ -265,7 +254,7 @@ const TracksScreen = ({ navigation }) => {
           style={styles.tracksInfoWrapStyle}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <SharedElement id={item.id}>
+            <SharedElement id={item?.id}>
               <LinearGradient
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
@@ -285,13 +274,15 @@ const TracksScreen = ({ navigation }) => {
               </LinearGradient>
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
-              <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
+              <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                {item?.name}
+              </Text>
               <Text style={{ ...Fonts.grayColor11Medium }}>
-                {item.artist_name}
+                {item?.artist.artist_name}
               </Text>
             </View>
           </View>
-          <CustomMenu />
+          <CustomMenu item={item} />
         </TouchableOpacity>
       </View>
     ));
@@ -548,6 +539,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: Sizes.fixPadding * 2.0,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+    margin: 40,
+    height: 269.0,
+    alignSelf: "center",
+    position: "absolute",
+    left: 0.0,
+    right: 0.0,
+    bottom: "30%",
+    elevation: 5.0,
+    paddingHorizontal: Sizes.fixPadding * 2.0,
+    borderRadius: 22.5,
+    borderColor: "#DFDFDF",
+    borderWidth: 0.5,
+    marginHorizontal: Sizes.fixPadding + 5.0,
+  },
+  header: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 0,
+  },
+  headerSubtext: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginTop: 10,
   },
 });
 
