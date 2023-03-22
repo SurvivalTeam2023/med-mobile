@@ -29,14 +29,6 @@ import { audioArtistAction } from "../../redux/audioArtist";
 import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
-let songOptionsList = [
-  "Share",
-  "Track Details",
-  "Add to Playlist",
-  "Album",
-  "Artist",
-  "Set as",
-];
 const sortOptions = ["Name", "Date Added", "Artist"];
 // let tracksList = [
 //   // {
@@ -139,7 +131,6 @@ const artistTracksScreen = ({ navigation }) => {
         (item) => item.status === "ACTIVE"
       );
       setTracksList(filteredTracksList);
-      console.log("here_1");
     }
     if (isErrorTracksFromPlaylist) {
       console.log("errorTrack", errorTracksFromPlaylist);
@@ -150,7 +141,6 @@ const artistTracksScreen = ({ navigation }) => {
     const audioId = store.getState().audioArtist.audioArtistId;
     const updatedAudioList = tracksList.filter((item) => item.id !== audioId);
     setTracksList(updatedAudioList);
-    console.log("Here_2");
   }
 
   const handleDeleteAudio = () => {
