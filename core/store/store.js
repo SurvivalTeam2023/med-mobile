@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import { audioArtistReducer } from "../../redux/audioArtist";
 import { userReducer } from "../../redux/auth/auth.slice";
 import { favoriteReducer } from "../../redux/auth/favorite.slice";
 import { genreArtistReducer } from "../../redux/auth/genreArtist.slice";
@@ -12,6 +13,7 @@ export const store = configureStore({
     question: questionReducer,
     favorite: favoriteReducer,
     genreArtist: genreArtistReducer,
+    audioArtist: audioArtistReducer,
   },
 });
 export const useAppDispatch = () => useDispatch;

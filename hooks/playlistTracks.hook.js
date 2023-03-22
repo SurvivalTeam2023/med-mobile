@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import {
   createAudioForArtistApi,
+  deleteAudioArtistAPI,
   getAudioForArtistAPI,
   getTracksAPI,
 } from "../api/playlistTracks.api";
@@ -24,4 +25,8 @@ export const useGetAudioForArtistAPI = (payload) =>
 export const useCreateAudioForArtistAPI = (payload) =>
   useMutation({
     mutationFn: (payload) => createAudioForArtistApi(payload),
+  });
+export const useDeleteAudioArtistAPI = (payload) =>
+  useMutation({
+    mutationFn: (payload) => deleteAudioArtistAPI(payload),
   });
