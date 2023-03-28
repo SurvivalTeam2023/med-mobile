@@ -24,7 +24,8 @@ let nextOnList = [];
 const NowPlayingScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
   if (isSuccess) {
-    nextOnList = data["data"];
+    nextOnList = data["data"].items;
+    console.log("nextOnList", nextOnList);
   }
   if (isError) {
     console.log("error", error);
@@ -52,7 +53,7 @@ const NowPlayingScreen = ({ navigation }) => {
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync({
-      uri: nextOnList[songIndex].audio.file.url,
+      uri: nextOnList[songIndex]?.audio.file.url,
     });
     setIsPlaying(false);
     setSound(sound);
@@ -127,8 +128,8 @@ const NowPlayingScreen = ({ navigation }) => {
         >
           Tracks list
         </Text>
-        {nextOnList.map((item, index) => (
-          <View key={`${item.id}`}>
+        {nextOnList?.map((item, index) => (
+          <View key={`${item?.id}`}>
             <TouchableOpacity
               key={index}
               activeOpacity={0.9}
@@ -140,7 +141,7 @@ const NowPlayingScreen = ({ navigation }) => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={{ uri: item.audio.imageUrl }}
+                  source={{ uri: item?.audio.imageUrl }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -149,10 +150,10 @@ const NowPlayingScreen = ({ navigation }) => {
                 />
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.audio.name}
+                    {item?.audio.name}
                   </Text>
                   <Text style={{ ...Fonts.grayColor10Medium }}>
-                    {item.audio.artist.artist_name}
+                    {item?.audio.artist.artist_name}
                   </Text>
                 </View>
               </View>
