@@ -27,3 +27,8 @@ export const createAudioForArtistApi = (payload) => {
     genreId,
   });
 };
+export const deleteAudioArtistAPI = (payload) => {
+  const audioId = store.getState().audioArtist.audioArtistId;
+  const url = "/audio/" + `${audioId}`;
+  return CallAPI.delete(url);
+};
