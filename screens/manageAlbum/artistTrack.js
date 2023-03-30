@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,100 +20,98 @@ import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { Ionicons } from "@expo/vector-icons";
-import { useGetAudioForArtistAPI } from "../../hooks/playlistTracks.hook";
+import {
+  useDeleteAudioArtistAPI,
+  useGetAudioForArtistAPI,
+} from "../../hooks/playlistTracks.hook";
+import { useDispatch } from "react-redux";
+import { audioArtistAction } from "../../redux/audioArtist";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
-
-let songOptionsList = [
-  "Share",
-  "Track Details",
-  "Add to Playlist",
-  "Album",
-  "Artist",
-  "Set as",
-];
-
-let tracksList = [
-  {
-    id: "1",
-    songName: "Leave Me Lonely",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "2",
-    songName: "There's Nothing Holdin' Me Back",
-    artist: "Shawn Menders",
-  },
-  {
-    id: "3",
-    songName: "Yeh Dosti Hum Nahi Todenge",
-    artist: "Kishore Kumar And RD Barman",
-  },
-  {
-    id: "4",
-    songName: "Bhanware Ki Gunjan",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "5",
-    songName: "Dangerous Woman",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "6",
-    songName: "Party Rock Anthem",
-    artist: "GoonRock",
-  },
-  {
-    id: "7",
-    songName: "What Makes You Beautiful",
-    artist: "One Direction",
-  },
-  {
-    id: "8",
-    songName: "Neele Neele Ambar Par",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "9",
-    songName: "Rim Jhim Gire Sawan",
-    artist: "Hasrat Jaipuri",
-  },
-  {
-    id: "10",
-    songName: "Aate Jaate Khoobsurat Awara Sadko",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "11",
-    songName: "Leave Me Lonely",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "12",
-    songName: "There's Nothing Holdin' Me Back",
-    artist: "Shawn Menders",
-  },
-  {
-    id: "13",
-    songName: "Dangerous Woman",
-    artist: "Ariana Grande",
-  },
-  {
-    id: "14",
-    songName: "Aate Jaate Khoobsurat Awara Sadko",
-    artist: "Kishore Kumar",
-  },
-  {
-    id: "15",
-    songName: "Party Rock Anthem",
-    artist: "GoonRock",
-  },
-];
-
 const sortOptions = ["Name", "Date Added", "Artist"];
-
+// let tracksList = [
+//   // {
+//   //   id: "1",
+//   //   songName: "Leave Me Lonely",
+//   //   artist: "Ariana Grande",
+//   // },
+//   // {
+//   //   id: "2",
+//   //   songName: "There's Nothing Holdin' Me Back",
+//   //   artist: "Shawn Menders",
+//   // },
+//   // {
+//   //   id: "3",
+//   //   songName: "Yeh Dosti Hum Nahi Todenge",
+//   //   artist: "Kishore Kumar And RD Barman",
+//   // },
+//   // {
+//   //   id: "4",
+//   //   songName: "Bhanware Ki Gunjan",
+//   //   artist: "Kishore Kumar",
+//   // },
+//   // {
+//   //   id: "5",
+//   //   songName: "Dangerous Woman",
+//   //   artist: "Ariana Grande",
+//   // },
+//   // {
+//   //   id: "6",
+//   //   songName: "Party Rock Anthem",
+//   //   artist: "GoonRock",
+//   // },
+//   // {
+//   //   id: "7",
+//   //   songName: "What Makes You Beautiful",
+//   //   artist: "One Direction",
+//   // },
+//   // {
+//   //   id: "8",
+//   //   songName: "Neele Neele Ambar Par",
+//   //   artist: "Kishore Kumar",
+//   // },
+//   // {
+//   //   id: "9",
+//   //   songName: "Rim Jhim Gire Sawan",
+//   //   artist: "Hasrat Jaipuri",
+//   // },
+//   // {
+//   //   id: "10",
+//   //   songName: "Aate Jaate Khoobsurat Awara Sadko",
+//   //   artist: "Kishore Kumar",
+//   // },
+//   // {
+//   //   id: "11",
+//   //   songName: "Leave Me Lonely",
+//   //   artist: "Ariana Grande",
+//   // },
+//   // {
+//   //   id: "12",
+//   //   songName: "There's Nothing Holdin' Me Back",
+//   //   artist: "Shawn Menders",
+//   // },
+//   // {
+//   //   id: "13",
+//   //   songName: "Dangerous Woman",
+//   //   artist: "Ariana Grande",
+//   // },
+//   // {
+//   //   id: "14",
+//   //   songName: "Aate Jaate Khoobsurat Awara Sadko",
+//   //   artist: "Kishore Kumar",
+//   // },
+//   // {
+//   //   id: "15",
+//   //   songName: "Party Rock Anthem",
+//   //   artist: "GoonRock",
+//   // },
+// ];
 const artistTracksScreen = ({ navigation }) => {
+  const [tracksList, setTracksList] = useState([]);
+  const dispatch = useDispatch();
+  const { mutate } = useDeleteAudioArtistAPI();
+
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
@@ -126,12 +125,51 @@ const artistTracksScreen = ({ navigation }) => {
     error: errorTracksFromPlaylist,
   } = useGetAudioForArtistAPI();
 
-  if (successTracksFromPlaylist) {
-    tracksList = dataTracksFromPlaylist["data"].items;
+  useEffect(() => {
+    if (successTracksFromPlaylist) {
+      const filteredTracksList = dataTracksFromPlaylist["data"].items.filter(
+        (item) => item.status === "ACTIVE"
+      );
+      setTracksList(filteredTracksList);
+    }
+    if (isErrorTracksFromPlaylist) {
+      console.log("errorTrack", errorTracksFromPlaylist);
+    }
+  }, [successTracksFromPlaylist]);
+
+  function updateAudioList() {
+    const audioId = store.getState().audioArtist.audioArtistId;
+    const updatedAudioList = tracksList.filter((item) => item.id !== audioId);
+    setTracksList(updatedAudioList);
   }
-  if (isErrorTracksFromPlaylist) {
-    console.log("errorTrack", errorTracksFromPlaylist);
-  }
+
+  const handleDeleteAudio = () => {
+    mutate({
+      onSuccess: (data) => {},
+      onError: (error) => {
+        alert("Some errors happened please try again later");
+        console.log("error", error);
+      },
+    });
+    updateAudioList();
+  };
+
+  const showConfirmDialog = () => {
+    return Alert.alert("Are your sure?", "Do you want to delete this audio?", [
+      // The "Yes" button
+      {
+        text: "Yes",
+        onPress: () => {
+          handleDeleteAudio();
+        },
+      },
+      // The "No" button
+      // Does nothing but dismiss the dialog when tapped
+      {
+        text: "No",
+      },
+    ]);
+  };
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
@@ -155,7 +193,7 @@ const artistTracksScreen = ({ navigation }) => {
   );
 
   function tracks() {
-    const CustomMenu = () => {
+    const CustomMenu = ({ id }) => {
       var _menu = null;
 
       const setMenuRef = (ref) => {
@@ -186,26 +224,27 @@ const artistTracksScreen = ({ navigation }) => {
             backgroundColor: Colors.whiteColor,
           }}
         >
-          {songOptionsList.map((item, index) => (
-            <View key={`${index}`}>
-              <MenuItem
-                pressColor="transparent"
-                style={{ height: 30.0 }}
-                textStyle={{
-                  marginRight: Sizes.fixPadding * 5.0,
-                  ...Fonts.blackColor12SemiBold,
-                }}
-                onPress={hideMenu}
-              >
-                {item}
-              </MenuItem>
-            </View>
-          ))}
+          <View>
+            <MenuItem
+              pressColor="transparent"
+              style={{ height: 30.0 }}
+              textStyle={{
+                marginRight: Sizes.fixPadding * 5.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                dispatch(audioArtistAction.setAudioArtistId(id));
+                showConfirmDialog(), hideMenu();
+              }}
+            >
+              Delete
+            </MenuItem>
+          </View>
         </Menu>
       );
     };
 
-    return tracksList.map((item) => (
+    return tracksList?.map((item) => (
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
@@ -238,7 +277,7 @@ const artistTracksScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-          <CustomMenu />
+          <CustomMenu id={item.id} />
         </TouchableOpacity>
       </View>
     ));

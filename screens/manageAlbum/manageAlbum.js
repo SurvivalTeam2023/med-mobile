@@ -260,19 +260,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
     );
   }
 };
-// <MenuItem
-// pressColor="transparent"
-// textStyle={{
-//   marginRight: Sizes.fixPadding * 3.0,
-//   marginTop: Sizes.fixPadding - 100.0,
-//   ...Fonts.blackColor12SemiBold,
-// }}
-// onPress={() => {
-//   updateState({ showOptions: false });
-// }}
-// >
-// Contact Us
-// </MenuItem>
+
 const styles = StyleSheet.create({
   headerWrapStyle: {
     flexDirection: "row",
