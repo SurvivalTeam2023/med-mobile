@@ -251,8 +251,8 @@ const ChooseMusicScreen = ({ navigation }) => {
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         horizontal={false}
+        numColumns={3}
         columnWrapperStyle={{
-          flexDirection: "row",
           justifyContent: "space-between",
         }}
       />

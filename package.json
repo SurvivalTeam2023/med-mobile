@@ -46,7 +46,8 @@
     "react-query": "^3.39.2",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
-    "expo-blur": "~11.2.0"
+    "expo-blur": "~11.2.0",
+    "expo-camera": "~12.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
