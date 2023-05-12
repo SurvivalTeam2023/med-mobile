@@ -48,22 +48,6 @@ const SigninScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { userData, isError, isSuccess, refetch } = useGetUserByNameApi();
 
-  const {
-    data: dataIsValidQuiz,
-    isSuccess: successIsValidQuiz,
-    isError: isErrorIsValidQuiz,
-    error: errorIsValidQuiz,
-    refetch: refetchQuiz,
-  } = useIsValidQuiz();
-
-  const {
-    data: dataIsFavoriteExisted,
-    isSuccess: successIsFavoriteExisted,
-    isError: isErrorIsFavoriteExisted,
-    error: errorIsFavoriteExisted,
-    refetch: refetchExistFav,
-  } = useIsFavoriteExisted();
-
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -93,10 +77,6 @@ const SigninScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
 
-  //null to compare
-  let isQuestionValid = null;
-  let isFavoriteExisted = null;
-
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
@@ -105,53 +85,7 @@ const SigninScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", isError);
   }
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted["data"];
-  }
-  if (isErrorIsFavoriteExisted) {
-    console.log("error", errorIsFavoriteExisted);
-  }
 
-  if (successIsValidQuiz) {
-    isQuestionValid = dataIsValidQuiz["data"];
-  }
-
-  if (isErrorIsValidQuiz) {
-    console.log("error", errorIsValidQuiz);
-  }
-  useEffect(() => {
-    if (isQuestionValid !== null && isFavoriteExisted !== null) {
-      isQuestionValid = null;
-      isFavoriteExisted = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isQuestionValid && isFavoriteExisted) {
-      validate();
-    }
-  }, [isQuestionValid, isFavoriteExisted]);
-
-  const validate = () => {
-    if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
-      navigation.push("BottomTabBar");
-    } else if (
-      isQuestionValid.isValid === false &&
-      isFavoriteExisted.exists === true
-    ) {
-      navigation.push("Quiz");
-    } else if (
-      isQuestionValid.isValid === true &&
-      isFavoriteExisted.exists === false
-    ) {
-      navigation.push("ChooseMusic");
-    } else if (
-      isQuestionValid.isValid === false &&
-      isFavoriteExisted.exists === false
-    ) {
-      navigation.push("Quiz");
-    }
-  };
   const handleLogin = () => {
     mutate(
       {
@@ -174,9 +108,7 @@ const SigninScreen = ({ navigation }) => {
           if (role === ARTIST_ROLE) {
             navigation.push("ManageArtistAlbum");
           } else {
-            refetchQuiz();
-            refetchExistFav();
-            validate();
+            navigation.push("OptionScreen");
           }
         },
         onError: (error) => {
@@ -185,31 +117,6 @@ const SigninScreen = ({ navigation }) => {
       }
     );
   };
-
-  // const handleLoginToManage = () => {
-  //   mutate(
-  //     {
-  //       username: state["userName"],
-  //       password: state["password"],
-  //     },
-
-  //     {
-  //       onSuccess: (data) => {
-  //         const dataRaw = data["data"];
-  //         const access_token = dataRaw["access_token"];
-  //         dispatch(userAction.storeToken(access_token));
-  //         refetch();
-  //         AsyncStorage.setItem(
-  //           TOKEN_KEY_STORAGE,
-  //           JSON.stringify({ token: access_token })
-  //         );
-  //       },
-  //       onError: (error) => {
-  //         console.log("error", error);
-  //       },
-  //     }
-  //   );
-  // };
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,

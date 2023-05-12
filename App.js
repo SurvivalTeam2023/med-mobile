@@ -32,6 +32,10 @@ import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArti
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
 import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
 import genreTracksScreen from "./screens/tracks/genreTracksScreen";
+import OptionScreen from "./screens/optionScreen/selectScreen";
+import ShowCamScreen from "./screens/optionScreen/showCam";
+import CamResultScreen from "./screens/optionScreen/camResult";
+import genreSuggestionScreen from "./screens/optionScreen/suggestGenreScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -62,6 +66,13 @@ const App = () => {
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
             <Stack.Screen name="SignIn" component={signinScreen} />
+            <Stack.Screen name="OptionScreen" component={OptionScreen} />
+            <Stack.Screen name="ShowCam" component={ShowCamScreen} />
+            <Stack.Screen
+              name="SuggestGenre"
+              component={genreSuggestionScreen}
+            />
+            <Stack.Screen name="CamResult" component={CamResultScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
             <Stack.Screen name="GenreTracks" component={genreTracksScreen} />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />

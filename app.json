@@ -30,6 +30,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "expo-camera":
+        {
+          "cameraPermission": "Allow $(med-app) to access your camera."
+        }
   }
 }
