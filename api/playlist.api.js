@@ -2,6 +2,7 @@ import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
 
 export const getPlaylistAPI = (payload) => {
+  console.log("dmmm", store.getState().user.user.user_keycloak.id);
   const userId = store.getState().user.user.user_db.id;
   const queryParam = `?authorId=` + `${userId}`;
   const url = "/playlist" + `${queryParam}`;
