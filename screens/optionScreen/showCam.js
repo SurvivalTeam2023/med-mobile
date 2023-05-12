@@ -89,7 +89,6 @@ const ShowCamScreen = ({ navigation }) => {
         onSuccess: (data) => {
           const dataEmotion = data["data"];
           dispatch(imageAction.storeImage(dataEmotion));
-          console.log("dmLinh", feeling);
         },
         onError: (error) => {
           console.log("error", error);

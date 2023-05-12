@@ -91,14 +91,15 @@ const CamResultScreen = ({ navigation }) => {
   function result() {
     return (
       <View>
-        {feeling?.map((item) => {
-          return (
-            <View key={item.Confidence} style={styles.result}>
-              <Text>{item.Type}</Text>
-              <Text>{item.Confidence.toFixed(2)} %</Text>
-            </View>
-          );
-        })}
+        {feeling &&
+          feeling.map((item) => {
+            return (
+              <View key={item.Confidence} style={styles.result}>
+                <Text>{item.Type}</Text>
+                <Text>{item.Confidence.toFixed(2)} %</Text>
+              </View>
+            );
+          })}
       </View>
     );
   }

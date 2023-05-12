@@ -98,7 +98,7 @@ const genreSuggestionScreen = ({ navigation }) => {
         style={styles.signupButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          navigation.push("CamResult");
+          navigation.push("BottomTabBar");
         }}
       >
         <LinearGradient
@@ -114,11 +114,8 @@ const genreSuggestionScreen = ({ navigation }) => {
   }
 
   function recommendedInfo() {
-    // Set the checkbox interval
-    const checkboxInterval = 3;
-
     // Calculate the item count based on the current index
-    const renderItem = ({ item, index }) => (
+    const renderItem = ({ item }) => (
       <TouchableOpacity activeOpacity={0.9} onPress={() => {}}>
         <ImageBackground
           source={{ uri: `${item.image}` }}
@@ -146,21 +143,13 @@ const genreSuggestionScreen = ({ navigation }) => {
             </Text>
           </LinearGradient>
         </ImageBackground>
-        {index % 3 === 0 && (
-          <Checkbox
-            status={checked ? "checked" : "unchecked"}
-            onPress={() => {
-              setChecked(!checked);
-            }}
-          />
-        )}
       </TouchableOpacity>
     );
 
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Happy</Text>
+          <Text style={styles.titleStyle}>Genre</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
