@@ -36,6 +36,7 @@ import OptionScreen from "./screens/optionScreen/selectScreen";
 import ShowCamScreen from "./screens/optionScreen/showCam";
 import CamResultScreen from "./screens/optionScreen/camResult";
 import genreSuggestionScreen from "./screens/optionScreen/suggestGenreScreen";
+import profileScreen from "./screens/Profile/profileScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -86,6 +87,7 @@ const App = () => {
               component={CreateAudioArtistScreen}
             />
             <Stack.Screen name="CreateAlbum" component={CreateAlbumScreen} />
+            <Stack.Screen name="Profile" component={profileScreen} />
             <Stack.Screen
               name="DeleteAlbumArtist"
               component={DeleteAlbumArtist}
