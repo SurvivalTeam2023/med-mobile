@@ -159,7 +159,6 @@ const QuestionScreen = () => {
     questionData = dataFormat[index];
     const questionBankId = dataRaw.map((obj) => obj.questionBankId)[0];
     dispatch(questionAction.storeQuestionBankId(questionBankId));
-
     questions = dataFormat;
   }
   if (isError) {

@@ -7,6 +7,7 @@ import { genreArtistReducer } from "../../redux/auth/genreArtist.slice";
 import { playlistReducer } from "../../redux/auth/playlist.slice";
 import { questionReducer } from "../../redux/auth/question.slice";
 import { genreReducer } from "../../redux/auth/genre.slice";
+import { imageReducer } from "../../redux/auth/image.slice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -16,6 +17,7 @@ export const store = configureStore({
     genreArtist: genreArtistReducer,
     audioArtist: audioArtistReducer,
     genre: genreReducer,
+    image: imageReducer,
   },
 });
 export const useAppDispatch = () => useDispatch;
