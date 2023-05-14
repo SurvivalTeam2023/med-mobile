@@ -8,26 +8,35 @@ import {
   Image,
   Text,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AntDesign } from "@expo/vector-icons";
-import { Button } from "react-native-paper";
+import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
 
 const ProfileArtistScreen = ({ navigation }) => {
+  const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+  let follower;
+
+  if (isSuccess) {
+    follower = data;
+  }
+  if (isError) {
+    console.log("error", error);
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         <FlatList
           ListHeaderComponent={
-            <>
+            <View>
               {cornerImage()}
               {header()}
               {Profile()}
-              {About()}
-            </>
+            </View>
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
@@ -35,17 +44,6 @@ const ProfileArtistScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
-
-  function About() {
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>About</Text>
-          <Button onPress={navigation.push("ManageArtistAlbum")}>hello</Button>
-        </View>
-      </View>
-    );
-  }
 
   function Profile() {
     return (
@@ -81,7 +79,7 @@ const ProfileArtistScreen = ({ navigation }) => {
             </View>
             <View>
               <Text>Followers</Text>
-              <Text>1M</Text>
+              <Text>{follower}</Text>
             </View>
           </View>
         </View>
@@ -143,7 +141,6 @@ const styles = StyleSheet.create({
   },
 
   desc: {
-    fontFamily: "roboto-regular",
     color: "#121212",
   },
   imageRow: {
@@ -153,23 +150,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginTop: 5,
   },
-  favorited: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    alignItems: "flex-start",
-  },
-  playlists: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginLeft: 51,
-    alignItems: "flex-start",
-  },
-  following: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginLeft: 51,
-    alignItems: "flex-start",
-  },
+
   favoritedRow: {
     flex: 1,
     flexDirection: "row",
@@ -178,36 +159,7 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding + 10,
     marginBottom: Sizes.fixPadding,
   },
-  about: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginTop: -250,
-    marginLeft: 27,
-  },
-  profileAbout: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginTop: 11,
-    marginLeft: 27,
-  },
-  publicPlaylists: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginTop: 20,
-    marginLeft: 26,
-  },
-  following2: {
-    fontFamily: "roboto-regular",
-    color: "#121212",
-    marginTop: 125,
-    marginLeft: 27,
-  },
-  recentlyPalyedSongImageStyle: {
-    marginRight: Sizes.fixPadding,
-    width: 110,
-    height: 100,
-    borderRadius: Sizes.fixPadding - 5.0,
-  },
+
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
