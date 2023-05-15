@@ -128,7 +128,7 @@ const CamResultScreen = ({ navigation }) => {
           style={styles.signupButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push("SuggestGenre");
+            navigation.push("ChooseMusic");
           }}
         >
           <LinearGradient
