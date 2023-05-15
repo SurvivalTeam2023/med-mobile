@@ -42,7 +42,6 @@ const genreSuggestionScreen = ({ navigation }) => {
   ];
   if (isSuccess) {
     recommendedList = data["data"];
-    console.log("alo", recommendedList);
   }
   if (isError) {
     console.log("error", error);

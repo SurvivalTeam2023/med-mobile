@@ -104,10 +104,9 @@ const SigninScreen = ({ navigation }) => {
             JSON.stringify({ token: access_token })
           );
           const role = store.getState().user.artist_role;
-          console.log("role: ", role);
 
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push("ProfileArtist");
           } else {
             navigation.push("OptionScreen");
           }
