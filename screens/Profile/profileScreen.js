@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rect: {
-    width: 330,
+    width: 350,
     height: 250,
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
