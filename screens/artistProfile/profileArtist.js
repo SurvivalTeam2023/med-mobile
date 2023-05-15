@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -9,29 +9,41 @@ import {
   Text,
   StyleSheet,
   Alert,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AntDesign } from "@expo/vector-icons";
 import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
-
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Pressable } from "react-native";
+import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
 const ProfileArtistScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
-
-  useEffect(() => {
-    getData();
-  }, []);
-  function getData() {
-    if (isSuccess) {
-      follower = data["data"];
-    }
-    if (isError) {
-      console.log("error", error);
-    }
+  const [modalVisible, setModalVisible] = useState(false);
+  let paymentInfo = {};
+  const {
+    data: dataWallet,
+    isSuccess: isSuccessWallet,
+    isError: isErrorWallet,
+    error: errorWallet,
+  } = useGetArtistWalletApi();
+  let follower;
+  if (isSuccessWallet) {
+    const rawData = dataWallet["data"];
+    paymentInfo = rawData[0];
+  }
+  if (isErrorWallet) {
+    console.log("error", errorWallet);
   }
 
-  let follower;
+  if (isSuccess) {
+    follower = data["data"];
+  }
+  if (isError) {
+    console.log("error", error);
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -44,6 +56,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               {header()}
               {Profile()}
               {ManageAlbum()}
+              {showModal()}
             </View>
           }
           showsVerticalScrollIndicator={false}
@@ -52,7 +65,47 @@ const ProfileArtistScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
+  function showModal() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
+                Payment Info
+              </Text>
+              <View style={{ justifyContent: "flex-start" }}>
+                <Text style={styles.modalText}>
+                  Owner: {paymentInfo["bankAccountOwner"]}
+                </Text>
+                <Text style={styles.modalText}>
+                  Bank: {paymentInfo["bankName"]}
+                </Text>
+                <Text style={styles.modalText}>
+                  Account number: {paymentInfo["bankAccountNumber"]}
+                </Text>
+              </View>
 
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Ok</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
   function ManageAlbum() {
     return (
       <View>
@@ -92,13 +145,23 @@ const ProfileArtistScreen = ({ navigation }) => {
               <Text style={{ ...Fonts.blackColor20Bold }}>Eminem</Text>
               <Text style={styles.desc}>Dope ass rapper</Text>
             </View>
-            <AntDesign
-              style={{ marginRight: 10 }}
-              name="edit"
-              size={24}
-              color="black"
-            />
+            <View>
+              <AntDesign
+                style={{ marginRight: 10 }}
+                name="edit"
+                size={24}
+                color="black"
+              />
+              <FontAwesome5
+                style={{ marginTop: 10 }}
+                name="money-bill-alt"
+                size={24}
+                color="black"
+                onPress={() => setModalVisible(true)}
+              />
+            </View>
           </View>
+
           <View style={styles.favoritedRow}>
             <View>
               <Text>Favorited</Text>
@@ -212,6 +275,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 
