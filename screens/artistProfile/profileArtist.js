@@ -21,7 +21,8 @@ const ProfileArtistScreen = ({ navigation }) => {
   let follower;
 
   if (isSuccess) {
-    follower = data;
+    follower = data["data"];
+    console.log("bo-at", data["data"]);
   }
   if (isError) {
     console.log("error", error);
@@ -77,7 +78,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               <Text>Playlist</Text>
               <Text>1M</Text>
             </View>
-            <View>
+            <View style={{ justifyContent: "flex-start" }}>
               <Text>Followers</Text>
               <Text>{follower}</Text>
             </View>

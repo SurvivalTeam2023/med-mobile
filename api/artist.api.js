@@ -1,3 +1,4 @@
+import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
 
 export const getArtistTotalFollowerApi = (payload) => {
