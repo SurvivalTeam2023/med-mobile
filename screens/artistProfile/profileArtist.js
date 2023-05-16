@@ -57,6 +57,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               {Profile()}
               {ManageAlbum()}
               {showModal()}
+              {ViewWallet()}
             </View>
           }
           showsVerticalScrollIndicator={false}
@@ -128,6 +129,26 @@ const ProfileArtistScreen = ({ navigation }) => {
       </View>
     );
   }
+  function ViewWallet() {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.manageAlbumButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => setModalVisible(true)}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.manageAlbumButtonGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor18Bold }}>View WalletS</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   function Profile() {
     return (
@@ -142,9 +163,16 @@ const ProfileArtistScreen = ({ navigation }) => {
               style={styles.image}
             ></Image>
             <View>
-              <Text style={{ ...Fonts.blackColor20Bold }}>Eminem</Text>
-              <Text style={styles.desc}>Dope ass rapper</Text>
+              <View>
+                <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
+                <Text style={styles.desc}>Dope ass rapper</Text>
+              </View>
+              <View style={{ marginTop: 20 }}>
+                <Text>Total Listeners</Text>
+                <Text>1213213</Text>
+              </View>
             </View>
+
             <View>
               <AntDesign
                 style={{ marginRight: 10 }}
@@ -157,7 +185,6 @@ const ProfileArtistScreen = ({ navigation }) => {
                 name="money-bill-alt"
                 size={24}
                 color="black"
-                onPress={() => setModalVisible(true)}
               />
             </View>
           </View>
