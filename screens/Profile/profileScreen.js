@@ -13,8 +13,10 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useGetUserProfile } from "../../hooks/user.hook";
+import { store } from "../../core/store/store";
 
-const libraryList = [
+let profile = [
   {
     id: "1",
     image: require("../../assets/images/albumsCoverImages/1.png"),
@@ -48,6 +50,18 @@ const libraryList = [
 ];
 
 const ProfileScreen = ({ navigation }) => {
+  const userName = store.getState().user.username;
+  const userAvatar = store.getState().user.user.user_db.avatar;
+  const { data, isSuccess, isError, error } = useGetUserProfile();
+
+  if (isSuccess) {
+    profile = data["data"];
+    console.log("profile", profile);
+  }
+  if (isError) {
+    console.log("error", error);
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -101,7 +115,7 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.titleStyle}>Public Playlists</Text>
         </View>
         <FlatList
-          data={libraryList}
+          data={profile}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           horizontal
@@ -142,7 +156,7 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.titleStyle}>Following</Text>
         </View>
         <FlatList
-          data={libraryList}
+          data={profile}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           horizontal
@@ -168,12 +182,12 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.imageRow}>
             <Image
               source={{
-                uri: "https://product-images.tcgplayer.com/167191.jpg",
+                uri: `${userAvatar}`,
               }}
               resizeMode="contain"
               style={styles.image}
             ></Image>
-            <Text style={styles.name}>Name</Text>
+            <Text style={styles.name}>{userName}</Text>
           </View>
           <View style={styles.favoritedRow}>
             <Text style={styles.favorited}>Favorited</Text>
@@ -181,9 +195,9 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.following}>Following</Text>
           </View>
           <View style={styles.loremIpsumRow}>
-            <Text style={styles.loremIpsum}>1</Text>
-            <Text style={styles.loremIpsum4}>1</Text>
-            <Text style={styles.loremIpsum3}>1</Text>
+            <Text style={styles.loremIpsum}>{profile.favorite}</Text>
+            <Text style={styles.loremIpsum4}>{profile.playlist}</Text>
+            <Text style={styles.loremIpsum3}>{profile.following}</Text>
           </View>
         </View>
       </View>
@@ -250,6 +264,8 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: "roboto-regular",
     color: "#121212",
+    fontSize: 24,
+    fontWeight: "bold",
     marginLeft: 20,
     marginTop: 44,
   },
