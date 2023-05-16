@@ -16,12 +16,20 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AntDesign } from "@expo/vector-icons";
 import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
+import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
 const ProfileArtistScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+  const {
+    data: dataListener,
+    isSuccess: isSuccessListener,
+    isError: isErrorListener,
+    error: errorListener,
+  } = useGetArtistTotalListenerApi();
+
   const [modalVisible, setModalVisible] = useState(false);
+  let totalListener = 1;
   let paymentInfo = {};
   const {
     data: dataWallet,
@@ -30,6 +38,16 @@ const ProfileArtistScreen = ({ navigation }) => {
     error: errorWallet,
   } = useGetArtistWalletApi();
   let follower;
+
+  //Total Listener
+  if (isSuccessListener) {
+    totalListener = dataListener["data"];
+  }
+  if (isErrorListener) {
+    console.log("error", errorListener);
+  }
+
+  //Wallet
   if (isSuccessWallet) {
     const rawData = dataWallet["data"];
     paymentInfo = rawData[0];
@@ -38,6 +56,7 @@ const ProfileArtistScreen = ({ navigation }) => {
     console.log("error", errorWallet);
   }
 
+  //follower
   if (isSuccess) {
     follower = data["data"];
   }
@@ -57,7 +76,6 @@ const ProfileArtistScreen = ({ navigation }) => {
               {Profile()}
               {ManageAlbum()}
               {showModal()}
-              {ViewWallet()}
             </View>
           }
           showsVerticalScrollIndicator={false}
@@ -126,12 +144,6 @@ const ProfileArtistScreen = ({ navigation }) => {
             <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
           </LinearGradient>
         </TouchableOpacity>
-      </View>
-    );
-  }
-  function ViewWallet() {
-    return (
-      <View>
         <TouchableOpacity
           style={styles.manageAlbumButtonStyle}
           activeOpacity={0.9}
@@ -143,7 +155,7 @@ const ProfileArtistScreen = ({ navigation }) => {
             colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
             style={styles.manageAlbumButtonGradientStyle}
           >
-            <Text style={{ ...Fonts.whiteColor18Bold }}>View WalletS</Text>
+            <Text style={{ ...Fonts.whiteColor18Bold }}>View Wallet</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -168,8 +180,10 @@ const ProfileArtistScreen = ({ navigation }) => {
                 <Text style={styles.desc}>Dope ass rapper</Text>
               </View>
               <View style={{ marginTop: 20 }}>
-                <Text>Total Listeners</Text>
-                <Text>1213213</Text>
+                <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                  Total listeners
+                </Text>
+                <Text>{totalListener}</Text>
               </View>
             </View>
 
@@ -177,12 +191,6 @@ const ProfileArtistScreen = ({ navigation }) => {
               <AntDesign
                 style={{ marginRight: 10 }}
                 name="edit"
-                size={24}
-                color="black"
-              />
-              <FontAwesome5
-                style={{ marginTop: 10 }}
-                name="money-bill-alt"
                 size={24}
                 color="black"
               />
