@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -18,14 +18,21 @@ import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
 
 const ProfileArtistScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+
+  useEffect(() => {
+    getData();
+  }, []);
+  function getData() {
+    if (isSuccess) {
+      follower = data["data"];
+    }
+    if (isError) {
+      console.log("error", error);
+    }
+  }
+
   let follower;
 
-  if (isSuccess) {
-    follower = data;
-  }
-  if (isError) {
-    console.log("error", error);
-  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -36,6 +43,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
+              {ManageAlbum()}
             </View>
           }
           showsVerticalScrollIndicator={false}
@@ -44,6 +52,29 @@ const ProfileArtistScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
+
+  function ManageAlbum() {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.manageAlbumButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => {
+            navigation.push("ManageArtistAlbum");
+          }}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.manageAlbumButtonGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   function Profile() {
     return (
@@ -77,7 +108,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               <Text>Playlist</Text>
               <Text>1M</Text>
             </View>
-            <View>
+            <View style={{ justifyContent: "flex-start" }}>
               <Text>Followers</Text>
               <Text>{follower}</Text>
             </View>
@@ -169,6 +200,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  manageAlbumButtonStyle: {
+    justifyContent: "center",
+    marginTop: Sizes.fixPadding * 2.5,
+    marginHorizontal: Sizes.fixPadding * 2.0,
+    borderRadius: Sizes.fixPadding - 5.0,
+  },
+  manageAlbumButtonGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Sizes.fixPadding - 5.0,
   },
 });
 

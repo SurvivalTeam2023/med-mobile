@@ -106,7 +106,7 @@ const SigninScreen = ({ navigation }) => {
           const role = store.getState().user.artist_role;
 
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push("ProfileArtist");
           } else {
             navigation.push("OptionScreen");
           }
