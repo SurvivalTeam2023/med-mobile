@@ -282,6 +282,7 @@ const TracksScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
+
           <CustomMenu item={item} />
         </TouchableOpacity>
       </View>
