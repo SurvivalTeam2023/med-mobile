@@ -15,11 +15,11 @@ import ExploreScreen from "../screens/explore/exploreScreen";
 import TrendingScreen from "../screens/trending/trendingScreen";
 import SettingsScreen from "../screens/settings/settingsScreen";
 import LibraryScreen from "../screens/library/libraryScreen";
-import CameraScreen from "../screens/camera/cameraScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Icon } from "react-native-gradient-icon";
 import { SharedElement } from "react-navigation-shared-element";
 import { useFocusEffect } from "@react-navigation/native";
+import ProfileScreen from "../screens/Profile/profileScreen";
 
 const { width } = Dimensions.get("window");
 
@@ -65,7 +65,7 @@ const BottomTabBarScreen = ({ navigation }) => {
         ) : currentIndex == 3 ? (
           <LibraryScreen navigation={navigation} />
         ) : currentIndex == 4 ? (
-          <CameraScreen navigation={navigation} />
+          <ProfileScreen navigation={navigation} />
         ) : (
           <SettingsScreen navigation={navigation} />
         )}

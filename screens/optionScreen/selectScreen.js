@@ -18,6 +18,7 @@ import { useRegisterUser } from "../../hooks/auth.hook";
 import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const OptionScreen = ({ navigation }) => {
   //null to compare
@@ -127,6 +128,29 @@ const OptionScreen = ({ navigation }) => {
 
         {QuizButton()}
         {CamButton()}
+        {skip()}
+      </View>
+    );
+  }
+
+  function skip() {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginTop: 10,
+        }}
+      >
+        <Ionicons
+          onPress={() => {
+            navigation.navigate("BottomTabBar");
+          }}
+          name="arrow-forward"
+          size={28}
+          color="black"
+        />
+        <Text style={{ ...Fonts.blackColor16Bold, marginTop: 5 }}>Skip</Text>
       </View>
     );
   }
