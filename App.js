@@ -37,6 +37,7 @@ import ShowCamScreen from "./screens/optionScreen/showCam";
 import CamResultScreen from "./screens/optionScreen/camResult";
 import profileScreen from "./screens/Profile/profileScreen";
 import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
+import editProfileScreen from "./screens/Profile/editProfileScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -104,6 +105,7 @@ const App = () => {
             <Stack.Screen name="Search" component={searchScreen} />
             <Stack.Screen name="Tracks" component={tracksScreen} />
             <Stack.Screen name="HomePage" component={ExploreScreen} />
+            <Stack.Screen name="editScreen" component={editProfileScreen} />
             <Stack.Screen
               name="ArtistProfile"
               component={ProfileArtistScreen}

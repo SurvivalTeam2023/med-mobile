@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, getState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -8,21 +8,22 @@ import {
   Image,
   Text,
   StyleSheet,
+  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useGetUserProfile } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
-import { Ionicons } from "@expo/vector-icons";
 
 let profile = [];
 
-const ProfileScreen = ({ navigation }) => {
+const editProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user.user.user_db.avatar.url;
-  console.log("userAvatar", userAvatar);
+  const userAvatar = store.getState().user?.user?.user_db?.avatar;
+  const [avatarImage, setAvatarImage] = useState(null);
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
@@ -32,6 +33,24 @@ const ProfileScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
+
+  const selectAvatarImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access media library is required!");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setAvatarImage(result.uri);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -43,8 +62,6 @@ const ProfileScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
-              {publicPlaylists()}
-              {Following()}
             </>
           }
           showsVerticalScrollIndicator={false}
@@ -54,109 +71,31 @@ const ProfileScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  function publicPlaylists() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.libraryFor}
-        </Text>
-      </TouchableOpacity>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Public Playlists</Text>
-        </View>
-        <FlatList
-          data={profile}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-
-  function Following() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.libraryFor}
-        </Text>
-      </TouchableOpacity>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Following</Text>
-        </View>
-        <FlatList
-          data={profile}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-  // function About() {
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>About</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
-
   function Profile() {
     return (
       <View style={styles.container}>
         <View style={styles.rect}>
           <View style={styles.imageRow}>
-            <Image
+            <ImageBackground
               source={{
                 uri: `${userAvatar}`,
               }}
               resizeMode="contain"
               style={styles.image}
-            ></Image>
+            >
+              {avatarImage && (
+                <Image
+                  source={{ uri: avatarImage }}
+                  style={styles.avatarImage}
+                />
+              )}
+              <TouchableOpacity
+                style={styles.overlay}
+                onPress={selectAvatarImage}
+              >
+                <MaterialIcons name="add-a-photo" size={24} color="black" />
+              </TouchableOpacity>
+            </ImageBackground>
             <Text style={styles.name}>{userName}</Text>
           </View>
           <View style={styles.favoritedRow}>
@@ -193,7 +132,7 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Profile</Text>}
+          maskElement={<Text style={{ ...Fonts.bold22 }}>Edit</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
@@ -202,13 +141,6 @@ const ProfileScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push("editScreen");
-          }}
-        >
-          <Ionicons name="md-create" size={24} color="black" />
-        </TouchableOpacity>
       </View>
     );
   }
@@ -297,12 +229,6 @@ const styles = StyleSheet.create({
     marginLeft: 42,
     marginRight: 61,
   },
-  // about: {
-  //   fontFamily: "roboto-regular",
-  //   color: "#121212",
-  //   marginTop: -250,
-  //   marginLeft: 27,
-  // },
   profileAbout: {
     fontFamily: "roboto-regular",
     color: "#121212",
@@ -337,6 +263,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
-export default ProfileScreen;
+export default editProfileScreen;
