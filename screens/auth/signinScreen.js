@@ -107,7 +107,7 @@ const SigninScreen = ({ navigation }) => {
 
           if (role === ARTIST_ROLE) {
             console.log("aloo");
-            navigation.push("ProfileArtist");
+            navigation.push("ArtistProfile");
           } else {
             navigation.push("OptionScreen");
           }
