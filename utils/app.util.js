@@ -10,6 +10,14 @@ export const parseTokenToUsername = (token) => {
   let token_decoded = jwtDecode(token);
   return token_decoded["preferred_username"];
 };
+export const parseTokenToEmail = (token) => {
+  let token_decoded = jwtDecode(token);
+  return token_decoded["email"];
+};
+export const parseTokenToId = (token) => {
+  let token_decoded = jwtDecode(token);
+  return token_decoded["sub"];
+};
 export const parseTokenToRole = (token) => {
   let token_decoded = jwtDecode(token);
   const resource_access = token_decoded["resource_access"];

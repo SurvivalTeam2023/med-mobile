@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  parseTokenToEmail,
+  parseTokenToId,
   parseTokenToRole,
   parseTokenToUsername,
   removeTokenFromStorage,
@@ -12,6 +14,8 @@ const initialState = {
   token: null,
   audio: null,
   artist_role: null,
+  id: null,
+  email: null,
 };
 const reducer = createSlice({
   name: "user",
@@ -25,6 +29,8 @@ const reducer = createSlice({
       state.username = parseTokenToUsername(payload);
       state.token = payload;
       state.artist_role = parseTokenToRole(payload);
+      state.id = parseTokenToId(payload);
+      state.email = parseTokenToEmail(payload);
     },
     removeTOken: (state, { payload }) => {
       removeTokenFromStorage();
