@@ -16,11 +16,19 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Authenticate with Expo
+        run: npx expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }} --non-interactive
+
       - name: Build Expo project
-        run: yarn expo build:android --release-channel ${{ github.run_number }}
+        run: npx eas build -p android
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: app-release
           path: ./android/app/build/outputs/apk/release/app-release.apk
+
+
+
+
+
