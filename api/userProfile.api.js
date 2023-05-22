@@ -8,19 +8,17 @@ export const getUserProfile = (payload) => {
   return CallAPI.get(url);
 };
 
-
-
 export const updateUserAvatar = (avatar) => {
   const userId = store.getState().user.user.user_db.id;
-  const formData  = new FormData();
-  formData.append('file', {
+  const formData = new FormData();
+  formData.append("file", {
     uri: avatar,
   });
-  const url = "/user/" + `${userId}` 
+  const url = "/user/" + `${userId}`;
   return CallAPIMulti.put(url, formData);
 };
 
-// export const updateUserAvatar = (payload) => {  
+// export const updateUserAvatar = (payload) => {
 //   const queryParam = `/` + `${userId}`;
 //   const url = "/user" + `${queryParam}`;
 //   const { userId, planId, startDate } = payload;

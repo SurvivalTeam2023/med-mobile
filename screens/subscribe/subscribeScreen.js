@@ -63,7 +63,7 @@ const SubscribeScreen = ({ navigation }) => {
     console.log("error", error);
   }
   const createSubscription = (planId) => {
-    const userId = store.getState().user.user.user_db.id;
+    const userId = store.getState().user.id;
 
     mutate(
       { userId: `${userId}`, planId: planId, startDate: currentDate },

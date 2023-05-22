@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -9,29 +9,60 @@ import {
   Text,
   StyleSheet,
   Alert,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AntDesign } from "@expo/vector-icons";
 import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
-
+import { Pressable } from "react-native";
+import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
+import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
 const ProfileArtistScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+  const {
+    data: dataListener,
+    isSuccess: isSuccessListener,
+    isError: isErrorListener,
+    error: errorListener,
+  } = useGetArtistTotalListenerApi();
 
-  useEffect(() => {
-    getData();
-  }, []);
-  function getData() {
-    if (isSuccess) {
-      follower = data["data"];
-    }
-    if (isError) {
-      console.log("error", error);
-    }
+  const [modalVisible, setModalVisible] = useState(false);
+  let totalListener = 1;
+  let paymentInfo = {};
+  const {
+    data: dataWallet,
+    isSuccess: isSuccessWallet,
+    isError: isErrorWallet,
+    error: errorWallet,
+  } = useGetArtistWalletApi();
+  let follower;
+
+  //Total Listener
+  if (isSuccessListener) {
+    totalListener = dataListener["data"];
+  }
+  if (isErrorListener) {
+    console.log("error", errorListener);
   }
 
-  let follower;
+  //Wallet
+  if (isSuccessWallet) {
+    const rawData = dataWallet["data"];
+    paymentInfo = rawData[0];
+  }
+  if (isErrorWallet) {
+    console.log("error", errorWallet);
+  }
+
+  //follower
+  if (isSuccess) {
+    follower = data["data"];
+  }
+  if (isError) {
+    console.log("error", error);
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -44,6 +75,7 @@ const ProfileArtistScreen = ({ navigation }) => {
               {header()}
               {Profile()}
               {ManageAlbum()}
+              {showModal()}
             </View>
           }
           showsVerticalScrollIndicator={false}
@@ -52,7 +84,47 @@ const ProfileArtistScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
+  function showModal() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
+                Payment Info
+              </Text>
+              <View style={{ justifyContent: "flex-start" }}>
+                <Text style={styles.modalText}>
+                  Owner: {paymentInfo["bankAccountOwner"]}
+                </Text>
+                <Text style={styles.modalText}>
+                  Bank: {paymentInfo["bankName"]}
+                </Text>
+                <Text style={styles.modalText}>
+                  Account number: {paymentInfo["bankAccountNumber"]}
+                </Text>
+              </View>
 
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Ok</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
   function ManageAlbum() {
     return (
       <View>
@@ -72,6 +144,20 @@ const ProfileArtistScreen = ({ navigation }) => {
             <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
           </LinearGradient>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageAlbumButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => setModalVisible(true)}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.manageAlbumButtonGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor18Bold }}>View Wallet</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -89,16 +175,28 @@ const ProfileArtistScreen = ({ navigation }) => {
               style={styles.image}
             ></Image>
             <View>
-              <Text style={{ ...Fonts.blackColor20Bold }}>Eminem</Text>
-              <Text style={styles.desc}>Dope ass rapper</Text>
+              <View>
+                <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
+                <Text style={styles.desc}>Dope ass rapper</Text>
+              </View>
+              <View style={{ marginTop: 20 }}>
+                <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                  Total listeners
+                </Text>
+                <Text>{totalListener}</Text>
+              </View>
             </View>
-            <AntDesign
-              style={{ marginRight: 10 }}
-              name="edit"
-              size={24}
-              color="black"
-            />
+
+            <View>
+              <AntDesign
+                style={{ marginRight: 10 }}
+                name="edit"
+                size={24}
+                color="black"
+              />
+            </View>
           </View>
+
           <View style={styles.favoritedRow}>
             <View>
               <Text>Favorited</Text>
@@ -212,6 +310,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 

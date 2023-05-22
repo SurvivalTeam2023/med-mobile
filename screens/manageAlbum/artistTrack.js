@@ -30,83 +30,6 @@ import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 const sortOptions = ["Name", "Date Added", "Artist"];
-// let tracksList = [
-//   // {
-//   //   id: "1",
-//   //   songName: "Leave Me Lonely",
-//   //   artist: "Ariana Grande",
-//   // },
-//   // {
-//   //   id: "2",
-//   //   songName: "There's Nothing Holdin' Me Back",
-//   //   artist: "Shawn Menders",
-//   // },
-//   // {
-//   //   id: "3",
-//   //   songName: "Yeh Dosti Hum Nahi Todenge",
-//   //   artist: "Kishore Kumar And RD Barman",
-//   // },
-//   // {
-//   //   id: "4",
-//   //   songName: "Bhanware Ki Gunjan",
-//   //   artist: "Kishore Kumar",
-//   // },
-//   // {
-//   //   id: "5",
-//   //   songName: "Dangerous Woman",
-//   //   artist: "Ariana Grande",
-//   // },
-//   // {
-//   //   id: "6",
-//   //   songName: "Party Rock Anthem",
-//   //   artist: "GoonRock",
-//   // },
-//   // {
-//   //   id: "7",
-//   //   songName: "What Makes You Beautiful",
-//   //   artist: "One Direction",
-//   // },
-//   // {
-//   //   id: "8",
-//   //   songName: "Neele Neele Ambar Par",
-//   //   artist: "Kishore Kumar",
-//   // },
-//   // {
-//   //   id: "9",
-//   //   songName: "Rim Jhim Gire Sawan",
-//   //   artist: "Hasrat Jaipuri",
-//   // },
-//   // {
-//   //   id: "10",
-//   //   songName: "Aate Jaate Khoobsurat Awara Sadko",
-//   //   artist: "Kishore Kumar",
-//   // },
-//   // {
-//   //   id: "11",
-//   //   songName: "Leave Me Lonely",
-//   //   artist: "Ariana Grande",
-//   // },
-//   // {
-//   //   id: "12",
-//   //   songName: "There's Nothing Holdin' Me Back",
-//   //   artist: "Shawn Menders",
-//   // },
-//   // {
-//   //   id: "13",
-//   //   songName: "Dangerous Woman",
-//   //   artist: "Ariana Grande",
-//   // },
-//   // {
-//   //   id: "14",
-//   //   songName: "Aate Jaate Khoobsurat Awara Sadko",
-//   //   artist: "Kishore Kumar",
-//   // },
-//   // {
-//   //   id: "15",
-//   //   songName: "Party Rock Anthem",
-//   //   artist: "GoonRock",
-//   // },
-// ];
 const artistTracksScreen = ({ navigation }) => {
   const [tracksList, setTracksList] = useState([]);
   const dispatch = useDispatch();
@@ -251,7 +174,9 @@ const artistTracksScreen = ({ navigation }) => {
           onPress={() => navigation.push("NowPlaying", { item })}
           style={styles.tracksInfoWrapStyle}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <SharedElement id={item.id}>
               <ImageBackground
                 source={{ uri: `${item.imageUrl}` }}
@@ -267,16 +192,24 @@ const artistTracksScreen = ({ navigation }) => {
                 marginLeft: Sizes.fixPadding,
               }}
             >
-              <Text style={{ ...Fonts.blackColor13SemiBold }}>{item.name}</Text>
-              <Text
-                style={{
-                  ...Fonts.grayColor11Medium,
-                }}
-              >
-                {item.length}
-              </Text>
+              <View>
+                <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                  {item.name}
+                </Text>
+                <Text
+                  style={{
+                    ...Fonts.grayColor11Medium,
+                  }}
+                >
+                  {item.length}
+                </Text>
+              </View>
             </View>
           </View>
+          <View>
+            <Text>{item.liked}</Text>
+          </View>
+
           <CustomMenu id={item.id} />
         </TouchableOpacity>
       </View>
