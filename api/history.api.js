@@ -10,7 +10,7 @@ export const createHistoryApi = (payload) => {
 };
 
 export const getHistoryAPI = (payload) => {
-  const userId = store.getState().user.user.user_db.id;
+  const userId = store.getState().user.id;
   const queryParam = `/` + `${userId}`;
   const url = "/history" + `${queryParam}`;
   return CallAPI.get(url);
