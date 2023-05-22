@@ -1,29 +1,26 @@
-name: Android CI
-
+name: react native CI
 on: push
-
 jobs:
-  Remove-Antifact:
-    name: Remove artifact
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clear useless artifacts
-        uses: c-hive/gha-remove-artifacts@v1.2.0
-        with:
-          age: '1 days'
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Install expo-cli
-      run: npm install -g expo-cli
-    - uses: actions/checkout@v2
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14.x'
-    - name: Install dependencies
-      run: npm install
-    - name: Test expo-cli installation
-      run: expo whoami
-    - name: Build APK
-      run: expo build:android
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Expo project
+        run: yarn expo build:android --release-channel ${{ github.run_number }}
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: ./android/app/build/outputs/apk/release/app-release.apk
