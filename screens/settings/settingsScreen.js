@@ -26,7 +26,8 @@ import { userAction } from "../../redux/auth/auth.slice";
 const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
-  const userEmail = store.getState().user.user.user_keycloak.email;
+  console.log("emailll", store.getState().user.username);
+  const userEmail = store.getState().user.email;
   const audioConfig = store.getState().user.audio;
 
   const dispatch = useDispatch();
