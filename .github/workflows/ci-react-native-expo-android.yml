@@ -30,7 +30,9 @@ jobs:
         run: npx eas init --skip-setup
 
       - name: Set EAS CLI version in eas.json
-        run: echo '{"cli": {"version": "x.x.x"}}' > eas.json
+        run: |
+          echo '{}' > eas.json
+          echo '{"cli": {"version": "x.x.x"}}' | jq '.cli.version |= "x.x.x"' > eas.jsonecho '{"cli": {"version": "x.x.x"}}' > eas.json
 
       - name: Build Expo project
         run: npx eas build -p android
