@@ -1,5 +1,6 @@
 name: react native CI
 on: push
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +15,13 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
+
+      - name: Install Expo CLI
+        run: npm i expo-cli
+
+      - name: Install EAS CLI
+        run: npm i eas-cli
 
       - name: Authenticate with Expo
         run: npx expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }} --non-interactive
