@@ -98,6 +98,7 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
+          console.log("kienbui", store.getState().user.id);
           refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
@@ -106,7 +107,6 @@ const SigninScreen = ({ navigation }) => {
           const role = store.getState().user.artist_role;
 
           if (role === ARTIST_ROLE) {
-            console.log("aloo");
             navigation.push("ArtistProfile");
           } else {
             navigation.push("OptionScreen");
