@@ -15,15 +15,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useGetUserProfile } from "../../hooks/user.hook";
+import { useGetUserProfile, useUpdateUserAvatar } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
-import { updateUserAvatar } from "../../api/userProfile.api";
 
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user?.user?.user_db?.avatar.url;
+  const userAvatar = store.getState().user?.user?.user_db?.avatar;
   const [avatarImage, setAvatarImage] = useState(null);
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
@@ -35,6 +34,19 @@ const editProfileScreen = ({ navigation }) => {
     console.log("error", error);
   }
 
+  const { mutate } = useUpdateUserAvatar();
+    const handleUploadImage = async (avatar) => {
+      mutate(avatar, {
+        onSuccess: (data) => {
+          const dataEmotion = data["data"];
+          setAvatarImage(dataEmotion)
+          console.log("dataHehe",dataEmotion)
+        },
+        onError: (error) => {
+          console.log("error", error);
+        },
+      });
+    };
   const selectAvatarImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -47,15 +59,10 @@ const editProfileScreen = ({ navigation }) => {
       aspect: [1, 1],
       quality: 1,
     });
-
+    console.log("dcmmNghia", result)
     if (!result.cancelled) {
-      updateUserAvatar({}, result.uri)
-        .then(response => {
-          console.log('Avatar updated successfully');
-        })
-        .catch(error => {
-          console.log('Avatar update failed:', error);
-        });
+      handleUploadImage(result.uri, result.fileName)
+      
     }
   };
 

@@ -1,5 +1,5 @@
 import { store } from "../core/store/store";
-import { CallAPI } from "../core/api/baseAxios";
+import { CallAPI, CallAPIMulti } from "../core/api/baseAxios";
 
 export const getUserProfile = (payload) => {
   const userId = store.getState().user.user.user_db.id;
@@ -8,21 +8,16 @@ export const getUserProfile = (payload) => {
   return CallAPI.get(url);
 };
 
-export const updateUserAvatar = (payload, image) => {
+
+
+export const updateUserAvatar = (avatar) => {
   const userId = store.getState().user.user.user_db.id;
   const formData  = new FormData();
-  formData.append('image', {
-    uri: image,
-    name: 'image.jpg',
-    type: 'image/jpeg',
+  formData.append('file', {
+    uri: avatar,
   });
-  const queryParam = `/` + `${userId}`;
-  const url = "/user" + `${queryParam}`;
-  return CallAPI.put(url, formData, {
-    headers:{
-      'Content-Type': 'multipart/form-data',
-    }
-  });
+  const url = "/user/" + `${userId}` 
+  return CallAPIMulti.put(url, formData);
 };
 
 // export const updateUserAvatar = (payload) => {  

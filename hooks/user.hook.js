@@ -24,7 +24,7 @@ export const useGetUserProfile = (payload) =>
     },
   });
 
-  export const useUpdateUserAvatar = (formData) =>
+  export const useUpdateUserAvatar = (avatar) =>
   useMutation({
-    mutationFn: (formData) => updateUserAvatar(formData),
+    mutationFn: (avatar) => updateUserAvatar(avatar),
   });
