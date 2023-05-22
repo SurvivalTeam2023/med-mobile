@@ -17,12 +17,13 @@ import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useGetUserProfile } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
+import { updateUserAvatar } from "../../api/userProfile.api";
 
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user?.user?.user_db?.avatar;
+  const userAvatar = store.getState().user?.user?.user_db?.avatar.url;
   const [avatarImage, setAvatarImage] = useState(null);
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
@@ -48,7 +49,13 @@ const editProfileScreen = ({ navigation }) => {
     });
 
     if (!result.cancelled) {
-      setAvatarImage(result.uri);
+      updateUserAvatar({}, result.uri)
+        .then(response => {
+          console.log('Avatar updated successfully');
+        })
+        .catch(error => {
+          console.log('Avatar update failed:', error);
+        });
     }
   };
 
