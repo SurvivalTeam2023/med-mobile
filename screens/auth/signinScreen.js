@@ -80,6 +80,7 @@ const SigninScreen = ({ navigation }) => {
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
+    console.log("ciube", store.getState().user.user.user_db);
   }
 
   if (isError) {
@@ -98,7 +99,6 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
-          console.log("kienbui", store.getState().user.id);
           refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,

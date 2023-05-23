@@ -27,7 +27,7 @@ const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
   console.log("emailll", store.getState().user.username);
-  const userEmail = store.getState().user.email;
+  const userEmail = store.getState().user.user.user_db.email;
   const audioConfig = store.getState().user.audio;
 
   const dispatch = useDispatch();
