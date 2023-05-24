@@ -11,9 +11,7 @@ export const getUserProfile = (payload) => {
 export const updateUserAvatar = (avatar) => {
   const userId = store.getState().user.user.user_db.id;
   const formData = new FormData();
-  formData.append("file", {
-    uri: avatar,
-  });
+  formData.append("file", avatar);
   const url = "/user/" + `${userId}`;
   return CallAPIMulti.put(url, formData);
 };

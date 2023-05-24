@@ -33,20 +33,19 @@ const editProfileScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-
   const { mutate } = useUpdateUserAvatar();
-    const handleUploadImage = async (avatar) => {
-      mutate(avatar, {
-        onSuccess: (data) => {
-          const dataEmotion = data["data"];
-          setAvatarImage(dataEmotion)
-          console.log("dataHehe",dataEmotion)
-        },
-        onError: (error) => {
-          console.log("error", error);
-        },
-      });
-    };
+  const handleUploadImage = async (avatar) => {
+    mutate(avatar, {
+      onSuccess: (data) => {
+        const dataEmotion = data["data"];
+        setAvatarImage(dataEmotion);
+        console.log("dataHehe", dataEmotion);
+      },
+      onError: (error) => {
+        console.log("error", error);
+      },
+    });
+  };
   const selectAvatarImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -59,10 +58,10 @@ const editProfileScreen = ({ navigation }) => {
       aspect: [1, 1],
       quality: 1,
     });
-    console.log("dcmmNghia", result)
+
     if (!result.cancelled) {
-      handleUploadImage(result.uri, result.fileName)
-      
+      setAvatarImage(result.uri);
+      handleUploadImage(result.uri);
     }
   };
 
@@ -97,12 +96,6 @@ const editProfileScreen = ({ navigation }) => {
               resizeMode="contain"
               style={styles.image}
             >
-              {avatarImage && (
-                <Image
-                  source={{ uri: avatarImage }}
-                  style={styles.avatarImage}
-                />
-              )}
               <TouchableOpacity
                 style={styles.overlay}
                 onPress={selectAvatarImage}
