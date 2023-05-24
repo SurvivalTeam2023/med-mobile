@@ -9,6 +9,7 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -20,16 +21,16 @@ import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
+//null to compare
+
 const OptionScreen = ({ navigation }) => {
-  //null to compare
-  let isQuestionValid = null;
-  let isFavoriteExisted = null;
+  let isQuestionValid;
+  let isFavoriteExisted;
   const {
     data: dataIsValidQuiz,
     isSuccess: successIsValidQuiz,
     isError: isErrorIsValidQuiz,
     error: errorIsValidQuiz,
-    refetch: refetchQuiz,
   } = useIsValidQuiz();
 
   const {
@@ -37,7 +38,6 @@ const OptionScreen = ({ navigation }) => {
     isSuccess: successIsFavoriteExisted,
     isError: isErrorIsFavoriteExisted,
     error: errorIsFavoriteExisted,
-    refetch: refetchExistFav,
   } = useIsFavoriteExisted();
 
   if (successIsFavoriteExisted) {
@@ -61,15 +61,18 @@ const OptionScreen = ({ navigation }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isQuestionValid && isFavoriteExisted) {
-      validate();
-    }
-  }, [isQuestionValid, isFavoriteExisted]);
+  // useEffect(() => {
+  //   if (isQuestionValid && isFavoriteExisted) {
+  //     validate();
+  //   }
+  // }, [isQuestionValid, isFavoriteExisted]);
 
   const validate = () => {
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
-      navigation.push("BottomTabBar");
+      Alert.alert("You've already done quiz");
+      setTimeout(() => {
+        navigation.push("BottomTabBar");
+      }, 500);
     } else if (
       isQuestionValid.isValid === false &&
       isFavoriteExisted.exists === true
@@ -79,7 +82,10 @@ const OptionScreen = ({ navigation }) => {
       isQuestionValid.isValid === true &&
       isFavoriteExisted.exists === false
     ) {
-      navigation.push("ChooseMusic");
+      Alert.alert("You've already done quiz");
+      setTimeout(() => {
+        navigation.push("ChooseMusic");
+      }, 500);
     } else if (
       isQuestionValid.isValid === false &&
       isFavoriteExisted.exists === false
@@ -161,7 +167,7 @@ const OptionScreen = ({ navigation }) => {
         style={styles.signupButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          refetchExistFav(), refetchQuiz(), validate();
+          validate();
         }}
       >
         <LinearGradient

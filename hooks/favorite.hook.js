@@ -21,7 +21,6 @@ export const useIsFavoriteExisted = (payload) =>
       const data = await isFavoriteExisted();
       return data;
     },
-    enabled: false,
   });
 
 export const useCreateFavoriteApi = () =>

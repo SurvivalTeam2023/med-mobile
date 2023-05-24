@@ -226,7 +226,7 @@ const ExploreScreen = ({ navigation }) => {
     forYouList = dataFavorite["data"];
   }
   if (isErrorFavorite) {
-    console.log("error", errorFavorite);
+    console.log("errordcm", errorFavorite);
   }
 
   const {
@@ -240,7 +240,7 @@ const ExploreScreen = ({ navigation }) => {
     albumsList = dataGenre["data"];
   }
   if (isErrorGenre) {
-    console.log("error", errorGenre);
+    console.log("errorcc", errorGenre);
   }
 
   const {
