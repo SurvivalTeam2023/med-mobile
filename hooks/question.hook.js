@@ -20,7 +20,6 @@ export const useIsValidQuiz = (payload) =>
       const data = await isValidQuiz();
       return data;
     },
-    enabled: false,
   });
 export const useSetQuizStatus = (payload) =>
   useMutation({
