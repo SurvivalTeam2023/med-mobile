@@ -224,10 +224,9 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successFavorite) {
     forYouList = dataFavorite["data"];
-    console.log("sasuke", forYouList);
   }
   if (isErrorFavorite) {
-    console.log("errordcm", errorFavorite);
+    console.log("error", errorFavorite);
   }
 
   const {
@@ -239,10 +238,9 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successGenre) {
     albumsList = dataGenre["data"];
-    console.log("aloo", albumsList);
   }
   if (isErrorGenre) {
-    console.log("errorcc", errorGenre);
+    console.log("error", errorGenre);
   }
 
   const {
@@ -256,7 +254,7 @@ const ExploreScreen = ({ navigation }) => {
     recentlyPlayedList = dataRecently["data"];
   }
   if (isErrorRecently) {
-    console.log("errorgivaybro?", errorRecently);
+    console.log("error", errorRecently);
   }
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
