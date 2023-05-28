@@ -224,6 +224,7 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successFavorite) {
     forYouList = dataFavorite["data"];
+    console.log("sasuke", forYouList);
   }
   if (isErrorFavorite) {
     console.log("errordcm", errorFavorite);
@@ -238,6 +239,7 @@ const ExploreScreen = ({ navigation }) => {
 
   if (successGenre) {
     albumsList = dataGenre["data"];
+    console.log("aloo", albumsList);
   }
   if (isErrorGenre) {
     console.log("errorcc", errorGenre);
@@ -454,9 +456,9 @@ const ExploreScreen = ({ navigation }) => {
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item?.genreId.id}>
+                <SharedElement id={item?.genre.id}>
                   <Image
-                    source={{ uri: `${item.genreId.image}` }}
+                    source={{ uri: `${item.genre.image}` }}
                     style={{
                       width: 50.0,
                       height: 50.0,
@@ -466,10 +468,7 @@ const ExploreScreen = ({ navigation }) => {
                 </SharedElement>
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.genreId.name}
-                  </Text>
-                  <Text style={{ ...Fonts.grayColor10Medium }}>
-                    {item.artist}
+                    {item.genre.name}
                   </Text>
                 </View>
               </View>
@@ -494,7 +493,7 @@ const ExploreScreen = ({ navigation }) => {
       >
         <SharedElement id={item.id}>
           <Image
-            source={{ uri: `${item.audioId?.imageUrl}` }}
+            source={{ uri: `${item.audio?.imageUrl}` }}
             style={styles.recentlyPalyedSongImageStyle}
           />
         </SharedElement>
@@ -504,8 +503,7 @@ const ExploreScreen = ({ navigation }) => {
             ...Fonts.blackColor12SemiBold,
           }}
         >
-          {item.name}
-          {item.audioId.name}
+          {item.audio.name}
         </Text>
       </TouchableOpacity>
     );
