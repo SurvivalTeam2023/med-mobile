@@ -80,7 +80,6 @@ const SigninScreen = ({ navigation }) => {
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
-    console.log("ciube", store.getState().user.user.user_db);
   }
 
   if (isError) {
@@ -187,7 +186,6 @@ const SigninScreen = ({ navigation }) => {
   const configAudio = async () => {
     try {
       await Audio.setAudioModeAsync(configOptions);
-      console.log("Configed");
     } catch (e) {
       console.log(e);
     }
