@@ -13,14 +13,3 @@ export const updateUserAvatar = (form) => {
   const url = "/user/" + `${userId}`;
   return CallAPIMulti.put(url, form);
 };
-
-// export const updateUserAvatar = (payload) => {
-//   const queryParam = `/` + `${userId}`;
-//   const url = "/user" + `${queryParam}`;
-//   const { userId, planId, startDate } = payload;
-//   return CallAPI.put(url, payload, {
-//     userId,
-//     planId,
-//     startDate,
-//   });
-// };

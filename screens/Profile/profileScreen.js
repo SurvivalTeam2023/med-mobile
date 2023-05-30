@@ -12,11 +12,9 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useGetUserProfile } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {

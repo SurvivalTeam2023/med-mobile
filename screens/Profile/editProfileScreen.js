@@ -15,17 +15,31 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useGetUserProfile, useUpdateUserAvatar } from "../../hooks/user.hook";
+import {
+  useGetUserByNameApi,
+  useGetUserProfile,
+  useUpdateUserAvatar,
+} from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Platform } from "react-native";
+import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
+import { Alert } from "react-native";
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
   const userAvatar = store.getState().user?.user?.user_db?.avatar;
+  const dispatch = useDispatch();
   const { data, isSuccess, isError, error } = useGetUserProfile();
+  const {
+    userData,
+    isError: isErrorUser,
+    isSuccess: isSuccessUser,
+    refetch,
+  } = useGetUserByNameApi();
 
   if (isSuccess) {
     profile = data["data"];
@@ -33,6 +47,16 @@ const editProfileScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
+
+  if (isSuccessUser) {
+    const userInfo = userData["data"];
+    dispatch(userAction.storeUser(userInfo));
+  }
+
+  if (isErrorUser) {
+    console.log("error", isError);
+  }
+
   const { mutate } = useUpdateUserAvatar();
 
   const handleUploadImage = async (form) => {
@@ -40,7 +64,11 @@ const editProfileScreen = ({ navigation }) => {
       onSuccess: (data) => {
         const dataEmotion = data["data"];
         console.log("dataHehe", dataEmotion);
-        navigation.push("Profile");
+        refetch();
+        Alert.alert("Processing image...");
+        setTimeout(() => {
+          navigation.push("Profile");
+        }, 3000);
       },
       onError: (error) => {
         console.log("error", error);
