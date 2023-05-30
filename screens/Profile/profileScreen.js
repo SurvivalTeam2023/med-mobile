@@ -22,12 +22,10 @@ let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
   const userAvatar = store.getState().user.user.user_db.avatar.url;
-  console.log("userAvatar", userAvatar);
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
     profile = data["data"];
-    console.log("profile", profile);
   }
   if (isError) {
     console.log("error", error);

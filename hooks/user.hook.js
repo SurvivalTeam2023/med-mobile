@@ -22,9 +22,9 @@ export const useGetUserProfile = (payload) =>
       const data = await getUserProfile();
       return data;
     },
-  });
+  });   
 
-export const useUpdateUserAvatar = (avatar) =>
+export const useUpdateUserAvatar = (payload) =>
   useMutation({
-    mutationFn: (avatar) => updateUserAvatar(avatar),
+    mutationFn: (payload) => updateUserAvatar(payload),
   });

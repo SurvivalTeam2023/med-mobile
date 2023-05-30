@@ -17,7 +17,9 @@ import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useGetUserProfile, useUpdateUserAvatar } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
-
+import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from 'expo-image-manipulator';
+import { Platform } from 'react-native';
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
@@ -28,16 +30,15 @@ const editProfileScreen = ({ navigation }) => {
 
   if (isSuccess) {
     profile = data["data"];
-    console.log("profile", profile);
   }
   if (isError) {
     console.log("error", error);
   }
   const { mutate } = useUpdateUserAvatar();
-  const handleUploadImage = async (avatar) => {
-    mutate(avatar, {
+  const handleUploadImage = async (avatar, fileName) => {
+    mutate((avatar, fileName), {
       onSuccess: (data) => {
-        const dataEmotion = data["data"];
+        const dataEmotion = data['data'];
         setAvatarImage(dataEmotion);
         console.log("dataHehe", dataEmotion);
       },
@@ -52,15 +53,42 @@ const editProfileScreen = ({ navigation }) => {
       alert("Permission to access media library is required!");
       return;
     }
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: false
     });
-
-    if (!result.cancelled) {
-      handleUploadImage(result.uri);
+    if (!pickerResult.cancelled) {
+      // Image selected successfully, handle the file conversion
+      convertImageToJPEG(pickerResult.uri);
+    }
+    console.log("aloooo", pickerResult)
+  };
+  const convertImageToJPEG = async (uri) => {
+    const fileName = 'myImage.jpg'; // Provide a desired name for the JPEG file
+  
+    const fileExtension = uri.split('.').pop();
+    const convertedUri = `${FileSystem.cacheDirectory}${fileName}`;
+  
+    if (fileExtension.toLowerCase() === 'jpg' || fileExtension.toLowerCase() === 'jpeg') {
+      // Image is already in JPEG format
+      console.log('Image is already in JPEG format:', uri);
+      return;
+    }
+  
+    try {
+      const result = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 800, height: 800 } }],
+        { format: ImageManipulator.SaveFormat.JPEG, compress: 1, base64: false, uri: convertedUri }
+      );
+  
+      console.log('Image converted to JPEG successfully:', result.uri);
+      handleUploadImage(result.uri, result.fileName)
+    } catch (error) {
+      console.log('Error converting image to JPEG:', error);
     }
   };
 
