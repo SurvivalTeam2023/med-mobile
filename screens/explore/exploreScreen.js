@@ -18,7 +18,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetPlaylist } from "../../hooks/playlist.hook";
+import {
+  useGetPlaylist,
+  useGetPlaylistForUser,
+} from "../../hooks/playlist.hook";
 import { useGetFavorite } from "../../hooks/favorite.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetHistory } from "../../hooks/history.hook";
@@ -181,7 +184,7 @@ const ExploreScreen = ({ navigation }) => {
     showOptions: false,
   });
 
-  const { data, isSuccess, isError, error } = useGetPlaylist();
+  const { data, isSuccess, isError, error } = useGetPlaylistForUser();
 
   if (isSuccess) {
     playlists = data["data"].items;
