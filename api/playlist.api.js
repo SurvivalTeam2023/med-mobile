@@ -7,6 +7,10 @@ export const getPlaylistAPI = (payload) => {
   const url = "/playlist" + `${queryParam}`;
   return CallAPI.get(url);
 };
+export const getPlaylistforUserAPI = (payload) => {
+  const url = "/playlist";
+  return CallAPI.get(url);
+};
 
 export const deletePlaylistAPI = (payload) => {
   const playlistId = store.getState().playlist.playlistId;

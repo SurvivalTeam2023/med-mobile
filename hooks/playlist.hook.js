@@ -3,6 +3,7 @@ import {
   createPlaylistAPI,
   deletePlaylistAPI,
   getPlaylistAPI,
+  getPlaylistforUserAPI,
 } from "../api/playlist.api";
 
 export const useGetPlaylist = (payload) =>
@@ -10,6 +11,14 @@ export const useGetPlaylist = (payload) =>
     queryKey: ["getPlaylist"],
     queryFn: async () => {
       const data = await getPlaylistAPI();
+      return data;
+    },
+  });
+export const useGetPlaylistForUser = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylist"],
+    queryFn: async () => {
+      const data = await getPlaylistforUserAPI();
       return data;
     },
   });
