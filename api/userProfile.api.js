@@ -8,16 +8,10 @@ export const getUserProfile = (payload) => {
   return CallAPI.get(url);
 };
 
-export const updateUserAvatar = (avatar, fileName) => {
+export const updateUserAvatar = (form) => {
   const userId = store.getState().user.user.user_db.id;
-  const formData = new FormData();
-  formData.append("avatar", {
-    uri: avatar,
-    name: fileName,
-    type: 'image/jpeg',
-  });
   const url = "/user/" + `${userId}`;
-  return CallAPIMulti.put(url, formData);
+  return CallAPIMulti.put(url, form);
 };
 
 // export const updateUserAvatar = (payload) => {
