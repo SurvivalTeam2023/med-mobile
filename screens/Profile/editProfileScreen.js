@@ -60,7 +60,6 @@ const editProfileScreen = ({ navigation }) => {
     });
 
     if (!result.cancelled) {
-      setAvatarImage(result.uri);
       handleUploadImage(result.uri);
     }
   };
