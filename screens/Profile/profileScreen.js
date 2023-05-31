@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   name: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     fontSize: 24,
     fontWeight: "bold",
@@ -250,18 +249,15 @@ const styles = StyleSheet.create({
     marginRight: 124,
   },
   favorited: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     alignItems: "flex-start",
   },
   playlists: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
   },
   following: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
@@ -274,16 +270,13 @@ const styles = StyleSheet.create({
     marginRight: 35,
   },
   loremIpsum: {
-    fontFamily: "roboto-regular",
     color: "#121212",
   },
   loremIpsum4: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginLeft: 104,
   },
   loremIpsum3: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginLeft: 92,
   },
@@ -295,25 +288,22 @@ const styles = StyleSheet.create({
     marginRight: 61,
   },
   // about: {
-  //   fontFamily: "roboto-regular",
+  //
   //   color: "#121212",
   //   marginTop: -250,
   //   marginLeft: 27,
   // },
   profileAbout: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginTop: 11,
     marginLeft: 27,
   },
   publicPlaylists: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginTop: 20,
     marginLeft: 26,
   },
   following2: {
-    fontFamily: "roboto-regular",
     color: "#121212",
     marginTop: 125,
     marginLeft: 27,
