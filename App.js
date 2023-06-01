@@ -37,6 +37,7 @@ import ShowCamScreen from "./screens/optionScreen/showCam";
 import CamResultScreen from "./screens/optionScreen/camResult";
 import profileScreen from "./screens/Profile/profileScreen";
 import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
+import NotifyEmail from "./screens/auth/evrifyEmail";
 
 LogBox.ignoreAllLogs();
 
@@ -78,6 +79,7 @@ const App = () => {
               name="ManageArtistAlbum"
               component={ManageArtistAlbumScreen}
             />
+
             <Stack.Screen name="ArtistTrack" component={artistTracksScreen} />
             <Stack.Screen
               name="CreateAudioArtist"
@@ -95,6 +97,7 @@ const App = () => {
             />
             <Stack.Screen name="Question" component={QuestionScreen} />
             <Stack.Screen name="Result" component={ResultScreen} />
+            <Stack.Screen name="NotifyEmail" component={NotifyEmail} />
             <Stack.Screen
               name="BottomTabBar"
               component={bottomTabBarScreen}
