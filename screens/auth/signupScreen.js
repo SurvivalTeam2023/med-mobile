@@ -9,6 +9,7 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -38,10 +39,13 @@ const SignupScreen = ({ navigation }) => {
       },
       {
         onSuccess: () => {
-          alert("Sign Up Success");
-          navigation.push("SignIn");
+          Alert.alert("SignUp success");
+          setTimeout(() => {
+            navigation.push("SignIn");
+          }, 2000);
         },
         onError: (error) => {
+          Alert.alert("Sign up failed please try again");
           console.log("error", error);
         },
       }
