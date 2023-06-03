@@ -19,8 +19,10 @@ import { Ionicons } from "@expo/vector-icons";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user.user.user_db.avatar.url;
 
+  const user = store.getState()?.user?.user;
+  const user_db = user?.user_db;
+  const userAvatar = user_db?.avatar.url;
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {

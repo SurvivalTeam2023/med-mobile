@@ -45,7 +45,7 @@ const SigninScreen = ({ navigation }) => {
     return true;
   };
   const { mutate } = useLogin();
-  const { mutateAsync } = useLoginWithGmail();
+  const { mutate: mutateLoginGoogle } = useLoginWithGmail();
   const dispatch = useDispatch();
   const { userData, isError, isSuccess, refetch } = useGetUserByNameApi();
 
@@ -99,6 +99,7 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
+
           refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
@@ -154,21 +155,29 @@ const SigninScreen = ({ navigation }) => {
   // }, []);
 
   const handleLoginWithGmail = () => {
-    mutateAsync(
+    mutateLoginGoogle(
       {
         subject_token: token,
         username: email,
+        email: email,
       },
       {
         onSuccess: (data) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
+          refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
-          validate();
+          const role = store.getState().user.artist_role;
+
+          if (role === ARTIST_ROLE) {
+            navigation.push("ArtistProfile");
+          } else {
+            navigation.push("OptionScreen");
+          }
         },
         onError: (error) => {
           console.log("error", error);
