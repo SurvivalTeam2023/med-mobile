@@ -9,11 +9,12 @@ export const loginApi = (payload) => {
   });
 };
 export const loginWithGoogleApi = (payload) => {
-  const { subject_token, username } = payload;
+  const { subject_token, username, email } = payload;
   const url = "/user/google";
   return CallAPI.post(url, {
     subject_token,
     username,
+    email,
   });
 };
 

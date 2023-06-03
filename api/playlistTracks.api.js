@@ -9,7 +9,8 @@ export const getTracksAPI = async (payload) => {
 };
 export const getAudioForArtistAPI = async (payload) => {
   const playlistId = store.getState().playlist.playlistId;
-  const artistId = store.getState().user.user.user_db.id;
+  const artist = store.getState()?.user?.user;
+  const artistId = artist?.user_db?.id;
   const queryParam =
     `playlistId=` + `${playlistId}` + `&artistId=` + `${artistId}`;
   const url = "/audio?status=ACTIVE&" + `${queryParam}`;

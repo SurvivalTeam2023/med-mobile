@@ -51,7 +51,8 @@ let profile = [
 
 const ProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user.user.user_db.avatar;
+  const user = store.getState()?.user?.user;
+  const userAvatar = user?.user_db?.avatar;
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
