@@ -19,7 +19,8 @@ export const CallAPIMulti = axios.create({
   baseURL: config.SERVER_URL,
   withCredentials: false,
   headers: {
-    "Content-type": "multipart/form-data",
+    "Content-type":
+      "multipart/form-data; boundary=<calculated when request is sent>",
     "Access-Control-Allow-Origin": "*",
   },
 });
