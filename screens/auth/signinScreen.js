@@ -10,6 +10,7 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -112,6 +113,7 @@ const SigninScreen = ({ navigation }) => {
           }
         },
         onError: (error) => {
+          Alert.alert("Please verify email");
           console.log("error", error);
         },
       }
