@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, getState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -8,20 +8,38 @@ import {
   Image,
   Text,
   StyleSheet,
+  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { useGetUserProfile } from "../../hooks/user.hook";
+import * as ImagePicker from "expo-image-picker";
+import { MaterialIcons } from "@expo/vector-icons";
+import {
+  useGetUserByNameApi,
+  useGetUserProfile,
+  useUpdateUserAvatar,
+} from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
-import { Ionicons } from "@expo/vector-icons";
-
+import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
+import { Platform } from "react-native";
+import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
+import { Alert } from "react-native";
 let profile = [];
-const ProfileScreen = ({ navigation }) => {
-  const userName = store.getState().user.username;
-  const userAvatar = store.getState().user.user.user_db.avatar.url;
 
+const editProfileScreen = ({ navigation }) => {
+  const userName = store.getState().user.username;
+  const userAvatar = store.getState().user?.user?.user_db?.avatar;
+  const dispatch = useDispatch();
   const { data, isSuccess, isError, error } = useGetUserProfile();
+  const {
+    userData,
+    isError: isErrorUser,
+    isSuccess: isSuccessUser,
+    refetch,
+  } = useGetUserByNameApi();
 
   if (isSuccess) {
     profile = data["data"];
@@ -29,6 +47,95 @@ const ProfileScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
+
+  if (isSuccessUser) {
+    const userInfo = userData["data"];
+    dispatch(userAction.storeUser(userInfo));
+  }
+
+  if (isErrorUser) {
+    console.log("error", isError);
+  }
+
+  const { mutate } = useUpdateUserAvatar();
+
+  const handleUploadImage = async (form) => {
+    mutate(form, {
+      onSuccess: (data) => {
+        const dataEmotion = data["data"];
+        console.log("dataHehe", dataEmotion);
+        refetch();
+        Alert.alert("Processing image...");
+        setTimeout(() => {
+          navigation.push("Profile");
+        }, 3000);
+      },
+      onError: (error) => {
+        console.log("error", error);
+      },
+    });
+  };
+  const selectAvatarImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access media library is required!");
+      return;
+    }
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+      base64: false,
+    });
+    if (!pickerResult.cancelled) {
+      // Image selected successfully, handle the file conversion
+      convertImageToJPEG(pickerResult.uri);
+      const formData = new FormData();
+      formData.append("avatar", {
+        uri: pickerResult.uri,
+        type: "image/jpeg",
+        name: pickerResult.fileName,
+      });
+
+      handleUploadImage(formData);
+    }
+  };
+  const convertImageToJPEG = async (uri) => {
+    const fileName = "myImage.jpg"; // Provide a desired name for the JPEG file
+
+    const fileExtension = uri.split(".").pop();
+    const convertedUri = `${FileSystem.cacheDirectory}${fileName}`;
+
+    if (
+      fileExtension.toLowerCase() === "jpg" ||
+      fileExtension.toLowerCase() === "jpeg"
+    ) {
+      // Image is already in JPEG format
+      console.log("Image is already in JPEG format:", uri);
+      handleUploadImage(uri, fileName);
+
+      return;
+    }
+
+    try {
+      const result = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 800, height: 800 } }],
+        {
+          format: ImageManipulator.SaveFormat.JPEG,
+          compress: 1,
+          base64: false,
+          uri: convertedUri,
+        }
+      );
+
+      console.log("Image converted to JPEG successfully:", result.uri);
+      return;
+    } catch (error) {
+      console.log("Error converting image to JPEG:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -40,8 +147,6 @@ const ProfileScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
-              {publicPlaylists()}
-              {Following()}
             </>
           }
           showsVerticalScrollIndicator={false}
@@ -51,109 +156,25 @@ const ProfileScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  function publicPlaylists() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.libraryFor}
-        </Text>
-      </TouchableOpacity>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Public Playlists</Text>
-        </View>
-        <FlatList
-          data={profile}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-
-  function Following() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.libraryFor}
-        </Text>
-      </TouchableOpacity>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Following</Text>
-        </View>
-        <FlatList
-          data={profile}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-  // function About() {
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>About</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
-
   function Profile() {
     return (
       <View style={styles.container}>
         <View style={styles.rect}>
           <View style={styles.imageRow}>
-            <Image
+            <ImageBackground
               source={{
                 uri: `${userAvatar}`,
               }}
               resizeMode="contain"
               style={styles.image}
-            ></Image>
+            >
+              <TouchableOpacity
+                style={styles.overlay}
+                onPress={selectAvatarImage}
+              >
+                <MaterialIcons name="add-a-photo" size={24} color="black" />
+              </TouchableOpacity>
+            </ImageBackground>
             <Text style={styles.name}>{userName}</Text>
           </View>
           <View style={styles.favoritedRow}>
@@ -190,7 +211,7 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Profile</Text>}
+          maskElement={<Text style={{ ...Fonts.bold22 }}>Edit</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
@@ -199,13 +220,6 @@ const ProfileScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push("editScreen");
-          }}
-        >
-          <Ionicons name="md-create" size={24} color="black" />
-        </TouchableOpacity>
       </View>
     );
   }
@@ -287,12 +301,6 @@ const styles = StyleSheet.create({
     marginLeft: 42,
     marginRight: 61,
   },
-  // about: {
-  //
-  //   color: "#121212",
-  //   marginTop: -250,
-  //   marginLeft: 27,
-  // },
   profileAbout: {
     color: "#121212",
     marginTop: 11,
@@ -324,6 +332,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
-export default ProfileScreen;
+export default editProfileScreen;
