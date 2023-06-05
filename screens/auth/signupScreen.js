@@ -39,13 +39,8 @@ const SignupScreen = ({ navigation }) => {
       },
       {
         onSuccess: () => {
-          Alert.alert("SignUp success");
           setTimeout(() => {
-<<<<<<< HEAD
-            navigation.push("SignIn");
-=======
             navigation.push("NotifyEmail");
->>>>>>> 9df548e6bb40addbb40d27557297df7dda359adc
           }, 2000);
         },
         onError: (error) => {
