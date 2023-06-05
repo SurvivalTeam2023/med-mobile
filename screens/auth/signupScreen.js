@@ -10,14 +10,49 @@ import {
   Image,
   StyleSheet,
   Alert,
+  FlatList,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
+import { Modal } from "react-native-paper";
+import { Pressable } from "react-native";
 
 const SignupScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  function showModal() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
+                Payment Info
+              </Text>
+
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Ok</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
   //signup
   const [state, setState] = useState({
     showPassword: false,
@@ -39,7 +74,6 @@ const SignupScreen = ({ navigation }) => {
       },
       {
         onSuccess: () => {
-          Alert.alert("SignUp success");
           setTimeout(() => {
 <<<<<<< HEAD
             navigation.push("SignIn");
@@ -49,7 +83,7 @@ const SignupScreen = ({ navigation }) => {
           }, 2000);
         },
         onError: (error) => {
-          Alert.alert("Sign up failed please try again");
+          setModalVisible(true);
           console.log("error", error);
         },
       }
@@ -61,18 +95,16 @@ const SignupScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
-        <ScrollView
+        <FlatList
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-        >
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            {signupInfo()}
-          </ScrollView>
-        </ScrollView>
+          ListHeaderComponent={
+            <View>
+              {cornerImage()}
+              {signupInfo()}
+            </View>
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -98,9 +130,11 @@ const SignupScreen = ({ navigation }) => {
         {usernameTextField()}
         {emailAddressTextField()}
         {passwordTextField()}
+        {showModal()}
         {rePasswordTextField()}
         {signupButton()}
         {orIndicator()}
+
         {socialMediaOptions()}
         {alreadyHaveAccountInfo()}
       </View>
@@ -177,19 +211,6 @@ const SignupScreen = ({ navigation }) => {
       <View style={styles.socialMediaIconsWrapStyle}>
         <View
           style={{
-            backgroundColor: "#4267B2",
-            ...styles.socialMediaIconsStyle,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/facebook-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View
-          style={{
             backgroundColor: "#EA4335",
             ...styles.socialMediaIconsStyle,
             marginHorizontal: Sizes.fixPadding - 5.0,
@@ -197,18 +218,6 @@ const SignupScreen = ({ navigation }) => {
         >
           <Image
             source={require("../../assets/images/icon/google-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-        <View
-          style={{
-            backgroundColor: "#00A1F2",
-            ...styles.socialMediaIconsStyle,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/twitter-icon.png")}
             style={{ width: 15.0, height: 15.0 }}
             resizeMode="contain"
           />
@@ -363,6 +372,16 @@ const SignupScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    elevation: 2,
+  },
+
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
   textFieldWrapStyle: {
     flexDirection: "row",
     alignItems: "center",
@@ -417,6 +436,27 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding * 2.5,
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
 
