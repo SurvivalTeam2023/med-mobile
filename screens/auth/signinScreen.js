@@ -332,9 +332,7 @@ const SigninScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           {cornerImage()}
-          {show400ErrorPopup()}
-          {show401ErrorPopup()}
-          {show404ErrorPopup()}
+
           <ScrollView
             scrollEnabled={false}
             contentContainerStyle={{
@@ -343,6 +341,9 @@ const SigninScreen = ({ navigation }) => {
             }}
           >
             {signinInfo()}
+            {show400ErrorPopup()}
+            {show401ErrorPopup()}
+            {show404ErrorPopup()}
           </ScrollView>
         </ScrollView>
       </View>
