@@ -11,6 +11,7 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -40,6 +41,9 @@ import { questionAction } from "../../redux/auth/question.slice";
 import { ARTIST_ROLE } from "../../constants/role";
 
 const SigninScreen = ({ navigation }) => {
+  const [modal400Visible, setModal400Visible] = useState(false);
+  const [modal401Visible, setModal401Visible] = useState(false);
+  const [modal404Visible, setModal404Visible] = useState(false);
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -63,10 +67,6 @@ const SigninScreen = ({ navigation }) => {
       updateState({ backClickCount: 0 });
     }, 1000);
   }
-  // useEffect(() => {
-
-  //   }
-  // }, [successIsValidQuiz, successIsFavoriteExisted]);
 
   const [state, setState] = useState({
     showPassword: false,
@@ -77,7 +77,87 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-
+  function show400ErrorPopup() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal400Visible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modal400Visible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Something went wrong</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModal400Visible(!modal400Visible)}
+              >
+                <Text style={styles.textStyle}>Retry</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
+  function show401ErrorPopup() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal401Visible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModal401Visible(!modal401Visible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>User unverify</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModal401Visible(!modal401Visible)}
+              >
+                <Text style={styles.textStyle}>Retry</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
+  function show404ErrorPopup() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal404Visible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modal404Visible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Something went wrong</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModal404Visible(!modal404Visible)}
+              >
+                <Text style={styles.textStyle}>Retry</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
@@ -114,8 +194,24 @@ const SigninScreen = ({ navigation }) => {
           }
         },
         onError: (error) => {
-          Alert.alert("Please verify email");
-          console.log("error", error);
+          let err = error.response.status;
+          switch (err) {
+            case 400:
+              show400ErrorPopup();
+              setModal400Visible(true);
+              break;
+            case 401:
+              show401ErrorPopup();
+              setModal401Visible(true);
+              break;
+            case 404:
+              show404ErrorPopup();
+              setModal404Visible(true);
+              break;
+            default:
+              show400ErrorPopup();
+              break;
+          }
         },
       }
     );
@@ -150,10 +246,6 @@ const SigninScreen = ({ navigation }) => {
     }
   }, [response]);
 
-  // useEffect(() => {
-  //   storeConfig();
-  // }, []);
-
   const handleLoginWithGmail = () => {
     mutateLoginGoogle(
       {
@@ -180,7 +272,23 @@ const SigninScreen = ({ navigation }) => {
           }
         },
         onError: (error) => {
-          console.log("error", error);
+          let err = error.response.status;
+          switch (err) {
+            case 400:
+              show400ErrorPopup();
+              setModal400Visible(true);
+              break;
+            case 401:
+              show401ErrorPopup();
+              setModal401Visible(true);
+              break;
+            case 404:
+              show404ErrorPopup();
+              setModal404Visible(true);
+              break;
+            default:
+              break;
+          }
         },
       }
     );
@@ -224,6 +332,9 @@ const SigninScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           {cornerImage()}
+          {show400ErrorPopup()}
+          {show401ErrorPopup()}
+          {show404ErrorPopup()}
           <ScrollView
             scrollEnabled={false}
             contentContainerStyle={{
@@ -378,26 +489,6 @@ const SigninScreen = ({ navigation }) => {
       </Pressable>
     );
   }
-  // function manageButton() {
-  //   return (
-  //     <TouchableOpacity
-  //       style={styles.signinButtonStyle}
-  //       activeOpacity={0.9}
-  //       onPress={() => {
-  //         handleLoginToManage();
-  //       }}
-  //     >
-  //       <LinearGradient
-  //         start={{ x: 1, y: 0 }}
-  //         end={{ x: 0, y: 0 }}
-  //         colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-  //         style={styles.signinButtonGradientStyle}
-  //       >
-  //         <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
-  //       </LinearGradient>
-  //     </TouchableOpacity>
-  //   );
-  // }
 
   function passwordTextField() {
     return (
@@ -536,6 +627,50 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding * 2.5,
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#eeeeee",
+    borderRadius: 20,
+    padding: 35,
+    paddingHorizontal: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    paddingHorizontal: 30,
+    backgroundColor: "#ae3c03",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 25,
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 

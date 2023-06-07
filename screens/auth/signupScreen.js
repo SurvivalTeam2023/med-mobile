@@ -11,48 +11,18 @@ import {
   StyleSheet,
   Alert,
   FlatList,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
-import { Modal } from "react-native-paper";
 import { Pressable } from "react-native";
 
 const SignupScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  function showModal() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
-                Payment Info
-              </Text>
-
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Ok</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
   //signup
   const [state, setState] = useState({
     showPassword: false,
@@ -75,11 +45,7 @@ const SignupScreen = ({ navigation }) => {
       {
         onSuccess: () => {
           setTimeout(() => {
-<<<<<<< HEAD
-            navigation.push("SignIn");
-=======
             navigation.push("NotifyEmail");
->>>>>>> 9df548e6bb40addbb40d27557297df7dda359adc
           }, 2000);
         },
         onError: (error) => {
@@ -96,19 +62,46 @@ const SignupScreen = ({ navigation }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         <FlatList
-          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
           ListHeaderComponent={
             <View>
               {cornerImage()}
               {signupInfo()}
+              {showModal()}
             </View>
           }
         />
       </View>
     </SafeAreaView>
   );
-
+  function showModal() {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Sign up failed</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Retry</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  }
   function signupInfo() {
     return (
       <View style={{ marginTop: Sizes.fixPadding + 5.0 }}>
@@ -127,14 +120,13 @@ const SignupScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+
         {usernameTextField()}
         {emailAddressTextField()}
         {passwordTextField()}
-        {showModal()}
         {rePasswordTextField()}
         {signupButton()}
         {orIndicator()}
-
         {socialMediaOptions()}
         {alreadyHaveAccountInfo()}
       </View>
@@ -372,16 +364,6 @@ const SignupScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    elevation: 2,
-  },
-
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
   textFieldWrapStyle: {
     flexDirection: "row",
     alignItems: "center",
@@ -445,9 +427,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#eeeeee",
     borderRadius: 20,
-    padding: 50,
+    padding: 35,
+    paddingHorizontal: 50,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -457,6 +440,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    paddingHorizontal: 30,
+    backgroundColor: "#ae3c03",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 25,
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
