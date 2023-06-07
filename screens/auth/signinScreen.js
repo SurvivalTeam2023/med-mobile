@@ -10,8 +10,6 @@ import {
   ScrollView,
   Image,
   StyleSheet,
-  Alert,
-  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -33,17 +31,13 @@ import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { Audio } from "expo-av";
-import { useIsValidQuiz } from "../../hooks/question.hook";
-import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Pressable } from "react-native";
-import { isValidQuiz } from "../../api/question.api";
-import { questionAction } from "../../redux/auth/question.slice";
 import { ARTIST_ROLE } from "../../constants/role";
 
 const SigninScreen = ({ navigation }) => {
-  const [modal400Visible, setModal400Visible] = useState(false);
-  const [modal401Visible, setModal401Visible] = useState(false);
-  const [modal404Visible, setModal404Visible] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
+  const [ortherErrorCode, setOtherErrorCode] = useState(null);
+
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -77,87 +71,7 @@ const SigninScreen = ({ navigation }) => {
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-  function show400ErrorPopup() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modal400Visible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modal400Visible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Something went wrong</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModal400Visible(!modal400Visible)}
-              >
-                <Text style={styles.textStyle}>Retry</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-  function show401ErrorPopup() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modal401Visible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModal401Visible(!modal401Visible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>User unverify</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModal401Visible(!modal401Visible)}
-              >
-                <Text style={styles.textStyle}>Retry</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-  function show404ErrorPopup() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modal404Visible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modal404Visible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Something went wrong</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModal404Visible(!modal404Visible)}
-              >
-                <Text style={styles.textStyle}>Retry</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
+
   if (isSuccess) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
@@ -197,19 +111,16 @@ const SigninScreen = ({ navigation }) => {
           let err = error.response.status;
           switch (err) {
             case 400:
-              show400ErrorPopup();
-              setModal400Visible(true);
+              setErrorCode(err);
               break;
             case 401:
-              show401ErrorPopup();
-              setModal401Visible(true);
+              setErrorCode(err);
               break;
             case 404:
-              show404ErrorPopup();
-              setModal404Visible(true);
+              setErrorCode(err);
               break;
             default:
-              show400ErrorPopup();
+              setOtherErrorCode(err);
               break;
           }
         },
@@ -275,18 +186,16 @@ const SigninScreen = ({ navigation }) => {
           let err = error.response.status;
           switch (err) {
             case 400:
-              show400ErrorPopup();
-              setModal400Visible(true);
+              setErrorCode(err);
               break;
             case 401:
-              show401ErrorPopup();
-              setModal401Visible(true);
+              setErrorCode(err);
               break;
             case 404:
-              show404ErrorPopup();
-              setModal404Visible(true);
+              setErrorCode(err);
               break;
             default:
+              setOtherErrorCode(err);
               break;
           }
         },
@@ -341,9 +250,6 @@ const SigninScreen = ({ navigation }) => {
             }}
           >
             {signinInfo()}
-            {show400ErrorPopup()}
-            {show401ErrorPopup()}
-            {show404ErrorPopup()}
           </ScrollView>
         </ScrollView>
       </View>
@@ -375,6 +281,34 @@ const SigninScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {errorCode === 400 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Something went wrong. Please double-check and try again
+            </Text>
+          </View>
+        )}
+        {errorCode === 401 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              User unverify. Please comfirm your email and try again
+            </Text>
+          </View>
+        )}
+        {errorCode === 404 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              User not found. Please sign up and try again
+            </Text>
+          </View>
+        )}
+        {ortherErrorCode !== null && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Something went wrong. Please sign up and try again
+            </Text>
+          </View>
+        )}
         {userNameTextField()}
         {passwordTextField()}
         {signinButton()}
@@ -629,50 +563,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
+  failWarningWrapper: {
     alignItems: "center",
-    marginTop: 22,
+    paddingHorizontal: Sizes.fixPadding + 9,
+    marginTop: Sizes.fixPadding,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "#eeeeee",
-    borderRadius: 20,
-    padding: 35,
-    paddingHorizontal: 50,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    paddingHorizontal: 30,
-    backgroundColor: "#ae3c03",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 25,
-    fontSize: 20,
-    textAlign: "center",
-  },
+  warningText: { color: "red", fontSize: 17 },
 });
 
 export default SigninScreen;

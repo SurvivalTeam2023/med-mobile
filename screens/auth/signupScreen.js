@@ -19,9 +19,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
 import { Pressable } from "react-native";
-
+import { Feather } from "@expo/vector-icons";
 const SignupScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isFailed, setIsFailed] = useState(null);
 
   //signup
   const [state, setState] = useState({
@@ -49,7 +49,7 @@ const SignupScreen = ({ navigation }) => {
           }, 2000);
         },
         onError: (error) => {
-          setModalVisible(true);
+          setIsFailed(true);
           console.log("error", error);
         },
       }
@@ -68,40 +68,13 @@ const SignupScreen = ({ navigation }) => {
             <View>
               {cornerImage()}
               {signupInfo()}
-              {showModal()}
             </View>
           }
         />
       </View>
     </SafeAreaView>
   );
-  function showModal() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Sign up failed</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Retry</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
+
   function signupInfo() {
     return (
       <View style={{ marginTop: Sizes.fixPadding + 5.0 }}>
@@ -120,6 +93,21 @@ const SignupScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {isFailed && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={{ color: "red" }}>
+              Something went wrong. Please double-check and try again
+            </Text>
+            <Feather
+              name="delete"
+              size={24}
+              color="red"
+              onPress={() => {
+                setIsFailed(false);
+              }}
+            />
+          </View>
+        )}
 
         {usernameTextField()}
         {emailAddressTextField()}
@@ -419,49 +407,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
+  failWarningWrapper: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "#eeeeee",
-    borderRadius: 20,
-    padding: 35,
-    paddingHorizontal: 50,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    paddingHorizontal: 30,
-    backgroundColor: "#ae3c03",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 25,
-    fontSize: 20,
-    textAlign: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding,
   },
 });
 
