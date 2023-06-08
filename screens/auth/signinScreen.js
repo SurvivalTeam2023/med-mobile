@@ -10,7 +10,6 @@ import {
   ScrollView,
   Image,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -32,14 +31,13 @@ import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { Audio } from "expo-av";
-import { useIsValidQuiz } from "../../hooks/question.hook";
-import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Pressable } from "react-native";
-import { isValidQuiz } from "../../api/question.api";
-import { questionAction } from "../../redux/auth/question.slice";
 import { ARTIST_ROLE } from "../../constants/role";
 
 const SigninScreen = ({ navigation }) => {
+  const [errorCode, setErrorCode] = useState(null);
+  const [ortherErrorCode, setOtherErrorCode] = useState(null);
+
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -63,10 +61,6 @@ const SigninScreen = ({ navigation }) => {
       updateState({ backClickCount: 0 });
     }, 1000);
   }
-  // useEffect(() => {
-
-  //   }
-  // }, [successIsValidQuiz, successIsFavoriteExisted]);
 
   const [state, setState] = useState({
     showPassword: false,
@@ -75,6 +69,7 @@ const SigninScreen = ({ navigation }) => {
     email: null,
     backClickCount: 0,
   });
+
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
 
@@ -114,8 +109,21 @@ const SigninScreen = ({ navigation }) => {
           }
         },
         onError: (error) => {
-          Alert.alert("Please verify email");
-          console.log("error", error);
+          let err = error.response.status;
+          switch (err) {
+            case 400:
+              setErrorCode(err);
+              break;
+            case 401:
+              setErrorCode(err);
+              break;
+            case 404:
+              setErrorCode(err);
+              break;
+            default:
+              setOtherErrorCode(err);
+              break;
+          }
         },
       }
     );
@@ -150,10 +158,6 @@ const SigninScreen = ({ navigation }) => {
     }
   }, [response]);
 
-  // useEffect(() => {
-  //   storeConfig();
-  // }, []);
-
   const handleLoginWithGmail = () => {
     mutateLoginGoogle(
       {
@@ -180,7 +184,21 @@ const SigninScreen = ({ navigation }) => {
           }
         },
         onError: (error) => {
-          console.log("error", error);
+          let err = error.response.status;
+          switch (err) {
+            case 400:
+              setErrorCode(err);
+              break;
+            case 401:
+              setErrorCode(err);
+              break;
+            case 404:
+              setErrorCode(err);
+              break;
+            default:
+              setOtherErrorCode(err);
+              break;
+          }
         },
       }
     );
@@ -224,6 +242,7 @@ const SigninScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           {cornerImage()}
+
           <ScrollView
             scrollEnabled={false}
             contentContainerStyle={{
@@ -263,6 +282,34 @@ const SigninScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {errorCode === 400 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Something went wrong. Please double-check and try again
+            </Text>
+          </View>
+        )}
+        {errorCode === 401 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Incorrect username or password. Please double-check and try again
+            </Text>
+          </View>
+        )}
+        {errorCode === 404 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              User not found. Please sign up and try again
+            </Text>
+          </View>
+        )}
+        {ortherErrorCode !== null && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Something went wrong. Please sign up and try again
+            </Text>
+          </View>
+        )}
         {userNameTextField()}
         {passwordTextField()}
         {signinButton()}
@@ -378,26 +425,6 @@ const SigninScreen = ({ navigation }) => {
       </Pressable>
     );
   }
-  // function manageButton() {
-  //   return (
-  //     <TouchableOpacity
-  //       style={styles.signinButtonStyle}
-  //       activeOpacity={0.9}
-  //       onPress={() => {
-  //         handleLoginToManage();
-  //       }}
-  //     >
-  //       <LinearGradient
-  //         start={{ x: 1, y: 0 }}
-  //         end={{ x: 0, y: 0 }}
-  //         colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-  //         style={styles.signinButtonGradientStyle}
-  //       >
-  //         <Text style={{ ...Fonts.whiteColor18Bold }}>Manage Album</Text>
-  //       </LinearGradient>
-  //     </TouchableOpacity>
-  //   );
-  // }
 
   function passwordTextField() {
     return (
@@ -537,6 +564,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
   },
+  failWarningWrapper: {
+    alignItems: "center",
+    paddingHorizontal: Sizes.fixPadding + 9,
+    marginTop: Sizes.fixPadding,
+  },
+  warningText: { color: "red", fontSize: 17 },
 });
 
 export default SigninScreen;
