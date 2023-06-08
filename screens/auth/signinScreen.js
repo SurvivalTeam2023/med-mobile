@@ -69,6 +69,7 @@ const SigninScreen = ({ navigation }) => {
     email: null,
     backClickCount: 0,
   });
+
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
 
@@ -291,7 +292,7 @@ const SigninScreen = ({ navigation }) => {
         {errorCode === 401 && (
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
-              User unverify. Please comfirm your email and try again
+              Incorrect username or password. Please double-check and try again
             </Text>
           </View>
         )}
