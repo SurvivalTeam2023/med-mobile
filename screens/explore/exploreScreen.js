@@ -30,6 +30,7 @@ import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
 import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
 import { genreAction } from "../../redux/auth/genre.slice";
+import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -178,6 +179,8 @@ let topArtistList = [
 ];
 
 const ExploreScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const [state, setState] = useState({
     forYouData: forYouList,
     pauseSong: true,
@@ -192,7 +195,21 @@ const ExploreScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-  const dispatch = useDispatch();
+
+  const {
+    data: dataFavTrack,
+    isSuccess: isSuccessFavTrack,
+    isError: isErrorFavTrack,
+    error: errorFavTrack,
+    refetch,
+  } = useGetTracksFromFavorite();
+  if (isSuccessFavTrack) {
+    const favTrack = dataFavTrack["data"];
+    dispatch(genreAction.setGenreTrack(favTrack));
+  }
+  if (isErrorFavTrack) {
+    console.log("errorFavTrack", errorFavTrack);
+  }
 
   const handlePlaylistPress = (playlistId) => {
     try {
@@ -213,6 +230,7 @@ const ExploreScreen = ({ navigation }) => {
   const handleFavoritedPress = (favoriteId) => {
     try {
       dispatch(favoriteAction.setFavoriteId(favoriteId));
+      refetch();
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }

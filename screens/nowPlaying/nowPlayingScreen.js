@@ -18,24 +18,16 @@ import { Slider } from "@rneui/themed";
 import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
 import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
+import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
+import { genreAction, genreReducer } from "../../redux/auth/genre.slice";
+import { store } from "../../core/store/store";
 
 const NowPlayingScreen = ({ navigation }) => {
-  const [nextOnList, setNextOnList] = React.useState([]);
+  let nextOnList = store.getState().genre.genreTrack;
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
   const { mutate } = useCreateHisoryApi();
-  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
-
-  useEffect(() => {
-    if (isSuccess) {
-      setNextOnList(data["data"]);
-      console.log("nextOnList", nextOnList);
-    }
-    if (isError) {
-      console.log("error", error);
-    }
-  }, []);
 
   const saveHistory = () => {
     mutate(
