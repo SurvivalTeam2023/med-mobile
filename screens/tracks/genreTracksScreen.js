@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -34,11 +34,10 @@ let songOptionsList = [
   "Set as",
 ];
 
-let genreTracksList = [];
-
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const TracksScreen = ({ navigation }) => {
+  const [genreTracksList, setGenreTracksList] = useState([]);
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
@@ -51,14 +50,15 @@ const TracksScreen = ({ navigation }) => {
     isError: isErrorTracksFromGenre,
     error: errorTracksFromGenre,
   } = useGetTracksFromGenre();
-
-  if (successTracksFromGenre) {
-    genreTracksList = dataTracksFromGenre["data"];
-    console.log("genreTracksList", genreTracksList);
-  }
-  if (isErrorTracksFromGenre) {
-    console.log("error", errorTracksFromGenre);
-  }
+  useEffect(() => {
+    if (successTracksFromGenre) {
+      setGenreTracksList(dataTracksFromGenre["data"]);
+      console.log("genreTracksList", genreTracksList);
+    }
+    if (isErrorTracksFromGenre) {
+      console.log("error", errorTracksFromGenre);
+    }
+  }, []);
 
   const handleOptionSelect = (option) => {
     // Perform action based on selected option

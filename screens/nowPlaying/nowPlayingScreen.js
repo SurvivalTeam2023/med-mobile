@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -19,21 +19,24 @@ import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
 import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
-let nextOnList = [];
-
 const NowPlayingScreen = ({ navigation }) => {
-  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
-  if (isSuccess) {
-    nextOnList = data["data"].items;
-    console.log("nextOnList", nextOnList);
-  }
-  if (isError) {
-    console.log("error", error);
-  }
+  const [nextOnList, setNextOnList] = React.useState([]);
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
   const { mutate } = useCreateHisoryApi();
+  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setNextOnList(data["data"]);
+      console.log("nextOnList", nextOnList);
+    }
+    if (isError) {
+      console.log("error", error);
+    }
+  }, []);
+
   const saveHistory = () => {
     mutate(
       {
@@ -53,7 +56,7 @@ const NowPlayingScreen = ({ navigation }) => {
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync({
-      uri: nextOnList[songIndex]?.audio.file.url,
+      uri: nextOnList[songIndex]?.audio?.file?.url,
     });
     setIsPlaying(false);
     setSound(sound);
@@ -281,7 +284,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: `${nextOnList[songIndex]?.audio.imageUrl}` }}
+          source={{ uri: `${nextOnList[songIndex]?.audio?.imageUrl}` }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,

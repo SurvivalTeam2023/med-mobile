@@ -451,13 +451,13 @@ const ExploreScreen = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                handleFavoritedPress(item.genreId.id);
+                handleFavoritedPress(item.genreId);
                 navigation.push("NowPlaying", { item });
               }}
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item?.genre.id}>
+                <SharedElement id={item?.genreId}>
                   <Image
                     source={{ uri: `${item.genre.image}` }}
                     style={{
