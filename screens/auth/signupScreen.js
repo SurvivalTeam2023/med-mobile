@@ -11,48 +11,18 @@ import {
   StyleSheet,
   Alert,
   FlatList,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
-import { Modal } from "react-native-paper";
 import { Pressable } from "react-native";
-
+import { Feather } from "@expo/vector-icons";
 const SignupScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isFailed, setIsFailed] = useState(null);
 
-  function showModal() {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
-                Payment Info
-              </Text>
-
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Ok</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    );
-  }
   //signup
   const [state, setState] = useState({
     showPassword: false,
@@ -83,7 +53,7 @@ const SignupScreen = ({ navigation }) => {
           }, 2000);
         },
         onError: (error) => {
-          setModalVisible(true);
+          setIsFailed(true);
           console.log("error", error);
         },
       }
@@ -96,8 +66,8 @@ const SignupScreen = ({ navigation }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         <FlatList
-          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
           ListHeaderComponent={
             <View>
               {cornerImage()}
@@ -127,14 +97,28 @@ const SignupScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {isFailed && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={{ color: "red" }}>
+              Something went wrong. Please double-check and try again
+            </Text>
+            <Feather
+              name="delete"
+              size={24}
+              color="red"
+              onPress={() => {
+                setIsFailed(false);
+              }}
+            />
+          </View>
+        )}
+
         {usernameTextField()}
         {emailAddressTextField()}
         {passwordTextField()}
-        {showModal()}
         {rePasswordTextField()}
         {signupButton()}
         {orIndicator()}
-
         {socialMediaOptions()}
         {alreadyHaveAccountInfo()}
       </View>
@@ -372,16 +356,6 @@ const SignupScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    elevation: 2,
-  },
-
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
   textFieldWrapStyle: {
     flexDirection: "row",
     alignItems: "center",
@@ -437,26 +411,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
+  failWarningWrapper: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 50,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    justifyContent: "space-between",
+    paddingHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding,
   },
 });
 
