@@ -10,14 +10,19 @@ import {
   Image,
   StyleSheet,
   Alert,
+  FlatList,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
-
+import { Pressable } from "react-native";
+import { Feather } from "@expo/vector-icons";
 const SignupScreen = ({ navigation }) => {
+  const [isFailed, setIsFailed] = useState(null);
+
   //signup
   const [state, setState] = useState({
     showPassword: false,
@@ -39,13 +44,16 @@ const SignupScreen = ({ navigation }) => {
       },
       {
         onSuccess: () => {
-          Alert.alert("SignUp success");
           setTimeout(() => {
+<<<<<<< HEAD
+            navigation.push("SignIn");
+=======
             navigation.push("NotifyEmail");
+>>>>>>> 9df548e6bb40addbb40d27557297df7dda359adc
           }, 2000);
         },
         onError: (error) => {
-          Alert.alert("Sign up failed please try again");
+          setIsFailed(true);
           console.log("error", error);
         },
       }
@@ -57,18 +65,16 @@ const SignupScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+        <FlatList
           showsVerticalScrollIndicator={false}
-        >
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            {signupInfo()}
-          </ScrollView>
-        </ScrollView>
+          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
+          ListHeaderComponent={
+            <View>
+              {cornerImage()}
+              {signupInfo()}
+            </View>
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -91,6 +97,22 @@ const SignupScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {isFailed && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={{ color: "red" }}>
+              Something went wrong. Please double-check and try again
+            </Text>
+            <Feather
+              name="delete"
+              size={24}
+              color="red"
+              onPress={() => {
+                setIsFailed(false);
+              }}
+            />
+          </View>
+        )}
+
         {usernameTextField()}
         {emailAddressTextField()}
         {passwordTextField()}
@@ -173,19 +195,6 @@ const SignupScreen = ({ navigation }) => {
       <View style={styles.socialMediaIconsWrapStyle}>
         <View
           style={{
-            backgroundColor: "#4267B2",
-            ...styles.socialMediaIconsStyle,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/facebook-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View
-          style={{
             backgroundColor: "#EA4335",
             ...styles.socialMediaIconsStyle,
             marginHorizontal: Sizes.fixPadding - 5.0,
@@ -193,18 +202,6 @@ const SignupScreen = ({ navigation }) => {
         >
           <Image
             source={require("../../assets/images/icon/google-icon.png")}
-            style={{ width: 15.0, height: 15.0 }}
-            resizeMode="contain"
-          />
-        </View>
-        <View
-          style={{
-            backgroundColor: "#00A1F2",
-            ...styles.socialMediaIconsStyle,
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icon/twitter-icon.png")}
             style={{ width: 15.0, height: 15.0 }}
             resizeMode="contain"
           />
@@ -413,6 +410,13 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding * 2.5,
     marginHorizontal: Sizes.fixPadding * 2.0,
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  failWarningWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding,
   },
 });
 
