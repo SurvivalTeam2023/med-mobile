@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
   StatusBar,
@@ -24,7 +23,7 @@ import {
   useGetAudioForArtistAPI,
 } from "../../hooks/playlistTracks.hook";
 import { useDispatch } from "react-redux";
-import { audioArtistAction } from "../../redux/audioArtist";
+import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
 
 const sortOptions = ["Name", "Date Added", "Artist"];

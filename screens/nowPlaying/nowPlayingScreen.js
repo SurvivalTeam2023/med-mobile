@@ -24,31 +24,12 @@ const NowPlayingScreen = ({ navigation }) => {
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
-  const { mutate } = useCreateHisoryApi();
   const [track, setTrack] = useState(store.getState().genre.genreTrack);
-  const isLoading = useState(store.getState().genre.isLoading);
   let nextOnList = track;
 
   useEffect(() => {
     setTrack(store.getState().genre.genreTrack);
   }, [store.getState().genre.genreTrack]);
-
-  const saveHistory = () => {
-    mutate(
-      {
-        audioId: 11,
-      },
-      {
-        onSuccess: (data) => {
-          console.log("Created!!!");
-        },
-        onError: (error) => {
-          console.log("error", error);
-        },
-      }
-    );
-  };
-
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync({
       uri: nextOnList[songIndex]?.audio?.file?.url,
@@ -95,7 +76,7 @@ const NowPlayingScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { songRunningInPercentage, currentSongInFavorite } = state;
-  return !isLoading ? (
+  return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
@@ -110,11 +91,11 @@ const NowPlayingScreen = ({ navigation }) => {
         </ScrollView>
       </View>
     </SafeAreaView>
-  ) : null;
+  );
 
   function nextOnTheLists() {
     if (!nextOnList || nextOnList.length === 0) {
-      return null; // or any other fallback component/rendering
+      return null;
     }
 
     return (

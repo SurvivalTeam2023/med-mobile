@@ -26,7 +26,6 @@ import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
 import { BlurView } from "expo-blur";
 import { genreAction } from "../../redux/auth/genre.slice";
 import { useDispatch } from "react-redux";
-import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -56,7 +55,6 @@ const TracksScreen = ({ navigation }) => {
   if (successTracksFromGenre) {
     genreTracksList = dataTracksFromGenre["data"];
     dispatch(genreAction.setGenreTrack(genreTracksList));
-    let nextOnList = store.getState().genre.genreTrack;
   }
 
   const handleOptionSelect = (option) => {
@@ -90,24 +88,6 @@ const TracksScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
-        >
-          {cornerImage()}
-          {header()}
-          {sortingIcons()}
-          {tracks()}
-        </ScrollView>
-      </View>
-      {currentlyPlayedSong()}
-    </SafeAreaView>
-  );
 
   function currentlyPlayedSong() {
     return (
@@ -165,7 +145,7 @@ const TracksScreen = ({ navigation }) => {
 
   function tracks() {
     const CustomMenu = ({ item }) => {
-      var _menu = null;
+      let _menu = null;
 
       const setMenuRef = (ref) => {
         _menu = ref;
@@ -472,6 +452,24 @@ const TracksScreen = ({ navigation }) => {
       </View>
     );
   }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      <StatusBar backgroundColor={Colors.primaryColor} />
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
+        >
+          {cornerImage()}
+          {header()}
+          {sortingIcons()}
+          {tracks()}
+        </ScrollView>
+      </View>
+      {currentlyPlayedSong()}
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({

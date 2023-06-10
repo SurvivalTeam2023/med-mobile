@@ -51,13 +51,10 @@ const TracksScreen = ({ navigation }) => {
     data: dataTracksFromPlaylist,
     isSuccess: successTracksFromPlaylist,
     isError: isErrorTracksFromPlaylist,
-    error: errorTracksFromPlaylist,
   } = useGetTracksFromPlaylist();
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
-  }
-  if (isErrorTracksFromPlaylist) {
   }
 
   const handleOptionSelect = (option) => {
