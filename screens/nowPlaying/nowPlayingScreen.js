@@ -64,8 +64,8 @@ const NowPlayingScreen = ({ navigation }) => {
 
   function getData() {
     let track = store.getState().genre.genreTrack;
-    console.log("pod");
     nextOnList = track;
+    console.log("pod", nextOnList);
   }
 
   function playNextSong() {
@@ -108,7 +108,6 @@ const NowPlayingScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
         >
-          {getData()}
           {cornerImage()}
           {header()}
           {songInfo()}
