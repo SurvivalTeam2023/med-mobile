@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -17,23 +17,19 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { Audio } from "expo-av";
 import { useCreateHisoryApi } from "../../hooks/history.hook";
-import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
-let nextOnList = [];
+import { store } from "../../core/store/store";
 
 const NowPlayingScreen = ({ navigation }) => {
-  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
-  if (isSuccess) {
-    nextOnList = data["data"].items;
-    console.log("nextOnList", nextOnList);
-  }
-  if (isError) {
-    console.log("error", error);
-  }
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
   const { mutate } = useCreateHisoryApi();
+  let nextOnList;
+
+  React.useEffect(() => {
+    getData();
+  }, [nextOnList]);
   const saveHistory = () => {
     mutate(
       {
@@ -53,7 +49,7 @@ const NowPlayingScreen = ({ navigation }) => {
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync({
-      uri: nextOnList[songIndex]?.audio.file.url,
+      uri: nextOnList[songIndex]?.audio?.file?.url,
     });
     setIsPlaying(false);
     setSound(sound);
@@ -65,6 +61,12 @@ const NowPlayingScreen = ({ navigation }) => {
     setIsPlaying(true);
     await sound.pauseAsync();
   };
+
+  function getData() {
+    let track = store.getState().genre.genreTrack;
+    nextOnList = track;
+    console.log("pod", nextOnList);
+  }
 
   function playNextSong() {
     if (songIndex < nextOnList.length - 1) {
@@ -116,6 +118,10 @@ const NowPlayingScreen = ({ navigation }) => {
   );
 
   function nextOnTheLists() {
+    if (!nextOnList || nextOnList.length === 0) {
+      return null; // or any other fallback component/rendering
+    }
+
     return (
       <View>
         <Text
@@ -128,7 +134,7 @@ const NowPlayingScreen = ({ navigation }) => {
         >
           Tracks list
         </Text>
-        {nextOnList?.map((item, index) => (
+        {nextOnList.map((item, index) => (
           <View key={`${item?.id}`}>
             <TouchableOpacity
               key={index}
@@ -163,7 +169,6 @@ const NowPlayingScreen = ({ navigation }) => {
       </View>
     );
   }
-
   function songInfo() {
     return (
       <View>
@@ -278,10 +283,13 @@ const NowPlayingScreen = ({ navigation }) => {
   }
 
   function songNameWithPoster() {
+    if (!nextOnList || nextOnList.length === 0) {
+      return null; // or any other fallback component/rendering
+    }
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: `${nextOnList[songIndex]?.audio.imageUrl}` }}
+          source={{ uri: `${nextOnList[songIndex]?.audio?.imageUrl}` }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,

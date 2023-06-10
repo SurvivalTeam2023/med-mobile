@@ -8,4 +8,5 @@ export const useGetTracksFromFavorite = (payload) =>
       const data = await getFavoriteTracksAPI();
       return data;
     },
+    enabled: false,
   });

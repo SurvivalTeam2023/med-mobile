@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -22,6 +22,9 @@ import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
 import { Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
+import { genreAction } from "../../redux/auth/genre.slice";
+import { useDispatch } from "react-redux";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -34,11 +37,11 @@ let songOptionsList = [
   "Set as",
 ];
 
-let genreTracksList = [];
-
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const TracksScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  let genreTracksList;
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
@@ -54,6 +57,9 @@ const TracksScreen = ({ navigation }) => {
 
   if (successTracksFromGenre) {
     genreTracksList = dataTracksFromGenre["data"];
+    dispatch(genreAction.setGenreTrack(genreTracksList));
+    let nextOnList = store.getState().genre.genreTrack;
+    console.log("dcmm", nextOnList);
     console.log("genreTracksList", genreTracksList);
   }
   if (isErrorTracksFromGenre) {

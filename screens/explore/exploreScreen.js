@@ -30,6 +30,8 @@ import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
 import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
 import { genreAction } from "../../redux/auth/genre.slice";
+import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -178,6 +180,8 @@ let topArtistList = [
 ];
 
 const ExploreScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const [state, setState] = useState({
     forYouData: forYouList,
     pauseSong: true,
@@ -192,7 +196,22 @@ const ExploreScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
-  const dispatch = useDispatch();
+
+  const {
+    data: dataFavTrack,
+    isSuccess: isSuccessFavTrack,
+    isError: isErrorFavTrack,
+    error: errorFavTrack,
+    refetch,
+  } = useGetTracksFromFavorite();
+  if (isSuccessFavTrack) {
+    const favTrack = dataFavTrack["data"];
+    dispatch(genreAction.setGenreTrack(favTrack));
+    console.log("dcm", store.getState().genre.genreTrack);
+  }
+  if (isErrorFavTrack) {
+    console.log("errorFavTrack", errorFavTrack);
+  }
 
   const handlePlaylistPress = (playlistId) => {
     try {
@@ -213,8 +232,9 @@ const ExploreScreen = ({ navigation }) => {
   const handleFavoritedPress = (favoriteId) => {
     try {
       dispatch(favoriteAction.setFavoriteId(favoriteId));
+      refetch();
     } catch (error) {
-      console.log("Error saving selected playlist ID", error);
+      console.log("Error saving selected favorited ID", error);
     }
   };
 
@@ -451,13 +471,13 @@ const ExploreScreen = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                handleFavoritedPress(item.genreId.id);
+                handleFavoritedPress(item.genreId);
                 navigation.push("NowPlaying", { item });
               }}
               style={styles.forYouInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item?.genre.id}>
+                <SharedElement id={item?.genreId}>
                   <Image
                     source={{ uri: `${item.genre.image}` }}
                     style={{
