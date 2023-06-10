@@ -1,51 +1,46 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
   BackHandler,
-  SafeAreaView,
-  View,
-  StatusBar,
-  TouchableOpacity,
-  TextInput,
-  Text,
-  ScrollView,
   Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
-import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import {Colors, Fonts, Sizes} from "../../constants/styles";
+import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
+import {LinearGradient} from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { useFocusEffect } from "@react-navigation/native";
-import { useLogin } from "../../hooks/auth.hook";
-import { useLoginWithGmail } from "../../hooks/auth.hook";
-import {
-  EXPO_CLIENT_ID,
-  TOKEN_KEY_STORAGE,
-  WEB_CLIENT_ID,
-} from "../../constants/config";
-import { useDispatch } from "react-redux";
-import { userAction } from "../../redux/auth/auth.slice";
+import {useFocusEffect} from "@react-navigation/native";
+import {useLogin, useLoginWithGmail} from "../../hooks/auth.hook";
+import {EXPO_CLIENT_ID, TOKEN_KEY_STORAGE, WEB_CLIENT_ID,} from "../../constants/config";
+import {useDispatch} from "react-redux";
+import {userAction} from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
-import { useGetUserByNameApi } from "../../hooks/user.hook";
-import { store } from "../../core/store/store";
-import { Audio } from "expo-av";
-import { Pressable } from "react-native";
-import { ARTIST_ROLE } from "../../constants/role";
+import {useGetUserByNameApi} from "../../hooks/user.hook";
+import {store} from "../../core/store/store";
+import {Audio} from "expo-av";
+import {ARTIST_ROLE} from "../../constants/role";
 
-const SigninScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState(null);
-  const [ortherErrorCode, setOtherErrorCode] = useState(null);
+  const [otherErrorCode, setOtherErrorCode] = useState(null);
 
   const backAction = () => {
-    backClickCount == 1 ? BackHandler.exitApp() : _spring();
+    backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
   const { mutate } = useLogin();
   const { mutate: mutateLoginGoogle } = useLoginWithGmail();
   const dispatch = useDispatch();
-  const { userData, isError, isSuccess, refetch } = useGetUserByNameApi();
+  const { userData, isSuccess, refetch } = useGetUserByNameApi();
 
   useFocusEffect(
     useCallback(() => {
@@ -91,14 +86,12 @@ const SigninScreen = ({ navigation }) => {
           const dataRaw = data["data"];
           const access_token = dataRaw["access_token"];
           dispatch(userAction.storeToken(access_token));
-
           refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })
           );
           const role = store.getState().user.artist_role;
-
           if (role === ARTIST_ROLE) {
             navigation.push("ArtistProfile");
           } else {
@@ -126,29 +119,24 @@ const SigninScreen = ({ navigation }) => {
     );
   };
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
   });
-  //variable can be get in the function below
   let token = null;
   let email = null;
 
   useEffect(() => {
     if (response?.type === "success") {
-      const { authentication } = response;
       const subject_token = response.authentication.accessToken;
       token = subject_token;
-
-      //username is email so we get email from api and pass it to handleLoginWithGmail function
       axios
         .get(
           "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
             `${subject_token}`
         )
         .then(function (response) {
-          const userDetails = response.data["email"];
-          email = userDetails;
+          email = response.data["email"];
           handleLoginWithGmail();
         });
     }
@@ -246,11 +234,11 @@ const SigninScreen = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {signinInfo()}
+            {signInInfo()}
           </ScrollView>
         </ScrollView>
       </View>
-      {backClickCount == 1 ? (
+      {backClickCount === 1 ? (
         <View style={[styles.animatedView]}>
           <Text style={{ ...Fonts.whiteColor12Medium }}>
             Press Back Once Again to Exit
@@ -260,7 +248,7 @@ const SigninScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  function signinInfo() {
+  function signInInfo() {
     return (
       <View>
         <MaskedView
@@ -297,7 +285,7 @@ const SigninScreen = ({ navigation }) => {
             </Text>
           </View>
         )}
-        {ortherErrorCode !== null && (
+        {otherErrorCode !== null && (
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
               Something went wrong. Please sign up and try again
@@ -306,7 +294,7 @@ const SigninScreen = ({ navigation }) => {
         )}
         {userNameTextField()}
         {passwordTextField()}
-        {signinButton()}
+        {signInButton()}
         {orIndicator()}
         {socialMediaOptions()}
         {dontHaveAccountInfo()}
@@ -398,10 +386,10 @@ const SigninScreen = ({ navigation }) => {
     );
   }
 
-  function signinButton() {
+  function signInButton() {
     return (
       <Pressable
-        style={styles.signinButtonStyle}
+        style={styles.signInButtonStyle}
         activeOpacity={0.9}
         onPressIn={() => {
           handleLogin();
@@ -412,7 +400,7 @@ const SigninScreen = ({ navigation }) => {
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
           colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.signinButtonGradientStyle}
+          style={styles.signInButtonGradientStyle}
         >
           <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN IN</Text>
         </LinearGradient>
@@ -422,7 +410,7 @@ const SigninScreen = ({ navigation }) => {
 
   function passwordTextField() {
     return (
-      <View style={styles.passwordTextFieldWrapstyle}>
+      <View style={styles.passwordTextFieldWrapStyle}>
         <View
           style={{
             flex: 1,
@@ -514,7 +502,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Sizes.fixPadding + 5.0,
     marginHorizontal: Sizes.fixPadding * 2.0,
   },
-  passwordTextFieldWrapstyle: {
+  passwordTextFieldWrapStyle: {
     marginVertical: Sizes.fixPadding,
     flexDirection: "row",
     alignItems: "center",
@@ -546,13 +534,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  signinButtonGradientStyle: {
+  signInButtonGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding - 5.0,
   },
-  signinButtonStyle: {
+  signInButtonStyle: {
     justifyContent: "center",
     marginTop: Sizes.fixPadding * 2.5,
     marginHorizontal: Sizes.fixPadding * 2.0,
@@ -566,4 +554,4 @@ const styles = StyleSheet.create({
   warningText: { color: "red", fontSize: 13, fontWeight: "bold" },
 });
 
-export default SigninScreen;
+export default SignInScreen;

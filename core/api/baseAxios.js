@@ -22,7 +22,6 @@ export const CallAPIMulti = axios.create({
 
 CallAPI.interceptors.request.use((req) => {
   const token = store?.getState().user.token;
-
   if (token && req.headers);
   req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   return req;

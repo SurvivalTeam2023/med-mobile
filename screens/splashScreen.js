@@ -9,10 +9,41 @@ import {
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {TOKEN_KEY_STORAGE, USER_KEY_STORAGE} from "../constants/config";
+import {userAction} from "../redux/auth/auth.slice";
+import {useDispatch} from "react-redux";
+import {store} from "../core/store/store";
+import {ARTIST_ROLE} from "../constants/role";
+const getTokenFromLocal = async () => {
+  try {
+    const value = await AsyncStorage.getItem(TOKEN_KEY_STORAGE)
+    if(value !== null) {
+      try{
+        return JSON.parse(value)
+      }catch(error){
+        console.log("Failed to parse token:", error);
+      }
+    }
+  } catch(e) {
+    console.log("fetch_token_local_fail")
+  }
+}
 const SplashScreen = ({ navigation }) => {
-  setTimeout(() => {
-    navigation.navigate("Signin");
+  const dispatch = useDispatch();
+  setTimeout(async () => {
+    const retrievedToken  = await getTokenFromLocal()
+     if(!retrievedToken ){
+       navigation.navigate("SignIn");
+     }else{
+       dispatch(userAction.storeTokenWithoutLocal(retrievedToken.token));
+       const role = store.getState().user.artist_role;
+       if (role === ARTIST_ROLE) {
+         navigation.push("ArtistProfile");
+       } else {
+         navigation.push("OptionScreen");
+       }
+     }
   }, 2000);
 
   return (

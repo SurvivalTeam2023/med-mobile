@@ -12,7 +12,7 @@ import nowPlayingScreen from "./screens/nowPlaying/nowPlayingScreen";
 import topArtistScreen from "./screens/topArtist/topArtistScreen";
 import exploreSubscription from "./screens/exploreSubscription/exploreSubscription";
 import paymentFailedScreen from "./screens/paymentFailed/paymentFailedScreen";
-import signinScreen from "./screens/auth/signinScreen";
+import signInScreen from "./screens/auth/signInScreen";
 import signupScreen from "./screens/auth/signupScreen";
 import chooseMusicScreen from "./screens/chooseMusic/chooseMusicScreen";
 import splashScreen from "./screens/splashScreen";
@@ -63,15 +63,13 @@ const App = () => {
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen
-              name="Signin"
-              component={signinScreen}
+              name="SignIn"
+              component={signInScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
-            <Stack.Screen name="SignIn" component={signinScreen} />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
-
             <Stack.Screen name="CamResult" component={CamResultScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
             <Stack.Screen name="GenreTracks" component={genreTracksScreen} />
