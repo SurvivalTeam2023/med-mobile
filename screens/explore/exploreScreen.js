@@ -31,6 +31,7 @@ import { useDispatch } from "react-redux";
 import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
 import { genreAction } from "../../redux/auth/genre.slice";
 import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -206,6 +207,7 @@ const ExploreScreen = ({ navigation }) => {
   if (isSuccessFavTrack) {
     const favTrack = dataFavTrack["data"];
     dispatch(genreAction.setGenreTrack(favTrack));
+    console.log("dcm", store.getState().genre.genreTrack);
   }
   if (isErrorFavTrack) {
     console.log("errorFavTrack", errorFavTrack);
@@ -232,7 +234,7 @@ const ExploreScreen = ({ navigation }) => {
       dispatch(favoriteAction.setFavoriteId(favoriteId));
       refetch();
     } catch (error) {
-      console.log("Error saving selected playlist ID", error);
+      console.log("Error saving selected favorited ID", error);
     }
   };
 
