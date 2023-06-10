@@ -45,16 +45,11 @@ const SignupScreen = ({ navigation }) => {
       {
         onSuccess: () => {
           setTimeout(() => {
-<<<<<<< HEAD
-            navigation.push("SignIn");
-=======
-            navigation.push("NotifyEmail");
->>>>>>> 9df548e6bb40addbb40d27557297df7dda359adc
+            navigation.push("VerifyEmail");
           }, 2000);
         },
         onError: (error) => {
           setIsFailed(true);
-          console.log("error", error);
         },
       }
     );

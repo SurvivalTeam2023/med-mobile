@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -11,7 +11,6 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
-  useColorScheme,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -26,7 +25,6 @@ import { userAction } from "../../redux/auth/auth.slice";
 const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
-  console.log("emailll", store.getState().user.username);
   const user = store.getState()?.user?.user;
   const userEmail = user?.user_db?.email;
   const audioConfig = store.getState().user.audio;

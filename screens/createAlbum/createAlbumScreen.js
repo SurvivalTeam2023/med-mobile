@@ -8,18 +8,20 @@ import {
   Text,
   ScrollView,
   Image,
+  Pressable,
   StyleSheet,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
-import { Pressable } from "react-native";
 import { useCreatePlaylistAPI } from "../../hooks/playlist.hook";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Ionicons,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const CreateAlbumScreen = ({ navigation }) => {
   const backAction = () => {

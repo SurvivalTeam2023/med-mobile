@@ -1,11 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import {
-  Modal,
-  Button,
   View,
   Text,
   SafeAreaView,
@@ -16,7 +13,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 
-const NotifyEmail = ({ navigation }) => {
+const VerifyEmail = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -145,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotifyEmail;
+export default VerifyEmail;

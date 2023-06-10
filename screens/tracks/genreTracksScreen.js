@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -9,18 +9,20 @@ import {
   StyleSheet,
   Text,
   Image,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
 import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
-import { Modal } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { genreAction } from "../../redux/auth/genre.slice";
 import { useDispatch } from "react-redux";
@@ -48,22 +50,13 @@ const TracksScreen = ({ navigation }) => {
     pauseSong: true,
   });
 
-  const {
-    data: dataTracksFromGenre,
-    isSuccess: successTracksFromGenre,
-    isError: isErrorTracksFromGenre,
-    error: errorTracksFromGenre,
-  } = useGetTracksFromGenre();
+  const { data: dataTracksFromGenre, isSuccess: successTracksFromGenre } =
+    useGetTracksFromGenre();
 
   if (successTracksFromGenre) {
     genreTracksList = dataTracksFromGenre["data"];
     dispatch(genreAction.setGenreTrack(genreTracksList));
     let nextOnList = store.getState().genre.genreTrack;
-    console.log("dcmm", nextOnList);
-    console.log("genreTracksList", genreTracksList);
-  }
-  if (isErrorTracksFromGenre) {
-    console.log("error", errorTracksFromGenre);
   }
 
   const handleOptionSelect = (option) => {

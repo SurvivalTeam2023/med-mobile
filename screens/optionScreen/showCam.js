@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,19 +8,17 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Camera, takePictureAsync } from "expo-camera";
-import { useRef, useEffect } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { Camera } from "expo-camera";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { useFaceRegApi } from "../../hooks/face.hook";
 import * as FileSystem from "expo-file-system";
 import { imageAction } from "../../redux/auth/image.slice";
-import { Alert } from "react-native";
 
 const ShowCamScreen = ({ navigation }) => {
   return (

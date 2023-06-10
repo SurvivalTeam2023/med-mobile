@@ -21,31 +21,7 @@ import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 
-const { width } = Dimensions.get("window");
-
-let forYouList = [
-  // {
-  //   id: "1f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-  //   albumName: "Don't call me up",
-  //   artist: "Mabel",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "2f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-  //   albumName: "Sugar and brownies",
-  //   artist: "Dharia",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "3f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-  //   albumName: "Pretty girl",
-  //   artist: "Maggie Lindemann",
-  //   isFavorite: false,
-  // },
-];
+let forYouList = [];
 let album = [
   {
     id: "1r",

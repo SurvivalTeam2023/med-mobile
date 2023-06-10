@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -65,7 +65,6 @@ const NowPlayingScreen = ({ navigation }) => {
   function getData() {
     let track = store.getState().genre.genreTrack;
     nextOnList = track;
-    console.log("pod", nextOnList);
   }
 
   function playNextSong() {
@@ -98,7 +97,7 @@ const NowPlayingScreen = ({ navigation }) => {
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { songRunningInPercentage, pauseSong, currentSongInFavorite } = state;
+  const { songRunningInPercentage, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />

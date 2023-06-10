@@ -21,18 +21,10 @@ let isFavoriteExisted = [];
 
 const QuizScreen = () => {
   const navigation = useNavigation();
-  const {
-    data: dataIsFavoriteExisted,
-    isSuccess: successIsFavoriteExisted,
-    isError: isErrorIsFavoriteExisted,
-    error: errorIsFavoriteExisted,
-  } = useIsFavoriteExisted();
+  const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
+    useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
     isFavoriteExisted = dataIsFavoriteExisted["data"];
-    console.log("isFavoriteExisted", isFavoriteExisted);
-  }
-  if (isErrorIsFavoriteExisted) {
-    console.log("error", errorIsFavoriteExisted);
   }
 
   const onPressHandler = () => {

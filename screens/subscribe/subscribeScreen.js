@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -21,7 +21,6 @@ import {
 } from "../../hooks/subscription.hook";
 import { store } from "../../core/store/store";
 import moment from "moment";
-import { useState } from "react";
 
 let subscribePackageList = [
   {
@@ -60,7 +59,6 @@ const SubscribeScreen = ({ navigation }) => {
   }
 
   if (isError) {
-    console.log("error", error);
   }
   const createSubscription = (planId) => {
     const userId = store.getState().user.id;
@@ -72,20 +70,12 @@ const SubscribeScreen = ({ navigation }) => {
         onSuccess: () => {
           navigation.push("Payment");
         },
-        onError: (error) => {
-          console.log("error", error);
-        },
       }
     );
   };
 
   useEffect(() => {
-    // get current time
-
     var date = moment().utcOffset("+03:00").format("YYYY-MM-DD");
-
-    // or get time ' hh:mm:ss a'
-
     setCurrentDate(date);
   }, []);
 

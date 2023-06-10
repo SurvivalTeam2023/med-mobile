@@ -18,20 +18,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import {
-  useGetPlaylist,
-  useGetPlaylistForUser,
-} from "../../hooks/playlist.hook";
+import { useGetPlaylistForUser } from "../../hooks/playlist.hook";
 import { useGetFavorite } from "../../hooks/favorite.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetHistory } from "../../hooks/history.hook";
-import { setPlaylistId } from "../../redux/auth/playlist.slice";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
-import { favoriteAction, setGenreId } from "../../redux/auth/favorite.slice";
+import { favoriteAction } from "../../redux/auth/favorite.slice";
 import { genreAction } from "../../redux/auth/genre.slice";
 import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
-import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -85,52 +80,9 @@ let popularSongsList = [
   },
 ];
 
-let recentlyPlayedList = [
-  // {
-  //   id: "r1",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage12.png"),
-  //   albumName: "Wathered",
-  // },
-  // {
-  //   id: "r2",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage11.png"),
-  //   albumName: "Circles",
-  // },
-  // {
-  //   id: "r3",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage10.png"),
-  //   albumName: "Sugar&brownies",
-  // },
-  // {
-  //   id: "r4",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-  //   albumName: "Pretty girl",
-  // },
-];
+let recentlyPlayedList = [];
 
-let forYouList = [
-  // {
-  //   id: "1f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage14.png"),
-  //   albumName: "Don't call me up",
-  //   artist: "Mabel",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "2f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage15.png"),
-  //   albumName: "Sugar and brownies",
-  //   artist: "Dharia",
-  //   isFavorite: false,
-  // },
-  // {
-  //   id: "3f",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-  //   albumName: "Pretty girl",
-  //   artist: "Maggie Lindemann",
-  //   isFavorite: false,
-  // },
-];
+let forYouList = [];
 
 let playlists = [];
 
@@ -207,10 +159,8 @@ const ExploreScreen = ({ navigation }) => {
   if (isSuccessFavTrack) {
     const favTrack = dataFavTrack["data"];
     dispatch(genreAction.setGenreTrack(favTrack));
-    console.log("dcm", store.getState().genre.genreTrack);
   }
   if (isErrorFavTrack) {
-    console.log("errorFavTrack", errorFavTrack);
   }
 
   const handlePlaylistPress = (playlistId) => {
@@ -224,18 +174,14 @@ const ExploreScreen = ({ navigation }) => {
   const handleGenrePress = (genreId) => {
     try {
       dispatch(genreAction.setGenreId(genreId));
-    } catch (error) {
-      console.log("Error saving selected genre ID", error);
-    }
+    } catch (error) {}
   };
 
   const handleFavoritedPress = (favoriteId) => {
     try {
       dispatch(favoriteAction.setFavoriteId(favoriteId));
       refetch();
-    } catch (error) {
-      console.log("Error saving selected favorited ID", error);
-    }
+    } catch (error) {}
   };
 
   const {

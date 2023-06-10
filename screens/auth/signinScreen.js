@@ -79,7 +79,6 @@ const SigninScreen = ({ navigation }) => {
   }
 
   if (isError) {
-    console.log("error", isError);
   }
 
   const handleLogin = () => {
@@ -151,7 +150,6 @@ const SigninScreen = ({ navigation }) => {
         )
         .then(function (response) {
           const userDetails = response.data["email"];
-          console.log(userDetails);
           email = userDetails;
           handleLoginWithGmail();
         });

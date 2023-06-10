@@ -9,16 +9,18 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
-import { Pressable } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Ionicons,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useCreateAudioForArtistAPI } from "../../hooks/playlistTracks.hook";
 import { store } from "../../core/store/store";
 

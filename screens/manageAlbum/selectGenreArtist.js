@@ -16,72 +16,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
-
-import {
-  useIsFavoriteExisted,
-  useCreateFavoriteApi,
-} from "../../hooks/favorite.hook";
 import { useDispatch } from "react-redux";
 import { genreArtistAction } from "../../redux/auth/genreArtist.slice";
 
 const { width } = Dimensions.get("window");
 
-let musicsList = [
-  // {
-  //   id: "1",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage21.png"),
-  //   songType: "HINDI",
-  //   selected: true,
-  // },
-  // {
-  //   id: "2",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage22.png"),
-  //   songType: "ENGLISH",
-  //   selected: false,
-  // },
-  // {
-  //   id: "3",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage17.png"),
-  //   songType: "PUNJABI",
-  //   selected: false,
-  // },
-  // {
-  //   id: "4",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage23.png"),
-  //   songType: "POP MUSIC",
-  //   selected: false,
-  // },
-  // {
-  //   id: "5",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage24.png"),
-  //   songType: "PODCASTS",
-  //   selected: false,
-  // },
-  // {
-  //   id: "6",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage25.png"),
-  //   songType: "TOP HITS",
-  //   selected: false,
-  // },
-  // {
-  //   id: "7",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage26.png"),
-  //   songType: "MIX SONGS",
-  //   selected: false,
-  // },
-  // {
-  //   id: "8",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage2.png"),
-  //   songType: "PARTY SONGS",
-  //   selected: false,
-  // },
-  // {
-  //   id: "9",
-  //   image: require("../../assets/images/songsCoverPicks/coverImage27.png"),
-  //   songType: "LOVE SONGS",
-  //   selected: false,
-  // },
-];
+let musicsList = [];
 
 const SelectGenreArtistScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();

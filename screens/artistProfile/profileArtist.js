@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -10,58 +10,39 @@ import {
   StyleSheet,
   Alert,
   Modal,
+  Pressable,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AntDesign } from "@expo/vector-icons";
 import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
-import { Pressable } from "react-native";
 import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
 import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
 const ProfileArtistScreen = ({ navigation }) => {
-  const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
-  const {
-    data: dataListener,
-    isSuccess: isSuccessListener,
-    isError: isErrorListener,
-    error: errorListener,
-  } = useGetArtistTotalListenerApi();
+  const { data, isSuccess } = useGetArtistTotalFollowerApi();
+  const { data: dataListener, isSuccess: isSuccessListener } =
+    useGetArtistTotalListenerApi();
 
   const [modalVisible, setModalVisible] = useState(false);
   let totalListener = 1;
   let paymentInfo = {};
-  const {
-    data: dataWallet,
-    isSuccess: isSuccessWallet,
-    isError: isErrorWallet,
-    error: errorWallet,
-  } = useGetArtistWalletApi();
+  const { data: dataWallet, isSuccess: isSuccessWallet } =
+    useGetArtistWalletApi();
   let follower;
 
-  //Total Listener
   if (isSuccessListener) {
     totalListener = dataListener["data"];
   }
-  if (isErrorListener) {
-    console.log("error", errorListener);
-  }
 
-  //Wallet
   if (isSuccessWallet) {
     const rawData = dataWallet["data"];
     paymentInfo = rawData[0];
-  }
-  if (isErrorWallet) {
-    console.log("error", errorWallet);
   }
 
   //follower
   if (isSuccess) {
     follower = data["data"];
-  }
-  if (isError) {
-    console.log("error", error);
   }
 
   return (

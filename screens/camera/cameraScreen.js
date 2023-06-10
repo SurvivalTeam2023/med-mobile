@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native";
-import { Camera, takePictureAsync } from "expo-camera";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { Camera } from "expo-camera";
 
 const CameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -40,7 +33,6 @@ const CameraScreen = ({ navigation }) => {
         await cameraRef.current.pausePreview();
         setIsPreview(true);
         setCapturedImage(data.uri);
-        console.log("picture", source);
       }
     }
   };

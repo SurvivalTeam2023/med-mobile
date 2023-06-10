@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   View,
@@ -16,33 +16,6 @@ import { store } from "../../core/store/store";
 
 const CamResultScreen = ({ navigation }) => {
   let feeling = store.getState().image["imageResult"];
-  let feelingResult = [
-    {
-      id: 1,
-      emotion: "Happy",
-      percent: 30,
-    },
-    {
-      id: 2,
-      emotion: "Sad",
-      percent: 30,
-    },
-    {
-      id: 3,
-      emotion: "Angry",
-      percent: 30,
-    },
-    {
-      id: 4,
-      emotion: "Happy",
-      percent: 30,
-    },
-    {
-      id: 5,
-      emotion: "Happy",
-      percent: 30,
-    },
-  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>

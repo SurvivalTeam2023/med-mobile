@@ -25,8 +25,6 @@ import { playlistAction } from "../../redux/auth/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
 
-const { width } = Dimensions.get("window");
-
 let album = [
   {
     id: "1r",

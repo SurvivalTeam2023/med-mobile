@@ -16,10 +16,9 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Icon } from "react-native-gradient-icon";
+import { Icon, Ionicons } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { Ionicons } from "@expo/vector-icons";
 import {
   useDeleteAudioArtistAPI,
   useGetAudioForArtistAPI,
@@ -28,7 +27,6 @@ import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audioArtist";
 import { store } from "../../core/store/store";
 
-const { width } = Dimensions.get("window");
 const sortOptions = ["Name", "Date Added", "Artist"];
 const artistTracksScreen = ({ navigation }) => {
   const [tracksList, setTracksList] = useState([]);

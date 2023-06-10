@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  parseTokenToEmail,
-  parseTokenToId,
   parseTokenToRole,
   parseTokenToUsername,
   removeTokenFromStorage,

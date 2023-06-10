@@ -1,4 +1,4 @@
-import React, { useState, getState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  Alert,
   StyleSheet,
   ImageBackground,
 } from "react-native";
@@ -23,10 +24,8 @@ import {
 import { store } from "../../core/store/store";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
-import { Platform } from "react-native";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
-import { Alert } from "react-native";
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
@@ -34,27 +33,15 @@ const editProfileScreen = ({ navigation }) => {
   const userAvatar = store.getState().user?.user?.user_db?.avatar;
   const dispatch = useDispatch();
   const { data, isSuccess, isError, error } = useGetUserProfile();
-  const {
-    userData,
-    isError: isErrorUser,
-    isSuccess: isSuccessUser,
-    refetch,
-  } = useGetUserByNameApi();
+  const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
 
   if (isSuccess) {
     profile = data["data"];
-  }
-  if (isError) {
-    console.log("error", error);
   }
 
   if (isSuccessUser) {
     const userInfo = userData["data"];
     dispatch(userAction.storeUser(userInfo));
-  }
-
-  if (isErrorUser) {
-    console.log("error", isError);
   }
 
   const { mutate } = useUpdateUserAvatar();
@@ -63,15 +50,11 @@ const editProfileScreen = ({ navigation }) => {
     mutate(form, {
       onSuccess: (data) => {
         const dataEmotion = data["data"];
-        console.log("dataHehe", dataEmotion);
         refetch();
         Alert.alert("Processing image...");
         setTimeout(() => {
           navigation.push("Profile");
         }, 3000);
-      },
-      onError: (error) => {
-        console.log("error", error);
       },
     });
   };
@@ -111,8 +94,6 @@ const editProfileScreen = ({ navigation }) => {
       fileExtension.toLowerCase() === "jpg" ||
       fileExtension.toLowerCase() === "jpeg"
     ) {
-      // Image is already in JPEG format
-      console.log("Image is already in JPEG format:", uri);
       handleUploadImage(uri, fileName);
 
       return;
@@ -129,8 +110,6 @@ const editProfileScreen = ({ navigation }) => {
           uri: convertedUri,
         }
       );
-
-      console.log("Image converted to JPEG successfully:", result.uri);
       return;
     } catch (error) {
       console.log("Error converting image to JPEG:", error);

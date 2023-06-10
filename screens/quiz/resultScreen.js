@@ -1,11 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import {
-  Modal,
-  Button,
   View,
   Text,
   SafeAreaView,
@@ -13,7 +10,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import {
-  BackHandler,
   SafeAreaView,
   View,
   StatusBar,
   TouchableOpacity,
-  TextInput,
   Text,
   ScrollView,
   Image,

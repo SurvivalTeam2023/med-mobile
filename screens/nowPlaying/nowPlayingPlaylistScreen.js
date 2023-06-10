@@ -22,13 +22,9 @@ import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 let nextOnList = [];
 
 const NowPlayingPlaylistScreen = ({ navigation }) => {
-  const { data, error, isSuccess, isError } = useGetTracksFromFavorite();
+  const { data, isSuccess } = useGetTracksFromFavorite();
   if (isSuccess) {
     nextOnList = data["data"].items;
-    console.log("nextOnList", nextOnList);
-  }
-  if (isError) {
-    console.log("error", error);
   }
   const [sound, setSound] = React.useState();
   const [isPlaying, setIsPlaying] = useState(true);

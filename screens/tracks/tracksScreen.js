@@ -8,18 +8,21 @@ import {
   View,
   StyleSheet,
   Text,
+  Modal,
   Image,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
-import { Modal } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 
 const { width } = Dimensions.get("window");
@@ -53,10 +56,8 @@ const TracksScreen = ({ navigation }) => {
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
-    console.log("tracksList", tracksList);
   }
   if (isErrorTracksFromPlaylist) {
-    console.log("error", errorTracksFromPlaylist);
   }
 
   const handleOptionSelect = (option) => {

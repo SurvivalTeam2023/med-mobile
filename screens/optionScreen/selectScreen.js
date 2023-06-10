@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
   StatusBar,
   TouchableOpacity,
-  TextInput,
   Text,
   ScrollView,
   Image,
@@ -12,13 +11,10 @@ import {
   Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { useRegisterUser } from "../../hooks/auth.hook";
 import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
-import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 //null to compare
@@ -60,12 +56,6 @@ const OptionScreen = ({ navigation }) => {
       isFavoriteExisted = null;
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (isQuestionValid && isFavoriteExisted) {
-  //     validate();
-  //   }
-  // }, [isQuestionValid, isFavoriteExisted]);
 
   const validate = () => {
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
