@@ -78,10 +78,8 @@ const SigninScreen = ({ navigation }) => {
     dispatch(userAction.storeUser(userInfo));
   }
 
-  if (isError) {
-  }
-
   const handleLogin = () => {
+    if (state["userName"] == null || state["password"] == null) return;
     mutate(
       {
         username: state["userName"],
@@ -282,22 +280,20 @@ const SigninScreen = ({ navigation }) => {
         </MaskedView>
         {errorCode === 400 && (
           <View style={styles.failWarningWrapper}>
-            <Text style={styles.warningText}>
-              Something went wrong. Please double-check and try again
-            </Text>
+            <Text style={styles.warningText}>Something went wrong</Text>
           </View>
         )}
         {errorCode === 401 && (
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
-              Incorrect username or password. Please double-check and try again
+              Incorrect username or password. Please try again!
             </Text>
           </View>
         )}
         {errorCode === 404 && (
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
-              User not found. Please sign up and try again
+              User not found. Please sign up and try again!
             </Text>
           </View>
         )}
@@ -567,7 +563,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Sizes.fixPadding + 9,
     marginTop: Sizes.fixPadding,
   },
-  warningText: { color: "red", fontSize: 17 },
+  warningText: { color: "red", fontSize: 13, fontWeight: "bold" },
 });
 
 export default SigninScreen;

@@ -152,17 +152,12 @@ const ExploreScreen = ({ navigation }) => {
   const {
     data: dataFavTrack,
     isSuccess: isSuccessFavTrack,
-    isError: isErrorFavTrack,
-    error: errorFavTrack,
     refetch,
   } = useGetTracksFromFavorite();
   if (isSuccessFavTrack) {
     const favTrack = dataFavTrack["data"];
     dispatch(genreAction.setGenreTrack(favTrack));
   }
-  if (isErrorFavTrack) {
-  }
-
   const handlePlaylistPress = (playlistId) => {
     try {
       dispatch(playlistAction.setPlaylistId(playlistId));

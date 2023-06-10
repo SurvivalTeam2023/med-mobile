@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   genreId: null,
   genreTrack: null,
+  isLoading: true,
 };
 
 const reducer = createSlice({
@@ -14,6 +15,8 @@ const reducer = createSlice({
     },
     setGenreTrack: (state, action) => {
       state.genreTrack = action.payload;
+      console.log(action.payload);
+      state.isLoading = false;
     },
   },
 });

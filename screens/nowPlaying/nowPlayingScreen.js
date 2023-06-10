@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -25,17 +25,19 @@ const NowPlayingScreen = ({ navigation }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [songIndex, setSongIndex] = useState(0);
   const { mutate } = useCreateHisoryApi();
-  let nextOnList;
+  const [track, setTrack] = useState(store.getState().genre.genreTrack);
+  const isLoading = useState(store.getState().genre.isLoading);
+  let nextOnList = track;
 
-  React.useEffect(() => {
-    getData();
-  }, [nextOnList]);
+  useEffect(() => {
+    setTrack(store.getState().genre.genreTrack);
+  }, [store.getState().genre.genreTrack]);
+
   const saveHistory = () => {
     mutate(
       {
         audioId: 11,
       },
-
       {
         onSuccess: (data) => {
           console.log("Created!!!");
@@ -62,11 +64,6 @@ const NowPlayingScreen = ({ navigation }) => {
     await sound.pauseAsync();
   };
 
-  function getData() {
-    let track = store.getState().genre.genreTrack;
-    nextOnList = track;
-  }
-
   function playNextSong() {
     if (songIndex < nextOnList.length - 1) {
       setSongIndex(songIndex + 1);
@@ -80,7 +77,7 @@ const NowPlayingScreen = ({ navigation }) => {
     setSongIndex(index);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     return sound
       ? () => {
           console.log("Unloading Sound");
@@ -98,10 +95,9 @@ const NowPlayingScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { songRunningInPercentage, currentSongInFavorite } = state;
-  return (
+  return !isLoading ? (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-
       <View style={{ flex: 1 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -114,7 +110,7 @@ const NowPlayingScreen = ({ navigation }) => {
         </ScrollView>
       </View>
     </SafeAreaView>
-  );
+  ) : null;
 
   function nextOnTheLists() {
     if (!nextOnList || nextOnList.length === 0) {
