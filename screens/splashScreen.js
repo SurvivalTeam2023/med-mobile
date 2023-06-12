@@ -9,41 +9,50 @@ import {
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TOKEN_KEY_STORAGE, USER_KEY_STORAGE} from "../constants/config";
-import {userAction} from "../redux/auth/auth.slice";
-import {useDispatch} from "react-redux";
-import {store} from "../core/store/store";
-import {ARTIST_ROLE} from "../constants/role";
-const getTokenFromLocal = async () => {
-  try {
-    const value = await AsyncStorage.getItem(TOKEN_KEY_STORAGE)
-    if(value !== null) {
-      try{
-        return JSON.parse(value)
-      }catch(error){
-        console.log("Failed to parse token:", error);
-      }
-    }
-  } catch(e) {
-    console.log("fetch_token_local_fail")
-  }
-}
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userAction } from "../redux/auth/auth.slice";
+import { useDispatch } from "react-redux";
+import { store } from "../core/store/store";
+import { ARTIST_ROLE } from "../constants/role";
+import { configAudio, configOptionsGlobal } from "../utils/app.configuration";
+import {
+  getTokenFromLocal,
+  getUserFromLocal,
+} from "../utils/app.local_handler";
+
 const SplashScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+
+  const storeConfig = async () => {
+    try {
+      const value = await AsyncStorage.getItem("Configuration");
+      if (!value) {
+        configAudio();
+        dispatch(userAction.storeAudio(configOptionsGlobal));
+      }
+    } catch (e) {
+      console.log("store configuration error:", e);
+    }
+  };
+
   setTimeout(async () => {
-    const retrievedToken  = await getTokenFromLocal()
-     if(!retrievedToken ){
-       navigation.navigate("SignIn");
-     }else{
-       dispatch(userAction.storeTokenWithoutLocal(retrievedToken.token));
-       const role = store.getState().user.artist_role;
-       if (role === ARTIST_ROLE) {
-         navigation.push("ArtistProfile");
-       } else {
-         navigation.push("OptionScreen");
-       }
-     }
+    //load configuratio
+    await storeConfig();
+    //load locla data
+    const retrievedToken = await getTokenFromLocal();
+    const retrivedUser = await getUserFromLocal();
+    if (!retrievedToken || !retrivedUser) {
+      navigation.navigate("SignIn");
+    } else {
+      dispatch(userAction.storeTokenWithoutLocal(retrievedToken.token));
+      dispatch(userAction.storeUserWithoutLocal(retrivedUser));
+      const role = store.getState().user.artist_role;
+      if (role === ARTIST_ROLE) {
+        navigation.push("ArtistProfile");
+      } else {
+        navigation.push("OptionScreen");
+      }
+    }
   }, 2000);
 
   return (
