@@ -19,18 +19,32 @@ import { Ionicons } from "@expo/vector-icons";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userName = store.getState().user.username;
-
   const user = store.getState()?.user?.user;
   const user_db = user?.user_db;
   const userAvatar = user_db?.avatar.url;
+  const formatNumber = (number) => {
+    if (number >= 1e9) {
+      return (number / 1e9).toFixed(1) + "B";
+    } else if (number >= 1e6) {
+      return (number / 1e6).toFixed(1) + "M";
+    } else if (number >= 1e3) {
+      return (number / 1e3).toFixed(1) + "K";
+    }
+    return number?.toString();
+  };
+
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
     profile = data["data"];
+    console.log("profile", profile);
   }
   if (isError) {
     console.log("error", error);
   }
+  const favoritedCount = formatNumber(profile?.favorite);
+  const playlistCount = formatNumber(profile?.playlist);
+  const followingCount = formatNumber(profile?.following);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -134,15 +148,6 @@ const ProfileScreen = ({ navigation }) => {
       </View>
     );
   }
-  // function About() {
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>About</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
 
   function Profile() {
     return (
@@ -158,15 +163,19 @@ const ProfileScreen = ({ navigation }) => {
             ></Image>
             <Text style={styles.name}>{userName}</Text>
           </View>
-          <View style={styles.favoritedRow}>
-            <Text style={styles.favorited}>Favorited</Text>
-            <Text style={styles.playlists}>Playlists</Text>
-            <Text style={styles.following}>Following</Text>
-          </View>
-          <View style={styles.loremIpsumRow}>
-            <Text style={styles.loremIpsum}>{profile.favorite}</Text>
-            <Text style={styles.loremIpsum4}>{profile.playlist}</Text>
-            <Text style={styles.loremIpsum3}>{profile.following}</Text>
+          <View style={styles.detailWrapper}>
+            <View>
+              <Text style={styles.detailedText}>Favorited</Text>
+              <Text>{favoritedCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Playlist</Text>
+              <Text>{playlistCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Following</Text>
+              <Text>{followingCount}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -230,12 +239,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
     borderRadius: 30,
+    borderWidth: 2,
   },
   image: {
     width: 100,
     height: 121,
     marginLeft: 20,
     borderRadius: 10,
+    borderWidth: 2,
   },
   name: {
     color: "#121212",
@@ -253,48 +264,41 @@ const styles = StyleSheet.create({
   favorited: {
     color: "#121212",
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   playlists: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   following: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
-  favoritedRow: {
-    height: 17,
+  detailWrapper: {
+    height: 40,
     flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     marginLeft: 21,
     marginRight: 35,
   },
-  loremIpsum: {
-    color: "#121212",
-  },
-  loremIpsum4: {
-    color: "#121212",
-    marginLeft: 104,
-  },
-  loremIpsum3: {
-    color: "#121212",
-    marginLeft: 92,
-  },
-  loremIpsumRow: {
-    height: 17,
+  favoritedTextRow: {
+    flex: 1,
     flexDirection: "row",
-    marginTop: 11,
-    marginLeft: 42,
-    marginRight: 61,
+    justifyContent: "space-between",
+    marginHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding + 5,
+    marginBottom: Sizes.fixPadding,
+    marginRight: 50,
   },
-  // about: {
-  //
-  //   color: "#121212",
-  //   marginTop: -250,
-  //   marginLeft: 27,
-  // },
+  detailedText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   profileAbout: {
     color: "#121212",
     marginTop: 11,
