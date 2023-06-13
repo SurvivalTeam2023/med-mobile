@@ -21,15 +21,15 @@ import Dialog from "react-native-dialog";
 import { store } from "../../core/store/store";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
+import { configOptionsGlobal } from "../../utils/app.configuration";
 
 const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const user = store.getState()?.user?.user;
   const userEmail = user?.user_db?.email;
-  const audioConfig = store.getState().user.audio;
-
-  const dispatch = useDispatch();
+  const audioConfig = store.getState().user.audio || { ...configOptionsGlobal };
 
   const [state, setState] = useState({
     email: `${userEmail}`,
@@ -57,7 +57,9 @@ const SettingsScreen = ({ navigation }) => {
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
+  const removeData = () => {
+    dispatch(userAction.logout());
+  };
   const {
     email,
     password,
@@ -153,7 +155,8 @@ const SettingsScreen = ({ navigation }) => {
               activeOpacity={0.9}
               onPress={() => {
                 updateState({ showLogoutDialog: false });
-                navigation.push("Signin");
+                removeData();
+                navigation.push("SignIn");
               }}
               style={styles.okButtonStyle}
             >

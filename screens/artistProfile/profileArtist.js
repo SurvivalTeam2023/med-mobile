@@ -83,15 +83,9 @@ const ProfileArtistScreen = ({ navigation }) => {
                 Payment Info
               </Text>
               <View style={{ justifyContent: "flex-start" }}>
-                <Text style={styles.modalText}>
-                  Owner: {paymentInfo["bankAccountOwner"]}
-                </Text>
-                <Text style={styles.modalText}>
-                  Bank: {paymentInfo["bankName"]}
-                </Text>
-                <Text style={styles.modalText}>
-                  Account number: {paymentInfo["bankAccountNumber"]}
-                </Text>
+                <Text style={styles.modalText}>Owner:</Text>
+                <Text style={styles.modalText}>Bank:</Text>
+                <Text style={styles.modalText}>Account number:</Text>
               </View>
 
               <Pressable

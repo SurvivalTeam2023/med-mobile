@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   BackHandler,
   Image,
@@ -10,24 +10,27 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-import {Colors, Fonts, Sizes} from "../../constants/styles";
-import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
-import {LinearGradient} from "expo-linear-gradient";
+import { Colors, Fonts, Sizes } from "../../constants/styles";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import {useFocusEffect} from "@react-navigation/native";
-import {useLogin, useLoginWithGmail} from "../../hooks/auth.hook";
-import {EXPO_CLIENT_ID, TOKEN_KEY_STORAGE, WEB_CLIENT_ID,} from "../../constants/config";
-import {useDispatch} from "react-redux";
-import {userAction} from "../../redux/auth/auth.slice";
+import { useFocusEffect } from "@react-navigation/native";
+import { useLogin, useLoginWithGmail } from "../../hooks/auth.hook";
+import {
+  EXPO_CLIENT_ID,
+  TOKEN_KEY_STORAGE,
+  WEB_CLIENT_ID,
+} from "../../constants/config";
+import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
-import {useGetUserByNameApi} from "../../hooks/user.hook";
-import {store} from "../../core/store/store";
-import {Audio} from "expo-av";
-import {ARTIST_ROLE} from "../../constants/role";
+import { useGetUserByNameApi } from "../../hooks/user.hook";
+import { store } from "../../core/store/store";
+import { ARTIST_ROLE } from "../../constants/role";
 
 const SignInScreen = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState(null);
@@ -186,35 +189,6 @@ const SignInScreen = ({ navigation }) => {
         },
       }
     );
-  };
-
-  let configOptions = {
-    allowsRecordingIOS: false,
-    playsInSilentModeIOS: true,
-    shouldDuckAndroid: true,
-    staysActiveInBackground: true,
-    playThroughEarpieceAndroid: true,
-  };
-
-  const configAudio = async () => {
-    try {
-      await Audio.setAudioModeAsync(configOptions);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const storeConfig = async () => {
-    try {
-      const value = await AsyncStorage.getItem("Configuration");
-      if (value == null) {
-        // value previously stored
-        configAudio();
-        dispatch(userAction.storeAudio(configOptions));
-      }
-    } catch (e) {
-      // error reading value
-    }
   };
 
   return (
@@ -393,7 +367,6 @@ const SignInScreen = ({ navigation }) => {
         activeOpacity={0.9}
         onPressIn={() => {
           handleLogin();
-          storeConfig();
         }}
       >
         <LinearGradient

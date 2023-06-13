@@ -15,7 +15,7 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as ImagePicker from "expo-image-picker";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   useGetUserByNameApi,
   useGetUserProfile,
@@ -26,6 +26,7 @@ import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
+
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
@@ -33,6 +34,12 @@ const editProfileScreen = ({ navigation }) => {
   const user = store.getState()?.user?.user;
   const user_db = user?.user_db;
   const userAvatar = user_db?.avatar.url;
+  const userFirstName = user_db?.firstName;
+  const userLastName = user_db?.lastName;
+  const userEmail = user_db?.email;
+  const userGender = user_db?.gender;
+  const userCity = user_db?.city;
+  const userDob = user_db?.dob;
   const dispatch = useDispatch();
   const { data, isSuccess, isError, error } = useGetUserProfile();
   const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
@@ -44,7 +51,7 @@ const editProfileScreen = ({ navigation }) => {
     } else if (number >= 1e3) {
       return (number / 1e3).toFixed(1) + "K";
     }
-    return number.toString();
+    return number?.toString();
   };
 
   if (isSuccess) {
@@ -142,6 +149,7 @@ const editProfileScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
+              {accountDetails()}
             </>
           }
           showsVerticalScrollIndicator={false}
@@ -191,6 +199,53 @@ const editProfileScreen = ({ navigation }) => {
     );
   }
 
+  function accountDetails() {
+    return (
+      <View style={styles.rect2}>
+        <View style={styles.detailtTileWrapper}>
+          <View>
+            <Text style={styles.detailtTextTitle}>Account Details</Text>
+          </View>
+          <View>
+            <Ionicons
+              name="md-create"
+              size={24}
+              color="black"
+              onPress={() => navigation.push("BottomTabBar")}
+            />
+          </View>
+        </View>
+
+        <View style={styles.detailInfoWrapper}>
+          <View>
+            <Text style={styles.detailedText}>First Name</Text>
+            <Text>{userFirstName}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Last Name</Text>
+            <Text>{userLastName}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Email</Text>
+            <Text>{userEmail}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Gender</Text>
+            <Text>{userGender}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>City</Text>
+            <Text>{userCity} something</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Dob</Text>
+            <Text>{userDob} Dob</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   function cornerImage() {
     return (
       <View>
@@ -233,7 +288,7 @@ const styles = StyleSheet.create({
     marginBottom: Sizes.fixPadding + 5.0,
   },
   container: {
-    flex: 1,
+    flex: 2,
   },
   rect: {
     width: 350,
@@ -241,6 +296,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
     borderRadius: 30,
+    borderWidth: 2,
+  },
+  rect2: {
+    width: 350,
+    height: 450,
+    backgroundColor: "#E6E6E6",
+    marginLeft: 20,
+    borderRadius: 30,
+    marginTop: 20,
   },
   image: {
     width: 100,
@@ -254,6 +318,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 20,
     marginTop: 44,
+  },
+  detailtTextTitle: {
+    color: "#121212",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   imageRow: {
     height: 121,
@@ -334,6 +403,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  icon: {
+    right: 15,
+    top: 30,
+  },
+  detailtTileWrapper: {
+    flexDirection: "row",
+    marginHorizontal: Sizes.fixPadding,
+    justifyContent: "space-between",
+    alignItems: "baseline",
+    marginTop: Sizes.fixPadding + 5,
+  },
+  detailInfoWrapper: {
+    flex: 1,
+    flexDirection: "column",
+    marginLeft: Sizes.fixPadding + 5,
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    marginTop: Sizes.fixPadding + 20,
+    marginBottom: Sizes.fixPadding,
   },
 });
 
