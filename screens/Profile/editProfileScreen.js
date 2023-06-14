@@ -19,6 +19,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   useGetUserByNameApi,
   useGetUserProfile,
+  useUpdateUserAccountDetails,
   useUpdateUserAvatar,
 } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
@@ -26,10 +27,20 @@ import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
+import { useState } from "react";
+import { Button, Modal } from "react-native-paper";
+import { TextInput } from "react-native-gesture-handler";
+import { BlurView } from "expo-blur";
 
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
+  const [updatedFirstName, setUpdatedFirstName] = useState(null);
+  const [updatedLastName, setUpdatedLastName] = useState(null);
+  const [updatedEmail, setUpdatedEmail] = useState(null);
+  const [updatedCity, setUpdatedCity] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [updatedAddress, setUpdatedAddress] = useState(null);
   const userName = store.getState().user.username;
   const user = store.getState()?.user?.user;
   const user_db = user?.user_db;
@@ -40,6 +51,7 @@ const editProfileScreen = ({ navigation }) => {
   const userGender = user_db?.gender;
   const userCity = user_db?.city;
   const userDob = user_db?.dob;
+  const userAddress = user_db?.address;
   const dispatch = useDispatch();
   const { data, isSuccess, isError, error } = useGetUserProfile();
   const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
@@ -63,11 +75,16 @@ const editProfileScreen = ({ navigation }) => {
     dispatch(userAction.storeUser(userInfo));
   }
 
+  const handleEditIconPress = () => {
+    setIsModalVisible(true);
+  };
+
   const favoritedCount = formatNumber(profile?.favorite);
   const playlistCount = formatNumber(profile?.playlist);
   const followingCount = formatNumber(profile?.following);
 
   const { mutate } = useUpdateUserAvatar();
+  const { mutate: mutatee } = useUpdateUserAccountDetails();
 
   const handleUploadImage = async (form) => {
     mutate(form, {
@@ -81,6 +98,31 @@ const editProfileScreen = ({ navigation }) => {
       },
     });
   };
+
+  const handleUpdateAccountDetails = async (form) => {
+    mutatee(form, {
+      onSuccess: (data) => {
+        refetch();
+        setTimeout(() => {
+          navigation.push("Profile");
+        }, 3000);
+      },
+    });
+  };
+
+  const saveUpdateAccountDetails = async () => {
+    const formData = new FormData();
+    formData.append({
+      firstName: updatedFirstName,
+      lastName: updatedLastName,
+      email: updatedEmail,
+      city: updatedCity,
+      address: updatedAddress,
+    });
+
+    handleUpdateAccountDetails(formData);
+  };
+
   const selectAvatarImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -150,6 +192,7 @@ const editProfileScreen = ({ navigation }) => {
               {header()}
               {Profile()}
               {accountDetails()}
+              {accountDetailsEdit()}
             </>
           }
           showsVerticalScrollIndicator={false}
@@ -211,7 +254,7 @@ const editProfileScreen = ({ navigation }) => {
               name="md-create"
               size={24}
               color="black"
-              onPress={() => navigation.push("BottomTabBar")}
+              onPress={() => handleEditIconPress()}
             />
           </View>
         </View>
@@ -235,14 +278,91 @@ const editProfileScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.detailedText}>City</Text>
-            <Text>{userCity} something</Text>
+            <Text>{userCity} </Text>
           </View>
           <View>
             <Text style={styles.detailedText}>Dob</Text>
-            <Text>{userDob} Dob</Text>
+            <Text>{userDob} </Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Address</Text>
+            <Text>{userDob} </Text>
           </View>
         </View>
       </View>
+    );
+  }
+
+  function accountDetailsEdit() {
+    return (
+      <Modal visible={isModalVisible} animationType="fade" transparent={false}>
+        <BlurView intensity={200} style={StyleSheet.absoluteFill}>
+          <View style={styles.modalContainer}>
+            <View>
+              <Text style={styles.detailtTextTitle}>
+                Update Account Details
+              </Text>
+              <Text style={styles.detailedEditText}>First Name</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedFirstName}
+                  onChangeText={setUpdatedFirstName}
+                  placeholder={userFirstName}
+                />
+              </View>
+              <Text style={styles.detailedText}>Last Name</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedLastName}
+                  onChangeText={setUpdatedLastName}
+                  placeholder={userLastName}
+                />
+              </View>
+              <Text style={styles.detailedText}>Email</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedEmail}
+                  onChangeText={setUpdatedEmail}
+                  placeholder={userEmail}
+                />
+              </View>
+              <Text style={styles.detailedText}>City</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedCity}
+                  onChangeText={setUpdatedCity}
+                  placeholder={userCity}
+                />
+              </View>
+              <Text style={styles.detailedText}>Adress</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedAddress}
+                  onChangeText={setUpdatedAddress}
+                  placeholder={userAddress}
+                />
+              </View>
+              <View style={styles.optionsRow}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsModalVisible(false);
+                  }}
+                >
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsModalVisible(false);
+                    saveUpdateAccountDetails();
+                  }}
+                >
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </BlurView>
+      </Modal>
     );
   }
 
@@ -300,7 +420,7 @@ const styles = StyleSheet.create({
   },
   rect2: {
     width: 350,
-    height: 450,
+    height: 400,
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
     borderRadius: 30,
@@ -329,6 +449,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 29,
     marginRight: 124,
+  },
+
+  optionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
   },
   favorited: {
     color: "#121212",
@@ -367,6 +496,11 @@ const styles = StyleSheet.create({
   detailedText: {
     fontWeight: "bold",
     fontSize: 16,
+  },
+  detailedEditText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: Sizes.fixPadding + 10,
   },
   profileAbout: {
     color: "#121212",
@@ -423,6 +557,38 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     marginTop: Sizes.fixPadding + 20,
     marginBottom: Sizes.fixPadding,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+    height: 420,
+    alignSelf: "center",
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: "50%",
+    transform: [{ translateY: -250 }],
+    paddingHorizontal: Sizes.fixPadding * 2,
+    borderRadius: 22.5,
+    borderColor: "#DFDFDF",
+    borderWidth: 0.5,
+    marginHorizontal: Sizes.fixPadding + 5,
+  },
+  header: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+  },
+  inputContainer: {
+    backgroundColor: "#E6E6E6",
+    borderRadius: 8,
+    padding: 1,
+    marginTop: 5,
   },
 });
 
