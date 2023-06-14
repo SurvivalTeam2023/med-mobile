@@ -16,56 +16,155 @@ import { Icon } from "react-native-gradient-icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { Audio } from "expo-av";
-import { useCreateHisoryApi } from "../../hooks/history.hook";
+import { MILLI_SECOND } from "../../constants/app";
 
-import { store } from "../../core/store/store";
-
+const audioList = [
+  {
+    id: 1,
+    name: "Em của ngày hôm qua",
+    url: "https://mp3-s1-zmp3.zmdcdn.me/6c15cefab4be5de004af/218878317877648665?authen=exp=1686840645~acl=/6c15cefab4be5de004af/*~hmac=a437548ce313e70ca44472a60e52f084&fs=MTY4NjY2Nzg0NTM4Nnx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
+    imgUrl: "https://example.com/image1.jpg",
+    artist: "Sơn tùng MTP",
+  },
+  {
+    id: 2,
+    name: "Audio 2",
+    url: "https://example.com/audio2.mp3",
+    imgUrl: "https://example.com/image2.jpg",
+  },
+  // Add more audio objects as needed
+];
 const NowPlayingScreen = ({ navigation }) => {
-  const [sound, setSound] = React.useState();
-  const [isPlaying, setIsPlaying] = useState(true);
+  //init master data
+  const [soundStatus, setSoundStatus] = useState({
+    isSoundLoaded: false,
+    isPlaying: false,
+    positionMillis: 0,
+    durationMillis: 60000,
+    songRunningInPercentage: 0,
+  });
+  const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
+
   const [songIndex, setSongIndex] = useState(0);
-  const [track, setTrack] = useState(store.getState().genre.genreTrack);
-  let nextOnList = track;
 
+  const nextOnList = null;
+  //master song
+  const [sound, setSound] = useState(null);
   useEffect(() => {
-    setTrack(store.getState().genre.genreTrack);
-  }, [store.getState().genre.genreTrack]);
-  const playSound = async () => {
-    const { sound } = await Audio.Sound.createAsync({
-      uri: nextOnList[songIndex]?.audio?.file?.url,
-    });
-    setIsPlaying(false);
-    setSound(sound);
-
-    await sound.playAsync();
-  };
-
-  const stopSound = async () => {
-    setIsPlaying(true);
-    await sound.pauseAsync();
-  };
-
-  function playNextSong() {
-    if (songIndex < nextOnList.length - 1) {
-      setSongIndex(songIndex + 1);
-      playSound();
-    } else {
-      setSongIndex(0);
-    }
-  }
-
-  const handleSongPress = (index) => {
-    setSongIndex(index);
-  };
-
-  useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
   }, [sound]);
+
+  const loadSound = async () => {
+    const { url } = audioList[currentAudioIndex];
+    try {
+      console.log("Sound Loading...");
+      const { sound } = await Audio.Sound.createAsync(
+        {
+          uri: url,
+        },
+        { shouldPlay: false }
+      );
+      setSound(sound);
+      setSoundStatus({ ...soundStatus, isSoundLoaded: true });
+      const status = await sound.getStatusAsync();
+      setSoundStatus({
+        ...soundStatus,
+        positionMillis: status.positionMillis,
+        durationMillis: status.durationMillis,
+        songRunningInPercentage: +(
+          (status.positionMillis / status.durationMillis) *
+          100
+        ).toFixed(0),
+      });
+    } catch (error) {
+      console.log("Error loading sound:", error);
+    }
+  };
+
+  //Featuring
+  const playSound = async () => {
+    try {
+      console.log("Sound playing...");
+      if (sound && soundStatus.isSoundLoaded) {
+        await sound.playAsync();
+        setSoundStatus({ ...soundStatus, isPlaying: true });
+      }
+    } catch (error) {
+      console.log("Error playing sound:", error);
+    }
+  };
+
+  const pauseSound = async () => {
+    console.log("Audio paused....");
+    if (sound) {
+      await sound.pauseAsync();
+      setSoundStatus({ ...soundStatus, isPlaying: false });
+    }
+  };
+  //get sound status time line
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      if (sound && soundStatus.isSoundLoaded) {
+        const status = await sound.getStatusAsync();
+        setSoundStatus({
+          ...soundStatus,
+          positionMillis: status.positionMillis,
+          durationMillis: status.durationMillis,
+          songRunningInPercentage: +(
+            (status.positionMillis / status.durationMillis) *
+            100
+          ).toFixed(0),
+        });
+      }
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [soundStatus.isPlaying]);
+  useEffect(() => console.log(soundStatus), [soundStatus]);
+
+  const playNextSound = () => {
+    if (sound) {
+      sound.unloadAsync();
+    }
+    const nextIndex = (currentAudioIndex + 1) % audioList.length;
+    setCurrentAudioIndex(nextIndex);
+  };
+
+  const playPrevSound = () => {
+    if (sound) {
+      sound.unloadAsync();
+    }
+    const prevIndex =
+      (currentAudioIndex - 1 + audioList.length) % audioList.length;
+    setCurrentAudioIndex(prevIndex);
+  };
+  //load Audio when change audio
+  useEffect(() => {
+    loadSound();
+  }, [currentAudioIndex]);
+
+  const handleChangeSoundTimeline = (value) => {
+    let upcomingTime = +((soundStatus.durationMillis * value) / 100).toFixed(0);
+    handleUpdateSoundTime(upcomingTime);
+  };
+  const handleUpdateSoundTime = async (positionMillis) => {
+    try {
+      await sound.setPositionAsync(positionMillis);
+      await sound.playFromPositionAsync(positionMillis);
+    } catch (error) {
+      console.log("Error playing audio:", error);
+    }
+  };
+  const handleMoveSoundTimeLine = (time) => {
+    let upcomingTime = soundStatus.positionMillis + time;
+    console.log(time);
+    handleUpdateSoundTime(upcomingTime);
+  };
 
   const [state, setState] = useState({
     songRunningInPercentage: 60,
@@ -74,7 +173,6 @@ const NowPlayingScreen = ({ navigation }) => {
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
   const { songRunningInPercentage, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -116,8 +214,7 @@ const NowPlayingScreen = ({ navigation }) => {
               key={index}
               activeOpacity={0.9}
               onPress={() => {
-                handleSongPress(index);
-                stopSound();
+                pauseSound();
               }}
               style={styles.nextOnTheListInfoWrapStyle}
             >
@@ -145,6 +242,7 @@ const NowPlayingScreen = ({ navigation }) => {
       </View>
     );
   }
+
   function songInfo() {
     return (
       <View>
@@ -224,13 +322,19 @@ const NowPlayingScreen = ({ navigation }) => {
           size={25}
           style={{ marginRight: Sizes.fixPadding * 2.0 }}
           color="black"
+          onPress={() => handleMoveSoundTimeLine(-(MILLI_SECOND * 10))}
         />
         <View style={styles.forwardBackwardButtonWrapStyle}>
-          <MaterialIcons name="arrow-left" size={30} color="black" />
+          <MaterialIcons
+            name="arrow-left"
+            size={30}
+            color="black"
+            onPress={() => playNextSound()}
+          />
         </View>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => (isPlaying ? playSound() : stopSound())}
+          onPress={() => (soundStatus.isPlaying ? pauseSound() : playSound())}
         >
           <LinearGradient
             start={{ x: 0, y: 0.1 }}
@@ -239,20 +343,26 @@ const NowPlayingScreen = ({ navigation }) => {
             style={styles.pausePlayButtonWrapStyle}
           >
             <MaterialIcons
-              name={isPlaying ? "play-arrow" : "pause"}
+              name={!soundStatus.isPlaying ? "play-arrow" : "pause"}
               color={Colors.whiteColor}
               size={25}
             />
           </LinearGradient>
         </TouchableOpacity>
         <View style={styles.forwardBackwardButtonWrapStyle}>
-          <MaterialIcons name="arrow-right" size={30} color="black" />
+          <MaterialIcons
+            name="arrow-right"
+            size={30}
+            color="black"
+            onPress={() => playPrevSound()}
+          />
         </View>
         <MaterialIcons
           name="forward-10"
           size={25}
           color="black"
           style={{ marginLeft: Sizes.fixPadding * 2.0 }}
+          onPress={() => handleMoveSoundTimeLine(MILLI_SECOND * 10)}
         />
       </View>
     );
@@ -265,7 +375,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: `${nextOnList[songIndex]?.audio?.imageUrl}` }}
+          source={{ uri: audioList }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,
@@ -287,10 +397,8 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.songProcessSliderWrapStyle}>
         <Slider
-          value={songRunningInPercentage}
-          onValueChange={(value) =>
-            updateState({ songRunningInPercentage: value })
-          }
+          value={soundStatus.songRunningInPercentage}
+          onValueChange={(value) => handleChangeSoundTimeline(value)}
           maximumValue={100}
           minimumValue={0}
           style={{ height: 12.0 }}
@@ -312,7 +420,9 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.songTimeInfoWrapStyle}>
         <Text style={{ ...Fonts.grayColor10Medium }}>0:00</Text>
-        <Text style={{ ...Fonts.grayColor10Medium }}>3:58</Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>
+          {(soundStatus.durationMillis / 60000).toFixed(2)}
+        </Text>
       </View>
     );
   }
