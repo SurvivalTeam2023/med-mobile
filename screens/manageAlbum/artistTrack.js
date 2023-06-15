@@ -15,9 +15,10 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Icon, Ionicons } from "react-native-gradient-icon";
-import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
+import { Menu, MenuItem } from "react-native-material-menu";
+import { Icon } from "react-native-gradient-icon";
+import { Ionicons } from "@expo/vector-icons";
 import {
   useDeleteAudioArtistAPI,
   useGetAudioForArtistAPI,
@@ -26,8 +27,9 @@ import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
 
-const sortOptions = ["Name", "Date Added", "Artist"];
 const artistTracksScreen = ({ navigation }) => {
+  const sortOptions = ["Name", "Date Added", "Artist"];
+
   const [tracksList, setTracksList] = useState([]);
   const dispatch = useDispatch();
   const { mutate } = useDeleteAudioArtistAPI();
@@ -367,17 +369,19 @@ const artistTracksScreen = ({ navigation }) => {
               type="material"
             />
           </TouchableOpacity>
-          <MaskedView
-            style={{ flex: 1, height: 28 }}
-            maskElement={<Text style={{ ...Fonts.bold22 }}>Tracks</Text>}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 0.2 }}
-              end={{ x: 1, y: 1 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-              style={{ flex: 1 }}
-            />
-          </MaskedView>
+          {
+            <MaskedView
+              style={{ flex: 1, height: 28 }}
+              maskElement={<Text style={{ ...Fonts.bold22 }}>Tracks</Text>}
+            >
+              <LinearGradient
+                start={{ x: 1, y: 0.2 }}
+                end={{ x: 1, y: 1 }}
+                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                style={{ flex: 1 }}
+              />
+            </MaskedView>
+          }
         </View>
         <MaterialIcons
           name="search"

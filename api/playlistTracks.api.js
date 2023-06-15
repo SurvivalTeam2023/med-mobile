@@ -16,6 +16,7 @@ export const getAudioForArtistAPI = async (payload) => {
   const url = "/audio?status=ACTIVE&" + `${queryParam}`;
   return CallAPI.get(url);
 };
+
 export const createAudioForArtistApi = (payload) => {
   const { name, imageUrl, status, length, playlistId, genreId } = payload;
   const url = "/audio";
@@ -28,6 +29,7 @@ export const createAudioForArtistApi = (payload) => {
     genreId,
   });
 };
+
 export const deleteAudioArtistAPI = (payload) => {
   const audioId = store.getState().audioArtist.audioArtistId;
   const url = "/audio/" + `${audioId}`;

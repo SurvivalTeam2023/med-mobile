@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  Dimensions,
   ImageBackground,
   ScrollView,
   StatusBar,
@@ -20,6 +19,7 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
+import { store } from "../../core/store/store";
 
 let forYouList = [];
 let album = [
@@ -64,6 +64,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
   if (isSuccess) {
     album = data["data"].items;
     activeAlbum = album.filter((item) => item.status === "ACTIVE");
+    dispatch(playlistAction.setActivePlaylist(activeAlbum));
   }
   if (isError) {
     console.log("error", error);
@@ -94,7 +95,8 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          handlePlaylistPress(item.id), navigation.push("ArtistTrack");
+          handlePlaylistPress(item.id);
+          navigation.push("ArtistTrack");
         }}
       >
         <ImageBackground
@@ -230,6 +232,19 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             }}
           >
             Delete Album
+          </MenuItem>
+          <MenuItem
+            pressColor="transparent"
+            textStyle={{
+              marginRight: Sizes.fixPadding * 3.0,
+              ...Fonts.blackColor12SemiBold,
+            }}
+            onPress={() => {
+              updateState({ showOptions: false }),
+                navigation.push("editAlbumArtistScreen");
+            }}
+          >
+            Edit Album
           </MenuItem>
         </Menu>
       </View>
