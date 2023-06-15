@@ -17,24 +17,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { Audio } from "expo-av";
 import { MILLI_SECOND } from "../../constants/app";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { store } from "../../core/store/store";
 
-const audioList = [
-  {
-    id: 1,
-    name: "Em của ngày hôm qua",
-    url: "https://mp3-s1-zmp3.zmdcdn.me/6c15cefab4be5de004af/218878317877648665?authen=exp=1686840645~acl=/6c15cefab4be5de004af/*~hmac=a437548ce313e70ca44472a60e52f084&fs=MTY4NjY2Nzg0NTM4Nnx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
-    imgUrl: "https://example.com/image1.jpg",
-    artist: "Sơn tùng MTP",
-  },
-  {
-    id: 2,
-    name: "Audio 2",
-    url: "https://example.com/audio2.mp3",
-    imgUrl: "https://example.com/image2.jpg",
-  },
-  // Add more audio objects as needed
-];
 const NowPlayingScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const audioList = store.getState().nowPlayingList.playingList;
+  // const currentSoundStatus = store.getState().nowPlayingList.soundStatus;
+  // const currentSoundPlayId = audioList.findIndex(
+  //   (audio) => audio.id == store.getState().nowPlayingList.currentPlayingId
+  // );
   //init master data
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -44,10 +37,6 @@ const NowPlayingScreen = ({ navigation }) => {
     songRunningInPercentage: 0,
   });
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
-
-  const [songIndex, setSongIndex] = useState(0);
-
-  const nextOnList = null;
   //master song
   const [sound, setSound] = useState(null);
   useEffect(() => {
@@ -66,13 +55,22 @@ const NowPlayingScreen = ({ navigation }) => {
         {
           uri: url,
         },
-        { shouldPlay: false }
+        { shouldPlay: true }
       );
-      setSound(sound);
-      setSoundStatus({ ...soundStatus, isSoundLoaded: true });
+      setSound((prevSound) => {
+        if (prevSound) {
+          prevSound.unloadAsync();
+        }
+        return sound;
+      });
+      if (soundStatus.positionMillis) {
+        handleUpdateSoundTime(soundStatus.positionMillis);
+      }
       const status = await sound.getStatusAsync();
       setSoundStatus({
         ...soundStatus,
+        isSoundLoaded: true,
+        isPlaying: true,
         positionMillis: status.positionMillis,
         durationMillis: status.durationMillis,
         songRunningInPercentage: +(
@@ -89,7 +87,7 @@ const NowPlayingScreen = ({ navigation }) => {
   const playSound = async () => {
     try {
       console.log("Sound playing...");
-      if (sound && soundStatus.isSoundLoaded) {
+      if (sound) {
         await sound.playAsync();
         setSoundStatus({ ...soundStatus, isPlaying: true });
       }
@@ -105,6 +103,14 @@ const NowPlayingScreen = ({ navigation }) => {
       setSoundStatus({ ...soundStatus, isPlaying: false });
     }
   };
+  useEffect(() => {
+    dispatch(
+      nowPlayingAction.setCurrentPlayingAudio({
+        soundStatus: soundStatus,
+        currentPlayingId: audioList[currentAudioIndex]["id"],
+      })
+    );
+  }, [soundStatus]);
   //get sound status time line
   useEffect(() => {
     const timer = setInterval(async () => {
@@ -125,14 +131,23 @@ const NowPlayingScreen = ({ navigation }) => {
       clearInterval(timer);
     };
   }, [soundStatus.isPlaying]);
-  useEffect(() => console.log(soundStatus), [soundStatus]);
 
-  const playNextSound = () => {
+  const playNextSound = async () => {
     if (sound) {
       sound.unloadAsync();
     }
     const nextIndex = (currentAudioIndex + 1) % audioList.length;
     setCurrentAudioIndex(nextIndex);
+    setSoundStatus({ ...soundStatus, isPlaying: false });
+  };
+
+  const playSoundSelect = (soundId) => {
+    if (sound && audioList.some((audio) => audio.id === soundId)) {
+      sound.unloadAsync();
+      const newIndex = audioList.findIndex((audio) => audio.id === soundId);
+      setCurrentAudioIndex(newIndex);
+      setSoundStatus({ ...soundStatus, isPlaying: false });
+    }
   };
 
   const playPrevSound = () => {
@@ -142,6 +157,7 @@ const NowPlayingScreen = ({ navigation }) => {
     const prevIndex =
       (currentAudioIndex - 1 + audioList.length) % audioList.length;
     setCurrentAudioIndex(prevIndex);
+    setSoundStatus({ ...soundStatus, isPlaying: false });
   };
   //load Audio when change audio
   useEffect(() => {
@@ -154,6 +170,7 @@ const NowPlayingScreen = ({ navigation }) => {
   };
   const handleUpdateSoundTime = async (positionMillis) => {
     try {
+      if (!sound) return;
       await sound.setPositionAsync(positionMillis);
       await sound.playFromPositionAsync(positionMillis);
     } catch (error) {
@@ -161,19 +178,11 @@ const NowPlayingScreen = ({ navigation }) => {
     }
   };
   const handleMoveSoundTimeLine = (time) => {
+    if (!time) return;
     let upcomingTime = soundStatus.positionMillis + time;
-    console.log(time);
     handleUpdateSoundTime(upcomingTime);
   };
 
-  const [state, setState] = useState({
-    songRunningInPercentage: 60,
-    pauseSong: true,
-    currentSongInFavorite: true,
-  });
-
-  const updateState = (data) => setState((state) => ({ ...state, ...data }));
-  const { songRunningInPercentage, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -192,10 +201,6 @@ const NowPlayingScreen = ({ navigation }) => {
   );
 
   function nextOnTheLists() {
-    if (!nextOnList || nextOnList.length === 0) {
-      return null;
-    }
-
     return (
       <View>
         <Text
@@ -208,19 +213,19 @@ const NowPlayingScreen = ({ navigation }) => {
         >
           Tracks list
         </Text>
-        {nextOnList.map((item, index) => (
-          <View key={`${item?.id}`}>
+        {audioList.map((item, index) => (
+          <View key={item.id}>
             <TouchableOpacity
-              key={index}
+              key={item.id}
               activeOpacity={0.9}
               onPress={() => {
-                pauseSound();
+                playSoundSelect(item.id);
               }}
               style={styles.nextOnTheListInfoWrapStyle}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={{ uri: item?.audio.imageUrl }}
+                  source={{ uri: item.imgUrl }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -229,10 +234,10 @@ const NowPlayingScreen = ({ navigation }) => {
                 />
                 <View style={{ marginLeft: Sizes.fixPadding }}>
                   <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item?.audio.name}
+                    {item.name}
                   </Text>
                   <Text style={{ ...Fonts.grayColor10Medium }}>
-                    {item?.audio.artist.artist_name}
+                    {item.artist}
                   </Text>
                 </View>
               </View>
@@ -273,14 +278,8 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.favoriteShuffleAndRepeatInfoWrapStyle}>
         <MaterialIcons name="repeat" size={20} color="black" />
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={{}}
-          onPress={() => {
-            updateState({ currentSongInFavorite: !currentSongInFavorite });
-          }}
-        >
-          {currentSongInFavorite ? (
+        <TouchableOpacity activeOpacity={0.9} style={{}}>
+          {audioList[currentAudioIndex]?.isLoved ? (
             <Icon
               start={{ x: 0, y: 1 }}
               end={{ x: 0, y: 0 }}
@@ -369,13 +368,10 @@ const NowPlayingScreen = ({ navigation }) => {
   }
 
   function songNameWithPoster() {
-    if (!nextOnList || nextOnList.length === 0) {
-      return null; // or any other fallback component/rendering
-    }
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: audioList }}
+          source={{ uri: audioList[currentAudioIndex]?.imgUrl || {} }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,
@@ -384,10 +380,10 @@ const NowPlayingScreen = ({ navigation }) => {
           }}
         />
         <Text style={{ ...Fonts.blackColor14Bold }}>
-          {nextOnList[songIndex]?.audio.name}
+          {audioList[currentAudioIndex]?.name || "loading..."}
         </Text>
         <Text style={{ ...Fonts.grayColor10Medium }}>
-          {nextOnList[songIndex]?.audio.artist.artist_name}
+          {audioList[currentAudioIndex]?.artist || "loading"}
         </Text>
       </View>
     );
@@ -397,7 +393,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.songProcessSliderWrapStyle}>
         <Slider
-          value={soundStatus.songRunningInPercentage}
+          value={soundStatus.songRunningInPercentage || 0}
           onValueChange={(value) => handleChangeSoundTimeline(value)}
           maximumValue={100}
           minimumValue={0}
