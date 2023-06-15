@@ -39,6 +39,7 @@ import profileScreen from "./screens/Profile/profileScreen";
 import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
 import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
+import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 
 LogBox.ignoreAllLogs();
 
@@ -50,6 +51,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <QueryClientProvider client={queryClient}>
+          <NowPlayingBackground />
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
@@ -78,7 +80,6 @@ const App = () => {
               name="ManageArtistAlbum"
               component={ManageArtistAlbumScreen}
             />
-
             <Stack.Screen name="ArtistTrack" component={artistTracksScreen} />
             <Stack.Screen
               name="CreateAudioArtist"
@@ -127,9 +128,7 @@ const App = () => {
                 return [item.id];
               }}
             />
-
             <Stack.Screen name="Subscribe" component={SubscribeScreen} />
-
             <Stack.Screen name="Payment" component={PaymentScreen} />
             <Stack.Screen
               name="ExploreSubscription"

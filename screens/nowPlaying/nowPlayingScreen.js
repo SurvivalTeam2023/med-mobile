@@ -17,43 +17,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { Audio } from "expo-av";
 import { MILLI_SECOND } from "../../constants/app";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { store } from "../../core/store/store";
 
-const audioList = [
-  {
-    id: 1,
-    name: "Em của ngày hôm qua",
-    url: "https://mp3-s1-zmp3.zmdcdn.me/6c15cefab4be5de004af/218878317877648665?authen=exp=1686840645~acl=/6c15cefab4be5de004af/*~hmac=a437548ce313e70ca44472a60e52f084&fs=MTY4NjY2Nzg0NTM4Nnx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
-    imgUrl:
-      "https://public-med-bucket-v2.s3.ap-southeast-1.amazonaws.com/default_images/default_sound_cover.jpg",
-    artist: "Sơn tùng MTP",
-  },
-  {
-    id: 2,
-    name: "Bài gì đó của amee",
-    url: "https://mp3-s1-zmp3.zmdcdn.me/13e3d26f9c2f75712c3e/6135008632595436642?authen=exp=1686934686~acl=/13e3d26f9c2f75712c3e/*~hmac=a3f7cf91d132e670a01cb8e17df9c0ed&fs=MTY4NjmUsIC2MTg4NjmUsIC4OHx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
-    imgUrl:
-      "https://public-med-bucket-v2.s3.ap-southeast-1.amazonaws.com/default_images/default_sound_cover.jpg",
-    artist: "Amee",
-  },
-  {
-    id: 3,
-    name: "Thiêu Thân",
-    url: "https://mp3-s1-zmp3.zmdcdn.me/365b88e146a6aff8f6b7/5520922060363643604?authen=exp=1686940314~acl=/365b88e146a6aff8f6b7/*~hmac=4ef844e551958acc7c482e223c03ba66&fs=MTY4NjmUsIC2NzUxNDk3Mnx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
-    imgUrl:
-      "https://public-med-bucket-v2.s3.ap-southeast-1.amazonaws.com/default_images/default_sound_cover.jpg",
-    artist: "Bray",
-  },
-  {
-    id: 4,
-    name: "Con trai cưng của mẹ",
-    url: "  https://mp3-s1-zmp3.zmdcdn.me/07adfb21ed61043f5d70/8890654532567428654?authen=exp=1686940410~acl=/07adfb21ed61043f5d70/*~hmac=2db65bb9beefc458a85980764767b5f3&fs=MTY4NjmUsIC2NzYxMDMwMnx3ZWJWNnwwfDI3LjY0LjMwLjIzNQ",
-    imgUrl:"https://public-med-bucket-v2.s3.ap-southeast-1.amazonaws.com/default_images/default_sound_cover.jpg",
-    artist: "Bray",
-  },
-
-  // Add more audio objects as needed
-];
 const NowPlayingScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const audioList = store.getState().nowPlayingList.playingList;
+  // const currentSoundStatus = store.getState().nowPlayingList.soundStatus;
+  // const currentSoundPlayId = audioList.findIndex(
+  //   (audio) => audio.id == store.getState().nowPlayingList.currentPlayingId
+  // );
   //init master data
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -89,6 +63,9 @@ const NowPlayingScreen = ({ navigation }) => {
         }
         return sound;
       });
+      if (soundStatus.positionMillis) {
+        handleUpdateSoundTime(soundStatus.positionMillis);
+      }
       const status = await sound.getStatusAsync();
       setSoundStatus({
         ...soundStatus,
@@ -126,6 +103,14 @@ const NowPlayingScreen = ({ navigation }) => {
       setSoundStatus({ ...soundStatus, isPlaying: false });
     }
   };
+  useEffect(() => {
+    dispatch(
+      nowPlayingAction.setCurrentPlayingAudio({
+        soundStatus: soundStatus,
+        currentPlayingId: audioList[currentAudioIndex]["id"],
+      })
+    );
+  }, [soundStatus]);
   //get sound status time line
   useEffect(() => {
     const timer = setInterval(async () => {
@@ -146,8 +131,6 @@ const NowPlayingScreen = ({ navigation }) => {
       clearInterval(timer);
     };
   }, [soundStatus.isPlaying]);
-
-  useEffect(() => console.log(soundStatus), [sound]);
 
   const playNextSound = async () => {
     if (sound) {
@@ -187,6 +170,7 @@ const NowPlayingScreen = ({ navigation }) => {
   };
   const handleUpdateSoundTime = async (positionMillis) => {
     try {
+      if (!sound) return;
       await sound.setPositionAsync(positionMillis);
       await sound.playFromPositionAsync(positionMillis);
     } catch (error) {
@@ -194,19 +178,11 @@ const NowPlayingScreen = ({ navigation }) => {
     }
   };
   const handleMoveSoundTimeLine = (time) => {
+    if (!time) return;
     let upcomingTime = soundStatus.positionMillis + time;
-    console.log(time);
     handleUpdateSoundTime(upcomingTime);
   };
 
-  const [state, setState] = useState({
-    songRunningInPercentage: 60,
-    pauseSong: true,
-    currentSongInFavorite: true,
-  });
-
-  const updateState = (data) => setState((state) => ({ ...state, ...data }));
-  const { songRunningInPercentage, currentSongInFavorite } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -302,14 +278,8 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.favoriteShuffleAndRepeatInfoWrapStyle}>
         <MaterialIcons name="repeat" size={20} color="black" />
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={{}}
-          onPress={() => {
-            updateState({ currentSongInFavorite: !currentSongInFavorite });
-          }}
-        >
-          {currentSongInFavorite ? (
+        <TouchableOpacity activeOpacity={0.9} style={{}}>
+          {audioList[currentAudioIndex]?.isLoved ? (
             <Icon
               start={{ x: 0, y: 1 }}
               end={{ x: 0, y: 0 }}
@@ -401,7 +371,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: audioList[currentAudioIndex].imgUrl }}
+          source={{ uri: audioList[currentAudioIndex]?.imgUrl || {} }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,
@@ -410,10 +380,10 @@ const NowPlayingScreen = ({ navigation }) => {
           }}
         />
         <Text style={{ ...Fonts.blackColor14Bold }}>
-          {audioList[currentAudioIndex].name}
+          {audioList[currentAudioIndex]?.name || "loading..."}
         </Text>
         <Text style={{ ...Fonts.grayColor10Medium }}>
-          {audioList[currentAudioIndex].artist}
+          {audioList[currentAudioIndex]?.artist || "loading"}
         </Text>
       </View>
     );

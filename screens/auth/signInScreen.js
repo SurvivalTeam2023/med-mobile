@@ -35,15 +35,15 @@ import { ARTIST_ROLE } from "../../constants/role";
 const SignInScreen = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState(null);
   const [otherErrorCode, setOtherErrorCode] = useState(null);
+  const { mutate } = useLogin();
+  const { mutate: mutateLoginGoogle } = useLoginWithGmail();
+  const dispatch = useDispatch();
+  const { userData, isSuccess, refetch } = useGetUserByNameApi();
 
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
-  const { mutate } = useLogin();
-  const { mutate: mutateLoginGoogle } = useLoginWithGmail();
-  const dispatch = useDispatch();
-  const { userData, isSuccess, refetch } = useGetUserByNameApi();
 
   useFocusEffect(
     useCallback(() => {
@@ -111,6 +111,9 @@ const SignInScreen = ({ navigation }) => {
               setErrorCode(err);
               break;
             case 404:
+              setErrorCode(err);
+              break;
+            case 502:
               setErrorCode(err);
               break;
             default:
@@ -256,6 +259,13 @@ const SignInScreen = ({ navigation }) => {
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
               User not found. Please sign up and try again!
+            </Text>
+          </View>
+        )}
+        {errorCode === 502 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Connection error. Please sign up and try again!
             </Text>
           </View>
         )}
