@@ -54,13 +54,11 @@ const editProfileScreen = ({ navigation }) => {
   const userAddress = user_db?.address;
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!isModalVisible) {
-      setUpdatedFirstName();
-      setUpdatedLastName();
-      setUpdatedEmail();
-      setUpdatedCity();
-      setUpdatedAddress();
-    }
+    setUpdatedFirstName();
+    setUpdatedLastName();
+    setUpdatedEmail();
+    setUpdatedCity();
+    setUpdatedAddress();
   }, [isModalVisible]);
   const { data, isSuccess, isError, error } = useGetUserProfile();
   const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
