@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -35,12 +35,12 @@ import { BlurView } from "expo-blur";
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
-  const [updatedFirstName, setUpdatedFirstName] = useState(null);
-  const [updatedLastName, setUpdatedLastName] = useState(null);
-  const [updatedEmail, setUpdatedEmail] = useState(null);
-  const [updatedCity, setUpdatedCity] = useState(null);
+  const [updatedFirstName, setUpdatedFirstName] = useState();
+  const [updatedLastName, setUpdatedLastName] = useState();
+  const [updatedEmail, setUpdatedEmail] = useState();
+  const [updatedCity, setUpdatedCity] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [updatedAddress, setUpdatedAddress] = useState(null);
+  const [updatedAddress, setUpdatedAddress] = useState();
   const userName = store.getState().user.username;
   const user = store.getState()?.user?.user;
   const user_db = user?.user_db;
@@ -53,6 +53,15 @@ const editProfileScreen = ({ navigation }) => {
   const userDob = user_db?.dob;
   const userAddress = user_db?.address;
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (!isModalVisible) {
+      setUpdatedFirstName();
+      setUpdatedLastName();
+      setUpdatedEmail();
+      setUpdatedCity();
+      setUpdatedAddress();
+    }
+  }, [isModalVisible]);
   const { data, isSuccess, isError, error } = useGetUserProfile();
   const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
   const formatNumber = (number) => {
@@ -93,7 +102,7 @@ const editProfileScreen = ({ navigation }) => {
         refetch();
         Alert.alert("Processing image...");
         setTimeout(() => {
-          navigation.push("Profile");
+          navigation.push("BottomTabBar");
         }, 3000);
       },
     });
@@ -102,9 +111,10 @@ const editProfileScreen = ({ navigation }) => {
   const handleUpdateAccountDetails = async (form) => {
     mutatee(form, {
       onSuccess: (data) => {
+        console.log("Success");
         refetch();
         setTimeout(() => {
-          navigation.push("Profile");
+          navigation.push("BottomTabBar");
         }, 3000);
       },
     });
@@ -112,14 +122,21 @@ const editProfileScreen = ({ navigation }) => {
 
   const saveUpdateAccountDetails = async () => {
     const formData = new FormData();
-    formData.append({
-      firstName: updatedFirstName,
-      lastName: updatedLastName,
-      email: updatedEmail,
-      city: updatedCity,
-      address: updatedAddress,
-    });
-
+    if (updatedFirstName) {
+      formData.append("firstName", updatedFirstName);
+    }
+    if (updatedLastName) {
+      formData.append("lastName", updatedLastName);
+    }
+    if (updatedEmail) {
+      formData.append("email", updatedEmail);
+    }
+    if (updatedCity) {
+      formData.append("city", updatedCity);
+    }
+    if (updatedAddress) {
+      formData.append("address", updatedAddress);
+    }
     handleUpdateAccountDetails(formData);
   };
 
@@ -286,7 +303,7 @@ const editProfileScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.detailedText}>Address</Text>
-            <Text>{userDob} </Text>
+            <Text>{userAddress} </Text>
           </View>
         </View>
       </View>
