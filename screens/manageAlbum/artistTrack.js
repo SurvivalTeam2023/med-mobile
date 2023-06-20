@@ -10,6 +10,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -21,24 +22,21 @@ import { Icon } from "react-native-gradient-icon";
 import { Ionicons } from "@expo/vector-icons";
 import {
   useDeleteAudioArtistAPI,
+  useGetAudioByIdForArtistAPI,
   useGetAudioForArtistAPI,
 } from "../../hooks/playlistTracks.hook";
 import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
+import { TextInput } from "react-native";
 
 const artistTracksScreen = ({ navigation }) => {
   const sortOptions = ["Name", "Date Added", "Artist"];
+  const [tracksList, setTrackList] = useState(null);
 
-  const [tracksList, setTracksList] = useState([]);
   const dispatch = useDispatch();
   const { mutate } = useDeleteAudioArtistAPI();
-
-  const [state, setState] = useState({
-    showSortOptions: false,
-    selectedSortCriteria: sortOptions[0],
-    pauseSong: true,
-  });
+  const [modalVisible, setModalVisible] = useState(false);
 
   const {
     data: dataTracksFromPlaylist,
@@ -46,23 +44,48 @@ const artistTracksScreen = ({ navigation }) => {
     isError: isErrorTracksFromPlaylist,
     error: errorTracksFromPlaylist,
   } = useGetAudioForArtistAPI();
+  const {
+    data: dataById,
+    isSuccess: isSuccessById,
+    isError: isErrorById,
+    error: errorById,
+  } = useGetAudioByIdForArtistAPI();
+  const [state, setState] = useState({
+    showSortOptions: false,
+    selectedSortCriteria: sortOptions[0],
+    pauseSong: true,
+    name: null,
+  });
+
+  const getAudioInfo = () => {
+    if (isSuccessById) {
+      const audioInfo = dataById["data"];
+      console.log("Get audio info successfully", dataById["data"]);
+      dispatch(audioArtistAction.setAudioInfo(audioInfo));
+      navigation.push("editAudioArtistScreen");
+    }
+    if (isErrorById) {
+      console.log("Error when get audio info by id", errorById);
+    }
+  };
 
   useEffect(() => {
     if (successTracksFromPlaylist) {
       const filteredTracksList = dataTracksFromPlaylist["data"].items.filter(
         (item) => item.status === "ACTIVE"
       );
-      setTracksList(filteredTracksList);
+      console.log("get audio list successfully", filteredTracksList);
+      setTrackList(filteredTracksList);
     }
     if (isErrorTracksFromPlaylist) {
-      console.log("errorTrack", errorTracksFromPlaylist);
+      console.log("Error get audio list", errorTracksFromPlaylist);
     }
   }, [successTracksFromPlaylist]);
 
   function updateAudioList() {
     const audioId = store.getState().audioArtist.audioArtistId;
     const updatedAudioList = tracksList.filter((item) => item.id !== audioId);
-    setTracksList(updatedAudioList);
+    tracksList = updatedAudioList;
   }
 
   const handleDeleteAudio = () => {
@@ -147,6 +170,26 @@ const artistTracksScreen = ({ navigation }) => {
           }}
         >
           <View>
+            <MenuItem
+              pressColor="transparent"
+              style={{ height: 30.0 }}
+              textStyle={{
+                marginRight: Sizes.fixPadding * 5.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                dispatch(audioArtistAction.setAudioArtistId(id));
+                console.log(
+                  "Audio artist saved",
+                  store.getState().audioArtist.audioArtistId
+                );
+                getAudioInfo();
+                hideMenu();
+                console.log(modalVisible);
+              }}
+            >
+              Edit
+            </MenuItem>
             <MenuItem
               pressColor="transparent"
               style={{ height: 30.0 }}
@@ -471,6 +514,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: Sizes.fixPadding * 2.0,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#ECECEC",
+    borderRadius: 20,
+    padding: 50,
+    paddingHorizontal: 70,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 10,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
   },
 });
 

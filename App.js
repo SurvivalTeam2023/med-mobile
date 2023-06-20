@@ -40,6 +40,7 @@ import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
 import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
 import EditAlbumArtistScreen from "./screens/manageAlbum/editAlbumArtist";
+import EditAudioArtistScreen from "./screens/manageAlbum/editAudioInfo";
 
 LogBox.ignoreAllLogs();
 
@@ -111,6 +112,10 @@ const App = () => {
             <Stack.Screen
               name="editAlbumArtistScreen"
               component={EditAlbumArtistScreen}
+            />
+            <Stack.Screen
+              name="editAudioArtistScreen"
+              component={EditAudioArtistScreen}
             />
             <Stack.Screen
               name="ArtistProfile"

@@ -22,23 +22,37 @@ import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 const ProfileArtistScreen = ({ navigation }) => {
-  const { data, isSuccess } = useGetArtistTotalFollowerApi();
-  const { data: dataListener, isSuccess: isSuccessListener } =
-    useGetArtistTotalListenerApi();
+  const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+  const {
+    data: dataListener,
+    isSuccess: isSuccessListener,
+    isError: isErrorGetListener,
+    error: errorGetListner,
+  } = useGetArtistTotalListenerApi();
 
   const [modalVisible, setModalVisible] = useState(false);
   let totalListener = 1;
   let paymentInfo = {};
   const dispatch = useDispatch();
 
-  const { data: dataWallet, isSuccess: isSuccessWallet } =
-    useGetArtistWalletApi();
-  let follower;
+  const {
+    data: dataWallet,
+    isSuccess: isSuccessWallet,
+    isError: isErrorGetWallet,
+    error: errorGetWallet,
+  } = useGetArtistWalletApi();
+
+  let follower = 0;
   const removeData = () => {
     dispatch(userAction.logout());
   };
+
   if (isSuccessListener) {
     totalListener = dataListener["data"];
+  }
+
+  if (isErrorGetListener) {
+    console.log("Getting listener failed", errorGetListner);
   }
 
   if (isSuccessWallet) {
@@ -46,11 +60,18 @@ const ProfileArtistScreen = ({ navigation }) => {
     paymentInfo = rawData[0];
   }
 
+  if (isErrorGetWallet) {
+    console.log("Getting wallet failed", errorGetWallet);
+  }
+
   //follower
   if (isSuccess) {
     follower = data["data"];
   }
 
+  if (isError) {
+    console.log("Getting follower failed", error);
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />

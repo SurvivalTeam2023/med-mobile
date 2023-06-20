@@ -57,6 +57,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
   const handlePlaylistPress = (playlistId) => {
     try {
       dispatch(playlistAction.setPlaylistId(playlistId));
+      console.log("Playlist Id saved", store.getState().playlist.playlistId);
     } catch (error) {
       console.log("Error saving selected playlist ID", error);
     }

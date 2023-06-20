@@ -13,6 +13,7 @@ export const useGetPlaylist = (payload) =>
     queryKey: ["getPlaylist"],
     queryFn: async () => {
       const data = await getPlaylistAPI();
+      if (!data) return;
       return data;
     },
   });
@@ -21,6 +22,7 @@ export const useGetPlaylistByIdAPI = (payload) =>
     queryKey: ["getPlaylistById"],
     queryFn: async () => {
       const data = await getPlaylistByIdAPI();
+      if (!data) return;
       return data;
     },
     enabled: false,
