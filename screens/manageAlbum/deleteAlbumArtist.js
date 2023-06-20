@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
+import { Navigate } from "../../constants/navigate";
 
 let album = [
   {
@@ -180,7 +181,7 @@ const DeleteAlbumArtist = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push("ManageArtistAlbum");
+            navigation.push(Navigate.MANAGE_ARTIST_ALBUM);
           }}
           style={{ width: 30 }}
           name="left"

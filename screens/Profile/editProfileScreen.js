@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -27,11 +27,11 @@ import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
-import { useState } from "react";
 import { Modal } from "react-native-paper";
 import { TextInput } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
 import { getUserFromDb } from "../../utils/app.util";
+import { Navigate } from "../../constants/navigate";
 
 let profile = [];
 
@@ -99,7 +99,7 @@ const editProfileScreen = ({ navigation }) => {
         refetch();
         Alert.alert("Processing image...");
         setTimeout(() => {
-          navigation.push("BottomTabBar");
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
         }, 3000);
       },
     });
@@ -111,7 +111,7 @@ const editProfileScreen = ({ navigation }) => {
         console.log("Success");
         refetch();
         setTimeout(() => {
-          navigation.push("BottomTabBar");
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
         }, 3000);
       },
     });

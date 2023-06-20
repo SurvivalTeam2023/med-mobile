@@ -22,6 +22,7 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { Navigate } from "../../constants/navigate";
 
 const CreateAlbumScreen = ({ navigation }) => {
   const backAction = () => {
@@ -58,7 +59,7 @@ const CreateAlbumScreen = ({ navigation }) => {
       {
         onSuccess: (data) => {
           if (data !== null) {
-            navigation.push("ManageArtistAlbum");
+            navigation.push(Navigate.MANAGE_ARTIST_ALBUM);
           }
         },
         onError: (error) => {
@@ -226,7 +227,7 @@ const CreateAlbumScreen = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push("ManageArtistAlbum");
+            navigation.push(Navigate.MANAGE_ARTIST_ALBUM);
           }}
           style={{ width: 30 }}
           name="left"

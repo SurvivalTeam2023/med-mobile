@@ -16,6 +16,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Ionicons } from "@expo/vector-icons";
+import { Navigate } from "../../constants/navigate";
 
 //null to compare
 
@@ -61,26 +62,26 @@ const OptionScreen = ({ navigation }) => {
     if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
       Alert.alert("You've already done quiz");
       setTimeout(() => {
-        navigation.push("BottomTabBar");
+        navigation.push(Navigate.BOTTOM_TAB_BAR);
       }, 500);
     } else if (
       isQuestionValid.isValid === false &&
       isFavoriteExisted.exists === true
     ) {
-      navigation.push("Quiz");
+      navigation.push(Navigate.QUIZ);
     } else if (
       isQuestionValid.isValid === true &&
       isFavoriteExisted.exists === false
     ) {
       Alert.alert("You've already done quiz");
       setTimeout(() => {
-        navigation.push("ChooseMusic");
+        navigation.push(Navigate.CHOOSE_MUSIC);
       }, 500);
     } else if (
       isQuestionValid.isValid === false &&
       isFavoriteExisted.exists === false
     ) {
-      navigation.push("Quiz");
+      navigation.push(Navigate.QUIZ);
     }
   };
   return (
@@ -177,7 +178,7 @@ const OptionScreen = ({ navigation }) => {
         style={styles.signupButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          navigation.push("ShowCam");
+          navigation.push(Navigate.SHOW_CAM);
         }}
       >
         <LinearGradient

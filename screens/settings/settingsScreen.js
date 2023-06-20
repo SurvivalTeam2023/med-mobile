@@ -22,6 +22,7 @@ import { store } from "../../core/store/store";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import { configOptionsGlobal } from "../../utils/app.configuration";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -156,7 +157,7 @@ const SettingsScreen = ({ navigation }) => {
               onPress={() => {
                 updateState({ showLogoutDialog: false });
                 removeData();
-                navigation.push("SignIn");
+                navigation.push(Navigate.SIGN_IN);
               }}
               style={styles.okButtonStyle}
             >
@@ -746,7 +747,7 @@ const SettingsScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Subscribe")}
+        onPress={() => navigation.push(Navigate.SUBSCRIBE)}
       >
         <ImageBackground
           source={require("../../assets/images/banner-design.png")}

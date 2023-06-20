@@ -25,6 +25,7 @@ CallAPI.interceptors.request.use((req) => {
   if (token && req.headers) {
     req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
+  console.debug("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 

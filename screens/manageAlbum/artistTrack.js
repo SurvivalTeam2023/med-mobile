@@ -25,6 +25,7 @@ import {
 import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
+import { Navigate } from "../../constants/navigate";
 
 const sortOptions = ["Name", "Date Added", "Artist"];
 const artistTracksScreen = ({ navigation }) => {
@@ -168,7 +169,7 @@ const artistTracksScreen = ({ navigation }) => {
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigation.push("NowPlaying", { item })}
+          onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
           style={styles.tracksInfoWrapStyle}
         >
           <View
@@ -347,7 +348,7 @@ const artistTracksScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.push("ManageArtistAlbum")}
+            onPress={() => navigation.push(Navigate.MANAGE_ARTIST_ALBUM)}
           >
             <Icon
               start={{ x: 0, y: 1 }}
@@ -383,7 +384,7 @@ const artistTracksScreen = ({ navigation }) => {
           name="search"
           size={20}
           style={{ alignSelf: "flex-end" }}
-          onPress={() => navigation.push("Search")}
+          onPress={() => navigation.push(Navigate.SEARCH)}
         />
       </View>
     );

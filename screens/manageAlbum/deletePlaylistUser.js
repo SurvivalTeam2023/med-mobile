@@ -25,6 +25,7 @@ import { playlistAction } from "../../redux/auth/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
 import { getUserFromDb } from "../../utils/app.util";
+import { Navigate } from "../../constants/navigate";
 
 let album = [
   {
@@ -184,7 +185,7 @@ const DeletePlayListUser = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push("BottomTabBar");
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }}
           style={{ width: 30 }}
           name="left"

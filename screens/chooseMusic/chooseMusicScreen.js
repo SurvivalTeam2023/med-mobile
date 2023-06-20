@@ -18,6 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 
 import { useCreateFavoriteApi } from "../../hooks/favorite.hook";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -39,7 +40,7 @@ const ChooseMusicScreen = ({ navigation }) => {
 
       {
         onSuccess: () => {
-          navigation.push("BottomTabBar");
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
         },
         onError: (error) => {
           console.log("error creating favorite", error);

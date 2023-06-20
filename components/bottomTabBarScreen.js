@@ -25,6 +25,7 @@ import {
   nowPlayingAction,
 } from "../redux/audio/nowPlayingList.slice";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -118,7 +119,9 @@ const BottomTabBarScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item: { id: "image" } })}
+        onPress={() =>
+          navigation.push(Navigate.NOW_PLAYING, { item: { id: "image" } })
+        }
         style={styles.currentlyPlayedSongInfoWrapStyle}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>

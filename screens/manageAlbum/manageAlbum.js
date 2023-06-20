@@ -20,6 +20,7 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
+import { Navigate } from "../../constants/navigate";
 
 let forYouList = [];
 let album = [
@@ -94,7 +95,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          handlePlaylistPress(item.id), navigation.push("ArtistTrack");
+          handlePlaylistPress(item.id), navigation.push(Navigate.ARTIST_TRACK);
         }}
       >
         <ImageBackground
@@ -152,7 +153,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Search")}
+        onPress={() => navigation.push(Navigate.SEARCH)}
         style={styles.searchBarWrapStyle}
       >
         <Text style={{ ...Fonts.grayColor15Medium }}>
@@ -213,7 +214,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             }}
             onPress={() => {
               updateState({ showOptions: false }),
-                navigation.push("CreateAlbum");
+                navigation.push(Navigate.CREATE_ALBUM);
             }}
           >
             Add New Album
@@ -226,7 +227,7 @@ const ManageArtistAlbumScreen = ({ navigation }) => {
             }}
             onPress={() => {
               updateState({ showOptions: false }),
-                navigation.push("DeleteAlbumArtist");
+                navigation.push(Navigate.DELETE_ALBUM_ARTIST);
             }}
           >
             Delete Album

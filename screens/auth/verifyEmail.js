@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
+import { Navigate } from "../../constants/navigate";
 
 const VerifyEmail = ({ navigation }) => {
   return (
@@ -72,7 +73,7 @@ const VerifyEmail = ({ navigation }) => {
           style={styles.doneQuizButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push("SignIn");
+            navigation.push(Navigate.SIGN_IN);
           }}
         >
           <LinearGradient

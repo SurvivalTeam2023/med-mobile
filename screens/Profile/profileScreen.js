@@ -17,6 +17,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { getUserFromDb } from "../../utils/app.util";
+import { Navigate } from "../../constants/navigate";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
@@ -73,7 +74,7 @@ const ProfileScreen = ({ navigation }) => {
       <View>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigation.push("Tracks")}
+          onPress={() => navigation.push(Navigate.TRACK)}
           style={styles.recentlyPalyedSongImageStyle}
         >
           <SharedElement id={item.id}>
@@ -155,7 +156,7 @@ const ProfileScreen = ({ navigation }) => {
     const renderItem = ({ item, index }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
+        onPress={() => navigation.push(Navigate.TRACK)}
         style={styles.recentlyPalyedSongImageStyle}
       >
         <Image
@@ -255,7 +256,7 @@ const ProfileScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => {
-            navigation.push("editScreen");
+            navigation.push(Navigate.EDIT_SCREEN);
           }}
         >
           <Ionicons name="md-create" size={24} color="black" />

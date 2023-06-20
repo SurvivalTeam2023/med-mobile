@@ -13,10 +13,11 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
+import { Navigate } from "../../constants/navigate";
 
 const PaymentFailedScreen = ({ navigation }) => {
   const backAction = () => {
-    navigation.push("BottomTabBar");
+    navigation.push(Navigate.BOTTOM_TAB_BAR);
     return true;
   };
 
@@ -50,7 +51,7 @@ const PaymentFailedScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          navigation.push("BottomTabBar");
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
         }}
         style={{
           justifyContent: "center",
