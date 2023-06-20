@@ -28,6 +28,7 @@ import QuestionScreen from "./screens/quiz/questionScreen";
 import ManageArtistAlbumScreen from "./screens/manageAlbum/manageAlbum";
 import artistTracksScreen from "./screens/manageAlbum/artistTrack";
 import CreateAlbumScreen from "./screens/createAlbum/createAlbumScreen";
+import CreatePlaylistScreenUser from "./screens/createAlbum/createPlaylistScreenUser";
 import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
 import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
@@ -40,6 +41,7 @@ import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
 import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
+import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 
 LogBox.ignoreAllLogs();
 
@@ -60,6 +62,10 @@ const App = () => {
           >
             <Stack.Screen name="Loading" component={LoadingScreen} />
             <Stack.Screen
+              name="DeletePlaylistUser"
+              component={DeletePlayListUser}
+            />
+            <Stack.Screen
               name="Splash"
               component={splashScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
@@ -70,6 +76,10 @@ const App = () => {
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen
+              name="CreatePlaylistUser"
+              component={CreatePlaylistScreenUser}
+            />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />

@@ -1,6 +1,10 @@
 import { useQuery, useMutation } from "react-query";
 import { getUserByNameApi } from "../api/user.api";
-import { getUserProfile, updateUserAvatar } from "../api/userProfile.api";
+import {
+  getUserProfile,
+  updateUserAvatar,
+  updateUserAccountDetails,
+} from "../api/userProfile.api";
 
 export const useGetUserByNameApi = (payload) => {
   const { data: userData, ...rest } = useQuery({
@@ -26,4 +30,9 @@ export const useGetUserProfile = (payload) =>
 export const useUpdateUserAvatar = (payload) =>
   useMutation({
     mutationFn: (payload) => updateUserAvatar(payload),
+  });
+
+export const useUpdateUserAccountDetails = (payload) =>
+  useMutation({
+    mutationFn: (payload) => updateUserAccountDetails(payload),
   });

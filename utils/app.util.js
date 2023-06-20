@@ -1,6 +1,7 @@
 import { USER_KEY_STORAGE } from "../constants/config";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { store } from "../core/store/store";
 
 export const removeTokenFromStorage = () => {
   AsyncStorage.removeItem(USER_KEY_STORAGE);
@@ -32,4 +33,8 @@ export const formatQuestionData = (originRaw) => {
     };
   });
   return dataFormat;
+};
+
+export const getUserFromDb = () => {
+  return store.getState().user.user.user_db;
 };

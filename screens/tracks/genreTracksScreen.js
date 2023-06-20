@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -9,23 +9,18 @@ import {
   StyleSheet,
   Text,
   Image,
-  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import {
-  MaterialIcons,
-  MaterialCommunityIcons,
-  Ionicons,
-} from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Icon } from "react-native-gradient-icon";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
+import { Modal } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { genreAction } from "../../redux/auth/genre.slice";
-import { useDispatch } from "react-redux";
 
 const { width } = Dimensions.get("window");
 
@@ -41,21 +36,28 @@ let songOptionsList = [
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const TracksScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  let genreTracksList;
+  const [genreTracksList, setGenreTracksList] = useState([]);
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
   });
 
-  const { data: dataTracksFromGenre, isSuccess: successTracksFromGenre } =
-    useGetTracksFromGenre();
-
-  if (successTracksFromGenre) {
-    genreTracksList = dataTracksFromGenre["data"];
-    dispatch(genreAction.setGenreTrack(genreTracksList));
-  }
+  const {
+    data: dataTracksFromGenre,
+    isSuccess: successTracksFromGenre,
+    isError: isErrorTracksFromGenre,
+    error: errorTracksFromGenre,
+  } = useGetTracksFromGenre();
+  useEffect(() => {
+    if (successTracksFromGenre) {
+      setGenreTracksList(dataTracksFromGenre["data"]);
+      console.log("genreTracksList", genreTracksList);
+    }
+    if (isErrorTracksFromGenre) {
+      console.log("error", errorTracksFromGenre);
+    }
+  }, []);
 
   const handleOptionSelect = (option) => {
     // Perform action based on selected option
@@ -88,6 +90,24 @@ const TracksScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      <StatusBar backgroundColor={Colors.primaryColor} />
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
+        >
+          {cornerImage()}
+          {header()}
+          {sortingIcons()}
+          {tracks()}
+        </ScrollView>
+      </View>
+      {currentlyPlayedSong()}
+    </SafeAreaView>
+  );
 
   function currentlyPlayedSong() {
     return (
@@ -145,7 +165,7 @@ const TracksScreen = ({ navigation }) => {
 
   function tracks() {
     const CustomMenu = ({ item }) => {
-      let _menu = null;
+      var _menu = null;
 
       const setMenuRef = (ref) => {
         _menu = ref;
@@ -452,24 +472,6 @@ const TracksScreen = ({ navigation }) => {
       </View>
     );
   }
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
-        >
-          {cornerImage()}
-          {header()}
-          {sortingIcons()}
-          {tracks()}
-        </ScrollView>
-      </View>
-      {currentlyPlayedSong()}
-    </SafeAreaView>
-  );
 };
 
 const styles = StyleSheet.create({
