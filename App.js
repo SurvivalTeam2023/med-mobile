@@ -40,8 +40,8 @@ import profileScreen from "./screens/Profile/profileScreen";
 import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
 import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
-import deletePlaylistUser from "./screens/manageAlbum/deletePlaylistUser";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
+import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 
 LogBox.ignoreAllLogs();
 
@@ -63,7 +63,7 @@ const App = () => {
             <Stack.Screen name="Loading" component={LoadingScreen} />
             <Stack.Screen
               name="DeletePlaylistUser"
-              component={deletePlaylistUser}
+              component={DeletePlayListUser}
             />
             <Stack.Screen
               name="Splash"

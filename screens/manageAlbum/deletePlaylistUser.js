@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
+import { getUserFromDb } from "../../utils/app.util";
 
 let album = [
   {
@@ -47,9 +48,8 @@ let album = [
     category: "Pop Music",
   },
 ];
-const deletePlaylistUser = ({ navigation }) => {
-  const user = store.getState()?.user?.user;
-  const userId = user?.user_db?.id;
+const DeletePlayListUser = ({ navigation }) => {
+  const userId = getUserFromDb().id;
   const { data, isSuccess, isError, error } = useGetPlaylist();
   const dispatch = useDispatch();
   const { mutate } = useDeletePlaylistAPI();
@@ -287,4 +287,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default deletePlaylistUser;
+export default DeletePlayListUser;

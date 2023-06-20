@@ -13,21 +13,16 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetUserProfile } from "../../hooks/user.hook";
-import { store } from "../../core/store/store";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
+import { getUserFromDb } from "../../utils/app.util";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
-  const [state, setState] = useState({
-    showOptions: false,
-  });
-  const userName = store.getState().user.username;
-  const user = store.getState()?.user?.user;
-  const user_db = user?.user_db;
-  const userAvatar = user_db?.avatar.url;
-  const userFirstName = user_db?.firstName;
+  const [showOptions, setShowOptions] = useState(false);
+  const userAvatar = getUserFromDb()?.avatar.url;
+  const userFirstName = getUserFromDb()?.firstName;
   const formatNumber = (number) => {
     if (number >= 1e9) {
       return (number / 1e9).toFixed(1) + "B";
@@ -51,10 +46,6 @@ const ProfileScreen = ({ navigation }) => {
   const playlistCount = formatNumber(profile?.playlist);
   const followingCount = formatNumber(profile?.following);
   let playlist = profile?.publicPlaylist;
-
-  const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
-  const { showOptions } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -115,10 +106,10 @@ const ProfileScreen = ({ navigation }) => {
                 size={24}
                 color={Colors.blackColor}
                 style={{ alignSelf: "flex-end" }}
-                onPress={() => updateState({ showOptions: true })}
+                onPress={() => setShowOptions(true)}
               />
             }
-            onRequestClose={() => updateState({ showOptions: false })}
+            onRequestClose={() => setShowOptions(false)}
           >
             <MenuItem
               pressColor="transparent"

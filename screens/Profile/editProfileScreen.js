@@ -28,9 +28,10 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import { useState } from "react";
-import { Button, Modal } from "react-native-paper";
+import { Modal } from "react-native-paper";
 import { TextInput } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
+import { getUserFromDb } from "../../utils/app.util";
 
 let profile = [];
 
@@ -42,16 +43,14 @@ const editProfileScreen = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [updatedAddress, setUpdatedAddress] = useState();
   const userName = store.getState().user.username;
-  const user = store.getState()?.user?.user;
-  const user_db = user?.user_db;
-  const userAvatar = user_db?.avatar.url;
-  const userFirstName = user_db?.firstName;
-  const userLastName = user_db?.lastName;
-  const userEmail = user_db?.email;
-  const userGender = user_db?.gender;
-  const userCity = user_db?.city;
-  const userDob = user_db?.dob;
-  const userAddress = user_db?.address;
+  const userAvatar = getUserFromDb()?.avatar.url;
+  const userFirstName = getUserFromDb()?.firstName;
+  const userLastName = getUserFromDb()?.lastName;
+  const userEmail = getUserFromDb()?.email;
+  const userGender = getUserFromDb()?.gender;
+  const userCity = getUserFromDb()?.city;
+  const userDob = getUserFromDb()?.dob;
+  const userAddress = getUserFromDb()?.address;
   const dispatch = useDispatch();
   useEffect(() => {
     setUpdatedFirstName();

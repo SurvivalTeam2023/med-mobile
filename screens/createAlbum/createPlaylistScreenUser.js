@@ -22,6 +22,7 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { Navigate } from "../../utils/navigate";
 
 const CreatePlaylistScreenUser = ({ navigation }) => {
   const backAction = () => {
@@ -58,7 +59,7 @@ const CreatePlaylistScreenUser = ({ navigation }) => {
       {
         onSuccess: (data) => {
           if (data !== null) {
-            navigation.push("BottomTabBar");
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }
         },
         onError: (error) => {
@@ -226,7 +227,7 @@ const CreatePlaylistScreenUser = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push("BottomTabBar");
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }}
           style={{ width: 30 }}
           name="left"
