@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   playlistId: null,
+  activePlaylist: null,
 };
 
 const reducer = createSlice({
@@ -10,6 +11,9 @@ const reducer = createSlice({
   reducers: {
     setPlaylistId: (state, action) => {
       state.playlistId = action.payload;
+    },
+    setActivePlaylist: (state, action) => {
+      state.activePlaylist = action.payload;
     },
   },
 });

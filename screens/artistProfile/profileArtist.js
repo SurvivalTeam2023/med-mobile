@@ -19,21 +19,41 @@ import { AntDesign } from "@expo/vector-icons";
 import { useGetArtistTotalFollowerApi } from "../../hooks/artist.hook";
 import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
 import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
+import { useDispatch } from "react-redux";
+import { userAction } from "../../redux/auth/auth.slice";
 import { Navigate } from "../../constants/navigate";
 const ProfileArtistScreen = ({ navigation }) => {
-  const { data, isSuccess } = useGetArtistTotalFollowerApi();
-  const { data: dataListener, isSuccess: isSuccessListener } =
-    useGetArtistTotalListenerApi();
+  const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
+  const {
+    data: dataListener,
+    isSuccess: isSuccessListener,
+    isError: isErrorGetListener,
+    error: errorGetListner,
+  } = useGetArtistTotalListenerApi();
 
   const [modalVisible, setModalVisible] = useState(false);
   let totalListener = 1;
   let paymentInfo = {};
-  const { data: dataWallet, isSuccess: isSuccessWallet } =
-    useGetArtistWalletApi();
-  let follower;
+  const dispatch = useDispatch();
+
+  const {
+    data: dataWallet,
+    isSuccess: isSuccessWallet,
+    isError: isErrorGetWallet,
+    error: errorGetWallet,
+  } = useGetArtistWalletApi();
+
+  let follower = 0;
+  const removeData = () => {
+    dispatch(userAction.logout());
+  };
 
   if (isSuccessListener) {
     totalListener = dataListener["data"];
+  }
+
+  if (isErrorGetListener) {
+    console.log("Getting listener failed", errorGetListner);
   }
 
   if (isSuccessWallet) {
@@ -41,11 +61,18 @@ const ProfileArtistScreen = ({ navigation }) => {
     paymentInfo = rawData[0];
   }
 
+  if (isErrorGetWallet) {
+    console.log("Getting wallet failed", errorGetWallet);
+  }
+
   //follower
   if (isSuccess) {
     follower = data["data"];
   }
 
+  if (isError) {
+    console.log("Getting follower failed", error);
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -79,23 +106,31 @@ const ProfileArtistScreen = ({ navigation }) => {
           }}
         >
           <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
-                Payment Info
-              </Text>
-              <View style={{ justifyContent: "flex-start" }}>
-                <Text style={styles.modalText}>Owner:</Text>
-                <Text style={styles.modalText}>Bank:</Text>
-                <Text style={styles.modalText}>Account number:</Text>
-              </View>
+            {paymentInfo && (
+              <View style={styles.modalView}>
+                <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 40 }}>
+                  Payment Info
+                </Text>
+                <View style={{ justifyContent: "flex-start" }}>
+                  <Text style={styles.modalText}>
+                    Owner: {paymentInfo.bankAccountOwner}
+                  </Text>
+                  <Text style={styles.modalText}>
+                    Bank: {paymentInfo.bankName}
+                  </Text>
+                  <Text style={styles.modalText}>
+                    Account number: {paymentInfo.bankAccountNumber}
+                  </Text>
+                </View>
 
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Ok</Text>
-              </Pressable>
-            </View>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Ok</Text>
+                </Pressable>
+              </View>
+            )}
           </View>
         </Modal>
       </View>
@@ -134,6 +169,22 @@ const ProfileArtistScreen = ({ navigation }) => {
             <Text style={{ ...Fonts.whiteColor18Bold }}>View Wallet</Text>
           </LinearGradient>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageAlbumButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => {
+            removeData(), navigation.push("SignIn");
+          }}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.manageAlbumButtonGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor18Bold }}>Logout</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -150,18 +201,20 @@ const ProfileArtistScreen = ({ navigation }) => {
               resizeMode="contain"
               style={styles.image}
             ></Image>
-            <View>
+            {totalListener && (
               <View>
-                <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
-                <Text style={styles.desc}>Dope ass rapper</Text>
+                <View>
+                  <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
+                  <Text style={styles.desc}>Dope ass rapper</Text>
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                    Total listeners
+                  </Text>
+                  <Text>{totalListener}</Text>
+                </View>
               </View>
-              <View style={{ marginTop: 20 }}>
-                <Text style={{ ...Fonts.blackColor16SemiBold }}>
-                  Total listeners
-                </Text>
-                <Text>{totalListener}</Text>
-              </View>
-            </View>
+            )}
 
             <View>
               <AntDesign

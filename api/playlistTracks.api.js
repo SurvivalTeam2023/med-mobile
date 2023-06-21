@@ -7,7 +7,7 @@ export const getTracksAPI = async (payload) => {
   const url = "/audio?status=ACTIVE&" + `${queryParam}`;
   return CallAPI.get(url);
 };
-export const getAudioForArtistAPI = async (payload) => {
+export const getAudioForArtistAPI = async () => {
   const playlistId = store.getState().playlist.playlistId;
   const artist = store.getState()?.user?.user;
   const artistId = artist?.user_db?.id;
@@ -16,6 +16,14 @@ export const getAudioForArtistAPI = async (payload) => {
   const url = "/audio?status=ACTIVE&" + `${queryParam}`;
   return CallAPI.get(url);
 };
+export const getAudioByIdForArtistAPI = async (payload) => {
+  const audioArtistId = store.getState().audioArtist.audioArtistId;
+  const queryParam = `${audioArtistId}`;
+  if (!audioArtistId) return;
+  const url = "/audio/" + `${queryParam}`;
+  return CallAPI.get(url);
+};
+
 export const createAudioForArtistApi = (payload) => {
   const { name, imageUrl, status, length, playlistId, genreId } = payload;
   const url = "/audio";
@@ -28,6 +36,16 @@ export const createAudioForArtistApi = (payload) => {
     genreId,
   });
 };
+export const updateAudioForArtistApi = (payload) => {
+  const { name } = payload;
+  const audioArtistId = store.getState().audioArtist.audioArtistId;
+  const queryParam = `${audioArtistId}`;
+  const url = "/audio/" + `${queryParam}`;
+  return CallAPI.put(url, {
+    name,
+  });
+};
+
 export const deleteAudioArtistAPI = (payload) => {
   const audioId = store.getState().audioArtist.audioArtistId;
   const url = "/audio/" + `${audioId}`;

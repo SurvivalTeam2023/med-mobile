@@ -3,7 +3,9 @@ import {
   createPlaylistAPI,
   deletePlaylistAPI,
   getPlaylistAPI,
+  getPlaylistByIdAPI,
   getPlaylistforUserAPI,
+  updatePlaylistforArtistAPI,
 } from "../api/playlist.api";
 
 export const useGetPlaylist = (payload) =>
@@ -11,9 +13,21 @@ export const useGetPlaylist = (payload) =>
     queryKey: ["getPlaylist"],
     queryFn: async () => {
       const data = await getPlaylistAPI();
+      if (!data) return;
       return data;
     },
   });
+export const useGetPlaylistByIdAPI = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylistById"],
+    queryFn: async () => {
+      const data = await getPlaylistByIdAPI();
+      if (!data) return;
+      return data;
+    },
+    enabled: false,
+  });
+
 export const useGetPlaylistForUser = (payload) =>
   useQuery({
     queryKey: ["getPlaylist"],
@@ -26,6 +40,11 @@ export const useGetPlaylistForUser = (payload) =>
 export const useCreatePlaylistAPI = (payload) =>
   useMutation({
     mutationFn: (payload) => createPlaylistAPI(payload),
+  });
+
+export const useUpdatePlaylistForArtistAPI = (payload) =>
+  useMutation({
+    mutationFn: (payload) => updatePlaylistforArtistAPI(payload),
   });
 
 export const useDeletePlaylistAPI = (payload) =>
