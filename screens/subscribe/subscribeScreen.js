@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   View,
@@ -19,30 +19,7 @@ import {
   useCreateSubscriptionApi,
   useGetSubscriptionType,
 } from "../../hooks/subscription.hook";
-import { store } from "../../core/store/store";
-import moment from "moment";
-import { Navigate } from "../../constants/navigate";
-
-let subscribePackageList = [
-  {
-    id: "1",
-    packType: "Starter Pack",
-    validityInMonths: 3,
-    amount: 8.99,
-  },
-  {
-    id: "2",
-    packType: "Standered Pack",
-    validityInMonths: 6,
-    amount: 15.99,
-  },
-  {
-    id: "3",
-    packType: "Super Saver Pack",
-    validityInMonths: 12,
-    amount: 25.99,
-  },
-];
+import { handleWebNavigation } from "../../utils/app.util";
 
 const subscriptionAllowsList = [
   "Download unlimited songs",
@@ -52,33 +29,20 @@ const subscriptionAllowsList = [
 ];
 
 const SubscribeScreen = ({ navigation }) => {
-  const { data, error, isSuccess, isError } = useGetSubscriptionType();
-  const { mutate } = useCreateSubscriptionApi();
-  const [currentDate, setCurrentDate] = useState("");
-  if (isSuccess) {
-    subscribePackageList = data["data"];
-  }
-
-  if (isError) {
-  }
+  const {
+    data: subscribePackageListData,
+    isSuccess: isSubscribePackageListSuccess,
+  } = useGetSubscriptionType();
+  const { mutate, isSuccess, data } = useCreateSubscriptionApi();
   const createSubscription = (planId) => {
-    const userId = store.getState().user.id;
-
-    mutate(
-      { userId: `${userId}`, planId: planId, startDate: currentDate },
-
-      {
-        onSuccess: () => {
-          navigation.push(Navigate.PAYMENT);
-        },
-      }
-    );
+    mutate({
+      planId: planId,
+    });
+    if (isSuccess) {
+      const url = data["links"][0].href;
+      handleWebNavigation(url);
+    }
   };
-
-  useEffect(() => {
-    var date = moment().utcOffset("+03:00").format("YYYY-MM-DD");
-    setCurrentDate(date);
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -140,50 +104,57 @@ const SubscribeScreen = ({ navigation }) => {
     );
   }
   function packages() {
-    return subscribePackageList.map((item) => (
-      <View key={`${item.id}`}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => {
-            createSubscription((planId = item.id));
-          }}
-        >
-          <ImageBackground
-            source={require("../../assets/images/card-design.png")}
-            style={{
-              marginHorizontal: Sizes.fixPadding * 2.0,
-              height: 130.0,
-              marginBottom: Sizes.fixPadding + 5.0,
-            }}
-            borderRadius={Sizes.fixPadding - 5.0}
-          >
-            <View
-              style={{
-                marginBottom: Sizes.fixPadding + 5.0,
-                marginHorizontal: Sizes.fixPadding * 2.0,
-                justifyContent: "flex-end",
-                flex: 1,
+    return isSubscribePackageListSuccess
+      ? subscribePackageListData.map((item) => (
+          <View key={`${item.id}`}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                createSubscription(item.id);
               }}
             >
-              <Text
+              <ImageBackground
+                source={require("../../assets/images/card-design.png")}
                 style={{
-                  marginBottom: Sizes.fixPadding - 8.0,
-                  ...Fonts.whiteColor15Bold,
+                  marginHorizontal: Sizes.fixPadding * 2.0,
+                  height: 130.0,
+                  marginBottom: Sizes.fixPadding + 5.0,
                 }}
+                borderRadius={Sizes.fixPadding - 5.0}
               >
-                {item.name}
-              </Text>
-              <Text style={{ ...Fonts.whiteColor22Light }}>{item.desc}</Text>
-              <Text
-                style={{ alignSelf: "flex-end", ...Fonts.whiteColor22Light }}
-              >
-                $ {item.cost}
-              </Text>
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
-    ));
+                <View
+                  style={{
+                    marginBottom: Sizes.fixPadding + 5.0,
+                    marginHorizontal: Sizes.fixPadding * 2.0,
+                    justifyContent: "flex-end",
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginBottom: Sizes.fixPadding - 8.0,
+                      ...Fonts.whiteColor15Bold,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text style={{ ...Fonts.whiteColor22Light }}>
+                    {item.desc}
+                  </Text>
+                  <Text
+                    style={{
+                      alignSelf: "flex-end",
+                      ...Fonts.whiteColor22Light,
+                    }}
+                  >
+                    $ {item.cost}
+                  </Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          </View>
+        ))
+      : null;
   }
 
   function cornerImage() {

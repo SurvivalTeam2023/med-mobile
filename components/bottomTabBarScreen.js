@@ -131,7 +131,7 @@ const BottomTabBarScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <SharedElement id="image">
             <Image
-              source={playingList[currentAudioIndex]?.imgUrl}
+              source={{ uri: playingList[currentAudioIndex]?.imgUrl }}
               style={{
                 width: 55.0,
                 height: 55.0,

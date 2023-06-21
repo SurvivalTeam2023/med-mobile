@@ -33,7 +33,6 @@ const useAudio = () => {
         },
         { shouldPlay: true }
       );
-      console.log("sound_loaded", sound);
       setSound((prevSound) => {
         if (prevSound) {
           prevSound.unloadAsync();

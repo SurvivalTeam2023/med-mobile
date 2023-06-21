@@ -2,6 +2,7 @@ import { USER_KEY_STORAGE } from "../constants/config";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../core/store/store";
+import { Linking } from "react-native";
 
 export const removeTokenFromStorage = () => {
   AsyncStorage.removeItem(USER_KEY_STORAGE);
@@ -37,4 +38,10 @@ export const formatQuestionData = (originRaw) => {
 
 export const getUserFromDb = () => {
   return store.getState().user.user.user_db;
+};
+
+export const handleWebNavigation = async (url) => {
+  Linking.openURL(url)
+    .then(() => console.log(`URL '${url}' opened successfully`))
+    .catch((error) => console.log("An error occurred", error));
 };
