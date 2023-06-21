@@ -393,7 +393,7 @@ const artistTracksScreen = ({ navigation }) => {
         <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.push(Navigate.MANAGE_ARTIST_ALBUM)}
+            onPress={() => navigation.pop()}
           >
             <Icon
               start={{ x: 0, y: 1 }}
