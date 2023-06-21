@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -74,7 +75,7 @@ let popularSongsList = [
   },
 ];
 
-let recentlyPlayedList = [];
+let recentlyPlayedList = null;
 
 let forYouList = [];
 
@@ -128,28 +129,32 @@ let topArtistList = [
 const ExploreScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   //Recommend gendre (if user finished their exam)
-
+  const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
+    useGetGenreList();
   //Recommend track
 
   //Recently played
 
   //Favorited gendre (first time and user choose and user like gendre)
-
+  const isFavoriteGendreSuccess = false;
   //Favorited Playlist
-  const { data: allPlayListFavoritedData } = useGetPlaylist({
-    status: "ACTIVE",
-    playListType: "LIKED",
-    page: 1,
-    limit: 10,
-  });
+  const { data: playListFavoritedData, isSuccess: isPlayListFavoritedSuccess } =
+    useGetPlaylist({
+      status: "ACTIVE",
+      playListType: "LIKED",
+      page: 1,
+      limit: 10,
+    });
   //Random playlist
   const { data: allPlayListData } = useGetPlaylist({
     status: "ACTIVE",
     page: 1,
     limit: 10,
   });
+
   //Random gendre
-  const { data: allGendreData } = useGetGenreList();
+  const { data: allGendreData, isSuccess: isAllGendreSuccess } =
+    useGetGenreList();
   //top music
 
   const [state, setState] = useState({
@@ -267,17 +272,23 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        <FlatList
-          data={albumsList}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: Sizes.fixPadding * 2.0,
-            paddingRight: Sizes.fixPadding,
-          }}
-        />
+        {isAllGendreSuccess ? (
+          <FlatList
+            data={allGendreData}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        )}
       </View>
     );
   }
@@ -316,17 +327,23 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        <FlatList
-          data={playlists}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: Sizes.fixPadding * 2.0,
-            paddingRight: Sizes.fixPadding,
-          }}
-        />
+        {isPlayListFavoritedSuccess ? (
+          <FlatList
+            data={playListFavoritedData}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        )}
       </View>
     );
   }
@@ -342,35 +359,41 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        {forYouList?.map((item) => (
-          <View key={`${item.id}`}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => {
-                navigation.push("NowPlaying", { item });
-              }}
-              style={styles.forYouInfoWrapStyle}
-            >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SharedElement id={item?.genreId}>
-                  <Image
-                    source={{ uri: `${item.genre.image}` }}
-                    style={{
-                      width: 50.0,
-                      height: 50.0,
-                      borderRadius: Sizes.fixPadding - 5.0,
-                    }}
-                  />
-                </SharedElement>
-                <View style={{ marginLeft: Sizes.fixPadding }}>
-                  <Text style={{ ...Fonts.blackColor12SemiBold }}>
-                    {item.genre.name}
-                  </Text>
+        {isFavoriteGendreSuccess ? (
+          forYouList?.map((item) => (
+            <View key={`${item.id}`}>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  navigation.push("NowPlaying", { item });
+                }}
+                style={styles.forYouInfoWrapStyle}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <SharedElement id={item?.genreId}>
+                    <Image
+                      source={{ uri: `${item.genre.image}` }}
+                      style={{
+                        width: 50.0,
+                        height: 50.0,
+                        borderRadius: Sizes.fixPadding - 5.0,
+                      }}
+                    />
+                  </SharedElement>
+                  <View style={{ marginLeft: Sizes.fixPadding }}>
+                    <Text style={{ ...Fonts.blackColor12SemiBold }}>
+                      {item.genre.name}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
           </View>
-        ))}
+        )}
       </View>
     );
   }
@@ -407,17 +430,23 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        <FlatList
-          data={recentlyPlayedList}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: Sizes.fixPadding * 2.0,
-            paddingRight: Sizes.fixPadding,
-          }}
-        />
+        {!recentlyPlayedList ? (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        ) : (
+          <FlatList
+            data={recentlyPlayedList}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        )}
       </View>
     );
   }
@@ -475,7 +504,7 @@ const ExploreScreen = ({ navigation }) => {
         onPress={() => navigation.push("Tracks")}
       >
         <ImageBackground
-          source={item.image}
+          source={{ uri: `${item?.image}` }}
           style={{ width: 130.0, height: 120.0, marginRight: Sizes.fixPadding }}
           borderRadius={Sizes.fixPadding - 5.0}
         >
@@ -491,7 +520,7 @@ const ExploreScreen = ({ navigation }) => {
                 ...Fonts.whiteColor12Medium,
               }}
             >
-              {item.category}
+              {item.name}
             </Text>
           </LinearGradient>
         </ImageBackground>
@@ -501,21 +530,27 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Recommended Music For You</Text>
+          <Text style={styles.titleStyle}>Recommended Genres For You</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
             size={25}
           />
         </View>
-        <FlatList
-          data={recommendedList}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingLeft: Sizes.fixPadding * 2.0 }}
-        />
+        {isRecommendedGenreSucess ? (
+          <FlatList
+            data={recommendedGenre}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: Sizes.fixPadding * 2.0 }}
+          />
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        )}
       </View>
     );
   }
@@ -528,7 +563,7 @@ const ExploreScreen = ({ navigation }) => {
         style={styles.searchBarWrapStyle}
       >
         <Text style={{ ...Fonts.grayColor15Medium }}>
-          Search for artist,song or lyrics...
+          Search for artist or song...
         </Text>
         <MaterialIcons name="search" color={Colors.grayColor} size={25} />
       </TouchableOpacity>
@@ -702,6 +737,14 @@ const styles = StyleSheet.create({
     width: 110,
     height: 100,
     borderRadius: Sizes.fixPadding - 5.0,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    marginTop: 10,
   },
 });
 

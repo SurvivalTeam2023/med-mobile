@@ -31,7 +31,7 @@ CallAPI.interceptors.request.use((req) => {
 
 CallAPI.interceptors.response.use(async (res) => {
   // console.debug("response_body: ", JSON.stringify(res.data));
-  return res;
+  return res.data;
 });
 CallAPIMulti.interceptors.request.use((req) => {
   const token = store?.getState().user.token;

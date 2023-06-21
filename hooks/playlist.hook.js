@@ -8,10 +8,10 @@ import {
 
 export const useGetPlaylist = (payload) =>
   useQuery({
-    queryKey: ["getPlaylist"],
+    queryKey: ["getPlaylist", payload],
     queryFn: async () => {
       const data = await getPlaylistAPI(payload);
-      return data;
+      return data["items"];
     },
   });
 
