@@ -3,6 +3,7 @@ import {
   createAudioForArtistApi,
   deleteAudioArtistAPI,
   getAudioForArtistAPI,
+  getAudioForLikedTracksAPI,
   getTracksAPI,
 } from "../api/playlistTracks.api";
 
@@ -29,4 +30,13 @@ export const useCreateAudioForArtistAPI = (payload) =>
 export const useDeleteAudioArtistAPI = (payload) =>
   useMutation({
     mutationFn: (payload) => deleteAudioArtistAPI(payload),
+  });
+
+export const useGetAudioForLikedTracksAPI = (payload) =>
+  useQuery({
+    queryKey: ["getAudio"],
+    queryFn: async () => {
+      const data = await getAudioForLikedTracksAPI();
+      return data;
+    },
   });

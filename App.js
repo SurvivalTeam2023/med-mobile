@@ -42,6 +42,7 @@ import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
+import LikedTracksScreen from "./screens/tracks/likedTrackScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -64,6 +65,10 @@ const App = () => {
             <Stack.Screen
               name="DeletePlaylistUser"
               component={DeletePlayListUser}
+            />
+            <Stack.Screen
+              name="LikedTracksScreen"
+              component={LikedTracksScreen}
             />
             <Stack.Screen
               name="Splash"

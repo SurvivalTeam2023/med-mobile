@@ -1,5 +1,6 @@
 import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
+import { getUserFromDb } from "../utils/app.util";
 
 export const getTracksAPI = async (payload) => {
   const playlistId = store.getState().playlist.playlistId;
@@ -16,6 +17,7 @@ export const getAudioForArtistAPI = async (payload) => {
   const url = "/audio?status=ACTIVE&" + `${queryParam}`;
   return CallAPI.get(url);
 };
+
 export const createAudioForArtistApi = (payload) => {
   const { name, imageUrl, status, length, playlistId, genreId } = payload;
   const url = "/audio";
@@ -28,8 +30,16 @@ export const createAudioForArtistApi = (payload) => {
     genreId,
   });
 };
+
 export const deleteAudioArtistAPI = (payload) => {
   const audioId = store.getState().audioArtist.audioArtistId;
   const url = "/audio/" + `${audioId}`;
   return CallAPI.delete(url);
+};
+
+export const getAudioForLikedTracksAPI = async (payload) => {
+  const userId = getUserFromDb().id;
+  const queryParam = `&authorId=` + `${userId}` + `&playListType=LIKED`;
+  const url = "/playlist?" + `${queryParam}`;
+  return CallAPI.get(url);
 };

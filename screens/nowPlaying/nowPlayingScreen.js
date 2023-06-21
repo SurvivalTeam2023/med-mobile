@@ -24,6 +24,7 @@ import { store } from "../../core/store/store";
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const audioList = store.getState().nowPlayingList.playingList;
+  console.log("audioList", audioList);
   // const currentSoundStatus = store.getState().nowPlayingList.soundStatus;
   // const currentSoundPlayId = audioList.findIndex(
   //   (audio) => audio.id == store.getState().nowPlayingList.currentPlayingId

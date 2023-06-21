@@ -47,6 +47,31 @@ const libraryList = [
 ];
 
 const LibraryScreen = ({ navigation }) => {
+  const handleOptionSelect = (libraryFor) => {
+    // Perform action based on selected option
+    switch (libraryFor) {
+      case "Liked Songs":
+        navigation.push("LikedTracksScreen");
+        break;
+      case "Gym":
+        setIsModalVisible(true);
+        break;
+      case "Chill":
+        console.log("Add to playlist option selected");
+        break;
+      case "Liked Prodcasts":
+        console.log("Album option selected");
+        break;
+      case "Party":
+        console.log("Artist option selected");
+        break;
+      case "BGM's":
+        console.log("Set as option selected");
+        break;
+      default:
+        console.log("Invalid option selected");
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -70,7 +95,7 @@ const LibraryScreen = ({ navigation }) => {
     const renderItem = ({ item, index }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
+        onPress={() => handleOptionSelect(item.libraryFor)}
         style={{
           marginBottom: Sizes.fixPadding * 2.5,
           flex: 1,
