@@ -31,19 +31,20 @@ import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { ARTIST_ROLE } from "../../constants/role";
+import { Navigate } from "../../constants/navigate";
 
 const SignInScreen = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState(null);
   const [otherErrorCode, setOtherErrorCode] = useState(null);
+  const { mutate } = useLogin();
+  const { mutate: mutateLoginGoogle } = useLoginWithGmail();
+  const dispatch = useDispatch();
+  const { userData, isSuccess, refetch } = useGetUserByNameApi();
 
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
-  const { mutate } = useLogin();
-  const { mutate: mutateLoginGoogle } = useLoginWithGmail();
-  const dispatch = useDispatch();
-  const { userData, isSuccess, refetch } = useGetUserByNameApi();
 
   useFocusEffect(
     useCallback(() => {
@@ -96,9 +97,9 @@ const SignInScreen = ({ navigation }) => {
           );
           const role = store.getState().user.artist_role;
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push(Navigate.ARTIST_PROFILE);
           } else {
-            navigation.push("OptionScreen");
+            navigation.push(Navigate.OPTION_SCREEN);
           }
         },
         onError: (error) => {
@@ -111,6 +112,9 @@ const SignInScreen = ({ navigation }) => {
               setErrorCode(err);
               break;
             case 404:
+              setErrorCode(err);
+              break;
+            case 502:
               setErrorCode(err);
               break;
             default:
@@ -165,9 +169,9 @@ const SignInScreen = ({ navigation }) => {
           const role = store.getState().user.artist_role;
 
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push(Navigate.ARTIST_PROFILE);
           } else {
-            navigation.push("OptionScreen");
+            navigation.push(Navigate.OPTION_SCREEN);
           }
         },
         onError: (error) => {
@@ -259,6 +263,13 @@ const SignInScreen = ({ navigation }) => {
             </Text>
           </View>
         )}
+        {errorCode === 502 && (
+          <View style={styles.failWarningWrapper}>
+            <Text style={styles.warningText}>
+              Connection error. Please sign up and try again!
+            </Text>
+          </View>
+        )}
         {otherErrorCode !== null && (
           <View style={styles.failWarningWrapper}>
             <Text style={styles.warningText}>
@@ -296,7 +307,7 @@ const SignInScreen = ({ navigation }) => {
           <TouchableOpacity
             style={{ flex: 0.3 }}
             activeOpacity={0.9}
-            onPress={() => navigation.push("SignUp")}
+            onPress={() => navigation.push(Navigate.SIGN_UP)}
           >
             <MaskedView
               style={{ flex: 0.3, height: 18 }}

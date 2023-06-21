@@ -16,6 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -160,7 +161,7 @@ const TrendingScreen = ({ navigation }) => {
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => navigation.push("NowPlaying", { item })}
+              onPress={() => navigation.push(Navigate.NOW, { item })}
               style={styles.topTrendingInfoWrapStyle}
             >
               <View

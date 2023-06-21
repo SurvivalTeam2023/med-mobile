@@ -8,24 +8,23 @@ import {
   Text,
   ScrollView,
   Image,
-  StyleSheet,
   Pressable,
+  StyleSheet,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
+import { useCreatePlaylistAPI } from "../../hooks/playlist.hook";
 import {
   AntDesign,
   Ionicons,
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { useCreateAudioForArtistAPI } from "../../hooks/playlistTracks.hook";
-import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 
-const CreateAudioArtistScreen = ({ navigation }) => {
+const CreatePlaylistScreenUser = ({ navigation }) => {
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -46,22 +45,21 @@ const CreateAudioArtistScreen = ({ navigation }) => {
     }, 1000);
   }
 
-  const { mutate } = useCreateAudioForArtistAPI();
-  const handleCreateAudio = () => {
+  const { mutate } = useCreatePlaylistAPI();
+
+  const handleCreatePlaylist = () => {
     mutate(
       {
-        name: state["audioName"],
+        name: state["albumName"],
         imageUrl: state["imageUrl"],
         status: "ACTIVE",
-        length: state["length"],
-        playlistId: [store.getState().playlist.playlistId],
-        genreId: store.getState().genreArtist.genreArtistId,
+        description: state["description"],
       },
 
       {
         onSuccess: (data) => {
           if (data !== null) {
-            navigation.push(Navigate.ARTIST_TRACK);
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }
         },
         onError: (error) => {
@@ -73,13 +71,12 @@ const CreateAudioArtistScreen = ({ navigation }) => {
   };
 
   const [state, setState] = useState({
-    audioName: null,
+    albumName: null,
     imageUrl: null,
-    length: null,
     backClickCount: 0,
   });
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
-  const { audioName, imageUrl, length, backClickCount } = state;
+  const { albumName, imageUrl, description, backClickCount } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -118,7 +115,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
           style={{ flex: 1, height: 35 }}
           maskElement={
             <Text style={{ textAlign: "center", ...Fonts.bold30 }}>
-              Audio Info
+              Playlist Info
             </Text>
           }
         >
@@ -129,9 +126,9 @@ const CreateAudioArtistScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        {audioNameTextField()}
-        {audioImageUrlTextField()}
-        {audioLengthTextField()}
+        {albumNameTextField()}
+        {albumImageUrlTextField()}
+        {descriptionTextField()}
         {addButton()}
       </View>
     );
@@ -144,7 +141,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
           style={styles.signinButtonStyle}
           activeOpacity={0.9}
           onPressIn={() => {
-            handleCreateAudio();
+            handleCreatePlaylist();
           }}
         >
           <LinearGradient
@@ -160,15 +157,15 @@ const CreateAudioArtistScreen = ({ navigation }) => {
     );
   }
 
-  function audioNameTextField() {
+  function albumNameTextField() {
     return (
       <View style={styles.albumNameTextFieldWrapStyle}>
         <Ionicons name="albums" color={Colors.grayColor} size={20} />
         <TextInput
-          value={audioName}
-          onChangeText={(text) => updateState({ audioName: text })}
+          value={albumName}
+          onChangeText={(text) => updateState({ albumName: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Audio Name"
+          placeholder="Playlist Name"
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -179,7 +176,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
       </View>
     );
   }
-  function audioImageUrlTextField() {
+  function albumImageUrlTextField() {
     return (
       <View style={styles.imageUrlTextFieldWrapStyle}>
         <FontAwesome name="image" color={Colors.grayColor} size={20} />
@@ -198,15 +195,15 @@ const CreateAudioArtistScreen = ({ navigation }) => {
       </View>
     );
   }
-  function audioLengthTextField() {
+  function descriptionTextField() {
     return (
       <View style={styles.descriptionTextFieldWrapStyle}>
         <MaterialIcons name="description" color={Colors.grayColor} size={20} />
         <TextInput
-          value={length}
-          onChangeText={(text) => updateState({ length: text })}
+          value={description}
+          onChangeText={(text) => updateState({ description: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Length"
+          placeholder="Description"
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -230,7 +227,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push(Navigate.ARTIST_TRACK);
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }}
           style={{ width: 30 }}
           name="left"
@@ -314,4 +311,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAudioArtistScreen;
+export default CreatePlaylistScreenUser;

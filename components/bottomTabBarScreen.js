@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   BackHandler,
   View,
@@ -20,15 +20,27 @@ import { Icon } from "react-native-gradient-icon";
 import { SharedElement } from "react-navigation-shared-element";
 import { useFocusEffect } from "@react-navigation/native";
 import ProfileScreen from "../screens/Profile/profileScreen";
+import {
+  ACTION_TYPE,
+  nowPlayingAction,
+} from "../redux/audio/nowPlayingList.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
 const BottomTabBarScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
-
+  const currentPlaySound = useSelector(
+    (state) => state.nowPlayingList.currentPlaying
+  );
+  const currentSoundStatus = useSelector(
+    (state) => state.nowPlayingList.soundStatus
+  );
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -107,13 +119,15 @@ const BottomTabBarScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item: { id: "image" } })}
+        onPress={() =>
+          navigation.push(Navigate.NOW_PLAYING, { item: { id: "image" } })
+        }
         style={styles.currentlyPlayedSongInfoWrapStyle}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <SharedElement id="image">
             <Image
-              source={require("../assets/images/songsCoverPicks/coverImage16.png")}
+              source={currentPlaySound?.imgUrl}
               style={{
                 width: 55.0,
                 height: 55.0,
@@ -129,28 +143,64 @@ const BottomTabBarScreen = ({ navigation }) => {
                 ...Fonts.blackColor15Bold,
               }}
             >
-              Dunya
+              {currentPlaySound?.name}
             </Text>
-            <Text style={{ ...Fonts.grayColor11Medium }}>Mahir Skekh</Text>
+            <Text style={{ ...Fonts.grayColor11Medium }}>
+              {currentPlaySound?.artist}
+            </Text>
           </View>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-left" size={30} color="black" />
+            <MaterialIcons
+              name="arrow-left"
+              size={30}
+              color="black"
+              onPress={() =>
+                dispatch(
+                  nowPlayingAction.triggerAudioPlayer({
+                    currentAction: ACTION_TYPE.PREV_SONG,
+                  })
+                )
+              }
+            />
           </View>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => updateState({ pauseSong: !pauseSong })}
+            onPress={() =>
+              !currentSoundStatus?.isPlaying
+                ? dispatch(
+                    nowPlayingAction.triggerAudioPlayer({
+                      currentAction: ACTION_TYPE.START,
+                    })
+                  )
+                : dispatch(
+                    nowPlayingAction.triggerAudioPlayer({
+                      currentAction: ACTION_TYPE.PAUSE,
+                    })
+                  )
+            }
             style={styles.pausePlayButtonWrapStyle}
           >
             <MaterialIcons
-              name={pauseSong ? "pause" : "play-arrow"}
+              name={currentSoundStatus?.isPlaying ? "pause" : "play-arrow"}
               size={30}
               color="black"
             />
           </TouchableOpacity>
           <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-right" size={30} color="black" />
+            <MaterialIcons
+              name="arrow-right"
+              size={30}
+              color="black"
+              onPress={() =>
+                dispatch(
+                  nowPlayingAction.triggerAudioPlayer({
+                    currentAction: ACTION_TYPE.NEXT_SONG,
+                  })
+                )
+              }
+            />
           </View>
         </View>
       </TouchableOpacity>

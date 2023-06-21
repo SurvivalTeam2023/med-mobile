@@ -141,7 +141,6 @@ const ExploreScreen = ({ navigation }) => {
   });
 
   const { data, isSuccess, isError, error } = useGetPlaylistForUser();
-
   if (isSuccess) {
     playlists = data["data"].items;
   }
@@ -308,7 +307,7 @@ const ExploreScreen = ({ navigation }) => {
         <SharedElement id={item.id}>
           <Image
             source={{ uri: `${item?.image}` }}
-            style={styles.recentlyPalyedSongImageStyle}
+            style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
         <Text
@@ -358,7 +357,7 @@ const ExploreScreen = ({ navigation }) => {
         <SharedElement id={item.id}>
           <Image
             source={{ uri: `${item?.imageUrl}` }}
-            style={styles.recentlyPalyedSongImageStyle}
+            style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
         <Text
@@ -434,12 +433,6 @@ const ExploreScreen = ({ navigation }) => {
                   </Text>
                 </View>
               </View>
-              {/* <MaterialIcons
-                name={item.isFavorite ? "favorite" : "favorite-border"}
-                color={Colors.grayColor}
-                size={18}
-                onPress={() => updateForYou({ id: item.id })}
-              /> */}
             </TouchableOpacity>
           </View>
         ))}
@@ -456,7 +449,7 @@ const ExploreScreen = ({ navigation }) => {
         <SharedElement id={item.id}>
           <Image
             source={{ uri: `${item.audio?.imageUrl}` }}
-            style={styles.recentlyPalyedSongImageStyle}
+            style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
         <Text
@@ -742,7 +735,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: Sizes.fixPadding - 5.0,
   },
-  recentlyPalyedSongImageStyle: {
+  recentlyPlayedSongImageStyle: {
     marginRight: Sizes.fixPadding,
     width: 110,
     height: 100,

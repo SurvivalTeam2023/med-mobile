@@ -13,6 +13,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
+import { Navigate } from "../../constants/navigate";
 
 let isFavoriteExisted;
 
@@ -34,10 +35,10 @@ const ResultScreen = ({ navigation }) => {
   const onPressHandler = () => {
     refetchFav();
     if (isFavoriteExisted.exists === true) {
-      navigation.push("BottomTabBar");
+      navigation.push(Navigate.BOTTOM_TAB_BAR);
     }
     if (isFavoriteExisted.exists === false) {
-      navigation.push("ChooseMusic");
+      navigation.push(Navigate.CHOOSE_MUSIC);
     }
   };
 

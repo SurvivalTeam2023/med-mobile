@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { playlistAction } from "../../redux/auth/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
+import { getUserFromDb } from "../../utils/app.util";
 import { Navigate } from "../../constants/navigate";
 
 let album = [
@@ -48,12 +49,15 @@ let album = [
     category: "Pop Music",
   },
 ];
-const DeleteAlbumArtist = ({ navigation }) => {
+const DeletePlayListUser = ({ navigation }) => {
+  const userId = getUserFromDb().id;
   const { data, isSuccess, isError, error } = useGetPlaylist();
   const dispatch = useDispatch();
   const { mutate } = useDeletePlaylistAPI();
   if (isSuccess) {
-    album = data["data"].items.filter((item) => item.status === "ACTIVE");
+    album = data["data"].items.filter(
+      (item) => item.status === "ACTIVE" && item.authorId === userId
+    );
   }
   if (isError) {
     console.log("error", error);
@@ -181,7 +185,7 @@ const DeleteAlbumArtist = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push(Navigate.MANAGE_ARTIST_ALBUM);
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }}
           style={{ width: 30 }}
           name="left"
@@ -199,7 +203,7 @@ const DeleteAlbumArtist = ({ navigation }) => {
           style={{ flex: 1, height: 28 }}
           maskElement={
             <Text style={{ ...Fonts.bold22, justifyContent: "center" }}>
-              Select Album to delete
+              Select Playlist to delete
             </Text>
           }
         >
@@ -284,4 +288,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeleteAlbumArtist;
+export default DeletePlayListUser;

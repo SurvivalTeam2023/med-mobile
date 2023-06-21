@@ -28,6 +28,7 @@ import QuestionScreen from "./screens/quiz/questionScreen";
 import ManageArtistAlbumScreen from "./screens/manageAlbum/manageAlbum";
 import artistTracksScreen from "./screens/manageAlbum/artistTrack";
 import CreateAlbumScreen from "./screens/createAlbum/createAlbumScreen";
+import CreatePlaylistScreenUser from "./screens/createAlbum/createPlaylistScreenUser";
 import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
 import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
@@ -41,6 +42,8 @@ import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
 import EditAlbumArtistScreen from "./screens/manageAlbum/editAlbumArtist";
 import EditAudioArtistScreen from "./screens/manageAlbum/editAudioInfo";
+import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
+import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 
 LogBox.ignoreAllLogs();
 
@@ -52,6 +55,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <QueryClientProvider client={queryClient}>
+          <NowPlayingBackground />
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
@@ -59,6 +63,10 @@ const App = () => {
             }}
           >
             <Stack.Screen name="Loading" component={LoadingScreen} />
+            <Stack.Screen
+              name="DeletePlaylistUser"
+              component={DeletePlayListUser}
+            />
             <Stack.Screen
               name="Splash"
               component={splashScreen}
@@ -70,6 +78,10 @@ const App = () => {
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen
+              name="CreatePlaylistUser"
+              component={CreatePlaylistScreenUser}
+            />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />
@@ -80,7 +92,6 @@ const App = () => {
               name="ManageArtistAlbum"
               component={ManageArtistAlbumScreen}
             />
-
             <Stack.Screen name="ArtistTrack" component={artistTracksScreen} />
             <Stack.Screen
               name="CreateAudioArtist"
@@ -137,9 +148,7 @@ const App = () => {
                 return [item.id];
               }}
             />
-
             <Stack.Screen name="Subscribe" component={SubscribeScreen} />
-
             <Stack.Screen name="Payment" component={PaymentScreen} />
             <Stack.Screen
               name="ExploreSubscription"

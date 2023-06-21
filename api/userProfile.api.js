@@ -10,7 +10,11 @@ export const getUserProfile = (payload) => {
 };
 
 export const updateUserAvatar = (form) => {
-  const userId = store.getState().user.user.user_db.id;
-  const url = "/user/" + `${userId}`;
+  const url = "/user";
+  return CallAPIMulti.put(url, form);
+};
+
+export const updateUserAccountDetails = (form) => {
+  const url = "/user";
   return CallAPIMulti.put(url, form);
 };

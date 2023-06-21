@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -15,10 +15,11 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as ImagePicker from "expo-image-picker";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
   useGetUserByNameApi,
   useGetUserProfile,
+  useUpdateUserAccountDetails,
   useUpdateUserAvatar,
 } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
@@ -26,14 +27,50 @@ import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
+import { Modal } from "react-native-paper";
+import { TextInput } from "react-native-gesture-handler";
+import { BlurView } from "expo-blur";
+import { getUserFromDb } from "../../utils/app.util";
+import { Navigate } from "../../constants/navigate";
+
 let profile = [];
 
 const editProfileScreen = ({ navigation }) => {
+  const [updatedFirstName, setUpdatedFirstName] = useState();
+  const [updatedLastName, setUpdatedLastName] = useState();
+  const [updatedEmail, setUpdatedEmail] = useState();
+  const [updatedCity, setUpdatedCity] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [updatedAddress, setUpdatedAddress] = useState();
   const userName = store.getState().user.username;
-  const userAvatar = store.getState().user?.user?.user_db?.avatar;
+  const userAvatar = getUserFromDb()?.avatar.url;
+  const userFirstName = getUserFromDb()?.firstName;
+  const userLastName = getUserFromDb()?.lastName;
+  const userEmail = getUserFromDb()?.email;
+  const userGender = getUserFromDb()?.gender;
+  const userCity = getUserFromDb()?.city;
+  const userDob = getUserFromDb()?.dob;
+  const userAddress = getUserFromDb()?.address;
   const dispatch = useDispatch();
+  useEffect(() => {
+    setUpdatedFirstName();
+    setUpdatedLastName();
+    setUpdatedEmail();
+    setUpdatedCity();
+    setUpdatedAddress();
+  }, [isModalVisible]);
   const { data, isSuccess, isError, error } = useGetUserProfile();
   const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
+  const formatNumber = (number) => {
+    if (number >= 1e9) {
+      return (number / 1e9).toFixed(1) + "B";
+    } else if (number >= 1e6) {
+      return (number / 1e6).toFixed(1) + "M";
+    } else if (number >= 1e3) {
+      return (number / 1e3).toFixed(1) + "K";
+    }
+    return number?.toString();
+  };
 
   if (isSuccess) {
     profile = data["data"];
@@ -44,7 +81,16 @@ const editProfileScreen = ({ navigation }) => {
     dispatch(userAction.storeUser(userInfo));
   }
 
+  const handleEditIconPress = () => {
+    setIsModalVisible(true);
+  };
+
+  const favoritedCount = formatNumber(profile?.favorite);
+  const playlistCount = formatNumber(profile?.playlist);
+  const followingCount = formatNumber(profile?.following);
+
   const { mutate } = useUpdateUserAvatar();
+  const { mutate: mutatee } = useUpdateUserAccountDetails();
 
   const handleUploadImage = async (form) => {
     mutate(form, {
@@ -53,11 +99,44 @@ const editProfileScreen = ({ navigation }) => {
         refetch();
         Alert.alert("Processing image...");
         setTimeout(() => {
-          navigation.push("Profile");
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
         }, 3000);
       },
     });
   };
+
+  const handleUpdateAccountDetails = async (form) => {
+    mutatee(form, {
+      onSuccess: (data) => {
+        console.log("Success");
+        refetch();
+        setTimeout(() => {
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
+        }, 3000);
+      },
+    });
+  };
+
+  const saveUpdateAccountDetails = async () => {
+    const formData = new FormData();
+    if (updatedFirstName) {
+      formData.append("firstName", updatedFirstName);
+    }
+    if (updatedLastName) {
+      formData.append("lastName", updatedLastName);
+    }
+    if (updatedEmail) {
+      formData.append("email", updatedEmail);
+    }
+    if (updatedCity) {
+      formData.append("city", updatedCity);
+    }
+    if (updatedAddress) {
+      formData.append("address", updatedAddress);
+    }
+    handleUpdateAccountDetails(formData);
+  };
+
   const selectAvatarImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -126,6 +205,8 @@ const editProfileScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
+              {accountDetails()}
+              {accountDetailsEdit()}
             </>
           }
           showsVerticalScrollIndicator={false}
@@ -156,18 +237,146 @@ const editProfileScreen = ({ navigation }) => {
             </ImageBackground>
             <Text style={styles.name}>{userName}</Text>
           </View>
-          <View style={styles.favoritedRow}>
-            <Text style={styles.favorited}>Favorited</Text>
-            <Text style={styles.playlists}>Playlists</Text>
-            <Text style={styles.following}>Following</Text>
-          </View>
-          <View style={styles.loremIpsumRow}>
-            <Text style={styles.loremIpsum}>{profile.favorite}</Text>
-            <Text style={styles.loremIpsum4}>{profile.playlist}</Text>
-            <Text style={styles.loremIpsum3}>{profile.following}</Text>
+          <View style={styles.detailWrapper}>
+            <View>
+              <Text style={styles.detailedText}>Favorited</Text>
+              <Text>{favoritedCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Playlist</Text>
+              <Text>{playlistCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Following</Text>
+              <Text>{followingCount}</Text>
+            </View>
           </View>
         </View>
       </View>
+    );
+  }
+
+  function accountDetails() {
+    return (
+      <View style={styles.rect2}>
+        <View style={styles.detailtTileWrapper}>
+          <View>
+            <Text style={styles.detailtTextTitle}>Account Details</Text>
+          </View>
+          <View>
+            <Ionicons
+              name="md-create"
+              size={24}
+              color="black"
+              onPress={() => handleEditIconPress()}
+            />
+          </View>
+        </View>
+
+        <View style={styles.detailInfoWrapper}>
+          <View>
+            <Text style={styles.detailedText}>First Name</Text>
+            <Text>{userFirstName}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Last Name</Text>
+            <Text>{userLastName}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Email</Text>
+            <Text>{userEmail}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Gender</Text>
+            <Text>{userGender}</Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>City</Text>
+            <Text>{userCity} </Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Dob</Text>
+            <Text>{userDob} </Text>
+          </View>
+          <View>
+            <Text style={styles.detailedText}>Address</Text>
+            <Text>{userAddress} </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  function accountDetailsEdit() {
+    return (
+      <Modal visible={isModalVisible} animationType="fade" transparent={false}>
+        <BlurView intensity={200} style={StyleSheet.absoluteFill}>
+          <View style={styles.modalContainer}>
+            <View>
+              <Text style={styles.detailtTextTitle}>
+                Update Account Details
+              </Text>
+              <Text style={styles.detailedEditText}>First Name</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedFirstName}
+                  onChangeText={setUpdatedFirstName}
+                  placeholder={userFirstName}
+                />
+              </View>
+              <Text style={styles.detailedText}>Last Name</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedLastName}
+                  onChangeText={setUpdatedLastName}
+                  placeholder={userLastName}
+                />
+              </View>
+              <Text style={styles.detailedText}>Email</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedEmail}
+                  onChangeText={setUpdatedEmail}
+                  placeholder={userEmail}
+                />
+              </View>
+              <Text style={styles.detailedText}>City</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedCity}
+                  onChangeText={setUpdatedCity}
+                  placeholder={userCity}
+                />
+              </View>
+              <Text style={styles.detailedText}>Adress</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={updatedAddress}
+                  onChangeText={setUpdatedAddress}
+                  placeholder={userAddress}
+                />
+              </View>
+              <View style={styles.optionsRow}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsModalVisible(false);
+                  }}
+                >
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsModalVisible(false);
+                    saveUpdateAccountDetails();
+                  }}
+                >
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </BlurView>
+      </Modal>
     );
   }
 
@@ -213,7 +422,7 @@ const styles = StyleSheet.create({
     marginBottom: Sizes.fixPadding + 5.0,
   },
   container: {
-    flex: 1,
+    flex: 2,
   },
   rect: {
     width: 350,
@@ -221,6 +430,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
     borderRadius: 30,
+    borderWidth: 2,
+  },
+  rect2: {
+    width: 350,
+    height: 400,
+    backgroundColor: "#E6E6E6",
+    marginLeft: 20,
+    borderRadius: 30,
+    marginTop: 20,
   },
   image: {
     width: 100,
@@ -235,50 +453,68 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 44,
   },
+  detailtTextTitle: {
+    color: "#121212",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
   imageRow: {
     height: 121,
     flexDirection: "row",
     marginTop: 29,
     marginRight: 124,
   },
+
+  optionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+  },
   favorited: {
     color: "#121212",
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   playlists: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   following: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
-  favoritedRow: {
-    height: 17,
+  detailWrapper: {
+    height: 40,
     flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     marginLeft: 21,
     marginRight: 35,
   },
-  loremIpsum: {
-    color: "#121212",
-  },
-  loremIpsum4: {
-    color: "#121212",
-    marginLeft: 104,
-  },
-  loremIpsum3: {
-    color: "#121212",
-    marginLeft: 92,
-  },
-  loremIpsumRow: {
-    height: 17,
+  favoritedTextRow: {
+    flex: 1,
     flexDirection: "row",
-    marginTop: 11,
-    marginLeft: 42,
-    marginRight: 61,
+    justifyContent: "space-between",
+    marginHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding + 5,
+    marginBottom: Sizes.fixPadding,
+    marginRight: 50,
+  },
+  detailedText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  detailedEditText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: Sizes.fixPadding + 10,
   },
   profileAbout: {
     color: "#121212",
@@ -315,6 +551,58 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  icon: {
+    right: 15,
+    top: 30,
+  },
+  detailtTileWrapper: {
+    flexDirection: "row",
+    marginHorizontal: Sizes.fixPadding,
+    justifyContent: "space-between",
+    alignItems: "baseline",
+    marginTop: Sizes.fixPadding + 5,
+  },
+  detailInfoWrapper: {
+    flex: 1,
+    flexDirection: "column",
+    marginLeft: Sizes.fixPadding + 5,
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    marginTop: Sizes.fixPadding + 20,
+    marginBottom: Sizes.fixPadding,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+    height: 420,
+    alignSelf: "center",
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: "50%",
+    transform: [{ translateY: -250 }],
+    paddingHorizontal: Sizes.fixPadding * 2,
+    borderRadius: 22.5,
+    borderColor: "#DFDFDF",
+    borderWidth: 0.5,
+    marginHorizontal: Sizes.fixPadding + 5,
+  },
+  header: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+  },
+  inputContainer: {
+    backgroundColor: "#E6E6E6",
+    borderRadius: 8,
+    padding: 1,
+    marginTop: 5,
   },
 });
 

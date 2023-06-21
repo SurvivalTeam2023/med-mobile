@@ -13,6 +13,7 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Button } from "react-native-paper";
+import { Navigate } from "../../constants/navigate";
 
 const paymentScreen = ({ navigation }) => {
   const [clickedPaypal, setClickedPaypal] = useState(false);
@@ -143,7 +144,7 @@ const paymentScreen = ({ navigation }) => {
         style={styles.backButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          navigation.push("Subscribe");
+          navigation.push(Navigate.SUBSCRIBE);
         }}
       >
         <LinearGradient

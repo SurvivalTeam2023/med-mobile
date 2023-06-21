@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { useFaceRegApi } from "../../hooks/face.hook";
 import * as FileSystem from "expo-file-system";
 import { imageAction } from "../../redux/auth/image.slice";
+import { Navigate } from "../../constants/navigate";
 
 const ShowCamScreen = ({ navigation }) => {
   return (
@@ -169,7 +170,7 @@ const ShowCamScreen = ({ navigation }) => {
               onPress={() => {
                 Alert.alert("Processing image...");
                 setTimeout(() => {
-                  navigation.push("CamResult");
+                  navigation.push(Navigate.CAM_RESULT);
                 }, 5000);
               }}
             >

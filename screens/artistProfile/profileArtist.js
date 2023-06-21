@@ -21,6 +21,7 @@ import { useGetArtistWalletApi } from "../../hooks/wallet.hook";
 import { useGetArtistTotalListenerApi } from "../../hooks/totalListener.hook";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
+import { Navigate } from "../../constants/navigate";
 const ProfileArtistScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetArtistTotalFollowerApi();
   const {
@@ -142,7 +143,7 @@ const ProfileArtistScreen = ({ navigation }) => {
           style={styles.manageAlbumButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push("ManageArtistAlbum");
+            navigation.push(Navigate.MANAGE_ARTIST_ALBUM);
           }}
         >
           <LinearGradient

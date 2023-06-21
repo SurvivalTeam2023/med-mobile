@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -13,16 +13,28 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetUserProfile } from "../../hooks/user.hook";
-import { store } from "../../core/store/store";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { SharedElement } from "react-navigation-shared-element";
+import { Menu, MenuItem } from "react-native-material-menu";
+import { getUserFromDb } from "../../utils/app.util";
+import { Navigate } from "../../constants/navigate";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
-  const userName = store.getState().user.username;
+  const [showOptions, setShowOptions] = useState(false);
+  const userAvatar = getUserFromDb()?.avatar.url;
+  const userFirstName = getUserFromDb()?.firstName;
+  const formatNumber = (number) => {
+    if (number >= 1e9) {
+      return (number / 1e9).toFixed(1) + "B";
+    } else if (number >= 1e6) {
+      return (number / 1e6).toFixed(1) + "M";
+    } else if (number >= 1e3) {
+      return (number / 1e3).toFixed(1) + "K";
+    }
+    return number?.toString();
+  };
 
-  const user = store.getState()?.user?.user;
-  const user_db = user?.user_db;
-  const userAvatar = user_db?.avatar.url;
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
@@ -31,6 +43,10 @@ const ProfileScreen = ({ navigation }) => {
   if (isError) {
     console.log("error", error);
   }
+  const favoritedCount = formatNumber(profile?.favorite);
+  const playlistCount = formatNumber(profile?.playlist);
+  const followingCount = formatNumber(profile?.following);
+  let playlist = profile?.publicPlaylist;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -54,37 +70,79 @@ const ProfileScreen = ({ navigation }) => {
   );
 
   function publicPlaylists() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
+    const renderItem = ({ item }) => (
+      <View>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => navigation.push(Navigate.TRACK)}
+          style={styles.recentlyPalyedSongImageStyle}
+        >
+          <SharedElement id={item.id}>
+            <Image
+              source={{ uri: `${item?.imageUrl}` }}
+              style={styles.recentlyPalyedSongImageStyle}
+            />
+          </SharedElement>
+        </TouchableOpacity>
         <Text
           style={{
-            marginTop: Sizes.fixPadding - 7.0,
             ...Fonts.blackColor12SemiBold,
+            marginTop: Sizes.fixPadding - 7.0,
           }}
         >
-          {item.libraryFor}
+          {item.name}
         </Text>
-      </TouchableOpacity>
+      </View>
     );
     return (
       <View style={styles.publicPlaylists}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Public Playlists</Text>
+          <Text style={styles.titleStyle}>Playlists</Text>
+          <Menu
+            visible={showOptions}
+            style={{ backgroundColor: Colors.whiteColor }}
+            anchor={
+              <MaterialIcons
+                name="more-vert"
+                size={24}
+                color={Colors.blackColor}
+                style={{ alignSelf: "flex-end" }}
+                onPress={() => setShowOptions(true)}
+              />
+            }
+            onRequestClose={() => setShowOptions(false)}
+          >
+            <MenuItem
+              pressColor="transparent"
+              textStyle={{
+                marginRight: Sizes.fixPadding * 3.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                updateState({ showOptions: false }),
+                  navigation.push("CreatePlaylistUser");
+              }}
+            >
+              Add New Album
+            </MenuItem>
+            <MenuItem
+              pressColor="transparent"
+              textStyle={{
+                marginRight: Sizes.fixPadding * 3.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                updateState({ showOptions: false }),
+                  navigation.push("DeletePlaylistUser");
+              }}
+            >
+              Delete Album
+            </MenuItem>
+          </Menu>
         </View>
+
         <FlatList
-          data={profile}
+          data={playlist}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           horizontal
@@ -98,7 +156,7 @@ const ProfileScreen = ({ navigation }) => {
     const renderItem = ({ item, index }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
+        onPress={() => navigation.push(Navigate.TRACK)}
         style={styles.recentlyPalyedSongImageStyle}
       >
         <Image
@@ -134,15 +192,6 @@ const ProfileScreen = ({ navigation }) => {
       </View>
     );
   }
-  // function About() {
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>About</Text>
-  //       </View>
-  //     </View>
-  //   );
-  // }
 
   function Profile() {
     return (
@@ -156,17 +205,21 @@ const ProfileScreen = ({ navigation }) => {
               resizeMode="contain"
               style={styles.image}
             ></Image>
-            <Text style={styles.name}>{userName}</Text>
+            <Text style={styles.name}>{userFirstName}</Text>
           </View>
-          <View style={styles.favoritedRow}>
-            <Text style={styles.favorited}>Favorited</Text>
-            <Text style={styles.playlists}>Playlists</Text>
-            <Text style={styles.following}>Following</Text>
-          </View>
-          <View style={styles.loremIpsumRow}>
-            <Text style={styles.loremIpsum}>{profile.favorite}</Text>
-            <Text style={styles.loremIpsum4}>{profile.playlist}</Text>
-            <Text style={styles.loremIpsum3}>{profile.following}</Text>
+          <View style={styles.detailWrapper}>
+            <View>
+              <Text style={styles.detailedText}>Favorited</Text>
+              <Text>{favoritedCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Playlist</Text>
+              <Text>{playlistCount}</Text>
+            </View>
+            <View>
+              <Text style={styles.detailedText}>Following</Text>
+              <Text>{followingCount}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -203,7 +256,7 @@ const ProfileScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => {
-            navigation.push("editScreen");
+            navigation.push(Navigate.EDIT_SCREEN);
           }}
         >
           <Ionicons name="md-create" size={24} color="black" />
@@ -230,12 +283,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
     marginLeft: 20,
     borderRadius: 30,
+    borderWidth: 2,
   },
   image: {
     width: 100,
     height: 121,
     marginLeft: 20,
     borderRadius: 10,
+    borderWidth: 2,
   },
   name: {
     color: "#121212",
@@ -253,48 +308,41 @@ const styles = StyleSheet.create({
   favorited: {
     color: "#121212",
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   playlists: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
   following: {
     color: "#121212",
     marginLeft: 51,
     alignItems: "flex-start",
+    fontWeight: "bold",
   },
-  favoritedRow: {
-    height: 17,
+  detailWrapper: {
+    height: 40,
     flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     marginLeft: 21,
     marginRight: 35,
   },
-  loremIpsum: {
-    color: "#121212",
-  },
-  loremIpsum4: {
-    color: "#121212",
-    marginLeft: 104,
-  },
-  loremIpsum3: {
-    color: "#121212",
-    marginLeft: 92,
-  },
-  loremIpsumRow: {
-    height: 17,
+  favoritedTextRow: {
+    flex: 1,
     flexDirection: "row",
-    marginTop: 11,
-    marginLeft: 42,
-    marginRight: 61,
+    justifyContent: "space-between",
+    marginHorizontal: Sizes.fixPadding + 15,
+    marginTop: Sizes.fixPadding + 5,
+    marginBottom: Sizes.fixPadding,
+    marginRight: 50,
   },
-  // about: {
-  //
-  //   color: "#121212",
-  //   marginTop: -250,
-  //   marginLeft: 27,
-  // },
+  detailedText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   profileAbout: {
     color: "#121212",
     marginTop: 11,
@@ -325,6 +373,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  recentlyPalyedSongImageStyle: {
+    marginRight: Sizes.fixPadding,
+    width: 110,
+    height: 100,
+    borderRadius: Sizes.fixPadding - 5.0,
   },
 });
 
