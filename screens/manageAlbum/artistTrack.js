@@ -374,7 +374,7 @@ const artistTracksScreen = ({ navigation }) => {
             color="black"
             style={{ marginRight: Sizes.fixPadding }}
             onPress={() => {
-              navigation.push("SelectGenreArtist");
+              navigation.push("CreateAudioArtist");
             }}
           />
           <MaterialCommunityIcons

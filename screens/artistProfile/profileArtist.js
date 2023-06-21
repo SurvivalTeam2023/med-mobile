@@ -201,18 +201,20 @@ const ProfileArtistScreen = ({ navigation }) => {
               resizeMode="contain"
               style={styles.image}
             ></Image>
-            <View>
+            {totalListener && (
               <View>
-                <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
-                <Text style={styles.desc}>Dope ass rapper</Text>
+                <View>
+                  <Text style={{ ...Fonts.blackColor26Bold }}>Eminem</Text>
+                  <Text style={styles.desc}>Dope ass rapper</Text>
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                    Total listeners
+                  </Text>
+                  <Text>{totalListener}</Text>
+                </View>
               </View>
-              <View style={{ marginTop: 20 }}>
-                <Text style={{ ...Fonts.blackColor16SemiBold }}>
-                  Total listeners
-                </Text>
-                <Text>{totalListener}</Text>
-              </View>
-            </View>
+            )}
 
             <View>
               <AntDesign
