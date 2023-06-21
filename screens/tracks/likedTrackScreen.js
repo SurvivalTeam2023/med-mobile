@@ -37,6 +37,7 @@ let songOptionsList = [
 ];
 
 let tracksList = [];
+let audio = [];
 
 const sortOptions = ["Name", "Date Added", "Artist"];
 
@@ -52,8 +53,9 @@ const LikedTracksScreen = ({ navigation }) => {
 
   if (successTracksFromPlaylist) {
     tracksList = dataTracksFromPlaylist["data"].items;
-    console.log("tracksList", tracksList);
   }
+
+  const audio = tracksList[0]?.audioPlaylist;
 
   const handleOptionSelect = (option) => {
     // Perform action based on selected option
@@ -188,9 +190,9 @@ const LikedTracksScreen = ({ navigation }) => {
                   <Text style={styles.headerText}>Track Details</Text>
                 </View>
                 <Text style={styles.headerSubtext}>Track Name</Text>
-                <Text>{item?.name}</Text>
+                {/* <Text>{item?.audio?.name}</Text> */}
                 <Text style={styles.headerSubtext}>Artist</Text>
-                {/* <Text>{item?.artist.artist_name}</Text> */}
+                {/* <Text>{item?.audio?.artist.artist_name}</Text> */}
                 <TouchableOpacity
                   onPress={() => setIsModalVisible(false)}
                   style={{
@@ -242,7 +244,7 @@ const LikedTracksScreen = ({ navigation }) => {
       );
     };
 
-    return tracksList?.map((item) => (
+    return audio?.map((item) => (
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
@@ -271,10 +273,10 @@ const LikedTracksScreen = ({ navigation }) => {
             </SharedElement>
             <View style={{ marginLeft: Sizes.fixPadding }}>
               <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                {item?.name}
+                {item?.audio?.name}
               </Text>
               <Text style={{ ...Fonts.grayColor11Medium }}>
-                {/* {item?.artist.artist_name} */}
+                {item?.audio?.artist?.artist_name}
               </Text>
             </View>
           </View>

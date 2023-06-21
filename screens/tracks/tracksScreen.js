@@ -190,9 +190,9 @@ const TracksScreen = ({ navigation }) => {
                   <Text style={styles.headerText}>Track Details</Text>
                 </View>
                 <Text style={styles.headerSubtext}>Track Name</Text>
-                <Text>{item?.name}</Text>
+                {/* <Text>{item?.name}</Text> */}
                 <Text style={styles.headerSubtext}>Artist</Text>
-                <Text>{item?.artist.artist_name}</Text>
+                {/* <Text>{item?.artist.artist_name}</Text> */}
                 <TouchableOpacity
                   onPress={() => setIsModalVisible(false)}
                   style={{
@@ -276,7 +276,7 @@ const TracksScreen = ({ navigation }) => {
                 {item?.name}
               </Text>
               <Text style={{ ...Fonts.grayColor11Medium }}>
-                {item?.artist.artist_name}
+                {item?.artist?.artist_name}
               </Text>
             </View>
           </View>

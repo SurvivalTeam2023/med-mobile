@@ -12,6 +12,7 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { Navigate } from "../../utils/navigate";
 
 const libraryList = [
   {
@@ -51,7 +52,7 @@ const LibraryScreen = ({ navigation }) => {
     // Perform action based on selected option
     switch (libraryFor) {
       case "Liked Songs":
-        navigation.push("LikedTracksScreen");
+        navigation.push(Navigate.LIKED_TRACK_SCREEN);
         break;
       case "Gym":
         setIsModalVisible(true);
