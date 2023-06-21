@@ -30,6 +30,7 @@ CallAPI.interceptors.request.use((req) => {
 });
 
 CallAPI.interceptors.response.use(async (res) => {
+  // console.debug("response_body: ", JSON.stringify(res.data));
   return res;
 });
 CallAPIMulti.interceptors.request.use((req) => {

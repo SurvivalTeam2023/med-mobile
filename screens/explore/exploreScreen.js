@@ -132,6 +132,13 @@ let topArtistList = [
 ];
 
 const ExploreScreen = ({ navigation }) => {
+  //Recommend gendre (if user finished their exam)
+  //Recommend music
+  //Recently played
+  //Favorited gendre (first time and user choose and user like gendre)
+  //Random playlist
+  //Random gendre
+  //top music
   const dispatch = useDispatch();
 
   const [state, setState] = useState({
