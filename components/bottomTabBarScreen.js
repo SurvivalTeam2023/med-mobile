@@ -55,7 +55,6 @@ const BottomTabBarScreen = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", backAction);
     }, [backAction])
   );
-
   function _spring() {
     updateState({ backClickCount: 1 });
     setTimeout(() => {

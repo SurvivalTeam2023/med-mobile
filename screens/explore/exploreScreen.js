@@ -18,15 +18,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetPlaylistForUser } from "../../hooks/playlist.hook";
-import { useGetFavorite } from "../../hooks/favorite.hook";
+import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
-import { useGetHistory } from "../../hooks/history.hook";
-import { playlistAction } from "../../redux/auth/playlist.slice";
 import { useDispatch } from "react-redux";
-import { favoriteAction } from "../../redux/auth/favorite.slice";
-import { genreAction } from "../../redux/auth/genre.slice";
-import { useGetTracksFromFavorite } from "../../hooks/favoriteTracks.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -132,14 +126,31 @@ let topArtistList = [
 ];
 
 const ExploreScreen = ({ navigation }) => {
-  //Recommend gendre (if user finished their exam)
-  //Recommend music
-  //Recently played
-  //Favorited gendre (first time and user choose and user like gendre)
-  //Random playlist
-  //Random gendre
-  //top music
   const dispatch = useDispatch();
+  //Recommend gendre (if user finished their exam)
+
+  //Recommend track
+
+  //Recently played
+
+  //Favorited gendre (first time and user choose and user like gendre)
+
+  //Favorited Playlist
+  const { data: allPlayListFavoritedData } = useGetPlaylist({
+    status: "ACTIVE",
+    playListType: "LIKED",
+    page: 1,
+    limit: 10,
+  });
+  //Random playlist
+  const { data: allPlayListData } = useGetPlaylist({
+    status: "ACTIVE",
+    page: 1,
+    limit: 10,
+  });
+  //Random gendre
+  const { data: allGendreData } = useGetGenreList();
+  //top music
 
   const [state, setState] = useState({
     forYouData: forYouList,
@@ -147,89 +158,9 @@ const ExploreScreen = ({ navigation }) => {
     showOptions: false,
   });
 
-  const { data, isSuccess, isError, error } = useGetPlaylistForUser();
-  if (isSuccess) {
-    playlists = data["data"].items;
-  }
-  if (isError) {
-    console.log("error", error);
-  }
-
-  const {
-    data: dataFavTrack,
-    isSuccess: isSuccessFavTrack,
-    refetch,
-  } = useGetTracksFromFavorite();
-  if (isSuccessFavTrack) {
-    const favTrack = dataFavTrack["data"];
-    dispatch(genreAction.setGenreTrack(favTrack));
-  }
-  const handlePlaylistPress = (playlistId) => {
-    try {
-      dispatch(playlistAction.setPlaylistId(playlistId));
-    } catch (error) {
-      console.log("Error saving selected playlist ID", error);
-    }
-  };
-
-  const handleGenrePress = (genreId) => {
-    try {
-      dispatch(genreAction.setGenreId(genreId));
-    } catch (error) {}
-  };
-
-  const handleFavoritedPress = (favoriteId) => {
-    try {
-      dispatch(favoriteAction.setFavoriteId(favoriteId));
-      refetch();
-    } catch (error) {}
-  };
-
-  const {
-    data: dataFavorite,
-    isSuccess: successFavorite,
-    isError: isErrorFavorite,
-    error: errorFavorite,
-  } = useGetFavorite();
-
-  if (successFavorite) {
-    forYouList = dataFavorite["data"];
-  }
-  if (isErrorFavorite) {
-    console.log("error", errorFavorite);
-  }
-
-  const {
-    data: dataGenre,
-    isSuccess: successGenre,
-    isError: isErrorGenre,
-    error: errorGenre,
-  } = useGetGenreList();
-
-  if (successGenre) {
-    albumsList = dataGenre["data"];
-  }
-  if (isErrorGenre) {
-    console.log("error", errorGenre);
-  }
-
-  const {
-    data: dataRecently,
-    isSuccess: successRecently,
-    isError: isErrorRecently,
-    error: errorRecently,
-  } = useGetHistory();
-
-  if (successRecently) {
-    recentlyPlayedList = dataRecently["data"];
-  }
-  if (isErrorRecently) {
-    console.log("error", errorRecently);
-  }
-
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { forYouData, pauseSong, showOptions } = state;
+  const { showOptions } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -280,7 +211,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Top Artists</Text>
+          <Text style={styles.titleStyle}>Top Tracks</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -307,7 +238,6 @@ const ExploreScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          handleGenrePress(item?.id);
           navigation.push("GenreTracks");
         }}
       >
@@ -330,7 +260,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Genre</Text>
+          <Text style={styles.titleStyle}>Genres</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -357,7 +287,6 @@ const ExploreScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          handlePlaylistPress(item?.id);
           navigation.push("Tracks");
         }}
       >
@@ -380,7 +309,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Playlist</Text>
+          <Text style={styles.titleStyle}>Favorited Playlist</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -406,7 +335,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Favorited</Text>
+          <Text style={styles.titleStyle}>Favorited Gendre</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -418,7 +347,6 @@ const ExploreScreen = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                handleFavoritedPress(item.genreId);
                 navigation.push("NowPlaying", { item });
               }}
               style={styles.forYouInfoWrapStyle}
@@ -518,7 +446,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Some Tracks</Text>
+          <Text style={styles.titleStyle}>Tracks</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
@@ -573,7 +501,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Recommended For You</Text>
+          <Text style={styles.titleStyle}>Recommended Music For You</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}

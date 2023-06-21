@@ -5,7 +5,7 @@ export const useGetGenreList = (payload) =>
   useQuery({
     queryKey: ["getGenreList"],
     queryFn: async () => {
-      const data = await getGenreListApi();
+      const data = await getGenreListApi(payload);
       return data;
     },
   });
