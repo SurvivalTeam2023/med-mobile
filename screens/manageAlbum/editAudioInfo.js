@@ -33,7 +33,6 @@ import { useUpdateAudioArtistAPI } from "../../hooks/playlistTracks.hook";
 const EditAudioArtistScreen = ({ navigation }) => {
   const audio = useSelector((state) => state.audioArtist);
   let audioInfo = audio.audioInfo;
-  console.log("audioInfo", audioInfo);
   const [state, setState] = useState({
     name: null,
     description: null,
