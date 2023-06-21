@@ -3,29 +3,26 @@ import {
   createPlaylistAPI,
   deletePlaylistAPI,
   getPlaylistAPI,
-  getPlaylistforUserAPI,
+  updatePlaylistforArtistAPI,
 } from "../api/playlist.api";
 
 export const useGetPlaylist = (payload) =>
   useQuery({
-    queryKey: ["getPlaylist"],
+    queryKey: ["getPlaylist", payload],
     queryFn: async () => {
-      const data = await getPlaylistAPI();
-      return data;
-    },
-  });
-export const useGetPlaylistForUser = (payload) =>
-  useQuery({
-    queryKey: ["getPlaylist"],
-    queryFn: async () => {
-      const data = await getPlaylistforUserAPI();
-      return data;
+      const data = await getPlaylistAPI(payload);
+      return data["items"];
     },
   });
 
 export const useCreatePlaylistAPI = (payload) =>
   useMutation({
     mutationFn: (payload) => createPlaylistAPI(payload),
+  });
+
+export const useUpdatePlaylistForArtistAPI = (payload) =>
+  useMutation({
+    mutationFn: (payload) => updatePlaylistforArtistAPI(payload),
   });
 
 export const useDeletePlaylistAPI = (payload) =>

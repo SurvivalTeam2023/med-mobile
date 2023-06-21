@@ -22,7 +22,7 @@ import {
   FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Navigate } from "../../utils/navigate";
+import { Navigate } from "../../constants/navigate";
 
 const CreatePlaylistScreenUser = ({ navigation }) => {
   const backAction = () => {

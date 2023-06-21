@@ -13,6 +13,7 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { store } from "../../core/store/store";
+import { Navigate } from "../../constants/navigate";
 
 const CamResultScreen = ({ navigation }) => {
   let feeling = store.getState().image["imageResult"];
@@ -84,7 +85,7 @@ const CamResultScreen = ({ navigation }) => {
           style={styles.signupButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push("ShowCam");
+            navigation.push(Navigate.SHOW_CAM);
           }}
         >
           <LinearGradient
@@ -101,7 +102,7 @@ const CamResultScreen = ({ navigation }) => {
           style={styles.signupButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push("ChooseMusic");
+            navigation.push(Navigate.CHOOSE_MUSIC);
           }}
         >
           <LinearGradient

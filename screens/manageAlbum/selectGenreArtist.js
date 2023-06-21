@@ -18,6 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useDispatch } from "react-redux";
 import { genreArtistAction } from "../../redux/auth/genreArtist.slice";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -35,7 +36,7 @@ const SelectGenreArtistScreen = ({ navigation }) => {
 
   const handleSelect = () => {
     dispatch(genreArtistAction.storeGenreArtistId(selectedGenreIds));
-    navigation.push("CreateAudioArtist");
+    navigation.push(Navigate.CREATE_AUDIO_ARTIST);
   };
 
   const [state, setState] = useState({

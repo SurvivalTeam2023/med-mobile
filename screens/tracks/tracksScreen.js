@@ -24,6 +24,7 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetTracksFromPlaylist } from "../../hooks/playlistTracks.hook";
 import { BlurView } from "expo-blur";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -111,7 +112,9 @@ const TracksScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item: { id: "image" } })}
+        onPress={() =>
+          navigation.push(Navigate.NOW_PLAYING, { item: { id: "image" } })
+        }
         style={styles.currentlyPlayedSongInfoWrapStyle}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -248,7 +251,7 @@ const TracksScreen = ({ navigation }) => {
       <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => navigation.push("NowPlaying", { item })}
+          onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
           style={styles.tracksInfoWrapStyle}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -454,7 +457,7 @@ const TracksScreen = ({ navigation }) => {
           name="search"
           size={20}
           style={{ alignSelf: "flex-end" }}
-          onPress={() => navigation.push("Search")}
+          onPress={() => navigation.push(Navigate.SEARCH)}
         />
       </View>
     );

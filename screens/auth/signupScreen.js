@@ -20,6 +20,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
 import { Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { Navigate } from "../../constants/navigate";
 const SignupScreen = ({ navigation }) => {
   const [isFailed, setIsFailed] = useState(null);
 
@@ -160,7 +161,7 @@ const SignupScreen = ({ navigation }) => {
           <TouchableOpacity
             style={{ flex: 0.3 }}
             activeOpacity={0.9}
-            onPress={() => navigation.push("SignIn")}
+            onPress={() => navigation.push(Navigate.SIGN_IN)}
           >
             <MaskedView
               style={{ flex: 0.3, height: 18 }}

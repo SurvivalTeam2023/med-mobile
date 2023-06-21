@@ -25,11 +25,13 @@ CallAPI.interceptors.request.use((req) => {
   if (token && req.headers) {
     req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
+  console.debug("request_url:", `${req.baseURL}${req.url}`);
   return req;
 });
 
 CallAPI.interceptors.response.use(async (res) => {
-  return res;
+  // console.debug("response_body: ", JSON.stringify(res.data));
+  return res.data;
 });
 CallAPIMulti.interceptors.request.use((req) => {
   const token = store?.getState().user.token;

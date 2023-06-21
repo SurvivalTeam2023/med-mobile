@@ -31,6 +31,7 @@ import axios from "axios";
 import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { ARTIST_ROLE } from "../../constants/role";
+import { Navigate } from "../../constants/navigate";
 
 const SignInScreen = ({ navigation }) => {
   const [errorCode, setErrorCode] = useState(null);
@@ -96,9 +97,9 @@ const SignInScreen = ({ navigation }) => {
           );
           const role = store.getState().user.artist_role;
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push(Navigate.ARTIST_PROFILE);
           } else {
-            navigation.push("OptionScreen");
+            navigation.push(Navigate.OPTION_SCREEN);
           }
         },
         onError: (error) => {
@@ -168,9 +169,9 @@ const SignInScreen = ({ navigation }) => {
           const role = store.getState().user.artist_role;
 
           if (role === ARTIST_ROLE) {
-            navigation.push("ArtistProfile");
+            navigation.push(Navigate.ARTIST_PROFILE);
           } else {
-            navigation.push("OptionScreen");
+            navigation.push(Navigate.OPTION_SCREEN);
           }
         },
         onError: (error) => {
@@ -306,7 +307,7 @@ const SignInScreen = ({ navigation }) => {
           <TouchableOpacity
             style={{ flex: 0.3 }}
             activeOpacity={0.9}
-            onPress={() => navigation.push("SignUp")}
+            onPress={() => navigation.push(Navigate.SIGN_UP)}
           >
             <MaskedView
               style={{ flex: 0.3, height: 18 }}

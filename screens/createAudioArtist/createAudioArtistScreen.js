@@ -23,6 +23,7 @@ import {
 } from "@expo/vector-icons";
 import { useCreateAudioForArtistAPI } from "../../hooks/playlistTracks.hook";
 import { store } from "../../core/store/store";
+import { Navigate } from "../../constants/navigate";
 
 const CreateAudioArtistScreen = ({ navigation }) => {
   const backAction = () => {
@@ -60,7 +61,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
       {
         onSuccess: (data) => {
           if (data !== null) {
-            navigation.push("ArtistTrack");
+            navigation.push(Navigate.ARTIST_TRACK);
           }
         },
         onError: (error) => {
@@ -229,7 +230,7 @@ const CreateAudioArtistScreen = ({ navigation }) => {
         />
         <AntDesign
           onPress={() => {
-            navigation.push("ArtistTrack");
+            navigation.push(Navigate.ARTIST_TRACK);
           }}
           style={{ width: 30 }}
           name="left"

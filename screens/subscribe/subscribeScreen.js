@@ -21,6 +21,7 @@ import {
 } from "../../hooks/subscription.hook";
 import { store } from "../../core/store/store";
 import moment from "moment";
+import { Navigate } from "../../constants/navigate";
 
 let subscribePackageList = [
   {
@@ -68,7 +69,7 @@ const SubscribeScreen = ({ navigation }) => {
 
       {
         onSuccess: () => {
-          navigation.push("Payment");
+          navigation.push(Navigate.PAYMENT);
         },
       }
     );

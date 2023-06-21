@@ -40,6 +40,8 @@ import profileScreen from "./screens/Profile/profileScreen";
 import ProfileArtistScreen from "./screens/artistProfile/profileArtist";
 import VerifyEmail from "./screens/auth/verifyEmail";
 import editProfileScreen from "./screens/Profile/editProfileScreen";
+import EditAlbumArtistScreen from "./screens/manageAlbum/editAlbumArtist";
+import EditAudioArtistScreen from "./screens/manageAlbum/editAudioInfo";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 import LikedTracksScreen from "./screens/tracks/likedTrackScreen";
@@ -123,6 +125,14 @@ const App = () => {
             <Stack.Screen name="Tracks" component={tracksScreen} />
             <Stack.Screen name="HomePage" component={ExploreScreen} />
             <Stack.Screen name="editScreen" component={editProfileScreen} />
+            <Stack.Screen
+              name="editAlbumArtistScreen"
+              component={EditAlbumArtistScreen}
+            />
+            <Stack.Screen
+              name="editAudioArtistScreen"
+              component={EditAudioArtistScreen}
+            />
             <Stack.Screen
               name="ArtistProfile"
               component={ProfileArtistScreen}

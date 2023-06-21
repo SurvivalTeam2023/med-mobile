@@ -19,6 +19,7 @@ import {
   getTokenFromLocal,
   getUserFromLocal,
 } from "../utils/app.local_handler";
+import { Navigate } from "../constants/navigate";
 
 const SplashScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -48,9 +49,9 @@ const SplashScreen = ({ navigation }) => {
       dispatch(userAction.storeUserWithoutLocal(retrivedUser));
       const role = store.getState().user.artist_role;
       if (role === ARTIST_ROLE) {
-        navigation.push("ArtistProfile");
+        navigation.push(Navigate.ARTIST_PROFILE);
       } else {
-        navigation.push("OptionScreen");
+        navigation.push(Navigate.OPTION_SCREEN);
       }
     }
   }, 2000);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import {
   BackHandler,
   View,
@@ -25,21 +25,29 @@ import {
   nowPlayingAction,
 } from "../redux/audio/nowPlayingList.slice";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
 const BottomTabBarScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const audioPlayer = (audioAction, audioActionVaue) => {
+    dispatch(
+      nowPlayingAction.triggerAudioPlayer({
+        audioAction: audioAction,
+        audioActionVaue: audioActionVaue,
+      })
+    );
+  };
   const backAction = () => {
     backClickCount == 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
-  const currentPlaySound = useSelector(
+  const { currentAudioIndex, soundStatus } = useSelector(
     (state) => state.nowPlayingList.currentPlaying
   );
-  const currentSoundStatus = useSelector(
-    (state) => state.nowPlayingList.soundStatus
-  );
+  const playingList = useSelector((state) => state.nowPlayingList.playingList);
+
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -47,7 +55,6 @@ const BottomTabBarScreen = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", backAction);
     }, [backAction])
   );
-
   function _spring() {
     updateState({ backClickCount: 1 });
     setTimeout(() => {
@@ -62,9 +69,7 @@ const BottomTabBarScreen = ({ navigation }) => {
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
   const { currentIndex, pauseSong, backClickCount } = state;
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -80,7 +85,7 @@ const BottomTabBarScreen = ({ navigation }) => {
         ) : (
           <SettingsScreen navigation={navigation} />
         )}
-        {currentlyPlayedSong()}
+        {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
         <View style={styles.bottomTabBarStyle}>
           {bottomTabBarItem({
             index: 1,
@@ -118,13 +123,15 @@ const BottomTabBarScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item: { id: "image" } })}
+        onPress={() =>
+          navigation.push(Navigate.NOW_PLAYING, { item: { id: "image" } })
+        }
         style={styles.currentlyPlayedSongInfoWrapStyle}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <SharedElement id="image">
             <Image
-              source={currentPlaySound?.imgUrl}
+              source={playingList[currentAudioIndex]?.imgUrl}
               style={{
                 width: 55.0,
                 height: 55.0,
@@ -140,10 +147,10 @@ const BottomTabBarScreen = ({ navigation }) => {
                 ...Fonts.blackColor15Bold,
               }}
             >
-              {currentPlaySound?.name}
+              {playingList[currentAudioIndex]?.name}
             </Text>
             <Text style={{ ...Fonts.grayColor11Medium }}>
-              {currentPlaySound?.artist}
+              {playingList[currentAudioIndex]?.artist}
             </Text>
           </View>
         </View>
@@ -153,34 +160,20 @@ const BottomTabBarScreen = ({ navigation }) => {
               name="arrow-left"
               size={30}
               color="black"
-              onPress={() =>
-                dispatch(
-                  nowPlayingAction.triggerAudioPlayer({
-                    currentAction: ACTION_TYPE.PREV_SONG,
-                  })
-                )
-              }
+              onPress={() => audioPlayer(ACTION_TYPE.PREV_SONG, index)}
             />
           </View>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() =>
-              !currentSoundStatus?.isPlaying
-                ? dispatch(
-                    nowPlayingAction.triggerAudioPlayer({
-                      currentAction: ACTION_TYPE.START,
-                    })
-                  )
-                : dispatch(
-                    nowPlayingAction.triggerAudioPlayer({
-                      currentAction: ACTION_TYPE.PAUSE,
-                    })
-                  )
+              !soundStatus?.isPlaying
+                ? audioPlayer(ACTION_TYPE.START, 0)
+                : audioPlayer(ACTION_TYPE.PAUSE, 0)
             }
             style={styles.pausePlayButtonWrapStyle}
           >
             <MaterialIcons
-              name={currentSoundStatus?.isPlaying ? "pause" : "play-arrow"}
+              name={soundStatus?.isPlaying ? "pause" : "play-arrow"}
               size={30}
               color="black"
             />
@@ -190,13 +183,7 @@ const BottomTabBarScreen = ({ navigation }) => {
               name="arrow-right"
               size={30}
               color="black"
-              onPress={() =>
-                dispatch(
-                  nowPlayingAction.triggerAudioPlayer({
-                    currentAction: ACTION_TYPE.NEXT_SONG,
-                  })
-                )
-              }
+              onPress={() => audioPlayer(ACTION_TYPE.NEXT_SONG, Math.random())}
             />
           </View>
         </View>

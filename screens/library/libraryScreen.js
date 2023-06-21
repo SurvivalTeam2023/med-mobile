@@ -12,7 +12,7 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Navigate } from "../../utils/navigate";
+import { Navigate } from "../../constants/navigate";
 
 const libraryList = [
   {
@@ -96,7 +96,7 @@ const LibraryScreen = ({ navigation }) => {
     const renderItem = ({ item, index }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => handleOptionSelect(item.libraryFor)}
+        onPress={() => navigation.push(Navigate.TRACK)}
         style={{
           marginBottom: Sizes.fixPadding * 2.5,
           flex: 1,

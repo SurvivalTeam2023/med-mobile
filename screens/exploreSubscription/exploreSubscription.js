@@ -13,6 +13,7 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { Navigate } from "../../constants/navigate";
 
 const subscriptionAllowsList = [
   "Download unlimited songs",
@@ -45,7 +46,7 @@ const ExploreSubscriptionScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          navigation.push("PaymentFailed");
+          navigation.push(Navigate.PAYMENT_FAILED);
         }}
         style={{
           justifyContent: "center",
