@@ -87,8 +87,7 @@ const SignInScreen = ({ navigation }) => {
 
       {
         onSuccess: (data) => {
-          const dataRaw = data["data"];
-          const access_token = dataRaw["access_token"];
+          const access_token = data["access_token"];
           dispatch(userAction.storeToken(access_token));
           refetch();
           AsyncStorage.setItem(
@@ -158,8 +157,7 @@ const SignInScreen = ({ navigation }) => {
       },
       {
         onSuccess: (data) => {
-          const dataRaw = data["data"];
-          const access_token = dataRaw["access_token"];
+          const access_token = data["access_token"];
           dispatch(userAction.storeToken(access_token));
           refetch();
           AsyncStorage.setItem(
