@@ -22,8 +22,8 @@ import { Navigate } from "../../constants/navigate";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const userAvatar = getUserFromDb()?.avatar.url;
-  const userFirstName = getUserFromDb()?.firstName;
+  const userAvatar = getUserFromDb()?.avatar?.url || {};
+  const userFirstName = getUserFromDb()?.firstName || "none";
   const formatNumber = (number) => {
     if (number >= 1e9) {
       return (number / 1e9).toFixed(1) + "B";
@@ -38,6 +38,7 @@ const ProfileScreen = ({ navigation }) => {
   const { data, isSuccess, isError, error } = useGetUserProfile();
 
   if (isSuccess) {
+    console.log(data);
     profile = data["data"];
   }
   if (isError) {

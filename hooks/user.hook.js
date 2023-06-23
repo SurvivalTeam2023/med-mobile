@@ -1,31 +1,34 @@
 import { useQuery, useMutation } from "react-query";
-import { getUserByNameApi } from "../api/user.api";
 import {
-  getUserProfile,
-  updateUserAvatar,
+  getUserDataByUsername,
+  getUserProfileByUserId,
   updateUserAccountDetails,
-} from "../api/userProfile.api";
+  updateUserAvatar,
+} from "../api/user.api";
 
-export const useGetUserByNameApi = (payload) => {
-  const { data: userData, ...rest } = useQuery({
-    queryKey: ["getUsername", payload],
-    queryFn: async (payload) => {
-      const data = await getUserByNameApi(payload);
-      return data;
+export const useGetUserDataByUsername = (username) => {
+  if (!username) return;
+  const { ...rest } = useQuery({
+    queryKey: ["getUsername", username],
+    queryFn: async () => {
+      return await getUserDataByUsername(username);
     },
-    enabled: false,
+    enabled: !!username,
   });
-  return { userData, ...rest };
+  return { ...rest };
 };
 
-export const useGetUserProfile = (payload) =>
-  useQuery({
-    queryKey: ["getUserProfile"],
+export const useGetUserProfile = (userId) => {
+  if (!userId) return;
+  const { ...rest } = useQuery({
+    queryKey: ["getUserProfile", userId],
     queryFn: async () => {
-      const data = await getUserProfile();
-      return data;
+      return await getUserProfileByUserId(userId);
     },
+    enabled: !!userId,
   });
+  return { ...rest };
+};
 
 export const useUpdateUserAvatar = (payload) =>
   useMutation({

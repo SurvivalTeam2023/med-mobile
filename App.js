@@ -119,7 +119,7 @@ const App = () => {
             <Stack.Screen name="Search" component={searchScreen} />
             <Stack.Screen name="Tracks" component={tracksScreen} />
             <Stack.Screen name="HomePage" component={ExploreScreen} />
-            <Stack.Screen name="editScreen" component={editProfileScreen} />
+            <Stack.Screen name="EditScreen" component={editProfileScreen} />
             <Stack.Screen
               name="editAlbumArtistScreen"
               component={EditAlbumArtistScreen}

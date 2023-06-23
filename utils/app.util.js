@@ -13,6 +13,11 @@ export const parseTokenToUsername = (token) => {
   return token_decoded["preferred_username"];
 };
 
+export const parseTokenToUserId = (token) => {
+  let token_decoded = jwtDecode(token);
+  return token_decoded["sub"];
+};
+
 export const parseTokenToRole = (token) => {
   let token_decoded = jwtDecode(token);
   const resource_access = token_decoded["resource_access"];
@@ -37,7 +42,7 @@ export const formatQuestionData = (originRaw) => {
 };
 
 export const getUserFromDb = () => {
-  return store.getState().user.user.user_db;
+  return store.getState()?.user?.user?.user_db;
 };
 
 export const handleWebNavigation = async (url) => {

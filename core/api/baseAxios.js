@@ -2,7 +2,7 @@ import axios from "axios";
 import { HEADER_AUTHORIZATION, config } from "../../constants/config";
 import { store } from "../store/store";
 
-export const CallAPI = axios.create({
+const axiosInstance = axios.create({
   baseURL: config.SERVER_URL,
   withCredentials: false,
   headers: {
@@ -10,7 +10,8 @@ export const CallAPI = axios.create({
     "Access-Control-Allow-Origin": "*",
   },
 });
-export const CallAPIMulti = axios.create({
+
+const axiosMultiInstance = axios.create({
   baseURL: config.SERVER_URL,
   withCredentials: false,
   headers: {
@@ -20,26 +21,32 @@ export const CallAPIMulti = axios.create({
   },
 });
 
-CallAPI.interceptors.request.use((req) => {
+const requestInterceptor = (config) => {
   const token = store?.getState().user.token;
-  if (token && req.headers) {
-    req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
+  if (token) {
+    config.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
-  console.debug("request_url:", `${req.baseURL}${req.url}`);
-  return req;
-});
+  console.debug("request_url:", `${config.baseURL}${config.url}`);
+  return config;
+};
 
-CallAPI.interceptors.response.use(async (res) => {
-  // console.debug("response_body: ", JSON.stringify(res.data));
-  return res.data;
-});
-CallAPIMulti.interceptors.request.use((req) => {
-  const token = store?.getState().user.token;
-  if (token && req.headers);
-  req.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
-  return req;
-});
+const responseInterceptor = (response) => {
+  return response.data;
+};
 
-CallAPIMulti.interceptors.response.use(async (res) => {
-  return res;
-});
+const errorInterceptor = (error) => {
+  console.error("Request failed:", error.toJSON());
+  throw error;
+};
+
+axiosInstance.interceptors.request.use(requestInterceptor);
+axiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
+
+axiosMultiInstance.interceptors.request.use(requestInterceptor);
+axiosMultiInstance.interceptors.response.use(
+  responseInterceptor,
+  errorInterceptor
+);
+
+export const CallAPI = axiosInstance;
+export const CallAPIMulti = axiosMultiInstance;

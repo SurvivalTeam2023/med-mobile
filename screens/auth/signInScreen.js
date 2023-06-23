@@ -28,19 +28,45 @@ import { userAction } from "../../redux/auth/auth.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
-import { useGetUserByNameApi } from "../../hooks/user.hook";
 import { store } from "../../core/store/store";
 import { ARTIST_ROLE } from "../../constants/role";
 import { Navigate } from "../../constants/navigate";
+import {
+  useGetUserDataByUsername,
+  useGetUserProfile,
+} from "../../hooks/user.hook";
+import { parseTokenToUserId, parseTokenToUsername } from "../../utils/app.util";
 
 const SignInScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [errorCode, setErrorCode] = useState(null);
   const [otherErrorCode, setOtherErrorCode] = useState(null);
-  const { mutate } = useLogin();
+  //Login hook
+  const { mutate, isSuccess: isLoginWithUserNamePasswordSuccess } = useLogin();
   const { mutate: mutateLoginGoogle } = useLoginWithGmail();
-  const dispatch = useDispatch();
-  const { userData, isSuccess, refetch } = useGetUserByNameApi();
-
+  //State
+  const [state, setState] = useState({
+    showPassword: false,
+    userName: null,
+    password: null,
+    email: null,
+    backClickCount: 0,
+  });
+  const [userState, setUserState] = useState({
+    username: null,
+    userId: null,
+  });
+  const { data: userData, isSuccess: isGetUserDataSuccess } =
+    useGetUserDataByUsername(
+      isLoginWithUserNamePasswordSuccess ? userState["username"] : null
+    );
+  const { data: userProfileData, isSuccess: isGetUserProfileSuccess } =
+    useGetUserProfile(
+      isLoginWithUserNamePasswordSuccess ? userState["userId"] : null
+    );
+  if (isGetUserProfileSuccess && isGetUserDataSuccess) {
+    console.log(userData, userProfileData);
+  }
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -61,20 +87,11 @@ const SignInScreen = ({ navigation }) => {
     }, 1000);
   }
 
-  const [state, setState] = useState({
-    showPassword: false,
-    userName: null,
-    password: null,
-    email: null,
-    backClickCount: 0,
-  });
-
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
 
-  if (isSuccess) {
-    const userInfo = userData["data"];
-    dispatch(userAction.storeUser(userInfo));
+  if (isLoginWithUserNamePasswordSuccess) {
+    dispatch(userAction.storeUser(userData));
   }
 
   const handleLogin = () => {
@@ -84,11 +101,14 @@ const SignInScreen = ({ navigation }) => {
         username: state["userName"],
         password: state["password"],
       },
-
       {
         onSuccess: (data) => {
           const access_token = data["access_token"];
           dispatch(userAction.storeToken(access_token));
+          setUserState({
+            username: parseTokenToUsername(access_token),
+            userId: parseTokenToUserId(access_token),
+          });
           refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
@@ -125,7 +145,7 @@ const SignInScreen = ({ navigation }) => {
     );
   };
 
-  const [response, promptAsync] = Google.useAuthRequest({
+  const [response, promptAsync, request] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
   });
@@ -340,7 +360,7 @@ const SignInScreen = ({ navigation }) => {
             marginHorizontal: Sizes.fixPadding - 5.0,
           }}
         >
-          <TouchableOpacity onPress={() => promptAsync()}>
+          <TouchableOpacity onPress={() => (!request ? promptAsync() : null)}>
             <Image
               source={require("../../assets/images/icon/google-icon.png")}
               style={{ width: 15.0, height: 15.0 }}

@@ -6,20 +6,19 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
-  ScrollView,
   Image,
   StyleSheet,
-  Alert,
   FlatList,
-  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Feather,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRegisterUser } from "../../hooks/auth.hook";
-import { Pressable } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
 const SignupScreen = ({ navigation }) => {
   const [isFailed, setIsFailed] = useState(null);

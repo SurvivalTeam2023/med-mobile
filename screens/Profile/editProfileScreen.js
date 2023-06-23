@@ -42,8 +42,8 @@ const editProfileScreen = ({ navigation }) => {
   const [updatedCity, setUpdatedCity] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [updatedAddress, setUpdatedAddress] = useState();
-  const userName = store.getState().user.username;
-  const userAvatar = getUserFromDb()?.avatar.url;
+  const userName = store.getState()?.user?.username;
+  const userAvatar = getUserFromDb()?.avatar?.url;
   const userFirstName = getUserFromDb()?.firstName;
   const userLastName = getUserFromDb()?.lastName;
   const userEmail = getUserFromDb()?.email;
