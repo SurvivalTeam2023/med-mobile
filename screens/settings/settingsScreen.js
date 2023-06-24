@@ -19,21 +19,21 @@ import { Switch } from "react-native-paper";
 import { Slider } from "@rneui/themed";
 import Dialog from "react-native-dialog";
 import { store } from "../../core/store/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
 import { configOptionsGlobal } from "../../utils/app.configuration";
 import { Navigate } from "../../constants/navigate";
+import { SUBSCRIPTION_STATUS } from "../../constants/app";
 
 const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const user = store.getState()?.user?.user;
-  const userEmail = user?.user_db?.email;
+  const userData = useSelector((state) => state.user.data);
   const audioConfig = store.getState().user.audio || { ...configOptionsGlobal };
-
+  const subscriptionStatus = userData["lastestSub"];
   const [state, setState] = useState({
-    email: `${userEmail}`,
+    email: userData?.email,
     password: "••••••••••",
     sleepTime: false,
     musicQuality: 80,
@@ -49,7 +49,7 @@ const SettingsScreen = ({ navigation }) => {
     twitterConnection: false,
     instagramConnection: true,
     showEmailDialog: false,
-    editableEmail: `${userEmail}`,
+    editableEmail: userData?.email,
     showPasswordDialog: false,
     oldPassword: null,
     newPassord: null,
@@ -744,23 +744,131 @@ const SettingsScreen = ({ navigation }) => {
   }
 
   function upgradePremiumButton() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push(Navigate.SUBSCRIBE)}
-      >
-        <ImageBackground
-          source={require("../../assets/images/banner-design.png")}
-          style={styles.upgradePremiumButtonStyle}
-          borderRadius={Sizes.fixPadding - 7.0}
-          resizeMode="contain"
+    if (!subscriptionStatus) {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => navigation.push(Navigate.SUBSCRIBE)}
         >
-          <Text style={{ ...Fonts.whiteColor18Bold }}>
-            Upgrade to My Music Premium
-          </Text>
-        </ImageBackground>
-      </TouchableOpacity>
-    );
+          <ImageBackground
+            source={require("../../assets/images/banner-design.png")}
+            style={styles.upgradePremiumButtonStyle}
+            borderRadius={Sizes.fixPadding - 7.0}
+            resizeMode="contain"
+          >
+            <Text style={{ ...Fonts.whiteColor18Bold }}>
+              Upgrade to Mediation Premium
+            </Text>
+          </ImageBackground>
+        </TouchableOpacity>
+      );
+    } else {
+      switch (subscriptionStatus.status) {
+        case SUBSCRIPTION_STATUS.ACTIVE:
+          return (
+            <TouchableOpacity activeOpacity={0.9}>
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Your are Subscripted!
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        case SUBSCRIPTION_STATUS.APPROVAL_PEDING:
+          return (
+            <TouchableOpacity activeOpacity={0.9}>
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Waiting for admin update!
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        case SUBSCRIPTION_STATUS.APPROVED:
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.push(Navigate.SUBSCRIBE)}
+            >
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Waiting for admin update!
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        case SUBSCRIPTION_STATUS.CANCELLED:
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.push(Navigate.SUBSCRIBE)}
+            >
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Upgrade to My Music Premium
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+
+        case SUBSCRIPTION_STATUS.EXPIRED:
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.push(Navigate.SUBSCRIBE)}
+            >
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Your Subscription is EXPIRED! Upgrade to Mediation Premium.
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        case SUBSCRIPTION_STATUS.SUSPENDED:
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.push(Navigate.SUBSCRIBE)}
+            >
+              <ImageBackground
+                source={require("../../assets/images/banner-design.png")}
+                style={styles.upgradePremiumButtonStyle}
+                borderRadius={Sizes.fixPadding - 7.0}
+                resizeMode="contain"
+              >
+                <Text style={{ ...Fonts.whiteColor18Bold }}>
+                  Your Subscription is SUSPENDED! Upgrade to Mediation Premium.
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+      }
+    }
   }
 
   function divider() {

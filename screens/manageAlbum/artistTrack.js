@@ -10,16 +10,18 @@ import {
   Image,
   ImageBackground,
   Alert,
-  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { Icon } from "react-native-gradient-icon";
-import { Ionicons } from "@expo/vector-icons";
 import {
   useDeleteAudioArtistAPI,
   useGetAudioByIdForArtistAPI,
@@ -28,13 +30,11 @@ import {
 import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
-import { TextInput } from "react-native";
 import { Navigate } from "../../constants/navigate";
 
 const artistTracksScreen = ({ navigation }) => {
   const sortOptions = ["Name", "Date Added", "Artist"];
   const [tracksList, setTrackList] = useState(null);
-
   const dispatch = useDispatch();
   const { mutate } = useDeleteAudioArtistAPI();
   const [modalVisible, setModalVisible] = useState(false);

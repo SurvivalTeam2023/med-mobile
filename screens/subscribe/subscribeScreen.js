@@ -104,57 +104,59 @@ const SubscribeScreen = ({ navigation }) => {
     );
   }
   function packages() {
-    return isSubscribePackageListSuccess
-      ? subscribePackageListData.map((item) => (
-          <View key={`${item.id}`}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => {
-                createSubscription(item.id);
+    return isSubscribePackageListSuccess ? (
+      subscribePackageListData.map((item) => (
+        <View key={`${item.id}`}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+              createSubscription(item.id);
+            }}
+          >
+            <ImageBackground
+              source={require("../../assets/images/card-design.png")}
+              style={{
+                marginHorizontal: Sizes.fixPadding * 2.0,
+                height: 130.0,
+                marginBottom: Sizes.fixPadding + 5.0,
               }}
+              borderRadius={Sizes.fixPadding - 5.0}
             >
-              <ImageBackground
-                source={require("../../assets/images/card-design.png")}
+              <View
                 style={{
-                  marginHorizontal: Sizes.fixPadding * 2.0,
-                  height: 130.0,
                   marginBottom: Sizes.fixPadding + 5.0,
+                  marginHorizontal: Sizes.fixPadding * 2.0,
+                  justifyContent: "flex-end",
+                  flex: 1,
                 }}
-                borderRadius={Sizes.fixPadding - 5.0}
               >
-                <View
+                <Text
                   style={{
-                    marginBottom: Sizes.fixPadding + 5.0,
-                    marginHorizontal: Sizes.fixPadding * 2.0,
-                    justifyContent: "flex-end",
-                    flex: 1,
+                    marginBottom: Sizes.fixPadding - 8.0,
+                    ...Fonts.whiteColor15Bold,
                   }}
                 >
-                  <Text
-                    style={{
-                      marginBottom: Sizes.fixPadding - 8.0,
-                      ...Fonts.whiteColor15Bold,
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text style={{ ...Fonts.whiteColor22Light }}>
-                    {item.desc}
-                  </Text>
-                  <Text
-                    style={{
-                      alignSelf: "flex-end",
-                      ...Fonts.whiteColor22Light,
-                    }}
-                  >
-                    $ {item.cost}
-                  </Text>
-                </View>
-              </ImageBackground>
-            </TouchableOpacity>
-          </View>
-        ))
-      : null;
+                  {item.name}
+                </Text>
+                <Text style={{ ...Fonts.whiteColor22Light }}>{item.desc}</Text>
+                <Text
+                  style={{
+                    alignSelf: "flex-end",
+                    ...Fonts.whiteColor22Light,
+                  }}
+                >
+                  $ {item.cost}
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      ))
+    ) : (
+      <View style={styles.container}>
+        <ActivityIndicator size="small" color="#f8b26a" />
+      </View>
+    );
   }
 
   function cornerImage() {
