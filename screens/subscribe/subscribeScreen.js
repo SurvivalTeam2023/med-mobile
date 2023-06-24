@@ -20,6 +20,7 @@ import {
   useGetSubscriptionType,
 } from "../../hooks/subscription.hook";
 import { handleWebNavigation } from "../../utils/app.util";
+import { ActivityIndicator } from "react-native-paper";
 
 const subscriptionAllowsList = [
   "Download unlimited songs",
