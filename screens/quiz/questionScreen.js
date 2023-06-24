@@ -18,7 +18,7 @@ import {
 } from "../../hooks/question.hook";
 import { store } from "../../core/store/store";
 import { useDispatch } from "react-redux";
-import { questionAction } from "../../redux/auth/question.slice";
+import { questionAction } from "../../redux/other/question.slice";
 import { formatQuestionData } from "../../utils/app.util";
 const Separator = () => <View style={styles.separator} />;
 import { AntDesign } from "@expo/vector-icons";

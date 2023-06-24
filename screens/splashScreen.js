@@ -45,9 +45,9 @@ const SplashScreen = ({ navigation }) => {
     if (!retrievedToken || !retrivedUser) {
       navigation.navigate("SignIn");
     } else {
-      dispatch(userAction.storeTokenWithoutLocal(retrievedToken.token));
+      dispatch(userAction.storeTokenWithoutLocal(retrievedToken));
       dispatch(userAction.storeUserWithoutLocal(retrivedUser));
-      const role = store.getState().user.artist_role;
+      const role = store.getState().user.role;
       if (role === ARTIST_ROLE) {
         navigation.push(Navigate.ARTIST_PROFILE);
       } else {

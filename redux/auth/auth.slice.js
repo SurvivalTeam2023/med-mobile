@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  parseTokenToRole,
-  parseTokenToUsername,
-  removeTokenFromStorage,
-} from "../../utils/app.util";
+import { parseTokenToRole, removeTokenFromStorage } from "../../utils/app.util";
 import {
   removeAllDataFromLocal,
   storeTokenToLocal,
@@ -12,11 +8,10 @@ import {
 
 const initialState = {
   isTriedLogin: false,
-  username: null,
-  user: null,
+  data: null,
   token: null,
-  audio: null,
-  artist_role: null,
+  refreshToken: null,
+  role: null,
 };
 const reducer = createSlice({
   name: "user",
@@ -24,27 +19,26 @@ const reducer = createSlice({
   reducers: {
     resetState: () => ({ ...initialState }),
     storeUser: (state, { payload }) => {
-      state.user = payload;
+      state.data = payload;
       storeUserToLocal(payload).then((r) =>
         console.log("store_user_local_success")
       );
     },
     storeUserWithoutLocal: (state, { payload }) => {
-      state.audio = null;
-      state.user = payload;
+      state.data = payload;
     },
     storeToken: (state, { payload }) => {
-      state.username = parseTokenToUsername(payload);
-      state.token = payload;
-      state.artist_role = parseTokenToRole(payload);
+      state.token = payload["access_token"];
+      state.refreshToken = payload["refresh_token"];
+      state.role = parseTokenToRole(payload["access_token"]);
       storeTokenToLocal(payload).then((r) =>
         console.log("store_token_local_success")
       );
     },
     storeTokenWithoutLocal: (state, { payload }) => {
-      state.username = parseTokenToUsername(payload);
-      state.token = payload;
-      state.artist_role = parseTokenToRole(payload);
+      state.token = payload["access_token"];
+      state.refreshToken = payload["refresh_token"];
+      state.role = parseTokenToRole(payload["access_token"]);
     },
     removeToken: (state, { payload }) => {
       removeTokenFromStorage();
@@ -63,3 +57,24 @@ export const userAction = {
   ...reducer.actions,
 };
 export const userReducer = reducer.reducer;
+
+// {
+//   "address": "696 XVNT",
+//   "avatar": "32182d5e-be57-4f66-a91f-67e8bd72da3c",
+//   "city": "BMT",
+//   "created_at": "32182d5e-be57-4f66-a91f-67e8bd72da3c",
+//   "dob": "2000-01-22T13:18:58.000Z",
+//   "email": "chaubao.cloud@gmail.com",
+//   "favorite": 0,
+//   "firstName": "Bao",
+//   "following": 0,
+//   "followingArtist": [],
+//   "gender": "MALE",
+//   "id": "32182d5e-be57-4f66-a91f-67e8bd72da3c",
+//   "lastName": "Chau",
+//   "lastestSub": null,
+//   "playlist": 0,
+//   "publicPlaylist": [],
+//   "status": "ACTIVE",
+//   "username": "bao.huynh"
+// }

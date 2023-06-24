@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
-  Dimensions,
   ImageBackground,
   ScrollView,
   StatusBar,
@@ -21,7 +20,7 @@ import {
   useGetPlaylist,
 } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
-import { playlistAction } from "../../redux/auth/playlist.slice";
+import { playlistAction } from "../../redux/other/playlist.slice";
 import { AntDesign } from "@expo/vector-icons";
 import { store } from "../../core/store/store";
 import { getUserFromDb } from "../../utils/app.util";

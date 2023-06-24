@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useDispatch } from "react-redux";
-import { genreArtistAction } from "../../redux/auth/genreArtist.slice";
+import { genreArtistAction } from "../../redux/other/genreArtist.slice";
 import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");

@@ -35,7 +35,11 @@ const responseInterceptor = (response) => {
 };
 
 const errorInterceptor = (error) => {
-  console.error("Request failed:", error.toJSON());
+  console.error(
+    error
+    // `Request failed:[${error.status}]`,
+    // `${error.baseURL}${error.url}`
+  );
   throw error;
 };
 

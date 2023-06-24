@@ -1,11 +1,11 @@
 import { CallAPI } from "../core/api/baseAxios";
 
-export const getUserDataByUsername = (username) => {
+export const getUserDataByUsernameApi = (username) => {
   const queryUrl = `/user/${username}`;
   return CallAPI.get(queryUrl);
 };
 
-export const getUserProfileByUserId = (userId) => {
+export const getUserProfileByUserIdApi = (userId) => {
   const queryUrl = `/user/getProfile/${userId}`;
   return CallAPI.get(queryUrl);
 };

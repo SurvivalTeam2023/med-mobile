@@ -18,7 +18,7 @@ import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { useFaceRegApi } from "../../hooks/face.hook";
 import * as FileSystem from "expo-file-system";
-import { imageAction } from "../../redux/auth/image.slice";
+import { imageAction } from "../../redux/other/image.slice";
 import { Navigate } from "../../constants/navigate";
 
 const ShowCamScreen = ({ navigation }) => {

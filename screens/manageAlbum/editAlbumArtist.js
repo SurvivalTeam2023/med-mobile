@@ -23,7 +23,7 @@ import {
   useUpdatePlaylistForArtistAPI,
 } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
-import { playlistAction } from "../../redux/auth/playlist.slice";
+import { playlistAction } from "../../redux/other/playlist.slice";
 import { store } from "../../core/store/store";
 import { useMutation } from "react-query";
 import { useEffect } from "react";

@@ -18,7 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
-import { playlistAction } from "../../redux/auth/playlist.slice";
+import { playlistAction } from "../../redux/other/playlist.slice";
 import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 

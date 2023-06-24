@@ -2,32 +2,18 @@ import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  ImageBackground,
   ScrollView,
   StatusBar,
-  FlatList,
   Image,
   Text,
-  TouchableOpacity,
   StyleSheet,
-  Modal,
   TextInput,
   Pressable,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import {
-  useGetPlaylist,
-  useGetPlaylistByIdAPI,
-  useUpdatePlaylistForArtistAPI,
-} from "../../hooks/playlist.hook";
 import { useDispatch, useSelector } from "react-redux";
-import { playlistAction } from "../../redux/auth/playlist.slice";
-import { store } from "../../core/store/store";
-import { useMutation } from "react-query";
-import { useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import { useUpdateAudioArtistAPI } from "../../hooks/playlistTracks.hook";
 
 const EditAudioArtistScreen = ({ navigation }) => {

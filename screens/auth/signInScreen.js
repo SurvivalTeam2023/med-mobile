@@ -31,18 +31,14 @@ import axios from "axios";
 import { store } from "../../core/store/store";
 import { ARTIST_ROLE } from "../../constants/role";
 import { Navigate } from "../../constants/navigate";
-import {
-  useGetUserDataByUsername,
-  useGetUserProfile,
-} from "../../hooks/user.hook";
-import { parseTokenToUserId, parseTokenToUsername } from "../../utils/app.util";
+import { fetchUserData } from "../../redux/auth/auth.action";
 
 const SignInScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [errorCode, setErrorCode] = useState(null);
   const [otherErrorCode, setOtherErrorCode] = useState(null);
   //Login hook
-  const { mutate, isSuccess: isLoginWithUserNamePasswordSuccess } = useLogin();
+  const { mutate } = useLogin();
   const { mutate: mutateLoginGoogle } = useLoginWithGmail();
   //State
   const [state, setState] = useState({
@@ -52,21 +48,7 @@ const SignInScreen = ({ navigation }) => {
     email: null,
     backClickCount: 0,
   });
-  const [userState, setUserState] = useState({
-    username: null,
-    userId: null,
-  });
-  const { data: userData, isSuccess: isGetUserDataSuccess } =
-    useGetUserDataByUsername(
-      isLoginWithUserNamePasswordSuccess ? userState["username"] : null
-    );
-  const { data: userProfileData, isSuccess: isGetUserProfileSuccess } =
-    useGetUserProfile(
-      isLoginWithUserNamePasswordSuccess ? userState["userId"] : null
-    );
-  if (isGetUserProfileSuccess && isGetUserDataSuccess) {
-    console.log(userData, userProfileData);
-  }
+
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -89,11 +71,6 @@ const SignInScreen = ({ navigation }) => {
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const { showPassword, userName, password, backClickCount } = state;
-
-  if (isLoginWithUserNamePasswordSuccess) {
-    dispatch(userAction.storeUser(userData));
-  }
-
   const handleLogin = () => {
     if (state["userName"] == null || state["password"] == null) return;
     mutate(
@@ -102,23 +79,21 @@ const SignInScreen = ({ navigation }) => {
         password: state["password"],
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           const access_token = data["access_token"];
-          dispatch(userAction.storeToken(access_token));
-          setUserState({
-            username: parseTokenToUsername(access_token),
-            userId: parseTokenToUserId(access_token),
-          });
-          refetch();
-          AsyncStorage.setItem(
-            TOKEN_KEY_STORAGE,
-            JSON.stringify({ token: access_token })
-          );
-          const role = store.getState().user.artist_role;
-          if (role === ARTIST_ROLE) {
-            navigation.push(Navigate.ARTIST_PROFILE);
+          dispatch(userAction.storeToken(data));
+          const userData = await fetchUserData(access_token);
+          if (userData) {
+            dispatch(userAction.storeUser(userData));
+
+            const role = store.getState().user.role;
+            if (role === ARTIST_ROLE) {
+              navigation.push(Navigate.ARTIST_PROFILE);
+            } else {
+              navigation.push(Navigate.OPTION_SCREEN);
+            }
           } else {
-            navigation.push(Navigate.OPTION_SCREEN);
+            setOtherErrorCode(err);
           }
         },
         onError: (error) => {
@@ -179,7 +154,6 @@ const SignInScreen = ({ navigation }) => {
         onSuccess: (data) => {
           const access_token = data["access_token"];
           dispatch(userAction.storeToken(access_token));
-          refetch();
           AsyncStorage.setItem(
             TOKEN_KEY_STORAGE,
             JSON.stringify({ token: access_token })

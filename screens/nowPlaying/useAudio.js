@@ -24,6 +24,8 @@ const useAudio = () => {
   }, [sound]);
 
   const loadSound = useCallback(async () => {
+    if (!audioList || audioList.length === 0) return;
+    console.log(audioList);
     const { url } = audioList[currentAudioIndex];
     try {
       console.log("Sound Loading...", url);
