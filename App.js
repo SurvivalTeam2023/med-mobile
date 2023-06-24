@@ -117,7 +117,14 @@ const App = () => {
             />
             <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
             <Stack.Screen name="Search" component={searchScreen} />
-            <Stack.Screen name="Tracks" component={tracksScreen} />
+            <Stack.Screen
+              name="Tracks"
+              component={tracksScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const albumId = route.params.playlistId;
+                return [albumId];
+              }}
+            />
             <Stack.Screen name="HomePage" component={ExploreScreen} />
             <Stack.Screen name="EditScreen" component={editProfileScreen} />
             <Stack.Screen

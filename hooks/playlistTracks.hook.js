@@ -10,11 +10,13 @@ import {
 
 export const useGetTracksFromPlaylist = (payload) =>
   useQuery({
-    queryKey: ["getAudio"],
+    queryKey: ["getAudio", payload],
     queryFn: async () => {
-      const data = await getTracksAPI();
-      return data;
+      return await getTracksAPI(payload);
     },
+    enabled: !!payload,
+    retry: 2,
+    retryDelay: 1000,
   });
 export const useGetAudioForArtistAPI = (payload) =>
   useQuery({

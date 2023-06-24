@@ -41,25 +41,24 @@ let tracksList = [];
 
 const sortOptions = ["Name", "Date Added", "Artist"];
 
-const TracksScreen = ({ navigation }) => {
+const TracksScreen = ({ navigation, route }) => {
+  const playlistId = route.params.playlistId;
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
   });
-
+  console.log(playlistId);
   const {
     data: dataTracksFromPlaylist,
     isSuccess: successTracksFromPlaylist,
     isError: isErrorTracksFromPlaylist,
-  } = useGetTracksFromPlaylist();
-
-  if (successTracksFromPlaylist) {
-    tracksList = dataTracksFromPlaylist["data"].items;
-  }
+  } = useGetTracksFromPlaylist({
+    status: "ACTIVE",
+    playlistId: playlistId,
+  });
 
   const handleOptionSelect = (option) => {
-    // Perform action based on selected option
     switch (option) {
       case "Share":
         console.log("Share option selected");
@@ -109,6 +108,7 @@ const TracksScreen = ({ navigation }) => {
   );
 
   function currentlyPlayedSong() {
+    return;
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -443,7 +443,7 @@ const TracksScreen = ({ navigation }) => {
           </TouchableOpacity>
           <MaskedView
             style={{ flex: 1, height: 28 }}
-            maskElement={<Text style={{ ...Fonts.bold22 }}>Tracks</Text>}
+            maskElement={<Text style={{ ...Fonts.bold22 }}>Songs</Text>}
           >
             <LinearGradient
               start={{ x: 1, y: 0.2 }}

@@ -1,11 +1,13 @@
 import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
+import queryString from "query-string";
 
 export const getTracksAPI = async (payload) => {
-  const playlistId = store.getState().playlist.playlistId;
-  const queryParam = `playlistId=` + `${playlistId}`;
-  const url = "/audio?status=ACTIVE&" + `${queryParam}`;
-  return CallAPI.get(url);
+  const queryUrl = queryString.stringifyUrl({
+    url: "/audio",
+    query: payload,
+  });
+  return CallAPI.get(queryUrl);
 };
 export const getAudioForArtistAPI = async () => {
   const playlistId = store.getState().playlist.playlistId;

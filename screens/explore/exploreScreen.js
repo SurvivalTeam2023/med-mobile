@@ -501,7 +501,7 @@ const ExploreScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks")}
+        onPress={() => navigation.push("Tracks", { playlistId: item.id })}
       >
         <ImageBackground
           source={{ uri: `${item?.image}` }}
