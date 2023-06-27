@@ -23,4 +23,3 @@ export const store = configureStore({
   },
 });
 export const useAppDispatch = () => useDispatch;
-export const useAppSelecto = useSelector;
