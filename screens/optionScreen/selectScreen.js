@@ -38,18 +38,18 @@ const OptionScreen = ({ navigation }) => {
   } = useIsFavoriteExisted();
 
   if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted["data"];
+    isFavoriteExisted = dataIsFavoriteExisted.exists;
   }
   if (isErrorIsFavoriteExisted) {
     console.log("error", errorIsFavoriteExisted);
   }
 
   if (successIsValidQuiz) {
-    isQuestionValid = dataIsValidQuiz["data"];
+    isQuestionValid = dataIsValidQuiz.isValid;
   }
 
   if (isErrorIsValidQuiz) {
-    console.log("error", errorIsValidQuiz);
+    console.log("Checking Valid Quiz failed", errorIsValidQuiz);
   }
   useEffect(() => {
     if (isQuestionValid !== null && isFavoriteExisted !== null) {
@@ -59,28 +59,19 @@ const OptionScreen = ({ navigation }) => {
   }, []);
 
   const validate = () => {
-    if (isQuestionValid.isValid === true && isFavoriteExisted.exists === true) {
+    if (isQuestionValid === true && isFavoriteExisted === true) {
       Alert.alert("You've already done quiz");
       setTimeout(() => {
         navigation.push(Navigate.BOTTOM_TAB_BAR);
       }, 500);
-    } else if (
-      isQuestionValid.isValid === false &&
-      isFavoriteExisted.exists === true
-    ) {
+    } else if (isQuestionValid === false && isFavoriteExisted === true) {
       navigation.push(Navigate.QUIZ);
-    } else if (
-      isQuestionValid.isValid === true &&
-      isFavoriteExisted.exists === false
-    ) {
+    } else if (isQuestionValid === true && isFavoriteExisted === false) {
       Alert.alert("You've already done quiz");
       setTimeout(() => {
         navigation.push(Navigate.CHOOSE_MUSIC);
       }, 500);
-    } else if (
-      isQuestionValid.isValid === false &&
-      isFavoriteExisted.exists === false
-    ) {
+    } else if (isQuestionValid === false && isFavoriteExisted === false) {
       navigation.push(Navigate.QUIZ);
     }
   };
