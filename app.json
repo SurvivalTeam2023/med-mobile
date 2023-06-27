@@ -17,11 +17,11 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.render.mymusicrn",
+      "bundleIdentifier": "med-app",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.render.mymusicrn",
+      "package": "med-app",
       "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",

@@ -86,12 +86,7 @@ const SignInScreen = ({ navigation }) => {
           if (userData) {
             dispatch(userAction.storeUser(userData));
 
-            const role = store.getState().user.role;
-            if (role === ARTIST_ROLE) {
-              navigation.push(Navigate.ARTIST_PROFILE);
-            } else {
-              navigation.push(Navigate.OPTION_SCREEN);
-            }
+            navigation.push(Navigate.OPTION_SCREEN);
           } else {
             setOtherErrorCode(err);
           }
@@ -120,7 +115,7 @@ const SignInScreen = ({ navigation }) => {
     );
   };
 
-  const [response, promptAsync, request] = Google.useAuthRequest({
+  const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
   });
@@ -138,6 +133,7 @@ const SignInScreen = ({ navigation }) => {
         )
         .then(function (response) {
           email = response.data["email"];
+          console.log("GOT SUBJECT_TOKEN: ", token);
           handleLoginWithGmail();
         });
     }
@@ -151,19 +147,14 @@ const SignInScreen = ({ navigation }) => {
         email: email,
       },
       {
-        onSuccess: (data) => {
-          const access_token = data["access_token"];
-          dispatch(userAction.storeToken(access_token));
-          AsyncStorage.setItem(
-            TOKEN_KEY_STORAGE,
-            JSON.stringify({ token: access_token })
-          );
-          const role = store.getState().user.artist_role;
-
-          if (role === ARTIST_ROLE) {
-            navigation.push(Navigate.ARTIST_PROFILE);
-          } else {
+        onSuccess: async (data) => {
+          dispatch(userAction.storeToken(data));
+          const userData = await fetchUserData(data["access_token"]);
+          if (userData) {
+            dispatch(userAction.storeUser(userData));
             navigation.push(Navigate.OPTION_SCREEN);
+          } else {
+            setOtherErrorCode(err);
           }
         },
         onError: (error) => {
@@ -334,7 +325,11 @@ const SignInScreen = ({ navigation }) => {
             marginHorizontal: Sizes.fixPadding - 5.0,
           }}
         >
-          <TouchableOpacity onPress={() => (!request ? promptAsync() : null)}>
+          <TouchableOpacity
+            onPress={() => {
+              request ? promptAsync() : null;
+            }}
+          >
             <Image
               source={require("../../assets/images/icon/google-icon.png")}
               style={{ width: 15.0, height: 15.0 }}
