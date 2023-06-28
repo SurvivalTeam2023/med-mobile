@@ -5,6 +5,11 @@ export const getQuestionBankApi = (payload) => {
   const url = "/questionBank";
   return CallAPI.post(url);
 };
+export const saveQuizResultApi = (payload) => {
+  const { questionBankId, status, optionId } = payload;
+  const url = "/result";
+  return CallAPI.post(url, payload);
+};
 
 export const isValidQuiz = (payload) => {
   const url = "/questionBank";

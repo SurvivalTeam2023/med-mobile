@@ -26,18 +26,18 @@ const ResultScreen = ({ navigation }) => {
     refetch: refetchFav,
   } = useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted["data"];
+    isFavoriteExisted = dataIsFavoriteExisted.exists;
   }
   if (isErrorIsFavoriteExisted) {
-    console.log("error", errorIsFavoriteExisted);
+    console.log("Failed to get favorited existed", errorIsFavoriteExisted);
   }
 
   const onPressHandler = () => {
     refetchFav();
-    if (isFavoriteExisted.exists === true) {
+    if (isFavoriteExisted === true) {
       navigation.push(Navigate.BOTTOM_TAB_BAR);
     }
-    if (isFavoriteExisted.exists === false) {
+    if (isFavoriteExisted === false) {
       navigation.push(Navigate.CHOOSE_MUSIC);
     }
   };

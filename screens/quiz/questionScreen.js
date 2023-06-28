@@ -14,6 +14,7 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   useGetQuestionBankApi,
+  useSaveQuizResultApi,
   useSetQuizStatus,
 } from "../../hooks/question.hook";
 import { store } from "../../core/store/store";
@@ -139,21 +140,55 @@ const QuestionScreen = () => {
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const { data, error, isSuccess, isError } = useGetQuestionBankApi();
   const { mutate } = useSetQuizStatus();
+  const { mutate: mutateSaveQuizResult } = useSaveQuizResultApi();
 
   let questionData;
   let totalQuestions;
-
+  let optionIdArr;
+  let questBankId;
   const setQuizStatus = () => {
     mutate({
       onSuccess: (data) => {},
       onError: (error) => {
-        console.log("error", error);
+        console.log("Failing set quiz status", error);
       },
     });
   };
 
+  const getOptionAndQuestionBankId = () => {
+    const answer = store.getState().question.answer;
+    questBankId = store.getState().question.questionBankId;
+    console.log(answer);
+    const optionId = answer.map((obj) => {
+      return obj.optionId;
+    });
+    optionIdArr = optionId;
+    if (questBankId && optionIdArr) {
+      saveQuizResult();
+    }
+  };
+
+  const saveQuizResult = () => {
+    mutateSaveQuizResult(
+      {
+        questionBankId: questBankId,
+        status: "ACTIVE",
+        optionId: optionIdArr,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Save quiz result successfully", data);
+          navigation.navigate("Result");
+        },
+        onError: (error) => {
+          console.log("Failing save quiz result", error);
+        },
+      }
+    );
+  };
+
   if (isSuccess) {
-    const dataRaw = data["data"].questionBankQuestion;
+    const dataRaw = data.questionBankQuestion;
     const dataFormat = formatQuestionData(dataRaw);
     totalQuestions = dataFormat.length;
     questionData = dataFormat[index];
@@ -175,10 +210,12 @@ const QuestionScreen = () => {
           optionId: option_id,
         })
       );
+      console.log(store.getState().question.answer);
       setSelectedAnswerIndex(index);
     }
   };
   useEffect(() => {
+    pickOption;
     setSelectedAnswerIndex(null);
   }, [index]);
 
@@ -316,7 +353,7 @@ const QuestionScreen = () => {
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() => {
-              setQuizStatus(), navigation.navigate("Result");
+              getOptionAndQuestionBankId(), setQuizStatus();
             }}
           >
             <LinearGradient
