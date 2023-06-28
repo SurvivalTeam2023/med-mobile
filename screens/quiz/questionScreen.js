@@ -178,6 +178,7 @@ const QuestionScreen = () => {
       {
         onSuccess: (data) => {
           console.log("Save quiz result successfully", data);
+          navigation.navigate("Result");
         },
         onError: (error) => {
           console.log("Failing save quiz result", error);
@@ -352,9 +353,7 @@ const QuestionScreen = () => {
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() => {
-              getOptionAndQuestionBankId(),
-                setQuizStatus(),
-                navigation.navigate("Result");
+              getOptionAndQuestionBankId(), setQuizStatus();
             }}
           >
             <LinearGradient
