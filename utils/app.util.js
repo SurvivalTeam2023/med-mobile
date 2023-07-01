@@ -42,7 +42,7 @@ export const formatQuestionData = (originRaw) => {
 };
 
 export const getUserFromDb = () => {
-  return store.getState()?.user?.user?.user_db;
+  return store.getState().user.data;
 };
 
 export const handleWebNavigation = async (url) => {

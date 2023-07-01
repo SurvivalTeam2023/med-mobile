@@ -18,12 +18,15 @@ import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { getUserFromDb } from "../../utils/app.util";
 import { Navigate } from "../../constants/navigate";
+import { store } from "../../core/store/store";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const userAvatar = getUserFromDb()?.avatar?.url || {};
+  // const userAvatar = getUserFromDb()?.avatar?.url || {};
+  const userAvatar = getUserFromDb()?.avatar?.url;
   const userFirstName = getUserFromDb()?.firstName || "none";
+  const userId = getUserFromDb()?.id;
   const formatNumber = (number) => {
     if (number >= 1e9) {
       return (number / 1e9).toFixed(1) + "B";
@@ -35,10 +38,9 @@ const ProfileScreen = ({ navigation }) => {
     return number?.toString();
   };
 
-  const { data, isSuccess, isError, error } = useGetUserProfile();
+  const { data, isSuccess, isError, error } = useGetUserProfile(userId);
 
   if (isSuccess) {
-    console.log(data);
     profile = data["data"];
   }
   if (isError) {

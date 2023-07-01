@@ -28,6 +28,8 @@ export const fetchUserData = async (token) => {
     address,
     dob,
     status,
+    avatar,
+    created_at,
   } = user_db;
   const {
     id: keycloakId,
@@ -56,8 +58,8 @@ export const fetchUserData = async (token) => {
     address: address || "",
     dob: dob || "",
     status: status || "",
-    created_at: id || "",
-    avatar: id || {},
+    created_at: created_at || "",
+    avatar: avatar || {},
     favorite,
     playlist,
     following,

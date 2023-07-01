@@ -5,6 +5,7 @@ import {
   updateUserAccountDetails,
   updateUserAvatar,
 } from "../api/user.api";
+import { store } from "../core/store/store";
 
 export const useGetUserDataByUsername = (username) => {
   if (!username) return;
