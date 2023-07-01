@@ -16,6 +16,11 @@ export const isValidQuiz = (payload) => {
   return CallAPI.get(url);
 };
 
+export const getFinishedQuiz = (payload) => {
+  const url = "/questionBank/user";
+  return CallAPI.get(url);
+};
+
 export const setQuizStatus = (payload) => {
   const questionBankId = store.getState().question.questionBankId;
   const queryParam = `/` + `${questionBankId}`;
