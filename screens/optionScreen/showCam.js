@@ -22,7 +22,6 @@ import { imageAction } from "../../redux/other/image.slice";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 const ShowCamScreen = ({ navigation }) => {
-  const [isImageExisted, setIsImageExisted] = useState(null);
   const [form, setForm] = useState(null);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -83,8 +82,6 @@ const ShowCamScreen = ({ navigation }) => {
     const cameraRef = useRef(null);
     const [isPreview, setIsPreview] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
-
-    useEffect(() => {}, [isImageExisted]);
 
     const { mutate } = useFaceRegApi();
     const handleProcessImage = async (form) => {
