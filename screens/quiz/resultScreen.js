@@ -12,12 +12,9 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
 import { generateColor } from "../../utils/app.util";
 import { ProgressBar } from "react-native-paper";
-
-let isFavoriteExisted;
 
 const ResultScreen = ({ navigation }) => {
   let feeling = [
@@ -96,7 +93,7 @@ const ResultScreen = ({ navigation }) => {
               }}
             >
               {data.map((e) => (
-                <View key={e.Confidence} style={styles.progressBar}>
+                <View key={e.id} style={styles.progressBar}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -164,7 +161,6 @@ const ResultScreen = ({ navigation }) => {
         style={styles.doneQuizButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          // navigation.navigate("ChooseMusic");
           onPressHandler();
         }}
       >
@@ -194,6 +190,9 @@ function cornerImage() {
   );
 }
 const styles = StyleSheet.create({
+  progressBar: {
+    marginTop: 12,
+  },
   resultInfo: {
     paddingVertical: Sizes.fixPadding + 50.0,
     marginHorizontal: Sizes.fixPadding + 10.0,
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
 
   doneQuizButtonStyle: {
     justifyContent: "center",
-    marginTop: Sizes.fixPadding * 10.0,
+    marginTop: 16,
     marginHorizontal: Sizes.fixPadding * 10.0,
     borderRadius: Sizes.fixPadding - 4.0,
   },
