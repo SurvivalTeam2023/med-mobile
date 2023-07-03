@@ -20,20 +20,6 @@ import { ProgressBar } from "react-native-paper";
 let isFavoriteExisted;
 
 const ResultScreen = ({ navigation }) => {
-  // const {
-  //   data: dataIsFavoriteExisted,
-  //   isSuccess: successIsFavoriteExisted,
-  //   isError: isErrorIsFavoriteExisted,
-  //   error: errorIsFavoriteExisted,
-  //   refetch: refetchFav,
-  // } = useIsFavoriteExisted();
-  // if (successIsFavoriteExisted) {
-  //   isFavoriteExisted = dataIsFavoriteExisted.exists;
-  // }
-  // if (isErrorIsFavoriteExisted) {
-  //   console.log("Failed to get favorited existed", errorIsFavoriteExisted);
-  // }
-
   let feeling = [
     {
       Confidence: 52.84242630004883,
@@ -144,7 +130,7 @@ const ResultScreen = ({ navigation }) => {
   };
 
   const onPressHandler = () => {
-    navigation.push("ReccommendedGenreScreen");
+    navigation.push(Navigate.RECOMMENDED_GENRE);
   };
 
   return (
