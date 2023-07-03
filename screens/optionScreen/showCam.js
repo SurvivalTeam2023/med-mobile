@@ -22,6 +22,8 @@ import { imageAction } from "../../redux/other/image.slice";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 const ShowCamScreen = ({ navigation }) => {
+  const [isImageExisted, setIsImageExisted] = useState();
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -83,29 +85,29 @@ const ShowCamScreen = ({ navigation }) => {
     const [capturedImage, setCapturedImage] = useState(null);
 
     const { mutate } = useFaceRegApi();
-    const handleProcessImage = async (fileUri) => {
-      mutate(fileUri, {
+    const handleProcessImage = async (form) => {
+      mutate(form, {
         onSuccess: (data) => {
-          const dataEmotion = data["data"];
+          const dataEmotion = data;
+          console.log("data from dataEmotion", dataEmotion);
           dispatch(imageAction.storeImage(dataEmotion));
-          console.log("Save result successfully", store.getState().image);
+          setIsImageExisted(store.getState().image.imageResult);
+          console.log(
+            "Save result successfully",
+            store.getState().image.imageResult
+          );
         },
         onError: (error) => {
           console.log("Can not process image", error);
         },
       });
-      console.log("sdafsa", store.getState().image);
     };
 
-    const checkImgExisted = () => {
-      let img = store.getState.image;
-      if (img) {
-        Alert.alert("Processing image...");
-        setTimeout(() => {
-          navigation.push(Navigate.CAM_RESULT);
-        }, 5000);
+    const checkImageExisted = () => {
+      if (isImageExisted) {
+        navigation.push(Navigate.CAM_RESULT);
       } else {
-        Alert.alert("Failing to take picture. Please try again");
+        Alert.alert("Taking picture failed. Please try again");
       }
     };
 
@@ -139,8 +141,14 @@ const ShowCamScreen = ({ navigation }) => {
             to: fileUri,
             type: FileSystem.MIME_TYPE_JPEG,
           });
-
-          handleProcessImage(fileUri);
+          const formData = new FormData();
+          console.log(fileUri);
+          formData.append("file", {
+            uri: fileUri,
+            name: "image.jpeg",
+            type: "image/jpeg",
+          });
+          handleProcessImage(formData);
         }
       }
     };
@@ -183,7 +191,10 @@ const ShowCamScreen = ({ navigation }) => {
               style={styles.continueButtonStyle}
               activeOpacity={0.9}
               onPress={() => {
-                checkImgExisted();
+                Alert.alert("Processing image...");
+                setTimeout(() => {
+                  checkImageExisted();
+                }, 5000);
               }}
             >
               <LinearGradient

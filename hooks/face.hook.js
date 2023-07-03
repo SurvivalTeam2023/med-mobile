@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { faceRegApi } from "../api/face.api";
 
-export const useFaceRegApi = (fileUri) =>
+export const useFaceRegApi = (payload) =>
   useMutation({
-    mutationFn: (fileUri) => faceRegApi(fileUri),
+    mutationFn: (payload) => faceRegApi(payload),
   });
