@@ -20,7 +20,7 @@ import { useFaceRegApi } from "../../hooks/face.hook";
 import * as FileSystem from "expo-file-system";
 import { imageAction } from "../../redux/other/image.slice";
 import { Navigate } from "../../constants/navigate";
-
+import { store } from "../../core/store/store";
 const ShowCamScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -88,11 +88,25 @@ const ShowCamScreen = ({ navigation }) => {
         onSuccess: (data) => {
           const dataEmotion = data["data"];
           dispatch(imageAction.storeImage(dataEmotion));
+          console.log("Save result successfully", store.getState().image);
         },
         onError: (error) => {
-          console.log("error", error);
+          console.log("Can not process image", error);
         },
       });
+      console.log("sdafsa", store.getState().image);
+    };
+
+    const checkImgExisted = () => {
+      let img = store.getState.image;
+      if (img) {
+        Alert.alert("Processing image...");
+        setTimeout(() => {
+          navigation.push(Navigate.CAM_RESULT);
+        }, 5000);
+      } else {
+        Alert.alert("Failing to take picture. Please try again");
+      }
     };
 
     useEffect(() => {
@@ -164,14 +178,12 @@ const ShowCamScreen = ({ navigation }) => {
                 color="black"
               />
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.continueButtonStyle}
               activeOpacity={0.9}
               onPress={() => {
-                Alert.alert("Processing image...");
-                setTimeout(() => {
-                  navigation.push(Navigate.CAM_RESULT);
-                }, 5000);
+                checkImgExisted();
               }}
             >
               <LinearGradient

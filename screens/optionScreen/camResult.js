@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -14,39 +14,199 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
-
+import { ProgressBar } from "react-native-paper";
+import { generateColor } from "../../utils/app.util";
 const CamResultScreen = ({ navigation }) => {
   let feeling = store.getState().image["imageResult"];
+  feeling = [
+    {
+      Confidence: 52.84242630004883,
+      Type: "HAPPY",
+    },
+    {
+      Confidence: 31.79851531982422,
+      Type: "CALM",
+    },
+    {
+      Confidence: 6.743500232696533,
+      Type: "SURPRISED",
+    },
+    {
+      Confidence: 6.225941181182861,
+      Type: "FEAR",
+    },
+    {
+      Confidence: 5.255831718444824,
+      Type: "CONFUSED",
+    },
+    {
+      Confidence: 3.8689191341400146,
+      Type: "SAD",
+    },
+    {
+      Confidence: 2.0175960063934326,
+      Type: "ANGRY",
+    },
+    {
+      Confidence: 1.977848768234253,
+      Type: "DISGUSTED",
+    },
+  ];
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            {signupInfo()}
-          </ScrollView>
-        </ScrollView>
+  let quizResult = [
+    {
+      quizId: 0,
+      createdDate: "01/01/2000",
+      point: 100,
+      numberOfQUestion: 20,
+    },
+    {
+      quizId: 1,
+      createdDate: "01/01/2000",
+      point: 100,
+      numberOfQUestion: 20,
+    },
+    {
+      quizId: 2,
+      createdDate: "01/01/2000",
+      point: 100,
+      numberOfQUestion: 20,
+    },
+  ];
+
+  const data = feeling.map((e) => {
+    return {
+      value: e.Confidence * 0.01,
+      color: generateColor(),
+      type: e.Type.charAt(0).toUpperCase() + e.Type.slice(1).toLowerCase(),
+      percentage: e.Confidence.toFixed(2),
+    };
+  });
+
+  const quizHistory = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 10,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <Text
+              style={{
+                fontSize: 24,
+                textAlign: "center",
+                fontWeight: "450",
+                paddingVertical: 8,
+              }}
+            >
+              Quiz History
+            </Text>
+            {quizResult.map((e) => (
+              <View
+                key={e.quizId}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderColor: "grey",
+                  paddingHorizontal: 8,
+                  paddingVertical: 12,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "400" }}>
+                    Quiz: {e.quizId}
+                  </Text>
+                  <Text style={{ fontSize: 18 }}>Score: {e.point}</Text>
+                </View>
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text
+                    style={{ fontSize: 12, color: "#aaa", fontStyle: "italic" }}
+                  >
+                    Created At: {e.createdDate}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
-    </SafeAreaView>
-  );
+    );
+  };
+
+  const progressQuiz = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 10,
+          marginTop: 8,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 24,
+                  textAlign: "center",
+                  fontWeight: "450",
+                  paddingVertical: 8,
+                  borderBottomWidth: 0.5,
+                  borderColor: "#ddd",
+                }}
+              >
+                Image Result
+              </Text>
+            </View>
+            <View style={{ marginBottom: Sizes.fixPadding * 2 }}>
+              {data.map((e) => (
+                <View key={e.Confidence} style={styles.progressBar}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignContent: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 18, fontWeight: "400" }}>
+                      {e.type}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 14, fontWeight: "400", marginTop: 1 }}
+                    >
+                      {e.percentage}%
+                    </Text>
+                  </View>
+                  <View>
+                    <ProgressBar
+                      style={{ height: 20, borderRadius: 8, marginTop: 4 }}
+                      progress={e.value}
+                      color={e.color}
+                    />
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   function signupInfo() {
     return (
-      <View style={{ marginTop: Sizes.fixPadding + 5.0 }}>
+      <View>
         <MaskedView
           style={{ height: 35 }}
           maskElement={
-            <Text style={{ textAlign: "center", ...Fonts.bold30 }}>
-              You are
-            </Text>
+            <Text style={{ textAlign: "center", ...Fonts.bold30 }}>Result</Text>
           }
         >
           <LinearGradient
@@ -56,24 +216,9 @@ const CamResultScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        {result()}
+        {progressQuiz()}
+        {quizHistory()}
         {continueButton()}
-      </View>
-    );
-  }
-
-  function result() {
-    return (
-      <View>
-        {feeling &&
-          feeling.map((item) => {
-            return (
-              <View key={item.Confidence} style={styles.result}>
-                <Text>{item.Type}</Text>
-                <Text>{item.Confidence.toFixed(2)} %</Text>
-              </View>
-            );
-          })}
       </View>
     );
   }
@@ -131,9 +276,28 @@ const CamResultScreen = ({ navigation }) => {
       </View>
     );
   }
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      <StatusBar backgroundColor={Colors.primaryColor} />
+      <View>
+        <ScrollView
+          contentContainerStyle={{ marginTop: -50 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {cornerImage()}
+
+          {signupInfo()}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
+  progressBar: {
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
   textFieldWrapStyle: {
     flexDirection: "row",
     alignItems: "center",
