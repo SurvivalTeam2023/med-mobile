@@ -14,32 +14,137 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
+import { generateColor } from "../../utils/app.util";
+import { ProgressBar } from "react-native-paper";
 
 let isFavoriteExisted;
 
 const ResultScreen = ({ navigation }) => {
-  const {
-    data: dataIsFavoriteExisted,
-    isSuccess: successIsFavoriteExisted,
-    isError: isErrorIsFavoriteExisted,
-    error: errorIsFavoriteExisted,
-    refetch: refetchFav,
-  } = useIsFavoriteExisted();
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted.exists;
-  }
-  if (isErrorIsFavoriteExisted) {
-    console.log("Failed to get favorited existed", errorIsFavoriteExisted);
-  }
+  // const {
+  //   data: dataIsFavoriteExisted,
+  //   isSuccess: successIsFavoriteExisted,
+  //   isError: isErrorIsFavoriteExisted,
+  //   error: errorIsFavoriteExisted,
+  //   refetch: refetchFav,
+  // } = useIsFavoriteExisted();
+  // if (successIsFavoriteExisted) {
+  //   isFavoriteExisted = dataIsFavoriteExisted.exists;
+  // }
+  // if (isErrorIsFavoriteExisted) {
+  //   console.log("Failed to get favorited existed", errorIsFavoriteExisted);
+  // }
+
+  let feeling = [
+    {
+      Confidence: 52.84242630004883,
+      Type: "HAPPY",
+    },
+    {
+      Confidence: 31.79851531982422,
+      Type: "CALM",
+    },
+    {
+      Confidence: 6.743500232696533,
+      Type: "SURPRISED",
+    },
+    {
+      Confidence: 6.225941181182861,
+      Type: "FEAR",
+    },
+    {
+      Confidence: 5.255831718444824,
+      Type: "CONFUSED",
+    },
+    {
+      Confidence: 3.8689191341400146,
+      Type: "SAD",
+    },
+    {
+      Confidence: 2.0175960063934326,
+      Type: "ANGRY",
+    },
+    {
+      Confidence: 1.977848768234253,
+      Type: "DISGUSTED",
+    },
+  ];
+  const data = feeling?.map((e, index) => {
+    return {
+      id: index + 1,
+      value: e.Confidence * 0.01,
+      color: generateColor(),
+      type: e.Type.charAt(0).toUpperCase() + e.Type.slice(1).toLowerCase(),
+      percentage: e.Confidence.toFixed(2),
+    };
+  });
+
+  const progressQuiz = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 10,
+          marginTop: 8,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 24,
+                  textAlign: "center",
+                  fontWeight: "450",
+                  paddingVertical: 8,
+                  borderBottomWidth: 1,
+                  borderColor: "#ddd",
+                }}
+              >
+                Quiz Result
+              </Text>
+            </View>
+            <View
+              style={{
+                marginBottom: Sizes.fixPadding * 2,
+                paddingHorizontal: 12,
+              }}
+            >
+              {data.map((e) => (
+                <View key={e.Confidence} style={styles.progressBar}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignContent: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 18, fontWeight: "400" }}>
+                      {e.type}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 14, fontWeight: "400", marginTop: 4 }}
+                    >
+                      {e.percentage}%
+                    </Text>
+                  </View>
+                  <View>
+                    <ProgressBar
+                      style={{ height: 20, borderRadius: 8, marginTop: 4 }}
+                      progress={e.value}
+                      color={e.color}
+                    />
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   const onPressHandler = () => {
-    refetchFav();
-    if (isFavoriteExisted === true) {
-      navigation.push(Navigate.BOTTOM_TAB_BAR);
-    }
-    if (isFavoriteExisted === false) {
-      navigation.push(Navigate.CHOOSE_MUSIC);
-    }
+    navigation.push("ReccommendedGenreScreen");
   };
 
   return (
@@ -59,34 +164,13 @@ const ResultScreen = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {quizResultTitle()}
+            {progressQuiz()}
             {doneResultBtn()}
           </ScrollView>
         </ScrollView>
       </View>
     </SafeAreaView>
   );
-
-  function quizResultTitle() {
-    return (
-      <LinearGradient
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 0 }}
-        colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-        style={styles.resultInfo}
-      >
-        <Text style={styles.resultInfoStyle}>Thank you for your answers</Text>
-        <View style={{ alignItems: "center" }}>
-          <Image
-            style={styles.logo}
-            source={{
-              uri: "https://cdn2.iconfinder.com/data/icons/working-at-home/512/N_P_182Artboard_1_copy_11-512.png",
-            }}
-          />
-        </View>
-      </LinearGradient>
-    );
-  }
 
   function doneResultBtn() {
     return (

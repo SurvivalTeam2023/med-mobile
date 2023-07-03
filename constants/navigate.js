@@ -1,4 +1,5 @@
 export const Navigate = {
+  RECOMMENDED_GENRE: "ReccommendedGenreScreen",
   BOTTOM_TAB_BAR: "BottomTabBar",
   NOW_PLAYING: "NowPlaying",
   ARTIST_PROFILE: "ArtistProfile",

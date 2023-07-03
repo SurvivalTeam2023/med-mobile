@@ -22,8 +22,8 @@ import { imageAction } from "../../redux/other/image.slice";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 const ShowCamScreen = ({ navigation }) => {
-  const [isImageExisted, setIsImageExisted] = useState();
-
+  const [isImageExisted, setIsImageExisted] = useState(null);
+  const [form, setForm] = useState(null);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -84,6 +84,8 @@ const ShowCamScreen = ({ navigation }) => {
     const [isPreview, setIsPreview] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
 
+    useEffect(() => {}, [isImageExisted]);
+
     const { mutate } = useFaceRegApi();
     const handleProcessImage = async (form) => {
       mutate(form, {
@@ -91,24 +93,18 @@ const ShowCamScreen = ({ navigation }) => {
           const dataEmotion = data;
           console.log("data from dataEmotion", dataEmotion);
           dispatch(imageAction.storeImage(dataEmotion));
-          setIsImageExisted(store.getState().image.imageResult);
           console.log(
             "Save result successfully",
             store.getState().image.imageResult
           );
+          setTimeout(() => {
+            navigation.push(Navigate.CAM_RESULT);
+          }, 5000);
         },
         onError: (error) => {
           console.log("Can not process image", error);
         },
       });
-    };
-
-    const checkImageExisted = () => {
-      if (isImageExisted) {
-        navigation.push(Navigate.CAM_RESULT);
-      } else {
-        Alert.alert("Taking picture failed. Please try again");
-      }
     };
 
     useEffect(() => {
@@ -148,7 +144,7 @@ const ShowCamScreen = ({ navigation }) => {
             name: "image.jpeg",
             type: "image/jpeg",
           });
-          handleProcessImage(formData);
+          setForm(formData);
         }
       }
     };
@@ -192,9 +188,7 @@ const ShowCamScreen = ({ navigation }) => {
               activeOpacity={0.9}
               onPress={() => {
                 Alert.alert("Processing image...");
-                setTimeout(() => {
-                  checkImageExisted();
-                }, 5000);
+                handleProcessImage(form);
               }}
             >
               <LinearGradient

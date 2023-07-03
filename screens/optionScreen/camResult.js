@@ -18,127 +18,50 @@ import { ProgressBar } from "react-native-paper";
 import { generateColor } from "../../utils/app.util";
 const CamResultScreen = ({ navigation }) => {
   let feeling = store.getState().image["imageResult"];
-  feeling = [
-    {
-      Confidence: 52.84242630004883,
-      Type: "HAPPY",
-    },
-    {
-      Confidence: 31.79851531982422,
-      Type: "CALM",
-    },
-    {
-      Confidence: 6.743500232696533,
-      Type: "SURPRISED",
-    },
-    {
-      Confidence: 6.225941181182861,
-      Type: "FEAR",
-    },
-    {
-      Confidence: 5.255831718444824,
-      Type: "CONFUSED",
-    },
-    {
-      Confidence: 3.8689191341400146,
-      Type: "SAD",
-    },
-    {
-      Confidence: 2.0175960063934326,
-      Type: "ANGRY",
-    },
-    {
-      Confidence: 1.977848768234253,
-      Type: "DISGUSTED",
-    },
-  ];
+  // feeling = [
+  //   {
+  //     Confidence: 52.84242630004883,
+  //     Type: "HAPPY",
+  //   },
+  //   {
+  //     Confidence: 31.79851531982422,
+  //     Type: "CALM",
+  //   },
+  //   {
+  //     Confidence: 6.743500232696533,
+  //     Type: "SURPRISED",
+  //   },
+  //   {
+  //     Confidence: 6.225941181182861,
+  //     Type: "FEAR",
+  //   },
+  //   {
+  //     Confidence: 5.255831718444824,
+  //     Type: "CONFUSED",
+  //   },
+  //   {
+  //     Confidence: 3.8689191341400146,
+  //     Type: "SAD",
+  //   },
+  //   {
+  //     Confidence: 2.0175960063934326,
+  //     Type: "ANGRY",
+  //   },
+  //   {
+  //     Confidence: 1.977848768234253,
+  //     Type: "DISGUSTED",
+  //   },
+  // ];
 
-  let quizResult = [
-    {
-      quizId: 0,
-      createdDate: "01/01/2000",
-      point: 100,
-      numberOfQUestion: 20,
-    },
-    {
-      quizId: 1,
-      createdDate: "01/01/2000",
-      point: 100,
-      numberOfQUestion: 20,
-    },
-    {
-      quizId: 2,
-      createdDate: "01/01/2000",
-      point: 100,
-      numberOfQUestion: 20,
-    },
-  ];
-
-  const data = feeling.map((e) => {
+  const data = feeling?.map((e, index) => {
     return {
+      id: index + 1,
       value: e.Confidence * 0.01,
       color: generateColor(),
       type: e.Type.charAt(0).toUpperCase() + e.Type.slice(1).toLowerCase(),
       percentage: e.Confidence.toFixed(2),
     };
   });
-
-  const quizHistory = () => {
-    return (
-      <View
-        style={{
-          backgroundColor: "#eeeeee",
-          borderRadius: 10,
-        }}
-      >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <Text
-              style={{
-                fontSize: 24,
-                textAlign: "center",
-                fontWeight: "450",
-                paddingVertical: 8,
-              }}
-            >
-              Quiz History
-            </Text>
-            {quizResult.map((e) => (
-              <View
-                key={e.quizId}
-                style={{
-                  borderTopWidth: 0.5,
-                  borderColor: "grey",
-                  paddingHorizontal: 8,
-                  paddingVertical: 12,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 18, fontWeight: "400" }}>
-                    Quiz: {e.quizId}
-                  </Text>
-                  <Text style={{ fontSize: 18 }}>Score: {e.point}</Text>
-                </View>
-                <View style={{ alignItems: "flex-end" }}>
-                  <Text
-                    style={{ fontSize: 12, color: "#aaa", fontStyle: "italic" }}
-                  >
-                    Created At: {e.createdDate}
-                  </Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-      </View>
-    );
-  };
 
   const progressQuiz = () => {
     return (
@@ -167,7 +90,7 @@ const CamResultScreen = ({ navigation }) => {
             </View>
             <View style={{ marginBottom: Sizes.fixPadding * 2 }}>
               {data.map((e) => (
-                <View key={e.Confidence} style={styles.progressBar}>
+                <View key={e.id} style={styles.progressBar}>
                   <View
                     style={{
                       flexDirection: "row",
@@ -217,7 +140,6 @@ const CamResultScreen = ({ navigation }) => {
           />
         </MaskedView>
         {progressQuiz()}
-        {quizHistory()}
         {continueButton()}
       </View>
     );
@@ -247,7 +169,7 @@ const CamResultScreen = ({ navigation }) => {
           style={styles.signupButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push(Navigate.CHOOSE_MUSIC);
+            navigation.push(Navigate.RECOMMENDED_GENRE);
           }}
         >
           <LinearGradient

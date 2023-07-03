@@ -149,7 +149,7 @@ const OptionScreen = ({ navigation }) => {
         style={styles.signupButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          validate();
+          navigation.navigate("Result");
         }}
       >
         <LinearGradient
