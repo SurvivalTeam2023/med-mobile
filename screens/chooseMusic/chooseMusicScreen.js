@@ -28,7 +28,7 @@ const ChooseMusicScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
   const { mutate } = useCreateFavoriteApi();
   if (isSuccess) {
-    musicsList = data["data"];
+    musicsList = data;
   }
   if (isError) {
     console.log("error", error);

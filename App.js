@@ -44,6 +44,7 @@ import EditAlbumArtistScreen from "./screens/manageAlbum/editAlbumArtist";
 import EditAudioArtistScreen from "./screens/manageAlbum/editAudioInfo";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
+import RecommendedGenreScreen from "./screens/recommendedGenre/recommendedGenreScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -164,6 +165,10 @@ const App = () => {
             <Stack.Screen
               name="PaymentFailed"
               component={paymentFailedScreen}
+            />
+            <Stack.Screen
+              name="ReccommendedGenreScreen"
+              component={RecommendedGenreScreen}
             />
           </Stack.Navigator>
         </QueryClientProvider>
