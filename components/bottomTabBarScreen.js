@@ -28,14 +28,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../constants/navigate";
 
 const { width } = Dimensions.get("window");
-
+let playingList = [
+  {
+    imgUrl: "saddds",
+    name: "ten",
+    artist: "test",
+  },
+];
 const BottomTabBarScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const audioPlayer = (audioAction, audioActionVaue) => {
+  const audioPlayer = (audioAction, audioActionValue) => {
     dispatch(
       nowPlayingAction.triggerAudioPlayer({
         audioAction: audioAction,
-        audioActionVaue: audioActionVaue,
+        audioActionValue: audioActionValue,
       })
     );
   };
@@ -46,7 +52,8 @@ const BottomTabBarScreen = ({ navigation }) => {
   const { currentAudioIndex, soundStatus } = useSelector(
     (state) => state.nowPlayingList.currentPlaying
   );
-  const playingList = useSelector((state) => state.nowPlayingList.playingList);
+  // let playingList = useSelector((state) => state.nowPlayingList.playingList);
+  console.log("playingList", playingList);
 
   useFocusEffect(
     useCallback(() => {

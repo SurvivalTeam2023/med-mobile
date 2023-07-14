@@ -1,4 +1,4 @@
-import { CallAPI } from "../core/api/baseAxios";
+import { CallAPI, CallAPIMulti } from "../core/api/baseAxios";
 
 export const getUserDataByUsernameApi = (username) => {
   const queryUrl = `/user/${username}`;

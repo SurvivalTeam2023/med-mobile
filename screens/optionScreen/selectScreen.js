@@ -132,7 +132,7 @@ const OptionScreen = ({ navigation }) => {
       >
         <Ionicons
           onPress={() => {
-            navigation.navigate("BottomTabBar");
+            navigation.push(Navigate.USER_PROFILE);
           }}
           name="arrow-forward"
           size={28}

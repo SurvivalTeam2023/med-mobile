@@ -33,16 +33,24 @@ export const getUserFromLocal = async () => {
 
 export const storeTokenToLocal = async (payload) => {
   try {
-    await AsyncStorage.setItem(TOKEN_KEY_STORAGE, JSON.stringify(payload));
+    if (payload) {
+      await AsyncStorage.setItem(USER_KEY_STORAGE, JSON.stringify(payload));
+    } else {
+      await AsyncStorage.removeItem(USER_KEY_STORAGE);
+    }
   } catch (error) {
     console.log("store_token_error: ", error);
   }
 };
 export const storeUserToLocal = async (payload) => {
   try {
-    await AsyncStorage.setItem(USER_KEY_STORAGE, JSON.stringify(payload));
+    if (payload !== undefined && payload !== null) {
+      await AsyncStorage.setItem(USER_KEY_STORAGE, JSON.stringify(payload));
+    } else {
+      await AsyncStorage.removeItem(USER_KEY_STORAGE);
+    }
   } catch (error) {
-    console.log("store_token_error: ", error);
+    console.log("store_user_error: ", error);
   }
 };
 

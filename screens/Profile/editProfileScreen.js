@@ -17,12 +17,10 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
-  useGetUserByNameApi,
-  useGetUserProfile,
+  useGetUserDataByUsername,
   useUpdateUserAccountDetails,
   useUpdateUserAvatar,
 } from "../../hooks/user.hook";
-import { store } from "../../core/store/store";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useDispatch } from "react-redux";
@@ -32,8 +30,9 @@ import { TextInput } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
 import { getUserFromDb } from "../../utils/app.util";
 import { Navigate } from "../../constants/navigate";
+import { getUserDataByUsernameApi } from "../../api/user.api";
 
-let profile = [];
+let userInfo = [];
 
 const editProfileScreen = ({ navigation }) => {
   const [updatedFirstName, setUpdatedFirstName] = useState();
@@ -42,7 +41,7 @@ const editProfileScreen = ({ navigation }) => {
   const [updatedCity, setUpdatedCity] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [updatedAddress, setUpdatedAddress] = useState();
-  const userName = store.getState()?.user?.username;
+  const username = getUserFromDb()?.username;
   const userAvatar = getUserFromDb()?.avatar?.url;
   const userFirstName = getUserFromDb()?.firstName;
   const userLastName = getUserFromDb()?.lastName;
@@ -59,35 +58,17 @@ const editProfileScreen = ({ navigation }) => {
     setUpdatedCity();
     setUpdatedAddress();
   }, [isModalVisible]);
-  const { data, isSuccess, isError, error } = useGetUserProfile();
-  const { userData, isSuccess: isSuccessUser, refetch } = useGetUserByNameApi();
-  const formatNumber = (number) => {
-    if (number >= 1e9) {
-      return (number / 1e9).toFixed(1) + "B";
-    } else if (number >= 1e6) {
-      return (number / 1e6).toFixed(1) + "M";
-    } else if (number >= 1e3) {
-      return (number / 1e3).toFixed(1) + "K";
-    }
-    return number?.toString();
-  };
+  const { data: userData, isSuccess } = getUserDataByUsernameApi(username);
 
   if (isSuccess) {
-    profile = data["data"];
-  }
-
-  if (isSuccessUser) {
-    const userInfo = userData["data"];
+    userInfo = userData;
+    console.log("userInfo", userInfo);
     dispatch(userAction.storeUser(userInfo));
   }
 
   const handleEditIconPress = () => {
     setIsModalVisible(true);
   };
-
-  const favoritedCount = formatNumber(profile?.favorite);
-  const playlistCount = formatNumber(profile?.playlist);
-  const followingCount = formatNumber(profile?.following);
 
   const { mutate } = useUpdateUserAvatar();
   const { mutate: mutatee } = useUpdateUserAccountDetails();
@@ -96,10 +77,9 @@ const editProfileScreen = ({ navigation }) => {
     mutate(form, {
       onSuccess: (data) => {
         const dataEmotion = data["data"];
-        refetch();
         Alert.alert("Processing image...");
         setTimeout(() => {
-          navigation.push(Navigate.BOTTOM_TAB_BAR);
+          navigation.push(Navigate.SIGN_IN);
         }, 3000);
       },
     });
@@ -109,9 +89,8 @@ const editProfileScreen = ({ navigation }) => {
     mutatee(form, {
       onSuccess: (data) => {
         console.log("Success");
-        refetch();
         setTimeout(() => {
-          navigation.push(Navigate.BOTTOM_TAB_BAR);
+          navigation.push(Navigate.SIGN_IN);
         }, 3000);
       },
     });
@@ -150,7 +129,7 @@ const editProfileScreen = ({ navigation }) => {
       quality: 1,
       base64: false,
     });
-    if (!pickerResult.cancelled) {
+    if (!pickerResult.canceled) {
       // Image selected successfully, handle the file conversion
       convertImageToJPEG(pickerResult.uri);
       const formData = new FormData();
@@ -235,20 +214,17 @@ const editProfileScreen = ({ navigation }) => {
                 <MaterialIcons name="add-a-photo" size={24} color="black" />
               </TouchableOpacity>
             </ImageBackground>
-            <Text style={styles.name}>{userName}</Text>
+            <Text style={styles.name}>{username}</Text>
           </View>
           <View style={styles.detailWrapper}>
             <View>
               <Text style={styles.detailedText}>Favorited</Text>
-              <Text>{favoritedCount}</Text>
             </View>
             <View>
               <Text style={styles.detailedText}>Playlist</Text>
-              <Text>{playlistCount}</Text>
             </View>
             <View>
               <Text style={styles.detailedText}>Following</Text>
-              <Text>{followingCount}</Text>
             </View>
           </View>
         </View>

@@ -2,7 +2,7 @@ import { CallAPI } from "../core/api/baseAxios";
 
 export const loginApi = (payload) => {
   const { username, password } = payload;
-  const url = "/auth/token";
+  const url = "/auth/login/token";
   return CallAPI.post(url, {
     username,
     password,

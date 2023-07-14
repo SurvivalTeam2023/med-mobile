@@ -24,6 +24,7 @@ const ProfileScreen = ({ navigation }) => {
   const [showOptions, setShowOptions] = useState(false);
   const userAvatar = getUserFromDb()?.avatar?.url || {};
   const userFirstName = getUserFromDb()?.firstName || "none";
+  const userId = getUserFromDb()?.id;
   const formatNumber = (number) => {
     if (number >= 1e9) {
       return (number / 1e9).toFixed(1) + "B";
@@ -35,15 +36,15 @@ const ProfileScreen = ({ navigation }) => {
     return number?.toString();
   };
 
-  const { data, isSuccess, isError, error } = useGetUserProfile();
+  const { data, isSuccess, isError, error } = useGetUserProfile(userId);
 
   if (isSuccess) {
-    console.log(data);
-    profile = data["data"];
+    profile = data;
   }
   if (isError) {
     console.log("error", error);
   }
+
   const favoritedCount = formatNumber(profile?.favorite);
   const playlistCount = formatNumber(profile?.playlist);
   const followingCount = formatNumber(profile?.following);
@@ -120,8 +121,8 @@ const ProfileScreen = ({ navigation }) => {
                 ...Fonts.blackColor12SemiBold,
               }}
               onPress={() => {
-                updateState({ showOptions: false }),
-                  navigation.push("CreatePlaylistUser");
+                setShowOptions(false);
+                navigation.push("CreatePlaylistUser");
               }}
             >
               Add New Album
@@ -133,8 +134,8 @@ const ProfileScreen = ({ navigation }) => {
                 ...Fonts.blackColor12SemiBold,
               }}
               onPress={() => {
-                updateState({ showOptions: false }),
-                  navigation.push("DeletePlaylistUser");
+                setShowOptions(false);
+                navigation.push("DeletePlaylistUser");
               }}
             >
               Delete Album

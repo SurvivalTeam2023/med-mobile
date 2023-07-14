@@ -22,7 +22,7 @@ const reducer = createSlice({
     },
     triggerAudioPlayer: (state, action) => {
       state.audioAction = action.payload["audioAction"];
-      state.audioActionValue = action.payload["audioActionVaue"];
+      state.audioActionValue = action.payload["audioActionValue"];
     },
   },
 });
