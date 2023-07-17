@@ -22,6 +22,7 @@ const axiosMultiInstance = axios.create({
 });
 
 const requestInterceptor = (config) => {
+  console.log(config);
   const token = store?.getState().user.token;
   if (token) {
     config.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
