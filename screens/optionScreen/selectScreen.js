@@ -17,16 +17,8 @@ import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Ionicons } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
-import { useDispatch } from "react-redux";
-import { userAction } from "../../redux/auth/auth.slice";
-
-//null to compare
 
 const OptionScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const removeData = () => {
-    dispatch(userAction.logout());
-  };
   let isQuestionValid;
   let isFavoriteExisted;
   const {
@@ -67,7 +59,6 @@ const OptionScreen = ({ navigation }) => {
   const validate = () => {
     if (isQuestionValid === true && isFavoriteExisted === true) {
       Alert.alert("You've already done quiz");
-      console.log("both true");
       setTimeout(() => {
         navigation.push(Navigate.BOTTOM_TAB_BAR);
       }, 500);
@@ -75,7 +66,6 @@ const OptionScreen = ({ navigation }) => {
       navigation.push(Navigate.QUIZ);
     } else if (isQuestionValid === true && isFavoriteExisted === false) {
       Alert.alert("You've already done quiz");
-      console.log("fucking fav wrong");
 
       setTimeout(() => {
         navigation.push(Navigate.CHOOSE_MUSIC);
@@ -154,42 +144,22 @@ const OptionScreen = ({ navigation }) => {
 
   function QuizButton() {
     return (
-      <>
-        <TouchableOpacity
-          style={styles.signupButtonStyle}
-          activeOpacity={0.9}
-          onPress={() => {
-            validate();
-          }}
+      <TouchableOpacity
+        style={styles.signupButtonStyle}
+        activeOpacity={0.9}
+        onPress={() => {
+          validate();
+        }}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.signupButtonGradientStyle}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-            style={styles.signupButtonGradientStyle}
-          >
-            <Text style={{ ...Fonts.whiteColor18Bold }}>Take quiz</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => {
-            removeData();
-            navigation.push(Navigate.SIGN_IN);
-          }}
-          style={styles.okButtonStyle}
-        >
-          <LinearGradient
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-            style={styles.okButtonGradientStyle}
-          >
-            <Text style={{ ...Fonts.whiteColor15Bold }}>Logout</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </>
+          <Text style={{ ...Fonts.whiteColor18Bold }}>Take quiz</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     );
   }
   function CamButton() {
