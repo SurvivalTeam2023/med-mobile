@@ -16,13 +16,13 @@ import { Navigate } from "../../constants/navigate";
 import { generateColor } from "../../utils/app.util";
 import { ProgressBar } from "react-native-paper";
 import { store } from "../../core/store/store";
+import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 
 const ResultScreen = ({ navigation }) => {
   let feeling = store.getState().question.result;
   let feelingFilter = feeling.filter((e) => {
     return e.point !== 0;
   });
-  console.log(feelingFilter);
   const data = feelingFilter?.map((e, index) => {
     return {
       id: index + 1,
@@ -144,7 +144,7 @@ const ResultScreen = ({ navigation }) => {
           colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
           style={styles.doneQuizGradientStyle}
         >
-          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoyyyy</Text>
+          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoy</Text>
         </LinearGradient>
       </Pressable>
     );

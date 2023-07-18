@@ -211,7 +211,6 @@ const QuestionScreen = () => {
           optionId: option_id,
         })
       );
-      console.log(store.getState().question.answer);
       setSelectedAnswerIndex(index);
     }
   };
