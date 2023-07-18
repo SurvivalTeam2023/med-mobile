@@ -158,26 +158,27 @@ const QuestionScreen = () => {
   const getOptionAndQuestionBankId = () => {
     const answer = store.getState().question.answer;
     questBankId = store.getState().question.questionBankId;
-    console.log(answer);
     const optionId = answer.map((obj) => {
       return obj.optionId;
     });
     optionIdArr = optionId;
+    console.log(optionIdArr);
+    console.log(questBankId);
     if (questBankId && optionIdArr) {
-      saveQuizResult();
+      saveQuizResult(questBankId, optionIdArr);
     }
   };
 
-  const saveQuizResult = () => {
+  const saveQuizResult = (questBankId, optionIdArr) => {
     mutateSaveQuizResult(
       {
         questionBankId: questBankId,
-        status: "ACTIVE",
         optionId: optionIdArr,
       },
       {
         onSuccess: (data) => {
           console.log("Save quiz result successfully", data);
+          dispatch(questionAction.storeQuizResult(data));
           navigation.navigate("Result");
         },
         onError: (error) => {
@@ -192,12 +193,12 @@ const QuestionScreen = () => {
     const dataFormat = formatQuestionData(dataRaw);
     totalQuestions = dataFormat.length;
     questionData = dataFormat[index];
-    const questionBankId = dataRaw.map((obj) => obj.questionBankId)[0];
+    const questionBankId = data.id;
     dispatch(questionAction.storeQuestionBankId(questionBankId));
     questions = dataFormat;
   }
   if (isError) {
-    console.log("error", error);
+    console.log("error from create question bank", error);
   }
   const pickOption = (question_id, option_id, index) => {
     const questionId = questions.map((item) => {

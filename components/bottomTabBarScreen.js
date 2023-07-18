@@ -47,6 +47,7 @@ const BottomTabBarScreen = ({ navigation }) => {
     (state) => state.nowPlayingList.currentPlaying
   );
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
+  console.log(playingList);
 
   useFocusEffect(
     useCallback(() => {
@@ -85,7 +86,6 @@ const BottomTabBarScreen = ({ navigation }) => {
         ) : (
           <SettingsScreen navigation={navigation} />
         )}
-        {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
         <View style={styles.bottomTabBarStyle}>
           {bottomTabBarItem({
             index: 1,
@@ -118,6 +118,9 @@ const BottomTabBarScreen = ({ navigation }) => {
       ) : null}
     </SafeAreaView>
   );
+  {
+    soundStatus.isSoundLoaded ? currentlyPlayedSong() : null;
+  }
 
   function currentlyPlayedSong() {
     return (

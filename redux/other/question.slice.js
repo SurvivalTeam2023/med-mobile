@@ -4,6 +4,7 @@ const initialState = {
   questionBankId: null,
   answer: [],
   isValidQuiz: null,
+  result: null,
 };
 
 const reducer = createSlice({
@@ -42,6 +43,9 @@ const reducer = createSlice({
     },
     storeIsValidQuiz: (state, action) => {
       state.isValidQuiz = action.payload;
+    },
+    storeQuizResult: (state, action) => {
+      state.result = action.payload;
     },
   },
 });

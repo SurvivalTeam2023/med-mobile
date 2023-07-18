@@ -6,9 +6,9 @@ export const getQuestionBankApi = (payload) => {
   return CallAPI.post(url);
 };
 export const saveQuizResultApi = (payload) => {
-  const { questionBankId, status, optionId } = payload;
+  const { questionBankId, optionId } = payload;
   const url = "/result";
-  return CallAPI.post(url, payload);
+  return CallAPI.post(url, { questionBankId, optionId });
 };
 
 export const isValidQuiz = (payload) => {
@@ -23,7 +23,6 @@ export const getFinishedQuiz = (payload) => {
 
 export const setQuizStatus = (payload) => {
   const questionBankId = store.getState().question.questionBankId;
-  const queryParam = `/` + `${questionBankId}`;
-  const url = "/questionBank" + `${queryParam}`;
+  const url = "/questionBank/" + `${questionBankId}`;
   return CallAPI.patch(url);
 };
