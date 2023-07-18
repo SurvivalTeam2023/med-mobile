@@ -16,7 +16,6 @@ import TrendingScreen from "../screens/trending/trendingScreen";
 import SettingsScreen from "../screens/settings/settingsScreen";
 import LibraryScreen from "../screens/library/libraryScreen";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Icon } from "react-native-gradient-icon";
 import { SharedElement } from "react-navigation-shared-element";
 import { useFocusEffect } from "@react-navigation/native";
 import ProfileScreen from "../screens/Profile/profileScreen";
@@ -202,15 +201,12 @@ const BottomTabBarScreen = ({ navigation }) => {
         onPress={() => updateState({ currentIndex: index })}
       >
         {index == currentIndex ? (
-          <Icon
+          <MaterialIcons
             start={{ x: 0, y: 1 }}
             end={{ x: 0, y: 0 }}
             size={35}
             mode="linear"
-            colors={[
-              { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
-              { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
-            ]}
+            color={Colors.secondaryColor}
             style={{ alignSelf: "center" }}
             name={icon}
             type="material"
