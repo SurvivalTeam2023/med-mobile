@@ -60,6 +60,7 @@ const OptionScreen = ({ navigation }) => {
     console.log("validate");
     validate();
   }, [isQuestionValid, isFavoriteExisted]);
+
   const validate = () => {
     if (isQuestionValid === true && isFavoriteExisted === true) {
       navigation.push(Navigate.BOTTOM_TAB_BAR);

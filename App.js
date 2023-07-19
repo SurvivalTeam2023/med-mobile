@@ -45,6 +45,7 @@ import EditAudioArtistScreen from "./screens/manageAlbum/editAudioInfo";
 import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 import RecommendedGenreScreen from "./screens/recommendedGenre/recommendedGenreScreen";
+import IntroAIScreen from "./screens/introAi/introduceAiScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -111,6 +112,7 @@ const App = () => {
             <Stack.Screen name="Question" component={QuestionScreen} />
             <Stack.Screen name="Result" component={ResultScreen} />
             <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+            <Stack.Screen name="IntroAi" component={IntroAIScreen} />
             <Stack.Screen
               name="BottomTabBar"
               component={bottomTabBarScreen}
