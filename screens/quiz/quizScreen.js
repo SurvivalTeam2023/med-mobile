@@ -24,7 +24,7 @@ const QuizScreen = () => {
   const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
     useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted["data"];
+    isFavoriteExisted = dataIsFavoriteExisted;
   }
 
   const onPressHandler = () => {

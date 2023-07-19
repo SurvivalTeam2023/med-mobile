@@ -15,49 +15,23 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { Navigate } from "../../constants/navigate";
 import { generateColor } from "../../utils/app.util";
 import { ProgressBar } from "react-native-paper";
+import { store } from "../../core/store/store";
+import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 
 const ResultScreen = ({ navigation }) => {
-  let feeling = [
-    {
-      Confidence: 52.84242630004883,
-      Type: "HAPPY",
-    },
-    {
-      Confidence: 31.79851531982422,
-      Type: "CALM",
-    },
-    {
-      Confidence: 6.743500232696533,
-      Type: "SURPRISED",
-    },
-    {
-      Confidence: 6.225941181182861,
-      Type: "FEAR",
-    },
-    {
-      Confidence: 5.255831718444824,
-      Type: "CONFUSED",
-    },
-    {
-      Confidence: 3.8689191341400146,
-      Type: "SAD",
-    },
-    {
-      Confidence: 2.0175960063934326,
-      Type: "ANGRY",
-    },
-    {
-      Confidence: 1.977848768234253,
-      Type: "DISGUSTED",
-    },
-  ];
-  const data = feeling?.map((e, index) => {
+  let feeling = store.getState().question.result;
+  let feelingFilter = feeling.filter((e) => {
+    return e.point !== 0;
+  });
+  const data = feelingFilter?.map((e, index) => {
     return {
       id: index + 1,
-      value: e.Confidence * 0.01,
+      value: e.point * 0.01,
       color: generateColor(),
-      type: e.Type.charAt(0).toUpperCase() + e.Type.slice(1).toLowerCase(),
-      percentage: e.Confidence.toFixed(2),
+      type:
+        e.mentalHealth?.charAt(0).toUpperCase() +
+        e.mentalHealth?.slice(1).toLowerCase(),
+      percentage: e.point?.toFixed(2),
     };
   });
 
@@ -170,7 +144,7 @@ const ResultScreen = ({ navigation }) => {
           colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
           style={styles.doneQuizGradientStyle}
         >
-          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoyyyy</Text>
+          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoy</Text>
         </LinearGradient>
       </Pressable>
     );

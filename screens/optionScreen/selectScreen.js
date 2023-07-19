@@ -18,8 +18,6 @@ import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Ionicons } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
 
-//null to compare
-
 const OptionScreen = ({ navigation }) => {
   let isQuestionValid;
   let isFavoriteExisted;
@@ -68,6 +66,7 @@ const OptionScreen = ({ navigation }) => {
       navigation.push(Navigate.QUIZ);
     } else if (isQuestionValid === true && isFavoriteExisted === false) {
       Alert.alert("You've already done quiz");
+
       setTimeout(() => {
         navigation.push(Navigate.CHOOSE_MUSIC);
       }, 500);
