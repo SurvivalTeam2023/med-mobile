@@ -141,13 +141,14 @@ const QuestionScreen = () => {
   const { data, error, isSuccess, isError } = useGetQuestionBankApi();
   const { mutate } = useSetQuizStatus();
   const { mutate: mutateSaveQuizResult } = useSaveQuizResultApi();
+  const questionBankId = store.getState().question.questionBankId;
 
   let questionData;
   let totalQuestions;
   let optionIdArr;
   let questBankId;
   const setQuizStatus = () => {
-    mutate({
+    mutate(questionBankId, {
       onSuccess: (data) => {},
       onError: (error) => {
         console.log("Failing set quiz status", error);
@@ -162,8 +163,6 @@ const QuestionScreen = () => {
       return obj.optionId;
     });
     optionIdArr = optionId;
-    console.log(optionIdArr);
-    console.log(questBankId);
     if (questBankId && optionIdArr) {
       saveQuizResult(questBankId, optionIdArr);
     }
@@ -177,7 +176,7 @@ const QuestionScreen = () => {
       },
       {
         onSuccess: (data) => {
-          console.log("Save quiz result successfully", data);
+          console.log("Save quiz result successfully");
           dispatch(questionAction.storeQuizResult(data));
           navigation.navigate("Result");
         },

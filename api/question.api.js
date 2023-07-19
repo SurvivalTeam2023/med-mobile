@@ -21,8 +21,7 @@ export const getFinishedQuiz = (payload) => {
   return CallAPI.get(url);
 };
 
-export const setQuizStatus = (payload) => {
-  const questionBankId = store.getState().question.questionBankId;
-  const url = "/questionBank/" + `${questionBankId}`;
+export const setQuizStatus = (quesBankId) => {
+  const url = "/questionBank/" + `${quesBankId}`;
   return CallAPI.patch(url);
 };
