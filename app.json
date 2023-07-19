@@ -13,15 +13,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "med-app",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "med-app",
+      "package": "com.med.medapp",
       "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
