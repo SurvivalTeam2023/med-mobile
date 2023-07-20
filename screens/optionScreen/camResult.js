@@ -169,7 +169,7 @@ const CamResultScreen = ({ navigation }) => {
           style={styles.signupButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push(Navigate.RECOMMENDED_GENRE);
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
           }}
         >
           <LinearGradient

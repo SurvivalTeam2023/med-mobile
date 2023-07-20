@@ -25,6 +25,7 @@ import {
 } from "../redux/audio/nowPlayingList.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../constants/navigate";
+import IntroAIScreen from "../screens/introAi/introduceAiScreen";
 
 const { width } = Dimensions.get("window");
 
@@ -81,6 +82,8 @@ const BottomTabBarScreen = ({ navigation }) => {
           <LibraryScreen navigation={navigation} />
         ) : currentIndex == 4 ? (
           <ProfileScreen navigation={navigation} />
+        ) : currentIndex == 5 ? (
+          <IntroAIScreen navigation={navigation} />
         ) : (
           <SettingsScreen navigation={navigation} />
         )}
@@ -104,6 +107,10 @@ const BottomTabBarScreen = ({ navigation }) => {
           })}
           {bottomTabBarItem({
             index: 5,
+            icon: "camera-alt",
+          })}
+          {bottomTabBarItem({
+            index: 6,
             icon: "settings",
           })}
         </View>

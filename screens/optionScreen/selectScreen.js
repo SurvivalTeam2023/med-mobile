@@ -56,43 +56,22 @@ const OptionScreen = ({ navigation }) => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("validate");
+    validate();
+  }, [isQuestionValid, isFavoriteExisted]);
+
   const validate = () => {
     if (isQuestionValid === true && isFavoriteExisted === true) {
-      Alert.alert("You've already done quiz");
-      setTimeout(() => {
-        navigation.push(Navigate.BOTTOM_TAB_BAR);
-      }, 500);
+      navigation.push(Navigate.BOTTOM_TAB_BAR);
     } else if (isQuestionValid === false && isFavoriteExisted === true) {
       navigation.push(Navigate.QUIZ);
     } else if (isQuestionValid === true && isFavoriteExisted === false) {
-      Alert.alert("You've already done quiz");
-
-      setTimeout(() => {
-        navigation.push(Navigate.CHOOSE_MUSIC);
-      }, 500);
+      navigation.push(Navigate.CHOOSE_MUSIC);
     } else if (isQuestionValid === false && isFavoriteExisted === false) {
       navigation.push(Navigate.QUIZ);
     }
   };
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
-            {signupInfo()}
-          </ScrollView>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
-  );
 
   function signupInfo() {
     return (
@@ -112,10 +91,6 @@ const OptionScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-
-        {QuizButton()}
-        {CamButton()}
-        {skip()}
       </View>
     );
   }
@@ -196,6 +171,26 @@ const OptionScreen = ({ navigation }) => {
       </View>
     );
   }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      <StatusBar backgroundColor={Colors.primaryColor} />
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {cornerImage()}
+          <ScrollView
+            scrollEnabled={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            {signupInfo()}
+          </ScrollView>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
