@@ -1,4 +1,20 @@
 export const Fonts = {
+  bold16: {
+    fontSize: 16,
+    fontFamily: "Montserrat_Bold",
+  },
+  light16: {
+    fontSize: 16,
+    fontFamily: "Montserrat_Light",
+  },
+  medium16: {
+    fontSize: 16,
+    fontFamily: "Montserrat_Medium",
+  },
+  bold18: {
+    fontSize: 18,
+    fontFamily: "Montserrat_Bold",
+  },
   bold22: {
     fontSize: 22,
     fontFamily: "Montserrat_Bold",
@@ -21,6 +37,27 @@ export const Fonts = {
   whiteColor20Light: {
     color: "#ffffff",
     fontSize: 20,
+    fontFamily: "Montserrat_Light",
+  },
+  whiteColor18Light: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontFamily: "Montserrat_Light",
+  },
+  whiteColor16Light: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontStyle: "italic",
+    fontFamily: "Montserrat_Light",
+  },
+  whiteColor14Light: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontFamily: "Montserrat_Light",
+  },
+  whiteColor12Light: {
+    color: "#ffffff",
+    fontSize: 12,
     fontFamily: "Montserrat_Light",
   },
 
@@ -104,6 +141,7 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: "Montserrat_SemiBold",
   },
+
   blackColor18SemiBold: {
     color: "#000000",
     fontSize: 18,
