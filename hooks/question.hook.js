@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import {
   getFinishedQuiz,
+  getFinishedQuizHistory,
   getQuestionBankApi,
   isValidQuiz,
   saveQuizResultApi,
@@ -23,11 +24,20 @@ export const useFinishedQuiz = (payload) =>
       return data;
     },
   });
+
 export const useIsValidQuiz = (payload) =>
   useQuery({
     queryKey: ["getValidQuiz"],
     queryFn: async () => {
       const data = await isValidQuiz();
+      return data;
+    },
+  });
+export const useGetFinishedQuizHistoryApi = (payload) =>
+  useQuery({
+    queryKey: ["getFinishedQuizHistory"],
+    queryFn: async () => {
+      const data = await getFinishedQuizHistory(payload);
       return data;
     },
   });
