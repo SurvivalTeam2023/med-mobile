@@ -20,6 +20,10 @@ export const getFinishedQuiz = (payload) => {
   const url = "/questionBank/user";
   return CallAPI.get(url);
 };
+export const getFinishedQuizHistory = (userId) => {
+  const url = "/result/user/" + `${userId}`;
+  return CallAPI.get(url);
+};
 
 export const setQuizStatus = (quesBankId) => {
   const url = "/questionBank/" + `${quesBankId}`;
