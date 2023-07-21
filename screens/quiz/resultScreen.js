@@ -20,14 +20,7 @@ import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 import moment from "moment";
 const ResultScreen = ({ navigation }) => {
   const userId = store.getState().user.data.id;
-  let quizResult = [
-    {
-      id: 0,
-      createdDate: "2023-07-18T12:30:34.806Z",
-      questionBankId: 100,
-      mentalHealth: ["Sleep Deprived", "Stress", "Anxiety", "Depression"],
-    },
-  ];
+  let quizResult;
   const {
     data: quizHistoryData,
     isSuccess: isSuccessQuizHistory,
