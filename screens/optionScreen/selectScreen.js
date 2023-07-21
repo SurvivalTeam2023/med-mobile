@@ -35,29 +35,32 @@ const OptionScreen = ({ navigation }) => {
     error: errorIsFavoriteExisted,
   } = useIsFavoriteExisted();
 
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted.exists;
-  }
   if (isErrorIsFavoriteExisted) {
     console.log("error", errorIsFavoriteExisted);
   }
 
-  if (successIsValidQuiz) {
-    isQuestionValid = dataIsValidQuiz.isValid;
-  }
-
   if (isErrorIsValidQuiz) {
     console.log("Checking Valid Quiz failed", errorIsValidQuiz);
+  }
+  if (successIsFavoriteExisted) {
+    isFavoriteExisted = dataIsFavoriteExisted.exists;
+  }
+  if (successIsValidQuiz) {
+    isQuestionValid = dataIsValidQuiz;
   }
   useEffect(() => {
     if (isQuestionValid !== null && isFavoriteExisted !== null) {
       isQuestionValid = null;
       isFavoriteExisted = null;
     }
-  }, []);
-
-  useEffect(() => {
-    console.log("validate");
+    if (isQuestionValid === null && isFavoriteExisted === null) {
+      if (successIsFavoriteExisted) {
+        isFavoriteExisted = dataIsFavoriteExisted.exists;
+      }
+      if (successIsValidQuiz) {
+        isQuestionValid = dataIsValidQuiz;
+      }
+    }
     validate();
   }, [isQuestionValid, isFavoriteExisted]);
 
@@ -91,6 +94,7 @@ const OptionScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        {skip()}
       </View>
     );
   }

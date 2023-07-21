@@ -39,15 +39,11 @@ const QuizScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView showsVerticalScrollIndicator={false}>
           {cornerImage()}
           <ScrollView
             scrollEnabled={true}
             contentContainerStyle={{
-              flexGrow: 1,
               justifyContent: "center",
             }}
           >
@@ -66,8 +62,8 @@ const QuizScreen = () => {
           <MaskedView
             style={{ height: 60 }}
             maskElement={
-              <Text style={{ textAlign: "center", ...Fonts.bold26 }}>
-                How was your day ...
+              <Text style={{ textAlign: "center", ...Fonts.bold22 }}>
+                To know your more
               </Text>
             }
           >
@@ -78,7 +74,6 @@ const QuizScreen = () => {
               style={{ flex: 1 }}
             />
           </MaskedView>
-          <Separator />
         </View>
         <LinearGradient
           start={{ x: 1, y: 0 }}
@@ -86,16 +81,13 @@ const QuizScreen = () => {
           colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
           style={styles.startQuizInfo}
         >
-          <Text style={styles.titleInfoStyle}>
-            Let's know more about yourself
-          </Text>
-          <View style={{ alignItems: "center", paddingTop: 80 }}>
-            <Image
-              style={styles.logo}
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/1858/1858095.png",
-              }}
-            />
+          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+          <View style={{ alignItems: "center", paddingTop: 4 }}>
+            <Text style={styles.describeQuizText}>
+              Welcome to the Emotion Quiz! This quiz is designed to help you
+              gain insight into your emotional landscape and explore the
+              complexities of your feelings.
+            </Text>
           </View>
         </LinearGradient>
       </View>
@@ -104,40 +96,34 @@ const QuizScreen = () => {
 
   function startQuizBtn() {
     return (
-      <View>
-        <Pressable
-          style={styles.startQuizButtonStyle}
-          activeOpacity={0.9}
-          onPress={() => {
-            navigation.navigate("Question");
-          }}
-        >
-          <LinearGradient
-            start={{ x: 1, y: 3 }}
-            end={{ x: 0, y: 2 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-            style={styles.startQuizGradientStyle}
-          >
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
-          </LinearGradient>
-        </Pressable>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 10,
-          }}
-        >
-          <Ionicons
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 30,
+          marginTop: 20,
+        }}
+      >
+        <View stylele={{ marginBottom: 8 }}>
+          <Text style={{ ...Fonts.medium16, color: "#583D72" }}>Skip</Text>
+        </View>
+        <View>
+          <Pressable
+            activeOpacity={0.9}
             onPress={() => {
-              // navigation.navigate("HomePage");
-              onPressHandler();
+              navigation.navigate("Question");
             }}
-            name="arrow-forward"
-            size={28}
-            color="black"
-          />
-          <Text style={{ ...Fonts.blackColor16Bold, marginTop: 5 }}>Skip</Text>
+          >
+            <LinearGradient
+              start={{ x: 1, y: 3 }}
+              end={{ x: 0, y: 2 }}
+              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+              style={{ borderRadius: 20 }}
+            >
+              <Ionicons name="arrow-forward" size={30} color="white" />
+            </LinearGradient>
+          </Pressable>
         </View>
       </View>
     );
@@ -161,7 +147,7 @@ const styles = StyleSheet.create({
   titleInfoStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.whiteColor20Bold,
+    ...Fonts.whiteColor18Bold,
     textAlign: "center",
   },
   quizzingTitleStyle: {
@@ -171,11 +157,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 30.0,
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
     marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: Sizes.fixPadding + 40.0,
+    borderRadius: Sizes.fixPadding + 20.0,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
@@ -205,7 +192,7 @@ const styles = StyleSheet.create({
   },
   startQuizButtonStyle: {
     justifyContent: "center",
-    marginTop: Sizes.fixPadding * 10.0,
+    marginTop: Sizes.fixPadding * 5.0,
     marginHorizontal: Sizes.fixPadding * 10.0,
     borderRadius: Sizes.fixPadding - 4.0,
   },
@@ -228,11 +215,10 @@ const styles = StyleSheet.create({
     borderBottomColor: "#D9D9D9",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  logo: {
-    width: 80,
-    height: 90,
+  describeQuizText: {
+    ...Fonts.whiteColor16Light,
+    width: 300,
     justifyContent: "center",
-    tintColor: "white",
   },
 
   questionInfo: {

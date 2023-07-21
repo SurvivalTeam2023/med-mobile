@@ -222,10 +222,7 @@ const QuestionScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView showsVerticalScrollIndicator={false}>
           {cornerImage()}
           {quizzingInfo()}
         </ScrollView>
@@ -243,38 +240,6 @@ const QuestionScreen = () => {
             height: 170,
           }}
         ></ImageBackground>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          {index + 1 <= questions?.length && index > 0 ? (
-            <View>
-              <AntDesign
-                onPress={() => {
-                  setIndex(index - 1);
-                }}
-                style={{ width: 30 }}
-                name="left"
-                size={27}
-                color="black"
-              />
-            </View>
-          ) : null}
-          {index <= questions?.length ? (
-            <View style={{ paddingLeft: 5 }}>
-              <AntDesign
-                onPress={() => {
-                  if (index + 1 < questions?.length) {
-                    setIndex(index + 1);
-                  } else {
-                    navigation.navigate("Result");
-                  }
-                }}
-                style={{ width: 30 }}
-                name="right"
-                size={27}
-                color="black"
-              />
-            </View>
-          ) : null}
-        </View>
       </View>
     );
   }
@@ -294,7 +259,6 @@ const QuestionScreen = () => {
           <Text style={styles.titleQuizText}>
             Your Progress: ({index + 1}/{totalQuestions}) answered
           </Text>
-          <Separator />
         </View>
         <View style={styles.questionInfo}>
           <Text
@@ -349,6 +313,49 @@ const QuestionScreen = () => {
             </View>
           </Pressable>
         ))}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 16,
+          }}
+        >
+          {index + 1 <= questions?.length && index > 0 ? (
+            <View>
+              <AntDesign
+                onPress={() => {
+                  setIndex(index - 1);
+                }}
+                style={{ width: 30 }}
+                name="left"
+                size={27}
+                color="black"
+              />
+            </View>
+          ) : null}
+          <View>
+            <Text style={styles.titleQuizText}>
+              {index + 1}/{totalQuestions}
+            </Text>
+          </View>
+          {index + 1 < questions?.length ? (
+            <View style={{ paddingLeft: 5 }}>
+              <AntDesign
+                onPress={() => {
+                  if (index + 1 < questions?.length) {
+                    setIndex(index + 1);
+                  } else {
+                    navigation.navigate("Result");
+                  }
+                }}
+                style={{ width: 30 }}
+                name="right"
+                size={27}
+                color="black"
+              />
+            </View>
+          ) : null}
+        </View>
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() => {
@@ -452,12 +459,13 @@ const styles = StyleSheet.create({
   questionInfo: {
     marginTop: 15,
     justifyContent: "flex-start",
+    maxHeight: 50,
   },
   answerInfo: {
     alignContent: "center",
     backgroundColor: "#D8E2E8",
     marginTop: 40,
-    width: 400,
+    width: 380,
     marginHorizontal: 6,
     height: 50,
     borderRadius: 20,
@@ -467,14 +475,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#D8E2E8",
     marginTop: 40,
     marginHorizontal: 5,
-    width: 400,
+    width: 380,
     backgroundColor: "green",
     height: 50,
     borderRadius: 20,
   },
   quizInfo: {
-    flex: 1,
     flexDirection: "column",
+    paddingHorizontal: 8,
   },
   roundButton1: {
     width: 38,
