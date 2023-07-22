@@ -57,8 +57,8 @@ const IntroAIScreen = () => {
           <MaskedView
             style={{ height: 60 }}
             maskElement={
-              <Text style={{ textAlign: "center", ...Fonts.bold26 }}>
-                Brand new Ai Tecnology
+              <Text style={{ textAlign: "center", ...Fonts.bold22 }}>
+                Brand new AI techonology
               </Text>
             }
           >
@@ -69,7 +69,6 @@ const IntroAIScreen = () => {
               style={{ flex: 1 }}
             />
           </MaskedView>
-          <Separator />
         </View>
         <LinearGradient
           start={{ x: 1, y: 0 }}
@@ -77,13 +76,19 @@ const IntroAIScreen = () => {
           colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
           style={styles.startQuizInfo}
         >
-          <Text style={styles.titleInfoStyle}>
-            Facial emotion recognition is a fascinating AI technology that can
-            detect and interpret human emotions based on facial expressions. By
-            analyzing various facial features such as eyebrows, eyes, mouth, and
-            overall facial movements, AI algorithms can accurately identify
-            emotions like happiness, sadness, anger, surprise, fear, and more.
-          </Text>
+          <Text style={styles.titleInfoStyle}>Facial emotion recognition</Text>
+          <View
+            style={{ alignItems: "center", paddingTop: 4, paddingBottom: 40 }}
+          >
+            <Text style={styles.describeQuizText}>
+              Facial emotion recognition is a fascinating AI technology that can
+              detect and interpret human emotions based on facial expressions.
+              By analyzing various facial features such as eyebrows, eyes,
+              mouth, and overall facial movements, AI algorithms can accurately
+              identify emotions like happiness, sadness, anger, surprise, fear,
+              and more.
+            </Text>
+          </View>
         </LinearGradient>
       </View>
     );
@@ -127,12 +132,16 @@ const IntroAIScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  describeQuizText: {
+    ...Fonts.whiteColor16Light,
+    width: 300,
+    justifyContent: "center",
+  },
   titleInfoStyle: {
-    marginBottom: Sizes.fixPadding + 10,
-    paddingHorizontal: Sizes.fixPadding,
-    paddingBottom: 10,
-    ...Fonts.whiteColor20Bold,
-    textAlign: "left",
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor18Bold,
+    textAlign: "center",
   },
   quizzingTitleStyle: {
     ...Fonts.whiteColor18Bold,

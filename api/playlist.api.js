@@ -9,6 +9,10 @@ export const getPlaylistAPI = (payload) => {
   });
   return CallAPI.get(requestUrl);
 };
+export const getPlaylistByGenreIdAPI = (genreId) => {
+  const url = "/genres/" + `${genreId}`;
+  return CallAPI.get(url);
+};
 
 export const updatePlaylistforArtistAPI = (payload) => {
   const { name, description } = payload;

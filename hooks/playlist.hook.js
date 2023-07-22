@@ -3,6 +3,7 @@ import {
   createPlaylistAPI,
   deletePlaylistAPI,
   getPlaylistAPI,
+  getPlaylistByGenreIdAPI,
   updatePlaylistforArtistAPI,
 } from "../api/playlist.api";
 
@@ -12,6 +13,14 @@ export const useGetPlaylist = (payload) =>
     queryFn: async () => {
       const data = await getPlaylistAPI(payload);
       return data["items"];
+    },
+  });
+export const useGetPlaylisByGenreIdApi = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylistByGenreId", payload],
+    queryFn: async () => {
+      const data = await getPlaylistByGenreIdAPI(payload);
+      return data;
     },
   });
 
