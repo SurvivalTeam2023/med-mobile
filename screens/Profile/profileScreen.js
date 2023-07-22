@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -27,36 +27,46 @@ import moment from "moment";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
-  const [showOptions, setShowOptions] = useState(false);
-  const userAvatar = getUserFromDb()?.avatar?.url;
+  // const [showOptions, setShowOptions] = useState(false);
+  // const userAvatar = getUserFromDb()?.avatar?.url;
 
   const username = store.getState().user.data.username;
 
-  const userFirstName = getUserFromDb()?.firstName || "none";
-  const formatNumber = (number) => {
-    if (number >= 1e9) {
-      return (number / 1e9).toFixed(1) + "B";
-    } else if (number >= 1e6) {
-      return (number / 1e6).toFixed(1) + "M";
-    } else if (number >= 1e3) {
-      return (number / 1e3).toFixed(1) + "K";
-    }
-    return number?.toString();
-  };
+  // const userFirstName = getUserFromDb()?.firstName || "none";
+  // const formatNumber = (number) => {
+  //   if (number >= 1e9) {
+  //     return (number / 1e9).toFixed(1) + "B";
+  //   } else if (number >= 1e6) {
+  //     return (number / 1e6).toFixed(1) + "M";
+  //   } else if (number >= 1e3) {
+  //     return (number / 1e3).toFixed(1) + "K";
+  //   }
+  //   return number?.toString();
+  // };
+
   const { data, isSuccess, isError, error } =
     useGetUserDataByUsernameApi(username);
 
   if (isSuccess) {
     profile = data.user_db;
-    console.log("user data", profile);
   }
   if (isError) {
     console.log("error", error);
   }
-  const favoritedCount = formatNumber(profile?.favorite);
-  const playlistCount = formatNumber(profile?.playlist);
-  const followingCount = formatNumber(profile?.following);
-  let playlist = profile?.publicPlaylist;
+
+  useEffect(() => {
+    if (isSuccess) {
+      profile = data.user_db;
+    }
+    if (isError) {
+      console.log("error", error);
+    }
+  }, []);
+
+  // const favoritedCount = formatNumber(profile?.favorite);
+  // const playlistCount = formatNumber(profile?.playlist);
+  // const followingCount = formatNumber(profile?.following);
+  // let playlist = profile?.publicPlaylist;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -368,7 +378,7 @@ const ProfileScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => {
-            navigation.push(Navigate.EDIT_SCREEN);
+            navigation.push(Navigate.EDIT_USER_SCREEN, { profile });
           }}
         >
           <Ionicons name="md-create" size={24} color="black" />

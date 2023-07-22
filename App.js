@@ -46,6 +46,7 @@ import NowPlayingBackground from "./screens/nowPlaying/nowPlayingBackground";
 import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 import RecommendedGenreScreen from "./screens/recommendedGenre/recommendedGenreScreen";
 import IntroAIScreen from "./screens/introAi/introduceAiScreen";
+import EditUserScreen from "./screens/Profile/editUserScreen";
 
 LogBox.ignoreAllLogs();
 
@@ -100,7 +101,14 @@ const App = () => {
               component={CreateAudioArtistScreen}
             />
             <Stack.Screen name="CreateAlbum" component={CreateAlbumScreen} />
-            <Stack.Screen name="Profile" component={profileScreen} />
+            <Stack.Screen
+              name="Profile"
+              component={profileScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const profile = route.params.profile;
+                return profile;
+              }}
+            />
             <Stack.Screen
               name="DeleteAlbumArtist"
               component={DeleteAlbumArtist}
@@ -113,6 +121,14 @@ const App = () => {
             <Stack.Screen name="Result" component={ResultScreen} />
             <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
             <Stack.Screen name="IntroAi" component={IntroAIScreen} />
+            <Stack.Screen
+              name="EditUser"
+              component={EditUserScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const profile = route.params.profile;
+                return profile;
+              }}
+            />
             <Stack.Screen
               name="BottomTabBar"
               component={bottomTabBarScreen}
@@ -142,6 +158,7 @@ const App = () => {
               name="ArtistProfile"
               component={ProfileArtistScreen}
             />
+
             <Stack.Screen
               name="NowPlaying"
               component={nowPlayingScreen}

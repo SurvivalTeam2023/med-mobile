@@ -22,4 +22,5 @@ export const Navigate = {
   SUBSCRIBE: "Subscribe",
   EDIT_SCREEN: "EditScreen",
   PAYMENT: "Payment",
+  EDIT_USER_SCREEN: "EditUser",
 };

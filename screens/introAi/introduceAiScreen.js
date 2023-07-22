@@ -108,24 +108,6 @@ const IntroAIScreen = () => {
             <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
           </LinearGradient>
         </Pressable>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 10,
-          }}
-        >
-          <Ionicons
-            onPress={() => {
-              // navigation.navigate("HomePage");
-              onPressHandler();
-            }}
-            name="arrow-forward"
-            size={28}
-            color="black"
-          />
-          <Text style={{ ...Fonts.blackColor16Bold, marginTop: 5 }}>Skip</Text>
-        </View>
       </View>
     );
   }
