@@ -21,12 +21,14 @@ import moment from "moment";
 const ResultScreen = ({ navigation }) => {
   const userId = store.getState().user.data.id;
   let quizResult;
+
   const {
     data: quizHistoryData,
     isSuccess: isSuccessQuizHistory,
     isError: isErrorQuizHistory,
     error: errorQuizHistory,
   } = useGetFinishedQuizHistoryApi(userId);
+
   let feeling = store.getState().question.result;
   let feelingFilter = feeling.filter((e) => {
     return e.point !== 0;
@@ -34,7 +36,6 @@ const ResultScreen = ({ navigation }) => {
 
   if (isSuccessQuizHistory) {
     quizResult = quizHistoryData;
-    console.log("quizHistory", quizHistoryData);
   }
   if (isErrorQuizHistory) {
     console.log("Cannot get quiz history", errorQuizHistory);

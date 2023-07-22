@@ -287,11 +287,11 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.headerWrapStyle}>
         <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.pop()}>
-          <Icon
+          <MaterialIcons
             start={{ x: 0, y: 1 }}
             end={{ x: 0, y: 0 }}
-            size={30}
-            mode="linear"
+            name="keyboard-arrow-left"
+            size={24}
             colors={[
               { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
               { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
@@ -301,8 +301,6 @@ const NowPlayingScreen = ({ navigation }) => {
               marginTop: Sizes.fixPadding - 5.0,
               alignSelf: "center",
             }}
-            name="keyboard-arrow-down"
-            type="material"
           />
         </TouchableOpacity>
         <MaskedView

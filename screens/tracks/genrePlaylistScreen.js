@@ -63,8 +63,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
     genreData = dataGetPlaylistByGenreId;
     playlist = genreData["playlist"];
     totalPlaylist = playlist.length;
-    console.log(playlist);
-    console.log("Get Playlist successfully", dataGetPlaylistByGenreId);
+    console.log("Get Playlist successfully");
   }
 
   if (isErrorGetPlaylistByGenreId) {
@@ -182,7 +181,14 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             {playlist?.map((item, index) => (
-              <TouchableOpacity key={index}>
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                    playlistId: item.id,
+                  })
+                }
+              >
                 <View
                   style={{
                     borderColor: "grey",

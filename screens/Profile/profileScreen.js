@@ -13,7 +13,6 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import {
-  useGetUserDataByUsername,
   useGetUserDataByUsernameApi,
   useGetUserProfile,
 } from "../../hooks/user.hook";
@@ -24,14 +23,27 @@ import { getUserFromDb } from "../../utils/app.util";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import moment from "moment";
+import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   // const [showOptions, setShowOptions] = useState(false);
   // const userAvatar = getUserFromDb()?.avatar?.url;
-
+  const userId = store.getState().user.data.id;
+  let quizResult;
+  const {
+    data: quizHistoryData,
+    isSuccess: isSuccessQuizHistory,
+    isError: isErrorQuizHistory,
+    error: errorQuizHistory,
+  } = useGetFinishedQuizHistoryApi(userId);
   const username = store.getState().user.data.username;
-
+  if (isSuccessQuizHistory) {
+    quizResult = quizHistoryData;
+  }
+  if (isErrorQuizHistory) {
+    console.log("Cannot get quiz history", errorQuizHistory);
+  }
   // const userFirstName = getUserFromDb()?.firstName || "none";
   // const formatNumber = (number) => {
   //   if (number >= 1e9) {
@@ -67,7 +79,64 @@ const ProfileScreen = ({ navigation }) => {
   // const playlistCount = formatNumber(profile?.playlist);
   // const followingCount = formatNumber(profile?.following);
   // let playlist = profile?.publicPlaylist;
+  const quizHistory = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 10,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <Text
+              style={{
+                fontSize: 24,
+                textAlign: "center",
+                fontWeight: "450",
+                paddingVertical: 8,
+              }}
+            >
+              Quiz History
+            </Text>
 
+            {quizResult?.map((e) => (
+              <View
+                key={e.quizId}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderColor: "grey",
+                  paddingHorizontal: 8,
+                  paddingVertical: 12,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Symptoms:
+                  </Text>
+                  <Text style={{ fontSize: 14, marginTop: 2 }}>
+                    {e.mentalHealth.toString()}
+                  </Text>
+                </View>
+                <View style={{ marginTop: 4 }}>
+                  <Text
+                    style={{ fontSize: 10, color: "#aaa", fontStyle: "italic" }}
+                  >
+                    Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -78,6 +147,7 @@ const ProfileScreen = ({ navigation }) => {
               {cornerImage()}
               {header()}
               {Profile()}
+              {quizHistory()}
             </View>
           }
           showsVerticalScrollIndicator={false}

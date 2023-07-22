@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
   StatusBar,
@@ -9,88 +8,62 @@ import {
   StyleSheet,
   Text,
   Image,
+  ImageBackground,
+  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Icon } from "react-native-gradient-icon";
-import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
-import { useGetTracksFromGenre } from "../../hooks/genreTracks.hook";
-import { Modal } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
+import { Menu, MenuItem } from "react-native-material-menu";
+import { Icon } from "react-native-gradient-icon";
+import {
+  useDeleteAudioArtistAPI,
+  useGetAudioByIdForArtistAPI,
+  useGetAudioForArtistAPI,
+} from "../../hooks/playlistTracks.hook";
+import { useDispatch } from "react-redux";
+import { audioArtistAction } from "../../redux/audio/audioArtist";
+import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
+import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
 
-const { width } = Dimensions.get("window");
+const PlaylistAudioScreen = ({ navigation, route }) => {
+  let tracksList;
+  let artistInfo;
+  const playlistId = route.params.playlistId;
+  const sortOptions = ["Name", "Date Added", "Artist"];
 
-let songOptionsList = [
-  "Share",
-  "Track Details",
-  "Add to Playlist",
-  "Album",
-  "Artist",
-  "Set as",
-];
+  const { data, isSuccess, isError, error } = useGetPlaylistByIdApi(playlistId);
 
-const sortOptions = ["Name", "Date Added", "Artist"];
+  if (isSuccess) {
+    console.log("Get playlist by id success");
+    const audioList = data["audioPlaylist"];
+    tracksList = audioList;
+  }
 
-const PlaylistAudioScreen = ({ navigation }) => {
-  const [genreTracksList, setGenreTracksList] = useState([]);
+  if (isError) {
+    console.log("Get playlist by id failed", error);
+  }
+
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
+    name: null,
   });
-
-  const {
-    data: dataTracksFromGenre,
-    isSuccess: successTracksFromGenre,
-    isError: isErrorTracksFromGenre,
-    error: errorTracksFromGenre,
-  } = useGetTracksFromGenre();
-  useEffect(() => {
-    if (successTracksFromGenre) {
-      setGenreTracksList(dataTracksFromGenre["data"]);
-      console.log("genreTracksList", genreTracksList);
-    }
-    if (isErrorTracksFromGenre) {
-      console.log("error", errorTracksFromGenre);
-    }
-  }, []);
-
-  const handleOptionSelect = (option) => {
-    // Perform action based on selected option
-    switch (option) {
-      case "Share":
-        console.log("Share option selected");
-        break;
-      case "Track Details":
-        setIsModalVisible(true);
-        break;
-      case "Add to Playlist":
-        console.log("Add to playlist option selected");
-        break;
-      case "Album":
-        console.log("Album option selected");
-        break;
-      case "Artist":
-        console.log("Artist option selected");
-        break;
-      case "Set as":
-        console.log("Set as option selected");
-        break;
-      default:
-        console.log("Invalid option selected");
-    }
-  };
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
+
+  {
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -106,68 +79,11 @@ const PlaylistAudioScreen = ({ navigation }) => {
           {tracks()}
         </ScrollView>
       </View>
-      {currentlyPlayedSong()}
     </SafeAreaView>
   );
 
-  function currentlyPlayedSong() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() =>
-          navigation.push(Navigate.NOW_PLAYING, { item: { id: "image" } })
-        }
-        style={styles.currentlyPlayedSongInfoWrapStyle}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <SharedElement id="image">
-            <Image
-              source={require("../../assets/images/songsCoverPicks/coverImage16.png")}
-              style={{
-                width: 55.0,
-                height: 55.0,
-                borderRadius: Sizes.fixPadding - 5.0,
-              }}
-            />
-          </SharedElement>
-          <View style={{ marginLeft: Sizes.fixPadding }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                maxWidth: width / 3.0,
-                ...Fonts.blackColor15Bold,
-              }}
-            >
-              Dunya
-            </Text>
-            <Text style={{ ...Fonts.grayColor11Medium }}>Mahir Skekh</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-left" size={30} color="black" />
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => updateState({ pauseSong: !pauseSong })}
-            style={styles.pausePlayButtonWrapStyle}
-          >
-            <MaterialIcons
-              name={pauseSong ? "pause" : "play-arrow"}
-              size={30}
-              color="black"
-            />
-          </TouchableOpacity>
-          <View style={styles.forwardBackwardButtonWrapStyle}>
-            <MaterialIcons name="arrow-right" size={30} color="black" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
   function tracks() {
-    const CustomMenu = ({ item }) => {
+    const CustomMenu = ({ id }) => {
       var _menu = null;
 
       const setMenuRef = (ref) => {
@@ -183,112 +99,99 @@ const PlaylistAudioScreen = ({ navigation }) => {
       };
 
       return (
-        <View>
-          <Modal
-            visible={isModalVisible}
-            animationType="fade"
-            transparent={true}
-          >
-            <BlurView intensity={200} style={StyleSheet.absoluteFill}>
-              <View style={styles.modalContainer}>
-                <View style={styles.header}>
-                  <Text style={styles.headerText}>Track Details</Text>
-                </View>
-                <Text style={styles.headerSubtext}>Track Name</Text>
-                <Text>{item?.audio.name}</Text>
-                <Text style={styles.headerSubtext}>Artist</Text>
-                <Text>{item?.audio.artist.artist_name}</Text>
-                <TouchableOpacity
-                  onPress={() => setIsModalVisible(false)}
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 20,
-                  }}
-                >
-                  <Ionicons name="ios-close" size={32} color="black" />
-                </TouchableOpacity>
-              </View>
-            </BlurView>
-          </Modal>
-          <Menu
-            ref={setMenuRef}
-            anchor={
-              <MaterialIcons
-                name="more-vert"
-                color={Colors.grayColor}
-                size={20}
-                onPress={showMenu}
-              />
-            }
-            style={{
-              paddingTop: Sizes.fixPadding,
-              backgroundColor: Colors.whiteColor,
-            }}
-          >
-            {songOptionsList.map((item, index) => (
-              <View key={`${index}`}>
-                <MenuItem
-                  pressColor="transparent"
-                  style={{ height: 30.0 }}
-                  textStyle={{
-                    marginRight: Sizes.fixPadding * 5.0,
-                    ...Fonts.blackColor12SemiBold,
-                  }}
-                  onPress={() => {
-                    hideMenu();
-                    handleOptionSelect(item);
-                  }}
-                >
-                  {item}
-                </MenuItem>
-              </View>
-            ))}
-          </Menu>
-        </View>
+        <Menu
+          ref={setMenuRef}
+          anchor={
+            <MaterialIcons
+              name="more-vert"
+              color={Colors.grayColor}
+              size={20}
+              onPress={showMenu}
+            />
+          }
+          style={{
+            paddingTop: Sizes.fixPadding,
+            backgroundColor: Colors.whiteColor,
+          }}
+        >
+          <View>
+            <MenuItem
+              pressColor="transparent"
+              style={{ height: 30.0 }}
+              textStyle={{
+                marginRight: Sizes.fixPadding * 5.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                dispatch(audioArtistAction.setAudioArtistId(id));
+                console.log(
+                  "Audio artist saved",
+                  store.getState().audioArtist.audioArtistId
+                );
+                getAudioInfo();
+                hideMenu();
+                console.log(modalVisible);
+              }}
+            >
+              Edit
+            </MenuItem>
+            <MenuItem
+              pressColor="transparent"
+              style={{ height: 30.0 }}
+              textStyle={{
+                marginRight: Sizes.fixPadding * 5.0,
+                ...Fonts.blackColor12SemiBold,
+              }}
+              onPress={() => {
+                dispatch(audioArtistAction.setAudioArtistId(id));
+                showConfirmDialog(), hideMenu();
+              }}
+            >
+              Delete
+            </MenuItem>
+          </View>
+        </Menu>
       );
     };
-    return genreTracksList?.map((item) => (
-      <View key={`${item?.id}`}>
+
+    return tracksList?.map((item) => (
+      <View key={`${item.id}`}>
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
           style={styles.tracksInfoWrapStyle}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <SharedElement id={item?.id}>
-              <LinearGradient
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                colors={[
-                  "rgba(255, 124, 0,0.9)",
-                  "rgba(255, 124, 0,0.7)",
-                  "rgba(255, 124, 0,0.4)",
-                  "rgba(41, 10, 89, 0.9)",
-                ]}
-                style={styles.musicIconWrapStyle}
-              >
-                <MaterialIcons
-                  name="music-note"
-                  color={Colors.whiteColor}
-                  size={24}
-                />
-              </LinearGradient>
+          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+            <SharedElement id={item.id}>
+              <ImageBackground
+                source={{ uri: `${item.audio.imageUrl}` }}
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                borderRadius={Sizes.fixPadding - 5.0}
+              ></ImageBackground>
             </SharedElement>
-            <View style={{ marginLeft: Sizes.fixPadding }}>
+            <View style={{ marginLeft: 8, marginTop: 10 }}>
               <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                {item?.audio.name}
+                {item.audio.name}
               </Text>
-              <Text style={{ ...Fonts.grayColor11Medium }}>
-                {item?.audio.artist.artist_name}
+              <Text
+                style={{
+                  ...Fonts.grayColor11Medium,
+                }}
+              >
+                {item?.audio.artist?.artist_name}
               </Text>
             </View>
           </View>
-          <CustomMenu item={item} />
+
+          <CustomMenu id={item.id} />
         </TouchableOpacity>
       </View>
     ));
   }
+
   function sortingIcons() {
     return (
       <View
@@ -398,11 +301,14 @@ const PlaylistAudioScreen = ({ navigation }) => {
         </Menu>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialIcons
-            name="shuffle"
+          <Ionicons
+            name="add-outline"
             size={20}
             color="black"
             style={{ marginRight: Sizes.fixPadding }}
+            onPress={() => {
+              navigation.push("CreateAudioArtist");
+            }}
           />
           <MaterialCommunityIcons
             name="arrow-right-drop-circle"
@@ -422,11 +328,11 @@ const PlaylistAudioScreen = ({ navigation }) => {
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
           >
-            <Icon
+            <MaterialIcons
               start={{ x: 0, y: 1 }}
               end={{ x: 0, y: 0 }}
-              size={30}
-              mode="linear"
+              name="keyboard-arrow-left"
+              size={24}
               colors={[
                 { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
@@ -436,21 +342,21 @@ const PlaylistAudioScreen = ({ navigation }) => {
                 marginTop: Sizes.fixPadding - 5.0,
                 alignSelf: "center",
               }}
-              name="keyboard-arrow-left"
-              type="material"
             />
           </TouchableOpacity>
-          <MaskedView
-            style={{ flex: 1, height: 28 }}
-            maskElement={<Text style={{ ...Fonts.bold22 }}>Tracks</Text>}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 0.2 }}
-              end={{ x: 1, y: 1 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-              style={{ flex: 1 }}
-            />
-          </MaskedView>
+          {
+            <MaskedView
+              style={{ flex: 1, height: 28 }}
+              maskElement={<Text style={{ ...Fonts.bold22 }}>Audio</Text>}
+            >
+              <LinearGradient
+                start={{ x: 1, y: 0.2 }}
+                end={{ x: 1, y: 1 }}
+                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                style={{ flex: 1 }}
+              />
+            </MaskedView>
+          }
         </View>
         <MaterialIcons
           name="search"
@@ -541,44 +447,54 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: Sizes.fixPadding * 2.0,
   },
-  modalContainer: {
+  centeredView: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
-    margin: 40,
-    height: 269.0,
-    alignSelf: "center",
-    position: "absolute",
-    left: 0.0,
-    right: 0.0,
-    bottom: "30%",
-    elevation: 5.0,
-    paddingHorizontal: Sizes.fixPadding * 2.0,
-    borderRadius: 22.5,
-    borderColor: "#DFDFDF",
-    borderWidth: 0.5,
-    marginHorizontal: Sizes.fixPadding + 5.0,
-  },
-  header: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#fff",
-    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
+    marginTop: 22,
   },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 0,
+  modalView: {
+    margin: 20,
+    backgroundColor: "#ECECEC",
+    borderRadius: 20,
+    padding: 50,
+    paddingHorizontal: 70,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 10,
   },
-  headerSubtext: {
-    fontSize: 16,
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
     fontWeight: "bold",
-    color: "#333",
-    marginTop: 10,
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
   },
 });
 
