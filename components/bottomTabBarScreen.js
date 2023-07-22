@@ -103,7 +103,7 @@ const BottomTabBarScreen = ({ navigation }) => {
           })}
           {bottomTabBarItem({
             index: 4,
-            icon: "camera",
+            icon: "supervised-user-circle",
           })}
           {bottomTabBarItem({
             index: 5,

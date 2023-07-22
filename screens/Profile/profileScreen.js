@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -12,42 +12,61 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { useGetUserProfile } from "../../hooks/user.hook";
+import {
+  useGetUserDataByUsername,
+  useGetUserDataByUsernameApi,
+  useGetUserProfile,
+} from "../../hooks/user.hook";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { getUserFromDb } from "../../utils/app.util";
 import { Navigate } from "../../constants/navigate";
+import { store } from "../../core/store/store";
+import moment from "moment";
 
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
-  const [showOptions, setShowOptions] = useState(false);
-  const userAvatar = getUserFromDb()?.avatar?.url || {};
-  const userFirstName = getUserFromDb()?.firstName || "none";
-  const formatNumber = (number) => {
-    if (number >= 1e9) {
-      return (number / 1e9).toFixed(1) + "B";
-    } else if (number >= 1e6) {
-      return (number / 1e6).toFixed(1) + "M";
-    } else if (number >= 1e3) {
-      return (number / 1e3).toFixed(1) + "K";
-    }
-    return number?.toString();
-  };
+  // const [showOptions, setShowOptions] = useState(false);
+  // const userAvatar = getUserFromDb()?.avatar?.url;
 
-  const { data, isSuccess, isError, error } = useGetUserProfile();
+  const username = store.getState().user.data.username;
+
+  // const userFirstName = getUserFromDb()?.firstName || "none";
+  // const formatNumber = (number) => {
+  //   if (number >= 1e9) {
+  //     return (number / 1e9).toFixed(1) + "B";
+  //   } else if (number >= 1e6) {
+  //     return (number / 1e6).toFixed(1) + "M";
+  //   } else if (number >= 1e3) {
+  //     return (number / 1e3).toFixed(1) + "K";
+  //   }
+  //   return number?.toString();
+  // };
+
+  const { data, isSuccess, isError, error } =
+    useGetUserDataByUsernameApi(username);
 
   if (isSuccess) {
-    console.log(data);
-    profile = data["data"];
+    profile = data.user_db;
   }
   if (isError) {
     console.log("error", error);
   }
-  const favoritedCount = formatNumber(profile?.favorite);
-  const playlistCount = formatNumber(profile?.playlist);
-  const followingCount = formatNumber(profile?.following);
-  let playlist = profile?.publicPlaylist;
+
+  useEffect(() => {
+    if (isSuccess) {
+      profile = data.user_db;
+    }
+    if (isError) {
+      console.log("error", error);
+    }
+  }, []);
+
+  // const favoritedCount = formatNumber(profile?.favorite);
+  // const playlistCount = formatNumber(profile?.playlist);
+  // const followingCount = formatNumber(profile?.following);
+  // let playlist = profile?.publicPlaylist;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -55,13 +74,11 @@ const ProfileScreen = ({ navigation }) => {
       <View style={{ flex: 1 }}>
         <FlatList
           ListHeaderComponent={
-            <>
+            <View>
               {cornerImage()}
               {header()}
               {Profile()}
-              {publicPlaylists()}
-              {Following()}
-            </>
+            </View>
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
@@ -70,156 +87,260 @@ const ProfileScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  function publicPlaylists() {
-    const renderItem = ({ item }) => (
-      <View>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => navigation.push(Navigate.TRACK)}
-          style={styles.recentlyPalyedSongImageStyle}
-        >
-          <SharedElement id={item.id}>
-            <Image
-              source={{ uri: `${item?.imageUrl}` }}
-              style={styles.recentlyPalyedSongImageStyle}
-            />
-          </SharedElement>
-        </TouchableOpacity>
-        <Text
-          style={{
-            ...Fonts.blackColor12SemiBold,
-            marginTop: Sizes.fixPadding - 7.0,
-          }}
-        >
-          {item.name}
-        </Text>
-      </View>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Playlists</Text>
-          <Menu
-            visible={showOptions}
-            style={{ backgroundColor: Colors.whiteColor }}
-            anchor={
-              <MaterialIcons
-                name="more-vert"
-                size={24}
-                color={Colors.blackColor}
-                style={{ alignSelf: "flex-end" }}
-                onPress={() => setShowOptions(true)}
-              />
-            }
-            onRequestClose={() => setShowOptions(false)}
-          >
-            <MenuItem
-              pressColor="transparent"
-              textStyle={{
-                marginRight: Sizes.fixPadding * 3.0,
-                ...Fonts.blackColor12SemiBold,
-              }}
-              onPress={() => {
-                updateState({ showOptions: false }),
-                  navigation.push("CreatePlaylistUser");
-              }}
-            >
-              Add New Album
-            </MenuItem>
-            <MenuItem
-              pressColor="transparent"
-              textStyle={{
-                marginRight: Sizes.fixPadding * 3.0,
-                ...Fonts.blackColor12SemiBold,
-              }}
-              onPress={() => {
-                updateState({ showOptions: false }),
-                  navigation.push("DeletePlaylistUser");
-              }}
-            >
-              Delete Album
-            </MenuItem>
-          </Menu>
-        </View>
+  // function publicPlaylists() {
+  //   const renderItem = ({ item }) => (
+  //     <View>
+  //       <TouchableOpacity
+  //         activeOpacity={0.9}
+  //         onPress={() => navigation.push(Navigate.TRACK)}
+  //         style={styles.recentlyPalyedSongImageStyle}
+  //       >
+  //         <SharedElement id={item.id}>
+  //           <Image
+  //             source={{ uri: `${item?.imageUrl}` }}
+  //             style={styles.recentlyPalyedSongImageStyle}
+  //           />
+  //         </SharedElement>
+  //       </TouchableOpacity>
+  //       <Text
+  //         style={{
+  //           ...Fonts.blackColor12SemiBold,
+  //           marginTop: Sizes.fixPadding - 7.0,
+  //         }}
+  //       >
+  //         {item.name}
+  //       </Text>
+  //     </View>
+  //   );
+  //   return (
+  //     <View style={styles.publicPlaylists}>
+  //       <View style={styles.titleWrapStyle}>
+  //         <Text style={styles.titleStyle}>Playlists</Text>
+  //         <Menu
+  //           visible={showOptions}
+  //           style={{ backgroundColor: Colors.whiteColor }}
+  //           anchor={
+  //             <MaterialIcons
+  //               name="more-vert"
+  //               size={24}
+  //               color={Colors.blackColor}
+  //               style={{ alignSelf: "flex-end" }}
+  //               onPress={() => setShowOptions(true)}
+  //             />
+  //           }
+  //           onRequestClose={() => setShowOptions(false)}
+  //         >
+  //           <MenuItem
+  //             pressColor="transparent"
+  //             textStyle={{
+  //               marginRight: Sizes.fixPadding * 3.0,
+  //               ...Fonts.blackColor12SemiBold,
+  //             }}
+  //             onPress={() => {
+  //               updateState({ showOptions: false }),
+  //                 navigation.push("CreatePlaylistUser");
+  //             }}
+  //           >
+  //             Add New Album
+  //           </MenuItem>
+  //           <MenuItem
+  //             pressColor="transparent"
+  //             textStyle={{
+  //               marginRight: Sizes.fixPadding * 3.0,
+  //               ...Fonts.blackColor12SemiBold,
+  //             }}
+  //             onPress={() => {
+  //               updateState({ showOptions: false }),
+  //                 navigation.push("DeletePlaylistUser");
+  //             }}
+  //           >
+  //             Delete Album
+  //           </MenuItem>
+  //         </Menu>
+  //       </View>
 
-        <FlatList
-          data={playlist}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
+  //       <FlatList
+  //         data={playlist}
+  //         keyExtractor={(item) => `${item.id}`}
+  //         renderItem={renderItem}
+  //         horizontal
+  //         showsHorizontalScrollIndicator={false}
+  //       />
+  //     </View>
+  //   );
+  // }
 
-  function Following() {
-    const renderItem = ({ item, index }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push(Navigate.TRACK)}
-        style={styles.recentlyPalyedSongImageStyle}
-      >
-        <Image
-          source={item.image}
-          style={{
-            width: "100%",
-            height: 160.0,
-            borderRadius: Sizes.fixPadding - 5.0,
-          }}
-        />
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.libraryFor}
-        </Text>
-      </TouchableOpacity>
-    );
-    return (
-      <View style={styles.publicPlaylists}>
-        <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Following</Text>
-        </View>
-        <FlatList
-          data={profile}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-
+  // function Following() {
+  //   const renderItem = ({ item, index }) => (
+  //     <TouchableOpacity
+  //       activeOpacity={0.9}
+  //       onPress={() => navigation.push(Navigate.TRACK)}
+  //       style={styles.recentlyPalyedSongImageStyle}
+  //     >
+  //       <Image
+  //         source={item.image}
+  //         style={{
+  //           width: "100%",
+  //           height: 160.0,
+  //           borderRadius: Sizes.fixPadding - 5.0,
+  //         }}
+  //       />
+  //       <Text
+  //         style={{
+  //           marginTop: Sizes.fixPadding - 7.0,
+  //           ...Fonts.blackColor12SemiBold,
+  //         }}
+  //       >
+  //         {item.libraryFor}
+  //       </Text>
+  //     </TouchableOpacity>
+  //   );
+  //   return (
+  //     <View style={styles.publicPlaylists}>
+  //       <View style={styles.titleWrapStyle}>
+  //         <Text style={styles.titleStyle}>Following</Text>
+  //       </View>
+  //       <FlatList
+  //         data={profile}
+  //         keyExtractor={(item) => `${item.id}`}
+  //         renderItem={renderItem}
+  //         horizontal
+  //         showsHorizontalScrollIndicator={false}
+  //       />
+  //     </View>
+  //   );
+  // }
+  // source={{
+  //   uri: `${profile.user_db.url}`,
+  // }}
   function Profile() {
     return (
-      <View style={styles.container}>
-        <View style={styles.rect}>
-          <View style={styles.imageRow}>
-            <Image
-              source={{
-                uri: `${userAvatar}`,
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 14,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <View
+              style={{
+                justifyContent: "center",
+                flexDirection: "row",
               }}
-              resizeMode="contain"
-              style={styles.image}
-            ></Image>
-            <Text style={styles.name}>{userFirstName}</Text>
-          </View>
-          <View style={styles.detailWrapper}>
-            <View>
-              <Text style={styles.detailedText}>Favorited</Text>
-              <Text>{favoritedCount}</Text>
+            >
+              <Image
+                source={{
+                  uri: profile?.avatar?.url,
+                }}
+                style={styles.image}
+              />
             </View>
+
             <View>
-              <Text style={styles.detailedText}>Playlist</Text>
-              <Text>{playlistCount}</Text>
-            </View>
-            <View>
-              <Text style={styles.detailedText}>Following</Text>
-              <Text>{followingCount}</Text>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Username
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.username}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>Email</Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.email}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Firstname
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.firstName}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Lastname
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.lastName}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Gender
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.gender}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Address
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {profile.address}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperUserInfo}>
+                <View style={styles.userInfo}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Date of birth
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "100",
+                    }}
+                  >
+                    {moment(profile.dob).format("DD-MM-YYYY")}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -257,7 +378,7 @@ const ProfileScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => {
-            navigation.push(Navigate.EDIT_SCREEN);
+            navigation.push(Navigate.EDIT_USER_SCREEN, { profile });
           }}
         >
           <Ionicons name="md-create" size={24} color="black" />
@@ -275,6 +396,16 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding - 30.0,
     marginBottom: Sizes.fixPadding + 5.0,
   },
+  userInfo: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+  wrapperUserInfo: {
+    paddingHorizontal: 8,
+    marginTop: 8,
+    marginLeft: 8,
+    paddingVertical: 8,
+  },
   container: {
     flex: 1,
   },
@@ -287,11 +418,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
-    width: 100,
-    height: 121,
-    marginLeft: 20,
-    borderRadius: 10,
-    borderWidth: 2,
+    width: 175,
+    height: 175,
+    marginTop: 8,
+    borderRadius: 50,
   },
   name: {
     color: "#121212",

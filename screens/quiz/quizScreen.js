@@ -106,7 +106,14 @@ const QuizScreen = () => {
         }}
       >
         <View stylele={{ marginBottom: 8 }}>
-          <Text style={{ ...Fonts.medium16, color: "#583D72" }}>Skip</Text>
+          <Text
+            style={{ ...Fonts.medium16, color: "#583D72" }}
+            onPress={() => {
+              onPressHandler();
+            }}
+          >
+            Skip
+          </Text>
         </View>
         <View>
           <Pressable

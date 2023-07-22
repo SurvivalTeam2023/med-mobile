@@ -1,17 +1,18 @@
 import { useQuery, useMutation } from "react-query";
 import {
   getUserDataByUsername,
+  getUserDataByUsernameApi,
   getUserProfileByUserId,
   updateUserAccountDetails,
   updateUserAvatar,
 } from "../api/user.api";
 
-export const useGetUserDataByUsername = (username) => {
+export const useGetUserDataByUsernameApi = (username) => {
   if (!username) return;
   const { ...rest } = useQuery({
     queryKey: ["getUsername", username],
     queryFn: async () => {
-      return await getUserDataByUsername(username);
+      return await getUserDataByUsernameApi(username);
     },
     enabled: !!username,
   });
