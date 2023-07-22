@@ -43,6 +43,7 @@ const ProfileScreen = ({ navigation }) => {
   //   }
   //   return number?.toString();
   // };
+
   const { data, isSuccess, isError, error } =
     useGetUserDataByUsernameApi(username);
 
@@ -377,7 +378,7 @@ const ProfileScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => {
-            navigation.push(Navigate.EDIT_USER_SCREEN);
+            navigation.push(Navigate.EDIT_USER_SCREEN, { profile });
           }}
         >
           <Ionicons name="md-create" size={24} color="black" />

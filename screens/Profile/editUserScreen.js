@@ -21,7 +21,11 @@ import * as ImagePicker from "expo-image-picker";
 import { useUpdateUserAccountDetails } from "../../hooks/user.hook";
 import { Alert } from "react-native";
 import { Navigate } from "../../constants/navigate";
-const EditUserScreen = ({ navigation }) => {
+import moment from "moment";
+
+const EditUserScreen = ({ navigation, route }) => {
+  const profile = route.params.profile;
+  console.log(profile);
   const [state, setState] = useState({
     firstName: null,
     lastName: null,
@@ -239,7 +243,7 @@ const EditUserScreen = ({ navigation }) => {
 
   function firstNameTextField() {
     return (
-      <View style={styles.passwordTextFieldWrapStyle}>
+      <View style={styles.userNameTextFieldWrapStyle}>
         <View
           style={{
             flex: 1,
@@ -252,7 +256,7 @@ const EditUserScreen = ({ navigation }) => {
             value={firstName}
             onChangeText={(text) => updateState({ firstName: text })}
             selectionColor={Colors.grayColor}
-            placeholder="Firstname"
+            placeholder={profile.firstName}
             placeholderTextColor={Colors.grayColor}
             style={{
               flex: 1,
@@ -273,7 +277,7 @@ const EditUserScreen = ({ navigation }) => {
           value={lastName}
           onChangeText={(text) => updateState({ lastName: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Lastname"
+          placeholder={profile.lastName}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -292,7 +296,7 @@ const EditUserScreen = ({ navigation }) => {
           value={email}
           onChangeText={(text) => updateState({ email: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Email"
+          placeholder={profile.email}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -311,7 +315,7 @@ const EditUserScreen = ({ navigation }) => {
           value={city}
           onChangeText={(text) => updateState({ city: text })}
           selectionColor={Colors.grayColor}
-          placeholder="City"
+          placeholder={profile.city}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -330,7 +334,7 @@ const EditUserScreen = ({ navigation }) => {
           value={address}
           onChangeText={(text) => updateState({ address: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Address"
+          placeholder={profile.address}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -349,7 +353,7 @@ const EditUserScreen = ({ navigation }) => {
           value={dob}
           onChangeText={(text) => updateState({ dob: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Date of Birth"
+          placeholder={moment(profile.dob).format("DD-MM-YYYY")}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -408,9 +412,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.whiteColor,
     elevation: 2.0,
-    borderRadius: Sizes.fixPadding - 5.0,
-    paddingVertical: Sizes.fixPadding + 1.0,
-    marginTop: Sizes.fixPadding * 2.5,
+    borderRadius: Sizes.fixPadding,
+    paddingVertical: 10,
+    marginTop: 10,
     marginBottom: Sizes.fixPadding,
     paddingHorizontal: Sizes.fixPadding + 5.0,
     marginHorizontal: Sizes.fixPadding * 2.0,
