@@ -48,6 +48,8 @@ import IntroAIScreen from "./screens/introAi/introduceAiScreen";
 import EditUserScreen from "./screens/Profile/editUserScreen";
 import PlaylistGenreScreen from "./screens/tracks/genrePlaylistScreen";
 import PlaylistAudioScreen from "./screens/tracks/playlistAudioScreen";
+import ResultHistoryDetailScreen from "./screens/Profile/resultHistoryDetailScreen";
+import { navigationRef } from "./core/RootNavigation";
 
 LogBox.ignoreAllLogs();
 
@@ -57,7 +59,7 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
           <NowPlayingBackground />
           <Stack.Navigator
@@ -161,6 +163,14 @@ const App = () => {
             <Stack.Screen
               name="editAudioArtistScreen"
               component={EditAudioArtistScreen}
+            />
+            <Stack.Screen
+              name="ResultHistoryDetail"
+              component={ResultHistoryDetailScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const item = route.params.e;
+                return [item.id];
+              }}
             />
             <Stack.Screen
               name="ArtistProfile"

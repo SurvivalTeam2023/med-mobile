@@ -1,7 +1,8 @@
 import axios from "axios";
 import { HEADER_AUTHORIZATION, config } from "../../constants/config";
 import { store } from "../store/store";
-
+import * as RootNavigation from "../RootNavigation";
+import { Navigate } from "../../constants/navigate";
 const axiosInstance = axios.create({
   baseURL: config.SERVER_URL,
   withCredentials: false,
@@ -33,13 +34,15 @@ const requestInterceptor = (config) => {
 const responseInterceptor = (response) => {
   return response.data;
 };
-
 const errorInterceptor = (error) => {
   console.error(
-    error
+    error.response.status
     // `Request failed:[${error.status}]`,
     // `${error.baseURL}${error.url}`
   );
+  if (error.response.status == "401") {
+    RootNavigation.navigate(Navigate.SIGN_IN, {});
+  }
   throw error;
 };
 

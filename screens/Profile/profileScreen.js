@@ -24,12 +24,12 @@ import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import moment from "moment";
 import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
-
+import { useSelector } from "react-redux";
+import { AntDesign } from "@expo/vector-icons";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
-  // const [showOptions, setShowOptions] = useState(false);
-  // const userAvatar = getUserFromDb()?.avatar?.url;
-  const userId = store.getState().user.data.id;
+  const userId = useSelector((state) => state.user.data.id);
+
   let quizResult;
   const {
     data: quizHistoryData,
@@ -37,24 +37,14 @@ const ProfileScreen = ({ navigation }) => {
     isError: isErrorQuizHistory,
     error: errorQuizHistory,
   } = useGetFinishedQuizHistoryApi(userId);
-  const username = store.getState().user.data.username;
+  const username = useSelector((state) => state.user.data.username);
   if (isSuccessQuizHistory) {
     quizResult = quizHistoryData;
+    console.log(quizResult);
   }
   if (isErrorQuizHistory) {
     console.log("Cannot get quiz history", errorQuizHistory);
   }
-  // const userFirstName = getUserFromDb()?.firstName || "none";
-  // const formatNumber = (number) => {
-  //   if (number >= 1e9) {
-  //     return (number / 1e9).toFixed(1) + "B";
-  //   } else if (number >= 1e6) {
-  //     return (number / 1e6).toFixed(1) + "M";
-  //   } else if (number >= 1e3) {
-  //     return (number / 1e3).toFixed(1) + "K";
-  //   }
-  //   return number?.toString();
-  // };
 
   const { data, isSuccess, isError, error } =
     useGetUserDataByUsernameApi(username);
@@ -75,10 +65,6 @@ const ProfileScreen = ({ navigation }) => {
     }
   }, []);
 
-  // const favoritedCount = formatNumber(profile?.favorite);
-  // const playlistCount = formatNumber(profile?.playlist);
-  // const followingCount = formatNumber(profile?.following);
-  // let playlist = profile?.publicPlaylist;
   const quizHistory = () => {
     return (
       <View
@@ -89,54 +75,89 @@ const ProfileScreen = ({ navigation }) => {
       >
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <Text
+            <View
               style={{
-                fontSize: 24,
-                textAlign: "center",
-                fontWeight: "450",
-                paddingVertical: 8,
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 8,
               }}
             >
-              Quiz History
-            </Text>
-
-            {quizResult?.map((e) => (
-              <View
-                key={e.quizId}
+              <AntDesign name="medicinebox" size={24} color="black" />
+              <Text
                 style={{
-                  borderTopWidth: 0.5,
-                  borderColor: "grey",
-                  paddingHorizontal: 8,
-                  paddingVertical: 12,
+                  fontSize: 24,
+                  textAlign: "left",
+                  marginLeft: 8,
+                  fontWeight: "450",
+                  paddingVertical: 8,
                 }}
               >
-                <View
+                Quiz History
+              </Text>
+            </View>
+
+            {quizResult ? (
+              // Render the list of quizzes if quizResult has data
+              quizResult.slice(0, 5).map((e) => (
+                <TouchableOpacity
+                  key={e.quizId}
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+                    borderTopWidth: 0.5,
+                    borderColor: "grey",
+                    paddingHorizontal: 8,
+                    paddingVertical: 12,
+                  }}
+                  onPress={() => {
+                    navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
+                      e,
+                    });
                   }}
                 >
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                    Symptoms:
-                  </Text>
-                  <Text style={{ fontSize: 14, marginTop: 2 }}>
-                    {e.mentalHealth.toString()}
-                  </Text>
-                </View>
-                <View style={{ marginTop: 4 }}>
-                  <Text
-                    style={{ fontSize: 10, color: "#aaa", fontStyle: "italic" }}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
-                  </Text>
-                </View>
-              </View>
-            ))}
+                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                      Symptoms:
+                    </Text>
+                    <Text style={{ fontSize: 14, marginTop: 2 }}>
+                      {e.mentalHealth.toString()}
+                    </Text>
+                  </View>
+                  <View style={{ marginTop: 4 }}>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: "#aaa",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              // Render the "No data" text if quizResult is empty
+              <Text
+                style={{
+                  fontSize: 24,
+                  textAlign: "center",
+                  fontWeight: "450",
+                  paddingVertical: 8,
+                }}
+              >
+                No data
+              </Text>
+            )}
           </View>
         </View>
       </View>
     );
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -157,132 +178,6 @@ const ProfileScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  // function publicPlaylists() {
-  //   const renderItem = ({ item }) => (
-  //     <View>
-  //       <TouchableOpacity
-  //         activeOpacity={0.9}
-  //         onPress={() => navigation.push(Navigate.TRACK)}
-  //         style={styles.recentlyPalyedSongImageStyle}
-  //       >
-  //         <SharedElement id={item.id}>
-  //           <Image
-  //             source={{ uri: `${item?.imageUrl}` }}
-  //             style={styles.recentlyPalyedSongImageStyle}
-  //           />
-  //         </SharedElement>
-  //       </TouchableOpacity>
-  //       <Text
-  //         style={{
-  //           ...Fonts.blackColor12SemiBold,
-  //           marginTop: Sizes.fixPadding - 7.0,
-  //         }}
-  //       >
-  //         {item.name}
-  //       </Text>
-  //     </View>
-  //   );
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>Playlists</Text>
-  //         <Menu
-  //           visible={showOptions}
-  //           style={{ backgroundColor: Colors.whiteColor }}
-  //           anchor={
-  //             <MaterialIcons
-  //               name="more-vert"
-  //               size={24}
-  //               color={Colors.blackColor}
-  //               style={{ alignSelf: "flex-end" }}
-  //               onPress={() => setShowOptions(true)}
-  //             />
-  //           }
-  //           onRequestClose={() => setShowOptions(false)}
-  //         >
-  //           <MenuItem
-  //             pressColor="transparent"
-  //             textStyle={{
-  //               marginRight: Sizes.fixPadding * 3.0,
-  //               ...Fonts.blackColor12SemiBold,
-  //             }}
-  //             onPress={() => {
-  //               updateState({ showOptions: false }),
-  //                 navigation.push("CreatePlaylistUser");
-  //             }}
-  //           >
-  //             Add New Album
-  //           </MenuItem>
-  //           <MenuItem
-  //             pressColor="transparent"
-  //             textStyle={{
-  //               marginRight: Sizes.fixPadding * 3.0,
-  //               ...Fonts.blackColor12SemiBold,
-  //             }}
-  //             onPress={() => {
-  //               updateState({ showOptions: false }),
-  //                 navigation.push("DeletePlaylistUser");
-  //             }}
-  //           >
-  //             Delete Album
-  //           </MenuItem>
-  //         </Menu>
-  //       </View>
-
-  //       <FlatList
-  //         data={playlist}
-  //         keyExtractor={(item) => `${item.id}`}
-  //         renderItem={renderItem}
-  //         horizontal
-  //         showsHorizontalScrollIndicator={false}
-  //       />
-  //     </View>
-  //   );
-  // }
-
-  // function Following() {
-  //   const renderItem = ({ item, index }) => (
-  //     <TouchableOpacity
-  //       activeOpacity={0.9}
-  //       onPress={() => navigation.push(Navigate.TRACK)}
-  //       style={styles.recentlyPalyedSongImageStyle}
-  //     >
-  //       <Image
-  //         source={item.image}
-  //         style={{
-  //           width: "100%",
-  //           height: 160.0,
-  //           borderRadius: Sizes.fixPadding - 5.0,
-  //         }}
-  //       />
-  //       <Text
-  //         style={{
-  //           marginTop: Sizes.fixPadding - 7.0,
-  //           ...Fonts.blackColor12SemiBold,
-  //         }}
-  //       >
-  //         {item.libraryFor}
-  //       </Text>
-  //     </TouchableOpacity>
-  //   );
-  //   return (
-  //     <View style={styles.publicPlaylists}>
-  //       <View style={styles.titleWrapStyle}>
-  //         <Text style={styles.titleStyle}>Following</Text>
-  //       </View>
-  //       <FlatList
-  //         data={profile}
-  //         keyExtractor={(item) => `${item.id}`}
-  //         renderItem={renderItem}
-  //         horizontal
-  //         showsHorizontalScrollIndicator={false}
-  //       />
-  //     </View>
-  //   );
-  // }
-  // source={{
-  //   uri: `${profile.user_db.url}`,
-  // }}
   function Profile() {
     return (
       <View

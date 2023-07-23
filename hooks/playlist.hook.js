@@ -23,7 +23,9 @@ export const useGetPlaylisByGenreIdApi = (payload) =>
       const data = await getPlaylistByGenreIdAPI(payload);
       return data;
     },
+    enabled: !!payload,
   });
+
 export const useGetPlaylistByIdApi = (payload) =>
   useQuery({
     queryKey: ["getPlaylistById", payload],
@@ -31,6 +33,7 @@ export const useGetPlaylistByIdApi = (payload) =>
       const data = await getPlaylistByIdAPI(payload);
       return data;
     },
+    enabled: !!payload,
   });
 
 export const useCreatePlaylistAPI = (payload) =>

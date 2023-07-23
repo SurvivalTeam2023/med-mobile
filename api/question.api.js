@@ -10,6 +10,10 @@ export const saveQuizResultApi = (payload) => {
   const url = "/result";
   return CallAPI.post(url, { questionBankId, optionId });
 };
+export const getQuizResultByIdApi = (resultId) => {
+  const url = "/result/" + `${resultId}`;
+  return CallAPI.get(url);
+};
 
 export const isValidQuiz = (payload) => {
   const url = "/questionBank";

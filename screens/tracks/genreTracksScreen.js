@@ -46,12 +46,12 @@ const TracksScreen = ({ navigation }) => {
 
   const {
     data: dataTracksFromGenre,
-    isSuccess: successTracksFromGenre,
+    isSuccess: isSuccessTracksFromGenre,
     isError: isErrorTracksFromGenre,
     error: errorTracksFromGenre,
   } = useGetTracksFromGenre();
   useEffect(() => {
-    if (successTracksFromGenre) {
+    if (isSuccessTracksFromGenre) {
       setGenreTracksList(dataTracksFromGenre["data"]);
       console.log("genreTracksList", genreTracksList);
     }

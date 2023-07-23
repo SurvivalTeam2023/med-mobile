@@ -59,7 +59,7 @@ const CamResultScreen = ({ navigation }) => {
       value: e.Confidence * 0.01,
       color: generateColor(),
       type: e.Type.charAt(0).toUpperCase() + e.Type.slice(1).toLowerCase(),
-      percentage: e.Confidence.toFixed(2),
+      percentage: e.Confidence,
     };
   });
 
