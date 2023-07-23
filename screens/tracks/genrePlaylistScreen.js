@@ -25,11 +25,6 @@ const sortOptions = ["Name", "Date Added", "Artist"];
 
 const PlaylistGenreScreen = ({ navigation, route }) => {
   const genreId = route.params.genreId;
-  const [state, setState] = useState({
-    showSortOptions: false,
-    selectedSortCriteria: sortOptions[0],
-    pauseSong: true,
-  });
 
   const {
     data: dataGetPlaylistByGenreId,
@@ -63,10 +58,6 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
   };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const updateState = (data) => setState((state) => ({ ...state, ...data }));
-
-  const { showSortOptions, selectedSortCriteria, pauseSong } = state;
   const genreInfo = () => {
     return (
       <View
@@ -149,60 +140,63 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
       <View style={{ backgroundColor: "#eeeeee", borderRadius: 10 }}>
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            {dataGetPlaylistByGenreId["playlists"]?.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() =>
-                  navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                    playlistId: item.id,
-                  })
-                }
-              >
-                <View
-                  style={{
-                    borderColor: "grey",
-                    paddingHorizontal: 8,
-                    paddingVertical: 12,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                  }}
+            {dataGetPlaylistByGenreId["playlists"]?.map((item, index) => {
+              const playListInfor = item["playlist"];
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                      playlistId: playListInfor.id,
+                    })
+                  }
                 >
-                  <View>
-                    <Text>{index + 1}</Text>
-                  </View>
-                  <View style={{ marginLeft: 8 }}>
-                    <Image
-                      source={{ uri: item.imageUrl }}
-                      style={styles.imagePlaylist}
-                    />
-                  </View>
                   <View
                     style={{
-                      flexDirection: "column",
-                      marginLeft: 10,
+                      borderColor: "grey",
+                      paddingHorizontal: 8,
+                      paddingVertical: 12,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
                     }}
                   >
                     <View>
-                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          marginTop: 2,
-                          fontWeight: "200",
-                          color: "#808080",
-                          fontStyle: "italic",
-                        }}
-                      >
-                        TamPham
-                      </Text>
+                      <Text>{index + 1}</Text>
+                    </View>
+                    <View style={{ marginLeft: 8 }}>
+                      <Image
+                        source={{ uri: playListInfor.imageUrl }}
+                        style={styles.imagePlaylist}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "column",
+                        marginLeft: 10,
+                      }}
+                    >
+                      <View>
+                        <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                          {playListInfor.name}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            marginTop: 2,
+                            fontWeight: "200",
+                            color: "#808080",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          {item.author}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       </View>
@@ -237,8 +231,6 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
             onPress={() => navigation.pop()}
           >
             <MaterialIcons
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
               name="keyboard-arrow-left"
               size={24}
               colors={[

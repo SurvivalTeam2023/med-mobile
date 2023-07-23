@@ -20,6 +20,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useLogin, useLoginWithGmail } from "../../hooks/auth.hook";
 import {
   EXPO_CLIENT_ID,
+  IOS_CLIENT_ID,
   TOKEN_KEY_STORAGE,
   WEB_CLIENT_ID,
 } from "../../constants/config";
@@ -118,6 +119,7 @@ const SignInScreen = ({ navigation }) => {
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
+    iosClientId: IOS_CLIENT_ID,
   });
   let token = null;
   let email = null;

@@ -69,6 +69,32 @@ const BottomTabBarScreen = ({ navigation }) => {
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
+  const bottonNavigation = [
+    {
+      index: 1,
+      icon: "music-note",
+    },
+    {
+      index: 2,
+      icon: "local-fire-department",
+    },
+    {
+      index: 3,
+      icon: "library-music",
+    },
+    {
+      index: 4,
+      icon: "supervised-user-circle",
+    },
+    {
+      index: 5,
+      icon: "camera-alt",
+    },
+    {
+      index: 6,
+      icon: "settings",
+    },
+  ];
   const { currentIndex, pauseSong, backClickCount } = state;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -89,30 +115,7 @@ const BottomTabBarScreen = ({ navigation }) => {
         )}
         {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
         <View style={styles.bottomTabBarStyle}>
-          {bottomTabBarItem({
-            index: 1,
-            icon: "music-note",
-          })}
-          {bottomTabBarItem({
-            index: 2,
-            icon: "local-fire-department",
-          })}
-          {bottomTabBarItem({
-            index: 3,
-            icon: "library-music",
-          })}
-          {bottomTabBarItem({
-            index: 4,
-            icon: "supervised-user-circle",
-          })}
-          {bottomTabBarItem({
-            index: 5,
-            icon: "camera-alt",
-          })}
-          {bottomTabBarItem({
-            index: 6,
-            icon: "settings",
-          })}
+          {bottonNavigation.map((item) => bottomTabBarItem(item))}
         </View>
       </View>
       {backClickCount == 1 ? (
@@ -206,8 +209,6 @@ const BottomTabBarScreen = ({ navigation }) => {
       >
         {index == currentIndex ? (
           <MaterialIcons
-            start={{ x: 0, y: 1 }}
-            end={{ x: 0, y: 0 }}
             size={35}
             mode="linear"
             color={Colors.secondaryColor}

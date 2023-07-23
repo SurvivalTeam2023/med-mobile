@@ -288,8 +288,6 @@ const NowPlayingScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.pop()}>
           <MaterialIcons
-            start={{ x: 0, y: 1 }}
-            end={{ x: 0, y: 0 }}
             name="keyboard-arrow-left"
             size={24}
             colors={[

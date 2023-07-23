@@ -14,7 +14,6 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Icon } from "react-native-gradient-icon";
 import {
   useCreateSubscriptionApi,
   useGetSubscriptionType,
@@ -178,11 +177,9 @@ const SubscribeScreen = ({ navigation }) => {
     return (
       <View style={styles.headerWrapStyle}>
         <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.pop()}>
-          <Icon
-            start={{ x: 0, y: 1 }}
-            end={{ x: 0, y: 0 }}
-            size={30}
-            mode="linear"
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={24}
             colors={[
               { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
               { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
@@ -192,8 +189,6 @@ const SubscribeScreen = ({ navigation }) => {
               marginTop: Sizes.fixPadding - 5.0,
               alignSelf: "center",
             }}
-            name="keyboard-arrow-left"
-            type="material"
           />
         </TouchableOpacity>
         <MaskedView
