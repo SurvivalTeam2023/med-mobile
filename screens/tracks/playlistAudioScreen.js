@@ -154,42 +154,57 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
       );
     };
 
-    return tracksList?.map((item) => (
-      <View key={`${item.id}`}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
-          style={styles.tracksInfoWrapStyle}
-        >
-          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-            <SharedElement id={item.id}>
-              <ImageBackground
-                source={{ uri: `${item.audio.imageUrl}` }}
-                style={{
-                  width: 50,
-                  height: 50,
-                }}
-                borderRadius={Sizes.fixPadding - 5.0}
-              ></ImageBackground>
-            </SharedElement>
-            <View style={{ marginLeft: 8, marginTop: 10 }}>
-              <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                {item.audio.name}
-              </Text>
-              <Text
-                style={{
-                  ...Fonts.grayColor11Medium,
-                }}
-              >
-                {item?.audio.artist?.artist_name}
-              </Text>
+    return tracksList.length > 0 ? (
+      tracksList?.map((item) => (
+        <View key={`${item.id}`}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
+            style={styles.tracksInfoWrapStyle}
+          >
+            <View
+              style={{ flexDirection: "row", justifyContent: "flex-start" }}
+            >
+              <SharedElement id={item.id}>
+                <ImageBackground
+                  source={{ uri: `${item.audio.imageUrl}` }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                  }}
+                  borderRadius={Sizes.fixPadding - 5.0}
+                ></ImageBackground>
+              </SharedElement>
+              <View style={{ marginLeft: 8, marginTop: 10 }}>
+                <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                  {item.audio.name}
+                </Text>
+                <Text
+                  style={{
+                    ...Fonts.grayColor11Medium,
+                  }}
+                >
+                  {item?.audio.artist?.artist_name}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <CustomMenu id={item.id} />
-        </TouchableOpacity>
-      </View>
-    ));
+            <CustomMenu id={item.id} />
+          </TouchableOpacity>
+        </View>
+      ))
+    ) : (
+      <Text
+        style={{
+          fontSize: 20,
+          textAlign: "center",
+          fontWeight: "100",
+          paddingVertical: 8,
+        }}
+      >
+        No data!
+      </Text>
+    );
   }
 
   function sortingIcons() {
@@ -329,8 +344,6 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
             onPress={() => navigation.pop()}
           >
             <MaterialIcons
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
               name="keyboard-arrow-left"
               size={24}
               colors={[

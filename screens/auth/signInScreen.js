@@ -21,18 +21,15 @@ import { useLogin, useLoginWithGmail } from "../../hooks/auth.hook";
 import {
   EXPO_CLIENT_ID,
   IOS_CLIENT_ID,
-  TOKEN_KEY_STORAGE,
   WEB_CLIENT_ID,
 } from "../../constants/config";
 import { useDispatch } from "react-redux";
 import { userAction } from "../../redux/auth/auth.slice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
-import { store } from "../../core/store/store";
-import { ARTIST_ROLE } from "../../constants/role";
 import { Navigate } from "../../constants/navigate";
 import { fetchUserData } from "../../redux/auth/auth.action";
+import { Toast } from "toastify-react-native";
 
 const SignInScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -86,7 +83,7 @@ const SignInScreen = ({ navigation }) => {
           const userData = await fetchUserData(access_token);
           if (userData) {
             dispatch(userAction.storeUser(userData));
-
+            Toast.success("Welcome " + state["userName"]);
             navigation.push(Navigate.OPTION_SCREEN);
           } else {
             setOtherErrorCode(err);

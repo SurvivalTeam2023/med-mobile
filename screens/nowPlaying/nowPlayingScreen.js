@@ -133,8 +133,6 @@ const NowPlayingScreen = ({ navigation }) => {
         <TouchableOpacity activeOpacity={0.9} style={{}}>
           {playingList[currentAudioIndex]?.isLoved ? (
             <Icon
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
               size={18}
               mode="linear"
               colors={[

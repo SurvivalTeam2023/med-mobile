@@ -3,6 +3,7 @@ import { HEADER_AUTHORIZATION, config } from "../../constants/config";
 import { store } from "../store/store";
 import * as RootNavigation from "../RootNavigation";
 import { Navigate } from "../../constants/navigate";
+import { Toast } from "toastify-react-native";
 const axiosInstance = axios.create({
   baseURL: config.SERVER_URL,
   withCredentials: false,
@@ -35,13 +36,12 @@ const responseInterceptor = (response) => {
   return response.data;
 };
 const errorInterceptor = (error) => {
-  console.error(
-    error.response.status
-    // `Request failed:[${error.status}]`,
-    // `${error.baseURL}${error.url}`
-  );
+  console.error(error.response.status);
   if (error.response.status == "401") {
+    Toast.error("Login expired!");
     RootNavigation.navigate(Navigate.SIGN_IN, {});
+  } else if (error.response.status == "500") {
+    Toast.error("Somethings went wrong!");
   }
   throw error;
 };

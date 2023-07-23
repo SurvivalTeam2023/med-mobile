@@ -423,8 +423,6 @@ const TracksScreen = ({ navigation }) => {
             onPress={() => navigation.pop()}
           >
             <Icon
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
               size={30}
               mode="linear"
               colors={[

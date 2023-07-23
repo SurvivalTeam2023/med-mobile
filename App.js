@@ -31,7 +31,6 @@ import CreatePlaylistScreenUser from "./screens/createAlbum/createPlaylistScreen
 import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
 import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
-import genreTracksScreen from "./screens/tracks/playlistAudioScreen";
 import OptionScreen from "./screens/optionScreen/selectScreen";
 import ShowCamScreen from "./screens/optionScreen/showCam";
 import CamResultScreen from "./screens/optionScreen/camResult";
@@ -50,7 +49,7 @@ import PlaylistGenreScreen from "./screens/tracks/genrePlaylistScreen";
 import PlaylistAudioScreen from "./screens/tracks/playlistAudioScreen";
 import ResultHistoryDetailScreen from "./screens/Profile/resultHistoryDetailScreen";
 import { navigationRef } from "./core/RootNavigation";
-
+import ToastManager from "toastify-react-native";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -59,6 +58,7 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <Provider store={store}>
+      <ToastManager height={50} />
       <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
           <NowPlayingBackground />

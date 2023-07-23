@@ -113,13 +113,6 @@ const EditAlbumArtistScreen = ({ navigation }) => {
       console.log("Error saving selected playlist ID", error);
     }
   };
-  // if (isSuccess) {
-  //   album = data["data"].items;
-  //   activeAlbum = album.filter((item) => item.status === "ACTIVE");
-  // }
-  // if (isError) {
-  //   console.log("error", error);
-  // }
 
   const { showOptions } = state;
   const showAlbumInfo = () => {
