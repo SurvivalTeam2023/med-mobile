@@ -177,14 +177,7 @@ const App = () => {
               component={ProfileArtistScreen}
             />
 
-            <Stack.Screen
-              name="NowPlaying"
-              component={nowPlayingScreen}
-              sharedElements={(route, otherRoute, showing) => {
-                const item = route.params.item;
-                return [item.id];
-              }}
-            />
+            <Stack.Screen name="NowPlaying" component={nowPlayingScreen} />
             <Stack.Screen
               name="TopArtist"
               component={topArtistScreen}

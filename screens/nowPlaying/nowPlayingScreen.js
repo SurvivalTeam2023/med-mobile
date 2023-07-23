@@ -77,7 +77,7 @@ const NowPlayingScreen = ({ navigation }) => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
-                  source={{ uri: item.imgUrl }}
+                  source={{ uri: item.imageUrl }}
                   style={{
                     width: 50.0,
                     height: 50.0,
@@ -190,8 +190,6 @@ const NowPlayingScreen = ({ navigation }) => {
           }
         >
           <LinearGradient
-            start={{ x: 0, y: 0.1 }}
-            end={{ x: 0, y: 1 }}
             colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
             style={styles.pausePlayButtonWrapStyle}
           >
@@ -225,7 +223,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={{ alignItems: "center" }}>
         <Image
-          source={{ uri: playingList[currentAudioIndex]?.imgUrl || {} }}
+          source={{ uri: playingList[currentAudioIndex]?.imageUrl || {} }}
           style={{
             marginVertical: Sizes.fixPadding,
             width: 190.0,

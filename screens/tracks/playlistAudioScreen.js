@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,7 +9,6 @@ import {
   Text,
   Image,
   ImageBackground,
-  Alert,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import {
@@ -22,48 +21,41 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { SharedElement } from "react-navigation-shared-element";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { Icon } from "react-native-gradient-icon";
-import {
-  useDeleteAudioArtistAPI,
-  useGetAudioByIdForArtistAPI,
-  useGetAudioForArtistAPI,
-} from "../../hooks/playlistTracks.hook";
-import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const PlaylistAudioScreen = ({ navigation, route }) => {
   let tracksList;
-  let artistInfo;
   const playlistId = route.params.playlistId;
   const sortOptions = ["Name", "Date Added", "Artist"];
-
-  const { data, isSuccess, isError, error } = useGetPlaylistByIdApi(playlistId);
-
+  const { data, isSuccess } = useGetPlaylistByIdApi(playlistId);
   if (isSuccess) {
-    console.log("Get playlist by id success");
     const audioList = data["audioPlaylist"];
     tracksList = audioList;
   }
-
-  if (isError) {
-    console.log("Get playlist by id failed", error);
-  }
-
+  const dispatch = useDispatch();
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
     name: null,
   });
-
+  const handleSelectAudio = (trackList, currentId) => {
+    dispatch(
+      nowPlayingAction.addListToPlayList({
+        tracklist: trackList,
+        currentId: currentId,
+      })
+    );
+    navigation.push(Navigate.NOW_PLAYING);
+  };
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showSortOptions, selectedSortCriteria, pauseSong } = state;
-
-  {
-  }
+  const { showSortOptions, selectedSortCriteria } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -156,11 +148,11 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
 
     return tracksList ? (
       tracksList.length > 0 ? (
-        tracksList?.map((item) => (
+        tracksList?.map((item, index) => (
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
+              onPress={() => handleSelectAudio(tracksList, index)}
               style={styles.tracksInfoWrapStyle}
             >
               <View

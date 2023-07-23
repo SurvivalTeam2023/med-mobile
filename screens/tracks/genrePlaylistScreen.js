@@ -124,8 +124,8 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                     marginLeft: 6,
                   }}
                 >
-                  {dataGetPlaylistByGenreId["playlists"]
-                    ? dataGetPlaylistByGenreId["playlists"].length
+                  {dataGetPlaylistByGenreId["playlist"]
+                    ? dataGetPlaylistByGenreId["playlist"].length
                     : "0"}
                 </Text>
               </View>
@@ -140,63 +140,64 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
       <View style={{ backgroundColor: "#eeeeee", borderRadius: 10 }}>
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            {dataGetPlaylistByGenreId["playlists"]?.map((item, index) => {
-              const playListInfor = item["playlist"];
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                      playlistId: playListInfor.id,
-                    })
-                  }
-                >
-                  <View
-                    style={{
-                      borderColor: "grey",
-                      paddingHorizontal: 8,
-                      paddingVertical: 12,
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                    }}
+            {dataGetPlaylistByGenreId["playlist"]?.map(
+              (playListInfor, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                        playlistId: playListInfor.id,
+                      })
+                    }
                   >
-                    <View>
-                      <Text>{index + 1}</Text>
-                    </View>
-                    <View style={{ marginLeft: 8 }}>
-                      <Image
-                        source={{ uri: playListInfor.imageUrl }}
-                        style={styles.imagePlaylist}
-                      />
-                    </View>
                     <View
                       style={{
-                        flexDirection: "column",
-                        marginLeft: 10,
+                        borderColor: "grey",
+                        paddingHorizontal: 8,
+                        paddingVertical: 12,
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
                       }}
                     >
                       <View>
-                        <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                          {playListInfor.name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 14,
-                            marginTop: 2,
-                            fontWeight: "200",
-                            color: "#808080",
-                            fontStyle: "italic",
-                          }}
-                        >
-                          {item.author}
-                        </Text>
+                        <Text>{index + 1}</Text>
+                      </View>
+                      <View style={{ marginLeft: 8 }}>
+                        <Image
+                          source={{ uri: playListInfor.imageUrl }}
+                          style={styles.imagePlaylist}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "column",
+                          marginLeft: 10,
+                        }}
+                      >
+                        <View>
+                          <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                            {playListInfor.name}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              marginTop: 2,
+                              fontWeight: "200",
+                              color: "#808080",
+                              fontStyle: "italic",
+                            }}
+                          >
+                            {playListInfor["author"]["lastName"] || "Unknow"}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                  </TouchableOpacity>
+                );
+              }
+            )}
           </View>
         </View>
       </View>

@@ -1,10 +1,14 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Audio } from "expo-av";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MILLI_SECOND } from "../../constants/app";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const useAudio = () => {
   const audioList = useSelector((state) => state.nowPlayingList.playingList);
+  const currentAudioId = useSelector(
+    (state) => state.nowPlayingList.currentPlaying.currentAudioIndex
+  );
   const [sound, setSound] = useState(null);
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -13,8 +17,14 @@ const useAudio = () => {
     durationMillis: "",
     songRunningInPercentage: 0,
   });
-  const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
-
+  const dispatch = useDispatch();
+  const setCurrentAudioIndex = (index) => {
+    dispatch(nowPlayingAction.setNowPlayingAudioId(index));
+  };
+  const currentAudioIndex = useMemo(
+    () => (currentAudioId !== undefined ? currentAudioId : 0),
+    [currentAudioId]
+  );
   useEffect(() => {
     return () => {
       if (sound) {
