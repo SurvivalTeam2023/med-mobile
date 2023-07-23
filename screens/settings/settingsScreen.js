@@ -844,7 +844,7 @@ const SettingsScreen = ({ navigation }) => {
                 resizeMode="contain"
               >
                 <Text style={{ ...Fonts.whiteColor18Bold }}>
-                  Your Subscription is EXPIRED! Upgrade to Mediation Premium.
+                  Subscription is EXPIRED!
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
@@ -862,7 +862,7 @@ const SettingsScreen = ({ navigation }) => {
                 resizeMode="contain"
               >
                 <Text style={{ ...Fonts.whiteColor18Bold }}>
-                  Your Subscription is SUSPENDED! Upgrade to Mediation Premium.
+                  Subscription is SUSPENDED!
                 </Text>
               </ImageBackground>
             </TouchableOpacity>

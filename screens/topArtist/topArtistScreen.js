@@ -226,8 +226,6 @@ const TopArtistScreen = ({ navigation, route }) => {
       <View style={styles.headerWrapStyle}>
         <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.pop()}>
           <Icon
-            start={{ x: 0, y: 1 }}
-            end={{ x: 0, y: 0 }}
             size={30}
             mode="linear"
             colors={[

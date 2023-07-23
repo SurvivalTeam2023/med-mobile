@@ -3,6 +3,7 @@ import {
   getFinishedQuiz,
   getFinishedQuizHistory,
   getQuestionBankApi,
+  getQuizResultByIdApi,
   isValidQuiz,
   saveQuizResultApi,
   setQuizStatus,
@@ -40,6 +41,15 @@ export const useGetFinishedQuizHistoryApi = (payload) =>
       const data = await getFinishedQuizHistory(payload);
       return data;
     },
+  });
+export const useGetResultByIdApi = (payload) =>
+  useQuery({
+    queryKey: ["getGetResultById"],
+    queryFn: async () => {
+      const data = await getQuizResultByIdApi(payload);
+      return data;
+    },
+    enabled: !!payload,
   });
 export const useSetQuizStatus = (payload) =>
   useMutation({

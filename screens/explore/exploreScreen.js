@@ -22,6 +22,7 @@ import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useDispatch } from "react-redux";
+import { Navigate } from "../../constants/navigate";
 
 const { width } = Dimensions.get("window");
 
@@ -501,7 +502,11 @@ const ExploreScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("Tracks", { playlistId: item.id })}
+        onPress={() =>
+          navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
+            genreId: item.id,
+          })
+        }
       >
         <ImageBackground
           source={{ uri: `${item?.image}` }}

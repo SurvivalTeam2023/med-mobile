@@ -16,39 +16,38 @@ import { Navigate } from "../../constants/navigate";
 import { generateColor } from "../../utils/app.util";
 import { ProgressBar } from "react-native-paper";
 import { store } from "../../core/store/store";
-import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
+import { useGetResultByIdApi } from "../../hooks/question.hook";
 import moment from "moment";
-const ResultScreen = ({ navigation }) => {
-  const userId = store.getState().user.data.id;
+const ResultHistoryDetailScreen = ({ navigation, route }) => {
+  const quizId = route.params.e.id;
+  console.log(quizId);
   let quizResult;
-
+  let resultFilter;
   const {
-    data: quizHistoryData,
-    isSuccess: isSuccessQuizHistory,
-    isError: isErrorQuizHistory,
-    error: errorQuizHistory,
-  } = useGetFinishedQuizHistoryApi(userId);
-
-  let feeling = store.getState().question.result;
-  let feelingFilter = feeling.filter((e) => {
-    return e.point !== 0;
-  });
-
-  if (isSuccessQuizHistory) {
-    quizResult = quizHistoryData;
+    data: resultDetailyData,
+    isSuccess: isSuccessResultDetail,
+    isError: isErrorResultDetail,
+    error: errorResultDetail,
+  } = useGetResultByIdApi(quizId);
+  if (isSuccessResultDetail) {
+    quizResult = resultDetailyData;
+    resultFilter = quizResult?.filter((e) => {
+      return e.point !== 0;
+    });
   }
-  if (isErrorQuizHistory) {
-    console.log("Cannot get quiz history", errorQuizHistory);
+  if (isErrorResultDetail) {
+    console.log("Cannot get quiz history", errorResultDetail);
   }
-  const data = feelingFilter?.map((e, index) => {
+
+  const data = resultFilter?.map((e, index) => {
     return {
       id: index + 1,
-      value: e.point * 0.01,
+      value: e.percentage * 0.01,
       color: generateColor(),
       type:
         e.mentalHealth?.charAt(0).toUpperCase() +
         e.mentalHealth?.slice(1).toLowerCase(),
-      percentage: e.point?.toFixed(2),
+      percentage: e.percentage,
     };
   });
 
@@ -83,7 +82,7 @@ const ResultScreen = ({ navigation }) => {
                 paddingHorizontal: 12,
               }}
             >
-              {data.map((e) => (
+              {data?.map((e) => (
                 <View key={e.id} style={styles.progressBar}>
                   <View
                     style={{
@@ -117,68 +116,6 @@ const ResultScreen = ({ navigation }) => {
     );
   };
 
-  const onPressHandler = () => {
-    navigation.push(Navigate.RECOMMENDED_GENRE);
-  };
-
-  const quizHistory = () => {
-    return (
-      <View
-        style={{
-          backgroundColor: "#eeeeee",
-          borderRadius: 10,
-        }}
-      >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <Text
-              style={{
-                fontSize: 24,
-                textAlign: "center",
-                fontWeight: "450",
-                paddingVertical: 8,
-              }}
-            >
-              Quiz History
-            </Text>
-
-            {quizResult.map((e) => (
-              <View
-                key={e.quizId}
-                style={{
-                  borderTopWidth: 0.5,
-                  borderColor: "grey",
-                  paddingHorizontal: 8,
-                  paddingVertical: 12,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                    Symptoms:
-                  </Text>
-                  <Text style={{ fontSize: 14, marginTop: 2 }}>
-                    {e.mentalHealth.toString()}
-                  </Text>
-                </View>
-                <View style={{ marginTop: 4 }}>
-                  <Text
-                    style={{ fontSize: 10, color: "#aaa", fontStyle: "italic" }}
-                  >
-                    Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
-                  </Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -197,34 +134,11 @@ const ResultScreen = ({ navigation }) => {
             }}
           >
             {progressQuiz()}
-            {quizHistory()}
-            {doneResultBtn()}
           </ScrollView>
         </ScrollView>
       </View>
     </SafeAreaView>
   );
-
-  function doneResultBtn() {
-    return (
-      <Pressable
-        style={styles.doneQuizButtonStyle}
-        activeOpacity={0.9}
-        onPress={() => {
-          onPressHandler();
-        }}
-      >
-        <LinearGradient
-          start={{ x: 1, y: 3 }}
-          end={{ x: 0, y: 2 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.doneQuizGradientStyle}
-        >
-          <Text style={{ ...Fonts.whiteColor16Bold }}>Enjoy</Text>
-        </LinearGradient>
-      </Pressable>
-    );
-  }
 };
 function cornerImage() {
   return (
@@ -277,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResultScreen;
+export default ResultHistoryDetailScreen;

@@ -12,6 +12,8 @@ export const Navigate = {
   PAYMENT_FAILED: "PaymentFailed",
   TRACK: "Tracks",
   SEARCH: "Search",
+  GENRE_PLAYLIST_SCREEN: "PlaylistGenre",
+  PLAYLIST_AUDIO_SCREEN: "PlaylistAudio",
   CREATE_ALBUM: "CreateAlbum",
   DELETE_ALBUM_ARTIST: "DeleteAlbumArtist",
   CREATE_AUDIO_ARTIST: "CreateAudioArtist",
@@ -23,4 +25,5 @@ export const Navigate = {
   EDIT_SCREEN: "EditScreen",
   PAYMENT: "Payment",
   EDIT_USER_SCREEN: "EditUser",
+  RESULT_HISTORY_DETAIL: "ResultHistoryDetail",
 };

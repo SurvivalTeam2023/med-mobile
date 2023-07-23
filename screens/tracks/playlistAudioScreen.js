@@ -31,26 +31,26 @@ import { useDispatch } from "react-redux";
 import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
+import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
 
-const artistTracksScreen = ({ navigation }) => {
+const PlaylistAudioScreen = ({ navigation, route }) => {
+  let tracksList;
+  let artistInfo;
+  const playlistId = route.params.playlistId;
   const sortOptions = ["Name", "Date Added", "Artist"];
-  const [tracksList, setTrackList] = useState(null);
-  const dispatch = useDispatch();
-  const { mutate } = useDeleteAudioArtistAPI();
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const {
-    data: dataTracksFromPlaylist,
-    isSuccess: successTracksFromPlaylist,
-    isError: isErrorTracksFromPlaylist,
-    error: errorTracksFromPlaylist,
-  } = useGetAudioForArtistAPI();
-  const {
-    data: dataById,
-    isSuccess: isSuccessById,
-    isError: isErrorById,
-    error: errorById,
-  } = useGetAudioByIdForArtistAPI();
+  const { data, isSuccess, isError, error } = useGetPlaylistByIdApi(playlistId);
+
+  if (isSuccess) {
+    console.log("Get playlist by id success");
+    const audioList = data["audioPlaylist"];
+    tracksList = audioList;
+  }
+
+  if (isError) {
+    console.log("Get playlist by id failed", error);
+  }
+
   const [state, setState] = useState({
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
@@ -58,68 +58,12 @@ const artistTracksScreen = ({ navigation }) => {
     name: null,
   });
 
-  const getAudioInfo = () => {
-    if (isSuccessById) {
-      const audioInfo = dataById["data"];
-      console.log("Get audio info successfully", dataById["data"]);
-      dispatch(audioArtistAction.setAudioInfo(audioInfo));
-      navigation.push("editAudioArtistScreen");
-    }
-    if (isErrorById) {
-      console.log("Error when get audio info by id", errorById);
-    }
-  };
-
-  useEffect(() => {
-    if (successTracksFromPlaylist) {
-      const filteredTracksList = dataTracksFromPlaylist["data"].items.filter(
-        (item) => item.status === "ACTIVE"
-      );
-      console.log("get audio list successfully", filteredTracksList);
-      setTrackList(filteredTracksList);
-    }
-    if (isErrorTracksFromPlaylist) {
-      console.log("Error get audio list", errorTracksFromPlaylist);
-    }
-  }, [successTracksFromPlaylist]);
-
-  function updateAudioList() {
-    const audioId = store.getState().audioArtist.audioArtistId;
-    const updatedAudioList = tracksList.filter((item) => item.id !== audioId);
-    tracksList = updatedAudioList;
-  }
-
-  const handleDeleteAudio = () => {
-    mutate({
-      onSuccess: (data) => {},
-      onError: (error) => {
-        alert("Some errors happened please try again later");
-        console.log("error", error);
-      },
-    });
-    updateAudioList();
-  };
-
-  const showConfirmDialog = () => {
-    return Alert.alert("Are your sure?", "Do you want to delete this audio?", [
-      // The "Yes" button
-      {
-        text: "Yes",
-        onPress: () => {
-          handleDeleteAudio();
-        },
-      },
-      // The "No" button
-      // Does nothing but dismiss the dialog when tapped
-      {
-        text: "No",
-      },
-    ]);
-  };
-
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, pauseSong } = state;
+
+  {
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -210,53 +154,70 @@ const artistTracksScreen = ({ navigation }) => {
       );
     };
 
-    return tracksList?.map((item) => (
-      <View key={`${item.id}`}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
-          style={styles.tracksInfoWrapStyle}
-        >
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <SharedElement id={item.id}>
-              <ImageBackground
-                source={{ uri: `${item.imageUrl}` }}
-                style={{
-                  width: 50,
-                  height: 50,
-                }}
-                borderRadius={Sizes.fixPadding - 5.0}
-              ></ImageBackground>
-            </SharedElement>
-            <View
-              style={{
-                marginLeft: Sizes.fixPadding,
-              }}
+    return tracksList ? (
+      tracksList.length > 0 ? (
+        tracksList?.map((item) => (
+          <View key={`${item.id}`}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.push(Navigate.NOW_PLAYING, { item })}
+              style={styles.tracksInfoWrapStyle}
             >
-              <View>
-                <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    ...Fonts.grayColor11Medium,
-                  }}
-                >
-                  {item.length}
-                </Text>
+              <View
+                style={{ flexDirection: "row", justifyContent: "flex-start" }}
+              >
+                <SharedElement id={item.id}>
+                  <ImageBackground
+                    source={{ uri: `${item.audio.imageUrl}` }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                    }}
+                    borderRadius={Sizes.fixPadding - 5.0}
+                  ></ImageBackground>
+                </SharedElement>
+                <View style={{ marginLeft: 8, marginTop: 10 }}>
+                  <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                    {item.audio.name}
+                  </Text>
+                  <Text
+                    style={{
+                      ...Fonts.grayColor11Medium,
+                    }}
+                  >
+                    {item?.audio.artist?.artist_name}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </View>
-          <View>
-            <Text>{item.liked}</Text>
-          </View>
 
-          <CustomMenu id={item.id} />
-        </TouchableOpacity>
-      </View>
-    ));
+              <CustomMenu id={item.id} />
+            </TouchableOpacity>
+          </View>
+        ))
+      ) : (
+        <Text
+          style={{
+            fontSize: 20,
+            textAlign: "center",
+            fontWeight: "100",
+            paddingVertical: 8,
+          }}
+        >
+          No data!
+        </Text>
+      )
+    ) : (
+      <Text
+        style={{
+          fontSize: 20,
+          textAlign: "center",
+          fontWeight: "100",
+          paddingVertical: 8,
+        }}
+      >
+        No data!
+      </Text>
+    );
   }
 
   function sortingIcons() {
@@ -395,9 +356,9 @@ const artistTracksScreen = ({ navigation }) => {
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
           >
-            <Icon
-              size={30}
-              mode="linear"
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
               colors={[
                 { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
@@ -407,14 +368,12 @@ const artistTracksScreen = ({ navigation }) => {
                 marginTop: Sizes.fixPadding - 5.0,
                 alignSelf: "center",
               }}
-              name="keyboard-arrow-left"
-              type="material"
             />
           </TouchableOpacity>
           {
             <MaskedView
               style={{ flex: 1, height: 28 }}
-              maskElement={<Text style={{ ...Fonts.bold22 }}>Tracks</Text>}
+              maskElement={<Text style={{ ...Fonts.bold22 }}>Audio</Text>}
             >
               <LinearGradient
                 start={{ x: 1, y: 0.2 }}
@@ -565,4 +524,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default artistTracksScreen;
+export default PlaylistAudioScreen;

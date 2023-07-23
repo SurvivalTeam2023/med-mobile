@@ -3,6 +3,8 @@ import {
   createPlaylistAPI,
   deletePlaylistAPI,
   getPlaylistAPI,
+  getPlaylistByGenreIdAPI,
+  getPlaylistByIdAPI,
   updatePlaylistforArtistAPI,
 } from "../api/playlist.api";
 
@@ -13,6 +15,25 @@ export const useGetPlaylist = (payload) =>
       const data = await getPlaylistAPI(payload);
       return data["items"];
     },
+  });
+export const useGetPlaylisByGenreIdApi = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylistByGenreId", payload],
+    queryFn: async () => {
+      const data = await getPlaylistByGenreIdAPI(payload);
+      return data;
+    },
+    enabled: !!payload,
+  });
+
+export const useGetPlaylistByIdApi = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylistById", payload],
+    queryFn: async () => {
+      const data = await getPlaylistByIdAPI(payload);
+      return data;
+    },
+    enabled: !!payload,
   });
 
 export const useCreatePlaylistAPI = (payload) =>

@@ -7,7 +7,6 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 import LoadingScreen from "./components/loadingScreen";
 import bottomTabBarScreen from "./components/bottomTabBarScreen";
 import searchScreen from "./screens/search/searchScreen";
-import tracksScreen from "./screens/tracks/tracksScreen";
 import nowPlayingScreen from "./screens/nowPlaying/nowPlayingScreen";
 import topArtistScreen from "./screens/topArtist/topArtistScreen";
 import exploreSubscription from "./screens/exploreSubscription/exploreSubscription";
@@ -32,7 +31,6 @@ import CreatePlaylistScreenUser from "./screens/createAlbum/createPlaylistScreen
 import CreateAudioArtistScreen from "./screens/createAudioArtist/createAudioArtistScreen";
 import SelectGenreArtistScreen from "./screens/manageAlbum/selectGenreArtist";
 import DeleteAlbumArtist from "./screens/manageAlbum/deleteAlbumArtist";
-import genreTracksScreen from "./screens/tracks/genreTracksScreen";
 import OptionScreen from "./screens/optionScreen/selectScreen";
 import ShowCamScreen from "./screens/optionScreen/showCam";
 import CamResultScreen from "./screens/optionScreen/camResult";
@@ -47,7 +45,11 @@ import DeletePlayListUser from "./screens/manageAlbum/deletePlaylistUser";
 import RecommendedGenreScreen from "./screens/recommendedGenre/recommendedGenreScreen";
 import IntroAIScreen from "./screens/introAi/introduceAiScreen";
 import EditUserScreen from "./screens/Profile/editUserScreen";
-
+import PlaylistGenreScreen from "./screens/tracks/genrePlaylistScreen";
+import PlaylistAudioScreen from "./screens/tracks/playlistAudioScreen";
+import ResultHistoryDetailScreen from "./screens/Profile/resultHistoryDetailScreen";
+import { navigationRef } from "./core/RootNavigation";
+import ToastManager from "toastify-react-native";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -56,7 +58,8 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <ToastManager height={50} />
+      <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
           <NowPlayingBackground />
           <Stack.Navigator
@@ -89,7 +92,14 @@ const App = () => {
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
-            <Stack.Screen name="GenreTracks" component={genreTracksScreen} />
+            <Stack.Screen
+              name="PlaylistAudio"
+              component={PlaylistAudioScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const playlistId = route.params.playlistId;
+                return [playlistId];
+              }}
+            />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
             <Stack.Screen
               name="ManageArtistAlbum"
@@ -137,11 +147,11 @@ const App = () => {
             <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
             <Stack.Screen name="Search" component={searchScreen} />
             <Stack.Screen
-              name="Tracks"
-              component={tracksScreen}
+              name="PlaylistGenre"
+              component={PlaylistGenreScreen}
               sharedElements={(route, otherRoute, showing) => {
-                const albumId = route.params.playlistId;
-                return [albumId];
+                const genreId = route.params.genreId;
+                return [genreId];
               }}
             />
             <Stack.Screen name="HomePage" component={ExploreScreen} />
@@ -153,6 +163,14 @@ const App = () => {
             <Stack.Screen
               name="editAudioArtistScreen"
               component={EditAudioArtistScreen}
+            />
+            <Stack.Screen
+              name="ResultHistoryDetail"
+              component={ResultHistoryDetailScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const item = route.params.e;
+                return [item.id];
+              }}
             />
             <Stack.Screen
               name="ArtistProfile"

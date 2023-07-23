@@ -46,12 +46,12 @@ const TracksScreen = ({ navigation }) => {
 
   const {
     data: dataTracksFromGenre,
-    isSuccess: successTracksFromGenre,
+    isSuccess: isSuccessTracksFromGenre,
     isError: isErrorTracksFromGenre,
     error: errorTracksFromGenre,
   } = useGetTracksFromGenre();
   useEffect(() => {
-    if (successTracksFromGenre) {
+    if (isSuccessTracksFromGenre) {
       setGenreTracksList(dataTracksFromGenre["data"]);
       console.log("genreTracksList", genreTracksList);
     }
@@ -423,8 +423,6 @@ const TracksScreen = ({ navigation }) => {
             onPress={() => navigation.pop()}
           >
             <Icon
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
               size={30}
               mode="linear"
               colors={[
