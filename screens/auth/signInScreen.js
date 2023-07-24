@@ -19,6 +19,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
 import { useLogin, useLoginWithGmail } from "../../hooks/auth.hook";
 import {
+  ANDROID_CLIENT_ID,
   EXPO_CLIENT_ID,
   IOS_CLIENT_ID,
   WEB_CLIENT_ID,
@@ -117,6 +118,7 @@ const SignInScreen = ({ navigation }) => {
     expoClientId: EXPO_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
+    androidClientId: ANDROID_CLIENT_ID,
   });
   let token = null;
   let email = null;

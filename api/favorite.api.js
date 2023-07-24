@@ -1,11 +1,8 @@
 import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
 
-export const getFavoriteAPI = (payload) => {
-  const user = store.getState()?.user?.user;
-  const userId = user?.user_db?.id;
-  const queryParam = `/` + `${userId}`;
-  const url = "/favorite" + `${queryParam}`;
+export const getFavoriteGenreAPI = () => {
+  const url = "/favorite/userId";
   return CallAPI.get(url);
 };
 
