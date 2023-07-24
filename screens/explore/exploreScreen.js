@@ -24,7 +24,10 @@ import { useGetGenreList } from "../../hooks/genre.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../../constants/navigate";
 import { useGetFavoriteGenreAPI } from "../../hooks/favorite.hook";
-import { useGetAudioListAPI } from "../../hooks/audio.hook";
+import {
+  useGetAudioListAPI,
+  useGetRecentlyPlayHistoryAudioListAPI,
+} from "../../hooks/audio.hook";
 
 let recentlyPlayedList = null;
 
@@ -57,12 +60,27 @@ let topArtistList = [
   },
 ];
 //top music
-//Recently played
+
 //Random playlist
 const ExploreScreen = ({ navigation }) => {
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
+
+  //Recently played
+  const {
+    data: dataRecentlyPlay,
+    isSuccess: isSuccessRecentlyPlay,
+    isError: isErrorRecentlyPlay,
+    error: errorRecentlyPlay,
+  } = useGetRecentlyPlayHistoryAudioListAPI();
+  if (isSuccessRecentlyPlay) {
+    console.log("Get audio list successful");
+  }
+  if (isErrorRecentlyPlay) {
+    console.log("Get audio list failed", errorRecentlyPlay);
+  }
+
   //Recommend audio
   const {
     data: dataAudioList,
@@ -367,6 +385,7 @@ const ExploreScreen = ({ navigation }) => {
           style={{
             marginTop: Sizes.fixPadding - 7.0,
             ...Fonts.blackColor12SemiBold,
+            width: "90%",
           }}
         >
           {item.audio.name}
@@ -383,13 +402,13 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        {!recentlyPlayedList ? (
+        {!dataRecentlyPlay ? (
           <View style={styles.container}>
             <ActivityIndicator size="small" color="#f8b26a" />
           </View>
         ) : (
           <FlatList
-            data={recentlyPlayedList}
+            data={dataRecentlyPlay}
             keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal
