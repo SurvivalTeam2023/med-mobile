@@ -21,84 +21,17 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../../constants/navigate";
-
-const { width } = Dimensions.get("window");
-
-let recommendedList = [
-  {
-    id: "1r",
-    image: require("../../assets/images/songsCoverPicks/coverImage1.png"),
-    category: "Morning chill",
-  },
-  {
-    id: "2r",
-    image: require("../../assets/images/songsCoverPicks/coverImage2.png"),
-    category: "Daily Mix",
-  },
-  {
-    id: "3r",
-    image: require("../../assets/images/songsCoverPicks/coverImage3.png"),
-    category: "Top Trending",
-  },
-  {
-    id: "4r",
-    image: require("../../assets/images/songsCoverPicks/coverImage4.png"),
-    category: "Pop Music",
-  },
-];
-
-let popularSongsList = [
-  {
-    id: "1s",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    songName: "Shape of you",
-    artist: "Ed shreean",
-  },
-  {
-    id: "2s",
-    image: require("../../assets/images/songsCoverPicks/coverImage6.png"),
-    songName: "Waka waka",
-    artist: "Shakira",
-  },
-  {
-    id: "3s",
-    image: require("../../assets/images/songsCoverPicks/coverImage7.png"),
-    songName: "Let her go",
-    artist: "Passenger",
-  },
-  {
-    id: "4s",
-    image: require("../../assets/images/songsCoverPicks/coverImage8.png"),
-    songName: "See you again",
-    artist: "Wiz khalifa",
-  },
-];
+import { useGetFavoriteGenreAPI } from "../../hooks/favorite.hook";
+import {
+  useGetAudioListAPI,
+  useGetRecentlyPlayHistoryAudioListAPI,
+} from "../../hooks/audio.hook";
 
 let recentlyPlayedList = null;
 
 let forYouList = [];
-
-let playlists = [];
-
-let albumsList = [
-  {
-    id: "1",
-    image: require("../../assets/images/audio.png"),
-    category: "Audio",
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/download.png"),
-    category: "Download",
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/music.png"),
-    category: "Future dust",
-  },
-];
 
 let topArtistList = [
   {
@@ -126,18 +59,54 @@ let topArtistList = [
     songsCount: 179,
   },
 ];
+//top music
 
+//Random playlist
 const ExploreScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
-  //Recommend track
 
   //Recently played
+  const {
+    data: dataRecentlyPlay,
+    isSuccess: isSuccessRecentlyPlay,
+    isError: isErrorRecentlyPlay,
+    error: errorRecentlyPlay,
+  } = useGetRecentlyPlayHistoryAudioListAPI();
+  if (isSuccessRecentlyPlay) {
+    console.log("Get audio list successful");
+  }
+  if (isErrorRecentlyPlay) {
+    console.log("Get audio list failed", errorRecentlyPlay);
+  }
 
+  //Recommend audio
+  const {
+    data: dataAudioList,
+    isSuccess: isSuccessAudioList,
+    isError: isErrorAudioList,
+    error: errorAudioList,
+  } = useGetAudioListAPI();
+  if (isSuccessAudioList) {
+    console.log("Get audio list successful");
+  }
+  if (isErrorAudioList) {
+    console.log("Get audio list failed", errorAudioList);
+  }
   //Favorited gendre (first time and user choose and user like gendre)
-  const isFavoriteGendreSuccess = false;
+  const {
+    data: dataFavGenre,
+    isSuccess: isSuccessFavGenre,
+    isError: isErrorFavGenre,
+    error: errorFavGenre,
+  } = useGetFavoriteGenreAPI();
+  if (isSuccessFavGenre) {
+    console.log("Get favorite genre successful");
+  }
+  if (isErrorFavGenre) {
+    console.log("Get favorite genre failed", errorFavGenre);
+  }
   //Favorited Playlist
   const { data: playListFavoritedData, isSuccess: isPlayListFavoritedSuccess } =
     useGetPlaylist({
@@ -146,7 +115,7 @@ const ExploreScreen = ({ navigation }) => {
       page: 1,
       limit: 10,
     });
-  //Random playlist
+
   const { data: allPlayListData } = useGetPlaylist({
     status: "ACTIVE",
     page: 1,
@@ -156,7 +125,6 @@ const ExploreScreen = ({ navigation }) => {
   //Random gendre
   const { data: allGendreData, isSuccess: isAllGendreSuccess } =
     useGetGenreList();
-  //top music
 
   const [state, setState] = useState({
     forYouData: forYouList,
@@ -353,21 +321,23 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Favorited Gendre</Text>
+          <Text style={styles.titleStyle}>Favorited Genre</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
             size={25}
           />
         </View>
-        {isFavoriteGendreSuccess ? (
-          forYouList?.map((item) => (
+        {isSuccessFavGenre ? (
+          dataFavGenre?.map((item) => (
             <View key={`${item.id}`}>
               <TouchableOpacity
                 activeOpacity={0.9}
-                onPress={() => {
-                  navigation.push("NowPlaying", { item });
-                }}
+                onPress={() =>
+                  navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
+                    genreId: item.genreId,
+                  })
+                }
                 style={styles.forYouInfoWrapStyle}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -415,6 +385,7 @@ const ExploreScreen = ({ navigation }) => {
           style={{
             marginTop: Sizes.fixPadding - 7.0,
             ...Fonts.blackColor12SemiBold,
+            width: "90%",
           }}
         >
           {item.audio.name}
@@ -431,13 +402,13 @@ const ExploreScreen = ({ navigation }) => {
             size={25}
           />
         </View>
-        {!recentlyPlayedList ? (
+        {!dataRecentlyPlay ? (
           <View style={styles.container}>
             <ActivityIndicator size="small" color="#f8b26a" />
           </View>
         ) : (
           <FlatList
-            data={recentlyPlayedList}
+            data={dataRecentlyPlay}
             keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal
@@ -459,7 +430,10 @@ const ExploreScreen = ({ navigation }) => {
         onPress={() => navigation.push("NowPlaying", { item })}
       >
         <SharedElement id={`${item.id}`}>
-          <Image source={item.image} style={styles.popularSongImageStyle} />
+          <Image
+            source={{ uri: `${item.imageUrl}` }}
+            style={styles.popularSongImageStyle}
+          />
         </SharedElement>
         <Text
           style={{
@@ -467,33 +441,41 @@ const ExploreScreen = ({ navigation }) => {
             ...Fonts.blackColor12SemiBold,
           }}
         >
-          {item.songName}
+          {item.name}
         </Text>
-        <Text style={{ ...Fonts.grayColor10Medium }}>{item.artist}</Text>
+        <Text style={{ ...Fonts.grayColor10Medium }}>
+          {item.artist.artist_name}
+        </Text>
       </TouchableOpacity>
     );
 
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Tracks</Text>
+          <Text style={styles.titleStyle}>Audios</Text>
           <MaterialIcons
             name="keyboard-arrow-right"
             color={Colors.blackColor}
             size={25}
           />
         </View>
-        <FlatList
-          data={popularSongsList}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: Sizes.fixPadding * 2.0,
-            paddingRight: Sizes.fixPadding,
-          }}
-        />
+        {!dataAudioList ? (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        ) : (
+          <FlatList
+            data={dataAudioList}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        )}
       </View>
     );
   }

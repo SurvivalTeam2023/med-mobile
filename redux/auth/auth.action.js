@@ -11,6 +11,7 @@ export const fetchUserData = async (token) => {
     parseTokenToUserId(token),
   ];
 
+  console.log(username);
   const [userDatabyUsername, getUserProfileByUserId] = await Promise.all([
     getUserDataByUsernameApi(username),
     getUserProfileByUserIdApi(userId),

@@ -1,15 +1,15 @@
 import { useQuery, useMutation } from "react-query";
 import {
-  getFavoriteAPI,
   createFavoriteApi,
   isFavoriteExisted,
+  getFavoriteGenreAPI,
 } from "../api/favorite.api";
 
-export const useGetFavorite = (payload) =>
+export const useGetFavoriteGenreAPI = (payload) =>
   useQuery({
-    queryKey: ["getFavorite"],
+    queryKey: ["getFavoriteByUserId"],
     queryFn: async () => {
-      const data = await getFavoriteAPI();
+      const data = await getFavoriteGenreAPI();
       return data;
     },
   });
