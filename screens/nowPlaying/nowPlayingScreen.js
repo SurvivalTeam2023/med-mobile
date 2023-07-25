@@ -20,32 +20,12 @@ import {
   ACTION_TYPE,
   nowPlayingAction,
 } from "../../redux/audio/nowPlayingList.slice";
-import { useLikeAudio } from "../../hooks/audio.hook";
 
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { currentAudioIndex, soundStatus } = useSelector(
     (state) => state.nowPlayingList.currentPlaying
   );
-
-  const { mutate } = useLikeAudio();
-  const handleLikeAudio = (audioId) => {
-    mutate(
-      {
-        audioId: audioId,
-        isLiked: true,
-      },
-      {
-        onSuccess: async (data) => {
-          console.log("Like audio successful", data);
-        },
-        onError: (error) => {
-          console.log("Cannot like song", error);
-        },
-      }
-    );
-  };
-
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
   const audioPlayer = (audioAction, audioActionVaue) => {
     dispatch(
@@ -55,7 +35,6 @@ const NowPlayingScreen = ({ navigation }) => {
       })
     );
   };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -151,14 +130,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View style={styles.favoriteShuffleAndRepeatInfoWrapStyle}>
         <MaterialIcons name="repeat" size={20} color="black" />
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={{}}
-          onPress={() => {
-            console.log(playingList);
-            handleLikeAudio(playingList[currentAudioIndex].id);
-          }}
-        >
+        <TouchableOpacity activeOpacity={0.9} style={{}}>
           {playingList[currentAudioIndex]?.isLoved ? (
             <Icon
               size={18}
