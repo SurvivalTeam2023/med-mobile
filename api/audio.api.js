@@ -9,11 +9,3 @@ export const getRecentlyPlayHistoryAudioListAPI = () => {
   const url = "/history";
   return CallAPI.get(url);
 };
-export const likeAudioApi = (payload) => {
-  const { audioId, isLiked } = payload;
-  const url = "/audioPlaylist/likedAudio";
-  return CallAPI.post(url, {
-    audioId,
-    isLiked,
-  });
-};
