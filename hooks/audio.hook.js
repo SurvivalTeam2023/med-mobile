@@ -1,7 +1,8 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
   getAudioListAPI,
   getRecentlyPlayHistoryAudioListAPI,
+  likeAudioApi,
 } from "../api/audio.api";
 
 export const useGetAudioListAPI = (payload) =>
@@ -19,4 +20,9 @@ export const useGetRecentlyPlayHistoryAudioListAPI = (payload) =>
       const data = await getRecentlyPlayHistoryAudioListAPI();
       return data;
     },
+  });
+
+export const useLikeAudio = (payload) =>
+  useMutation({
+    mutationFn: (payload) => likeAudioApi(payload),
   });
