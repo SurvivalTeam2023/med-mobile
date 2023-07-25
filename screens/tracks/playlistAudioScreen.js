@@ -148,13 +148,11 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
         </Menu>
       );
     };
-    console.log("old", tracksList);
     if (search !== null) {
       tracksList = tracksList?.filter((c) =>
         c.audio.name.toLowerCase().includes(search.toLowerCase())
       );
     }
-    console.log("new", tracksList);
     return tracksList ? (
       tracksList.length > 0 ? (
         tracksList?.map((item, index) => (
