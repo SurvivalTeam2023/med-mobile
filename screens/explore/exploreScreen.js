@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -28,6 +28,7 @@ import {
   useGetAudioListAPI,
   useGetRecentlyPlayHistoryAudioListAPI,
 } from "../../hooks/audio.hook";
+import { TextInput } from "react-native-gesture-handler";
 
 let recentlyPlayedList = null;
 
@@ -127,6 +128,7 @@ const ExploreScreen = ({ navigation }) => {
     useGetGenreList();
 
   const [state, setState] = useState({
+    search: "",
     forYouData: forYouList,
     pauseSong: true,
     showOptions: false,
@@ -134,7 +136,7 @@ const ExploreScreen = ({ navigation }) => {
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showOptions } = state;
+  const { showOptions, search } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -146,7 +148,7 @@ const ExploreScreen = ({ navigation }) => {
         >
           {cornerImage()}
           {header()}
-          {searchBar()}
+          {searchField()}
           {recommendedInfo()}
           {popularSongsInfo()}
           {recentlyPlayedInfo()}
@@ -439,6 +441,7 @@ const ExploreScreen = ({ navigation }) => {
           style={{
             marginTop: Sizes.fixPadding - 7.0,
             ...Fonts.blackColor12SemiBold,
+            width: "60%",
           }}
         >
           {item.name}
@@ -542,18 +545,28 @@ const ExploreScreen = ({ navigation }) => {
     );
   }
 
-  function searchBar() {
+  function searchField() {
+    const textInputRef = createRef();
     return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => navigation.push("Search")}
-        style={styles.searchBarWrapStyle}
-      >
-        <Text style={{ ...Fonts.grayColor15Medium }}>
-          Search for artist or song...
-        </Text>
-        <MaterialIcons name="search" color={Colors.grayColor} size={25} />
-      </TouchableOpacity>
+      <View style={styles.searchBarWrapStyle}>
+        <TextInput
+          ref={textInputRef}
+          selectionColor={Colors.grayColor}
+          style={{ ...Fonts.grayColor15Medium, flex: 1 }}
+          value={search}
+          placeholder="Search for artist,song or lyrics..."
+          placeholderTextColor={Colors.grayColor}
+          onChangeText={(text) => updateState({ search: text })}
+        />
+        <MaterialIcons
+          name="search"
+          color={Colors.grayColor}
+          size={25}
+          onPress={() => {
+            navigation.push(Navigate.SEARCH, { searchValue: state["search"] });
+          }}
+        />
+      </View>
     );
   }
 
@@ -662,6 +675,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: Sizes.fixPadding * 2.0,
     marginTop: Sizes.fixPadding - 30.0,
+  },
+  searchFieldWrapStyle: {
+    backgroundColor: Colors.lightGrayColor,
+    borderRadius: Sizes.fixPadding * 2.5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: Sizes.fixPadding * 2.0,
+    marginBottom: Sizes.fixPadding + 5.0,
+    marginTop: Sizes.fixPadding - 30.0,
+    paddingVertical: Sizes.fixPadding + 2.0,
+    paddingHorizontal: Sizes.fixPadding + 5.0,
   },
   searchBarWrapStyle: {
     backgroundColor: Colors.lightGrayColor,

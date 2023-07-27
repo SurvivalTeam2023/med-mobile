@@ -5,6 +5,7 @@ import {
   getPlaylistAPI,
   getPlaylistByGenreIdAPI,
   getPlaylistByIdAPI,
+  getPlaylistByNameAPI,
   updatePlaylistforArtistAPI,
 } from "../api/playlist.api";
 
@@ -32,6 +33,15 @@ export const useGetPlaylistByIdApi = (payload) =>
     queryFn: async () => {
       const data = await getPlaylistByIdAPI(payload);
       return data;
+    },
+    enabled: !!payload,
+  });
+export const useGetPlaylistByNameApi = (payload) =>
+  useQuery({
+    queryKey: ["getPlaylistByName", payload],
+    queryFn: async () => {
+      const data = await getPlaylistByNameAPI(payload);
+      return data["items"];
     },
     enabled: !!payload,
   });
