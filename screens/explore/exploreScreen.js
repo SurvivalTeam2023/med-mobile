@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -21,7 +21,6 @@ import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
 import { useGetGenreList } from "../../hooks/genre.hook";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../../constants/navigate";
 import { useGetFavoriteGenreAPI } from "../../hooks/favorite.hook";
 import {
@@ -128,7 +127,7 @@ const ExploreScreen = ({ navigation }) => {
     useGetGenreList();
 
   const [state, setState] = useState({
-    search: "",
+    search: null,
     forYouData: forYouList,
     pauseSong: true,
     showOptions: false,
@@ -563,7 +562,12 @@ const ExploreScreen = ({ navigation }) => {
           color={Colors.grayColor}
           size={25}
           onPress={() => {
-            navigation.push(Navigate.SEARCH, { searchValue: state["search"] });
+            if (state["search"] !== null) {
+              navigation.push(Navigate.SEARCH, {
+                searchValue: state["search"],
+              });
+            }
+            updateState({ search: null });
           }}
         />
       </View>

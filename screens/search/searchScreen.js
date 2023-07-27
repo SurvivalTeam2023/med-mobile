@@ -111,7 +111,9 @@ const SearchScreen = ({ navigation, route }) => {
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
         >
           {cornerImage()}
-          {!dataAudio && !dataPlaylist && titleNotFound()}
+          {dataAudio?.length === 0 &&
+            dataPlaylist?.length === 0 &&
+            titleNotFound()}
           {dataAudio && dataAudio.length > 0 && audio()}
           {dataPlaylist && dataPlaylist.length > 0 && playlist()}
         </ScrollView>
