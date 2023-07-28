@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import {
   getAudioListAPI,
+  getAudioListByNameAPI,
   getRecentlyPlayHistoryAudioListAPI,
 } from "../api/audio.api";
 
@@ -11,6 +12,15 @@ export const useGetAudioListAPI = (payload) =>
       const data = await getAudioListAPI();
       return data["items"];
     },
+  });
+export const useGetAudioListByNameAPI = (payload) =>
+  useQuery({
+    queryKey: ["getAudioListByName"],
+    queryFn: async () => {
+      const data = await getAudioListByNameAPI(payload);
+      return data["items"];
+    },
+    enabled: !!payload,
   });
 export const useGetRecentlyPlayHistoryAudioListAPI = (payload) =>
   useQuery({

@@ -17,6 +17,10 @@ export const getPlaylistByIdAPI = (playlistId) => {
   const url = "/playlist/" + `${playlistId}`;
   return CallAPI.get(url);
 };
+export const getPlaylistByNameAPI = (playlistName) => {
+  const url = "/playlist?name=" + `${playlistName}` + "&status=ACTIVE";
+  return CallAPI.get(url);
+};
 
 export const updatePlaylistforArtistAPI = (payload) => {
   const { name, description } = payload;

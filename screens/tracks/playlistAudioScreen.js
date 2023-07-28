@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   Text,
   Image,
   ImageBackground,
+  TextInput,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import {
@@ -26,6 +27,7 @@ import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
+
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const PlaylistAudioScreen = ({ navigation, route }) => {
@@ -39,6 +41,7 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
   }
   const dispatch = useDispatch();
   const [state, setState] = useState({
+    search: "",
     showSortOptions: false,
     selectedSortCriteria: sortOptions[0],
     pauseSong: true,
@@ -55,7 +58,7 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
   };
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
-  const { showSortOptions, selectedSortCriteria } = state;
+  const { showSortOptions, selectedSortCriteria, search } = state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -145,7 +148,11 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
         </Menu>
       );
     };
-
+    if (search !== null) {
+      tracksList = tracksList?.filter((c) =>
+        c.audio.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
     return tracksList ? (
       tracksList.length > 0 ? (
         tracksList?.map((item, index) => (
@@ -341,6 +348,7 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
   }
 
   function header() {
+    const textInputRef = createRef();
     return (
       <View style={styles.headerWrapStyle}>
         <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
@@ -376,11 +384,20 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
             </MaskedView>
           }
         </View>
+        <TextInput
+          ref={textInputRef}
+          selectionColor={Colors.grayColor}
+          style={{ ...Fonts.grayColor15Medium, flex: 1 }}
+          value={search}
+          placeholder="Search for artist,song or lyrics..."
+          placeholderTextColor={Colors.grayColor}
+          onChangeText={(text) => updateState({ search: text })}
+        />
         <MaterialIcons
           name="search"
-          size={20}
-          style={{ alignSelf: "flex-end" }}
-          onPress={() => navigation.push(Navigate.SEARCH)}
+          color={Colors.grayColor}
+          size={25}
+          onPress={() => textInputRef.current.focus()}
         />
       </View>
     );
@@ -402,6 +419,10 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  searchFieldWrapStyle: {
+    backgroundColor: Colors.lightGrayColor,
+    borderRadius: Sizes.fixPadding * 2.5,
+  },
   headerWrapStyle: {
     flexDirection: "row",
     alignItems: "center",

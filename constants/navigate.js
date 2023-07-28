@@ -26,4 +26,5 @@ export const Navigate = {
   PAYMENT: "Payment",
   EDIT_USER_SCREEN: "EditUser",
   RESULT_HISTORY_DETAIL: "ResultHistoryDetail",
+  SEARCH_SCREEN: "Search",
 };

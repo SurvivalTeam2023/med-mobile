@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   Modal,
+  TextInput,
   Image,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
@@ -24,14 +25,24 @@ let totalPlaylist;
 const sortOptions = ["Name", "Date Added", "Artist"];
 
 const PlaylistGenreScreen = ({ navigation, route }) => {
+  let playlist;
   const genreId = route.params.genreId;
-
+  const updateState = (data) => setState((state) => ({ ...state, ...data }));
+  const [state, setState] = useState({
+    search: "",
+  });
+  const { search } = state;
   const {
     data: dataGetPlaylistByGenreId,
     isSuccess: isSuccessGetPlaylistByGenreId,
     isError: isErrorGetPlaylistByGenreId,
     error: errorGetPlaylistByGenreId,
   } = useGetPlaylisByGenreIdApi(genreId);
+
+  if (isSuccessGetPlaylistByGenreId) {
+    playlist = dataGetPlaylistByGenreId["playlist"];
+  }
+
   const handleOptionSelect = (option) => {
     switch (option) {
       case "Share":
@@ -124,9 +135,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                     marginLeft: 6,
                   }}
                 >
-                  {dataGetPlaylistByGenreId["playlist"]
-                    ? dataGetPlaylistByGenreId["playlist"].length
-                    : "0"}
+                  {playlist ? playlist.length : "0"}
                 </Text>
               </View>
             </View>
@@ -136,68 +145,71 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
     );
   };
   const genrePlaylist = () => {
+    if (search !== null) {
+      playlist = playlist?.filter((c) =>
+        c.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
     return (
       <View style={{ backgroundColor: "#eeeeee", borderRadius: 10 }}>
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            {dataGetPlaylistByGenreId["playlist"]?.map(
-              (playListInfor, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() =>
-                      navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                        playlistId: playListInfor.id,
-                      })
-                    }
+            {playlist?.map((playListInfor, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                      playlistId: playListInfor.id,
+                    })
+                  }
+                >
+                  <View
+                    style={{
+                      borderColor: "grey",
+                      paddingHorizontal: 8,
+                      paddingVertical: 12,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                    }}
                   >
+                    <View>
+                      <Text>{index + 1}</Text>
+                    </View>
+                    <View style={{ marginLeft: 8 }}>
+                      <Image
+                        source={{ uri: playListInfor.imageUrl }}
+                        style={styles.imagePlaylist}
+                      />
+                    </View>
                     <View
                       style={{
-                        borderColor: "grey",
-                        paddingHorizontal: 8,
-                        paddingVertical: 12,
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
+                        flexDirection: "column",
+                        marginLeft: 10,
                       }}
                     >
                       <View>
-                        <Text>{index + 1}</Text>
-                      </View>
-                      <View style={{ marginLeft: 8 }}>
-                        <Image
-                          source={{ uri: playListInfor.imageUrl }}
-                          style={styles.imagePlaylist}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: "column",
-                          marginLeft: 10,
-                        }}
-                      >
-                        <View>
-                          <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                            {playListInfor.name}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              marginTop: 2,
-                              fontWeight: "200",
-                              color: "#808080",
-                              fontStyle: "italic",
-                            }}
-                          >
-                            {playListInfor["author"]["lastName"] || "Unknow"}
-                          </Text>
-                        </View>
+                        <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                          {playListInfor.name}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            marginTop: 2,
+                            fontWeight: "200",
+                            color: "#808080",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          {playListInfor["author"]["lastName"] || "Unknow"}
+                        </Text>
                       </View>
                     </View>
-                  </TouchableOpacity>
-                );
-              }
-            )}
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       </View>
@@ -224,6 +236,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
   );
 
   function header() {
+    const textInputRef = createRef();
     return (
       <View style={styles.headerWrapStyle}>
         <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
@@ -257,11 +270,20 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
             />
           </MaskedView>
         </View>
+        <TextInput
+          ref={textInputRef}
+          selectionColor={Colors.grayColor}
+          style={{ ...Fonts.grayColor15Medium, flex: 1 }}
+          value={search}
+          placeholder="Search for artist,song or lyrics..."
+          placeholderTextColor={Colors.grayColor}
+          onChangeText={(text) => updateState({ search: text })}
+        />
         <MaterialIcons
           name="search"
-          size={20}
-          style={{ alignSelf: "flex-end" }}
-          onPress={() => navigation.push(Navigate.SEARCH)}
+          color={Colors.grayColor}
+          size={25}
+          onPress={() => textInputRef.current.focus()}
         />
       </View>
     );

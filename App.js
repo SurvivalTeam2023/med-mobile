@@ -145,7 +145,14 @@ const App = () => {
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
-            <Stack.Screen name="Search" component={searchScreen} />
+            <Stack.Screen
+              name="Search"
+              component={searchScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const searchValue = route.params.search;
+                return searchValue;
+              }}
+            />
             <Stack.Screen
               name="PlaylistGenre"
               component={PlaylistGenreScreen}
