@@ -9,6 +9,8 @@ import {
   Image,
   Text,
   StyleSheet,
+  FlatList,
+  ImageBackground,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -17,10 +19,13 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { Navigate } from "../../constants/navigate";
+import { useGetGenreList } from "../../hooks/genre.hook";
+import { useGetAudioListAPI } from "../../hooks/audio.hook";
+import QuizScreen from "../quiz/quizScreen";
 
 const { width } = Dimensions.get("window");
 
-const trendingCategoriesList = ["ALL", "HIP-HOP", "PODCASTS"];
+const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 
 const songOptionsList = [
   "Share",
@@ -70,6 +75,21 @@ const topTrendingsList = [
 ];
 
 const TrendingScreen = ({ navigation }) => {
+  const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
+  //Recommend audio
+  const {
+    data: dataAudioList,
+    isSuccess: isSuccessAudioList,
+    isError: isErrorAudioList,
+    error: errorAudioList,
+  } = useGetAudioListAPI();
+  if (isSuccessAudioList) {
+    console.log("Get audio list successful", dataAudioList);
+  }
+  if (isErrorAudioList) {
+    console.log("Get audio list failed", errorAudioList);
+  }
+
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],
   });
@@ -89,152 +109,141 @@ const TrendingScreen = ({ navigation }) => {
           {cornerImage()}
           {header()}
           {trendingCategories()}
-          {topTrendingInfo()}
+          {selectedCategory === "Genre" && genre()}
+          {selectedCategory === "Audio" && song()}
         </ScrollView>
       </View>
     </SafeAreaView>
   );
 
-  function topTrendingInfo() {
-    const CustomMenu = () => {
-      var _menu = null;
-
-      const setMenuRef = (ref) => {
-        _menu = ref;
-      };
-
-      const hideMenu = () => {
-        _menu.hide();
-      };
-
-      const showMenu = () => {
-        _menu.show();
-      };
-
-      return (
-        <Menu
-          ref={setMenuRef}
-          anchor={
-            <MaterialIcons
-              name="more-vert"
-              color={Colors.grayColor}
-              size={22}
-              onPress={showMenu}
-            />
-          }
+  function genre() {
+    const renderItem = ({ item }) => (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() =>
+          navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
+            genreId: item.id,
+          })
+        }
+      >
+        <ImageBackground
+          source={{ uri: `${item?.image}` }}
           style={{
-            paddingTop: Sizes.fixPadding,
-            backgroundColor: Colors.whiteColor,
+            width: 125,
+            height: 120.0,
+            marginRight: Sizes.fixPadding,
+            marginTop: Sizes.fixPadding,
           }}
+          borderRadius={Sizes.fixPadding - 5.0}
         >
-          {songOptionsList.map((item, index) => (
-            <View key={`${index}`}>
-              <MenuItem
-                pressColor="transparent"
-                style={{ height: 30.0 }}
-                textStyle={{
-                  marginRight: Sizes.fixPadding * 5.0,
-                  ...Fonts.blackColor12SemiBold,
-                }}
-                onPress={hideMenu}
-              >
-                {item}
-              </MenuItem>
-            </View>
-          ))}
-        </Menu>
-      );
-    };
+          <LinearGradient
+            start={{ x: 1, y: 0.2 }}
+            end={{ x: 1, y: 1 }}
+            colors={["rgba(255, 124, 0,0.5)", "rgba(41, 10, 89, 0.5)"]}
+            style={{ flex: 1, borderRadius: Sizes.fixPadding - 5.0 }}
+          >
+            <Text
+              style={{
+                padding: Sizes.fixPadding - 5.0,
+                ...Fonts.whiteColor12Medium,
+              }}
+            >
+              {item.name}
+            </Text>
+          </LinearGradient>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
 
     return (
       <View>
-        <Text
-          style={{
-            marginBottom: Sizes.fixPadding + 5.0,
-            marginHorizontal: Sizes.fixPadding * 2.0,
-            ...Fonts.blackColor15Bold,
-          }}
-        >
-          Top Trending 2020
-        </Text>
-        {topTrendingsList.map((item, index) => (
-          <View key={`${item.id}`}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => navigation.push(Navigate.NOW, { item })}
-              style={styles.topTrendingInfoWrapStyle}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <SharedElement id={item.id}>
-                  <Image
-                    source={item.image}
-                    style={{
-                      width: 100.0,
-                      height: 100.0,
-                      borderRadius: Sizes.fixPadding - 5.0,
-                    }}
-                  />
-                </SharedElement>
-                <View style={{ marginLeft: Sizes.fixPadding }}>
-                  <LinearGradient
-                    start={{ x: 0, y: 0.1 }}
-                    end={{ x: 0, y: 1 }}
-                    colors={["rgba(255, 124, 0,0.9)", "rgba(41, 10, 89, 1)"]}
-                    style={styles.songNumberWrapStyle}
-                  >
-                    <Text style={{ ...Fonts.whiteColor9Medium }}>
-                      #{index + 1}
-                    </Text>
-                  </LinearGradient>
-                  <Text
-                    style={{
-                      marginTop: Sizes.fixPadding - 5.0,
-                      marginBottom: Sizes.fixPadding - 9.0,
-                      ...Fonts.blackColor14Bold,
-                    }}
-                  >
-                    {item.songName}
-                  </Text>
-                  <Text
-                    style={{
-                      maxWidth: width / 2.0,
-                      ...Fonts.grayColor11Medium,
-                    }}
-                  >
-                    {item.artist}
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: Sizes.fixPadding,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <MaterialIcons
-                      name="play-circle-fill"
-                      size={13}
-                      color="black"
-                    />
-                    <Text
-                      style={{
-                        marginLeft: Sizes.fixPadding - 5.0,
-                        ...Fonts.grayColor10Medium,
-                      }}
-                    >
-                      {item.plays} plays
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <CustomMenu />
-            </TouchableOpacity>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Genres </Text>
+          <MaterialIcons
+            name="keyboard-arrow-right"
+            color={Colors.blackColor}
+            size={25}
+          />
+        </View>
+        {genreData ? (
+          <FlatList
+            data={genreData}
+            numColumns={3}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: 8,
+              width: "50%",
+            }}
+          />
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
           </View>
-        ))}
+        )}
+      </View>
+    );
+  }
+
+  function song() {
+    const renderItem = ({ item }) => (
+      <View style={{ flexDirection: "row", marginTop: 8 }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => handleNavigateNowPlayling(item)}
+        >
+          <SharedElement id={`${item.id}`}>
+            <Image
+              source={{ uri: `${item.imageUrl}` }}
+              style={styles.popularSongImageStyle}
+            />
+          </SharedElement>
+        </TouchableOpacity>
+        <View style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}>
+          <Text
+            style={{
+              ...Fonts.blackColor12SemiBold,
+              width: "70%",
+            }}
+          >
+            {item.name}
+          </Text>
+          <Text style={{ ...Fonts.grayColor10Medium }}>
+            {item.artist.artist_name}
+          </Text>
+        </View>
+      </View>
+    );
+
+    return (
+      <View style={{ marginTop: Sizes.fixPadding }}>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Audios</Text>
+          <MaterialIcons
+            name="keyboard-arrow-right"
+            color={Colors.blackColor}
+            size={25}
+          />
+        </View>
+        {!dataAudioList ? (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        ) : (
+          <FlatList
+            data={dataAudioList}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        )}
       </View>
     );
   }
@@ -247,7 +256,12 @@ const TrendingScreen = ({ navigation }) => {
             {selectedCategory == item ? (
               <TouchableOpacity
                 activeOpacity={0.9}
-                onPress={() => updateState({ selectedCategory: item })}
+                onPress={() => {
+                  updateState({ selectedCategory: item });
+                  if (selectedCategory === "Quiz") {
+                    navigation.push(Navigate.QUIZ);
+                  }
+                }}
               >
                 <LinearGradient
                   key={`${index}`}
@@ -330,6 +344,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: Sizes.fixPadding * 2.0,
     marginTop: Sizes.fixPadding - 30.0,
+  },
+  popularSongImageStyle: {
+    marginRight: Sizes.fixPadding,
+    width: 110,
+    height: 100,
+    borderRadius: Sizes.fixPadding - 5.0,
+  },
+  titleStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.blackColor15Bold,
+  },
+  titleWrapStyle: {
+    marginRight: Sizes.fixPadding + 5.0,
+    marginLeft: Sizes.fixPadding * 2.0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   trendingCategoriesWrapStyle: {
     flex: 1,
