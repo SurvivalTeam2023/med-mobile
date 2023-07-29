@@ -112,7 +112,7 @@ const TrendingScreen = ({ navigation }) => {
           {trendingCategories()}
           {selectedCategory === "Genre" && genre()}
           {selectedCategory === "Audio" && song()}
-          {selectedCategory === "Quiz" && startQuizBtn()}
+          {selectedCategory === "Quiz" && startQuizTitle()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -307,6 +307,29 @@ const TrendingScreen = ({ navigation }) => {
     );
   }
 
+  function startQuizTitle() {
+    return (
+      <View style={{ marginTop: 44 }}>
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.startQuizInfo}
+        >
+          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+          <View style={{ alignItems: "center", paddingTop: 4 }}>
+            <Text style={styles.describeQuizText}>
+              Welcome to the Emotion Quiz! This quiz is designed to help you
+              gain insight into your emotional landscape and explore the
+              complexities of your feelings.
+            </Text>
+          </View>
+        </LinearGradient>
+        {startQuizBtn()}
+      </View>
+    );
+  }
+
   function startQuizBtn() {
     return (
       <View>
@@ -387,6 +410,25 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
     ...Fonts.blackColor15Bold,
+  },
+  describeQuizText: {
+    ...Fonts.whiteColor16Light,
+    width: 300,
+    justifyContent: "center",
+  },
+  titleInfoStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor18Bold,
+    textAlign: "center",
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    marginHorizontal: Sizes.fixPadding + 10.0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Sizes.fixPadding + 20.0,
   },
   titleWrapStyle: {
     marginRight: Sizes.fixPadding + 5.0,
