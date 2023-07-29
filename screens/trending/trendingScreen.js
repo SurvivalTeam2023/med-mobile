@@ -11,6 +11,7 @@ import {
   StyleSheet,
   FlatList,
   ImageBackground,
+  Pressable,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -111,6 +112,7 @@ const TrendingScreen = ({ navigation }) => {
           {trendingCategories()}
           {selectedCategory === "Genre" && genre()}
           {selectedCategory === "Audio" && song()}
+          {selectedCategory === "Quiz" && startQuizBtn()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -305,6 +307,29 @@ const TrendingScreen = ({ navigation }) => {
     );
   }
 
+  function startQuizBtn() {
+    return (
+      <View>
+        <Pressable
+          style={styles.startQuizButtonStyle}
+          activeOpacity={0.9}
+          onPress={() => {
+            navigation.push(Navigate.QUESTION_SCREEN);
+          }}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 3 }}
+            end={{ x: 0, y: 2 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.startQuizGradientStyle}
+          >
+            <Text style={{ ...Fonts.whiteColor16Bold }}>Do quiz</Text>
+          </LinearGradient>
+        </Pressable>
+      </View>
+    );
+  }
+
   function cornerImage() {
     return (
       <View>
@@ -345,6 +370,13 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     marginTop: Sizes.fixPadding - 30.0,
   },
+  startQuizGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Sizes.fixPadding + 20.0,
+    marginTop: Sizes.fixPadding - 40.0,
+  },
   popularSongImageStyle: {
     marginRight: Sizes.fixPadding,
     width: 110,
@@ -362,6 +394,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  startQuizButtonStyle: {
+    justifyContent: "center",
+    marginTop: Sizes.fixPadding * 10.0,
+    marginHorizontal: Sizes.fixPadding * 10.0,
+    borderRadius: Sizes.fixPadding - 4.0,
   },
   trendingCategoriesWrapStyle: {
     flex: 1,

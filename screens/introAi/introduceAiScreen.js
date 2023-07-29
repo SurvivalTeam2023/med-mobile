@@ -116,6 +116,7 @@ const IntroAIScreen = () => {
       </View>
     );
   }
+
   function cornerImage() {
     return (
       <View>
@@ -154,6 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: Sizes.fixPadding + 10.0,
   },
+
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
     justifyContent: "center",
