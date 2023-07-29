@@ -40,8 +40,6 @@ const errorInterceptor = (error) => {
   if (error.response.status == "401") {
     Toast.error("Login expired!");
     RootNavigation.navigate(Navigate.SIGN_IN, {});
-  } else if (error.response.status == "500") {
-    Toast.error("Somethings went wrong!");
   }
   throw error;
 };
