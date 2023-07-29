@@ -12,7 +12,7 @@ const initialState = {
 };
 const beatifulAudioFormat = (audio) => {
   if (!audio) return;
-  const audioInfo = audio["audio"];
+  const audioInfo = audio["audio"] || audio;
   const artist = audioInfo["artist"];
   const audioFile = audioInfo["audioFile"][0];
   const latestFile = audioFile["file"];
@@ -35,6 +35,8 @@ const reducer = createSlice({
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
       playingList.push(beatifulAudioFormat(action.payload));
+      const audioIndex = playingList.length - 1;
+      state.currentPlaying.currentAudioIndex = audioIndex;
       state.playingList = playingList;
     },
     addListToPlayList: (state, action) => {

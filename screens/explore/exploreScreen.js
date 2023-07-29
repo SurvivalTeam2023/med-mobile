@@ -28,6 +28,8 @@ import {
   useGetRecentlyPlayHistoryAudioListAPI,
 } from "../../hooks/audio.hook";
 import { TextInput } from "react-native-gesture-handler";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 let recentlyPlayedList = null;
 
@@ -63,6 +65,7 @@ let topArtistList = [
 
 //Random playlist
 const ExploreScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
@@ -424,11 +427,16 @@ const ExploreScreen = ({ navigation }) => {
     );
   }
 
+  function handleNavigateNowPlayling(audio) {
+    dispatch(nowPlayingAction.addAudioToPlayList(audio));
+    navigation.push("NowPlaying", { audio });
+  }
+
   function popularSongsInfo() {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item })}
+        onPress={() => handleNavigateNowPlayling(item)}
       >
         <SharedElement id={`${item.id}`}>
           <Image

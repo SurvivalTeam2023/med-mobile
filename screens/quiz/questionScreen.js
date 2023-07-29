@@ -147,6 +147,7 @@ const QuestionScreen = () => {
   let totalQuestions;
   let optionIdArr;
   let questBankId;
+
   const setQuizStatus = () => {
     mutate(questionBankId, {
       onSuccess: (data) => {},
@@ -196,9 +197,11 @@ const QuestionScreen = () => {
     dispatch(questionAction.storeQuestionBankId(questionBankId));
     questions = dataFormat;
   }
+
   if (isError) {
     console.log("error from create question bank", error);
   }
+
   const pickOption = (question_id, option_id, index) => {
     const questionId = questions.map((item) => {
       return item.id;
@@ -213,6 +216,7 @@ const QuestionScreen = () => {
       setSelectedAnswerIndex(index);
     }
   };
+
   useEffect(() => {
     pickOption;
     setSelectedAnswerIndex(null);

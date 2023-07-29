@@ -15,6 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
+import { Navigate } from "../../constants/navigate";
 
 const Separator = () => <View style={styles.separator} />;
 let isFavoriteExisted = [];
@@ -119,7 +120,7 @@ const QuizScreen = () => {
           <Pressable
             activeOpacity={0.9}
             onPress={() => {
-              navigation.navigate("Question");
+              navigation.push(Navigate.QUESTION_SCREEN);
             }}
           >
             <LinearGradient
@@ -135,6 +136,7 @@ const QuizScreen = () => {
       </View>
     );
   }
+
   function cornerImage() {
     return (
       <View>
