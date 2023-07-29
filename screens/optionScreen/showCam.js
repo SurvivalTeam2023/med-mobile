@@ -78,7 +78,7 @@ const ShowCamScreen = ({ navigation }) => {
   function CameraScreen() {
     const dispatch = useDispatch();
     const [hasPermission, setHasPermission] = useState(null);
-    const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+    const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
     const cameraRef = useRef(null);
     const [isPreview, setIsPreview] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: Sizes.fixPadding,
     marginLeft: 5,
+    justifyContent: "center",
     width: Sizes.fixPadding * 40,
     height: Sizes.fixPadding * 50,
   },

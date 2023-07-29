@@ -377,7 +377,7 @@ const ExploreScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => navigation.push("NowPlaying", { item })}
+        onPress={() => handleNavigateNowPlayling()}
       >
         <SharedElement id={item.id}>
           <Image
