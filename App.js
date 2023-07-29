@@ -58,7 +58,7 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <Provider store={store}>
-      <ToastManager height={50} />
+      <ToastManager />
       <NavigationContainer ref={navigationRef}>
         <QueryClientProvider client={queryClient}>
           <NowPlayingBackground />
