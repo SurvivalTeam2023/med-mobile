@@ -34,10 +34,8 @@ const reducer = createSlice({
   reducers: {
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
-      console.log(action.payload);
       playingList.push(beatifulAudioFormat(action.payload));
       const audioIndex = playingList.length - 1;
-      console.log("chua te", audioIndex);
       state.currentPlaying.currentAudioIndex = audioIndex;
       state.playingList = playingList;
     },
