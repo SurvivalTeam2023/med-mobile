@@ -41,6 +41,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
 
   if (isSuccessGetPlaylistByGenreId) {
     playlist = dataGetPlaylistByGenreId["playlist"];
+    console.log(playlist);
   }
 
   const handleOptionSelect = (option) => {
