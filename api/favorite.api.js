@@ -2,17 +2,17 @@ import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
 
 export const getFavoriteGenreAPI = () => {
-  const url = "/favorite/userId";
+  const url = "/genreUser/userId";
   return CallAPI.get(url);
 };
 
 export const isFavoriteExisted = (payload) => {
-  const url = "/favorite";
+  const url = "/genreUser";
   return CallAPI.get(url);
 };
 
 export const createFavoriteApi = (payload) => {
-  const url = "/favorite";
+  const url = "/genreUser";
   const { genreId } = payload;
   return CallAPI.post(url, {
     genreId,

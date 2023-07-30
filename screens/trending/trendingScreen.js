@@ -255,7 +255,7 @@ const TrendingScreen = ({ navigation }) => {
               paddingVertical: 8,
             }}
           >
-            No data!
+            Please do quiz to get recommended audio
           </Text>
         )}
       </View>
