@@ -36,7 +36,7 @@ const OptionScreen = ({ navigation }) => {
   } = useIsFavoriteExisted();
 
   if (isErrorIsFavoriteExisted) {
-    console.log("error", errorIsFavoriteExisted);
+    console.log("get existed fav genre failed", errorIsFavoriteExisted);
   }
 
   if (isErrorIsValidQuiz) {
