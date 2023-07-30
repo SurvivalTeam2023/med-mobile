@@ -13,6 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+  useCreateQuestionBankApi,
   useGetQuestionBankApi,
   useSaveQuizResultApi,
   useSetQuizStatus,
@@ -138,7 +139,7 @@ const QuestionScreen = () => {
   const [index, setIndex] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-  const { data, error, isSuccess, isError } = useGetQuestionBankApi();
+  const { data, error, isSuccess, isError } = useCreateQuestionBankApi();
   const { mutate } = useSetQuizStatus();
   const { mutate: mutateSaveQuizResult } = useSaveQuizResultApi();
   const questionBankId = store.getState().question.questionBankId;

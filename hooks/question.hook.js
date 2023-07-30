@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import {
+  createQuestionBankApi,
   getFinishedQuiz,
   getFinishedQuizHistory,
   getQuestionBankApi,
@@ -9,11 +10,11 @@ import {
   setQuizStatus,
 } from "../api/question.api";
 
-export const useGetQuestionBankApi = (payload) =>
+export const useCreateQuestionBankApi = (payload) =>
   useQuery({
-    queryKey: ["getQuestionBank"],
+    queryKey: ["createQuestionBank"],
     queryFn: async () => {
-      const data = await getQuestionBankApi();
+      const data = await createQuestionBankApi();
       return data;
     },
   });

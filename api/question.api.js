@@ -1,7 +1,7 @@
 import { CallAPI } from "../core/api/baseAxios";
 import { store } from "../core/store/store";
 
-export const getQuestionBankApi = (payload) => {
+export const createQuestionBankApi = (payload) => {
   const url = "/questionBank";
   return CallAPI.post(url);
 };
