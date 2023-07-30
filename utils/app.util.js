@@ -28,10 +28,11 @@ export const generateColor = () => {
 export const parseTokenToRole = (token) => {
   let token_decoded = jwtDecode(token);
   const resource_access = token_decoded["resource_access"];
-  const med_app = resource_access["med-app"];
+  const med_app =
+    resource_access["med-app"] || resource_access["med-app-playground"];
   const roles = med_app["roles"];
-  const artist_role = roles.find((item) => item === "artist");
-  return artist_role;
+  const user_role = roles.find((item) => item === "user");
+  return user_role;
 };
 
 export const formatQuestionData = (originRaw) => {

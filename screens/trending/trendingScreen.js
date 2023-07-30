@@ -12,6 +12,7 @@ import {
   FlatList,
   ImageBackground,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";

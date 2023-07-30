@@ -17,7 +17,7 @@ import { Navigate } from "../../constants/navigate";
 
 const subscriptionAllowsList = [
   "Download unlimited songs",
-  "View song lyrics while playing song",
+  "Remove ads while listening to music",
   "High quality sound quality",
   "Add free song play",
 ];
