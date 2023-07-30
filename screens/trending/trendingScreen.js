@@ -24,6 +24,7 @@ import { Navigate } from "../../constants/navigate";
 import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetAudioListAPI } from "../../hooks/audio.hook";
 import QuizScreen from "../quiz/quizScreen";
+import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
 
 const { width } = Dimensions.get("window");
 
@@ -84,12 +85,12 @@ const TrendingScreen = ({ navigation }) => {
     isSuccess: isSuccessAudioList,
     isError: isErrorAudioList,
     error: errorAudioList,
-  } = useGetAudioListAPI();
+  } = useGetRecommendAudioByQuizResultAPI();
   if (isSuccessAudioList) {
-    console.log("Get audio list successful", dataAudioList);
+    console.log("Rec audios successful", dataAudioList);
   }
   if (isErrorAudioList) {
-    console.log("Get audio list failed", errorAudioList);
+    console.log("Rec audios failed", errorAudioList);
   }
 
   const [state, setState] = useState({
@@ -232,7 +233,17 @@ const TrendingScreen = ({ navigation }) => {
         </View>
         {!dataAudioList ? (
           <View style={styles.container}>
-            <ActivityIndicator size="small" color="#f8b26a" />
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+                fontWeight: "100",
+                display: "flex",
+                paddingVertical: 8,
+              }}
+            >
+              Please do quiz to get recommended audio
+            </Text>
           </View>
         ) : dataAudioList.length > 0 ? (
           <FlatList
@@ -384,7 +395,7 @@ const TrendingScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Trending</Text>}
+          maskElement={<Text style={{ ...Fonts.bold22 }}>Recomendation</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
