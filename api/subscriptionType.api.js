@@ -5,6 +5,11 @@ export const getSubscriptionType = (payload) => {
   return CallAPI.get(url);
 };
 
+export const getSubscriptionByUserId = (payload) => {
+  const url = "/subscriptions/user/userID";
+  return CallAPI.get(url);
+};
+
 export const createSubscriptionApi = (payload) => {
   const url = "/subscriptions";
   const { planId } = payload;

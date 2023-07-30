@@ -16,13 +16,23 @@ import { Icon } from "react-native-gradient-icon";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from "react-redux";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import {
   ACTION_TYPE,
   nowPlayingAction,
 } from "../../redux/audio/nowPlayingList.slice";
+import { useGetSubscriptionByUserId } from "../../hooks/subscription.hook";
 
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const {
+    data: subscriptionData,
+    isSuccess: isSuccessSubscription,
+    isError: isErrorSubScription,
+    error: errorSubScription,
+  } = useGetSubscriptionByUserId();
+
   const { currentAudioIndex, soundStatus } = useSelector(
     (state) => state.nowPlayingList.currentPlaying
   );
@@ -108,20 +118,27 @@ const NowPlayingScreen = ({ navigation }) => {
         {songProcessSlider()}
         {songPlayInfo()}
         {favoriteShuffleAndRepeatInfo()}
-        {lyricsTextWithIcon()}
+        {downloadIcon()}
       </View>
     );
   }
 
-  function lyricsTextWithIcon() {
+  function downloadIcon() {
     return (
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <MaterialIcons
-          name="keyboard-arrow-up"
-          size={20}
-          color={Colors.blackColor}
-        />
-        <Text style={{ ...Fonts.grayColor10SemiBold }}>Lyrics</Text>
+        {subscriptionData?.length > 1 ? (
+          <MaterialCommunityIcons
+            name="download"
+            size={22}
+            color={Colors.black}
+          />
+        ) : (
+          <MaterialCommunityIcons
+            name="download"
+            size={22}
+            color={Colors.grayColor}
+          />
+        )}
       </View>
     );
   }

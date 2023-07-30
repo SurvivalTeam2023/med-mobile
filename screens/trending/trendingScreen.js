@@ -234,7 +234,7 @@ const TrendingScreen = ({ navigation }) => {
           <View style={styles.container}>
             <ActivityIndicator size="small" color="#f8b26a" />
           </View>
-        ) : (
+        ) : dataAudioList.length > 0 ? (
           <FlatList
             data={dataAudioList}
             keyExtractor={(item) => `${item.id}`}
@@ -246,6 +246,17 @@ const TrendingScreen = ({ navigation }) => {
               paddingRight: Sizes.fixPadding,
             }}
           />
+        ) : (
+          <Text
+            style={{
+              fontSize: 20,
+              textAlign: "center",
+              fontWeight: "100",
+              paddingVertical: 8,
+            }}
+          >
+            Please do quiz to get recommended audio
+          </Text>
         )}
       </View>
     );

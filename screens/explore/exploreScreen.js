@@ -78,10 +78,10 @@ const ExploreScreen = ({ navigation }) => {
     error: errorRecentlyPlay,
   } = useGetRecentlyPlayHistoryAudioListAPI();
   if (isSuccessRecentlyPlay) {
-    console.log("Get audio list successful");
+    console.log("Get recently list successful");
   }
   if (isErrorRecentlyPlay) {
-    console.log("Get audio list failed", errorRecentlyPlay);
+    console.log("Get recently list failed", errorRecentlyPlay);
   }
 
   //Recommend audio
@@ -377,7 +377,7 @@ const ExploreScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => handleNavigateNowPlayling()}
+        onPress={() => handleNavigateNowPlayling(item)}
       >
         <SharedElement id={item.id}>
           <Image
@@ -429,6 +429,7 @@ const ExploreScreen = ({ navigation }) => {
 
   function handleNavigateNowPlayling(audio) {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
+    console.log(audio);
     navigation.push("NowPlaying", { audio });
   }
 

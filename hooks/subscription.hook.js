@@ -1,5 +1,6 @@
 import {
   createSubscriptionApi,
+  getSubscriptionByUserId,
   getSubscriptionType,
 } from "../api/subscriptionType.api";
 import { useMutation, useQuery } from "react-query";
@@ -8,6 +9,14 @@ export const useGetSubscriptionType = (payload) =>
     queryKey: ["getSubList"],
     queryFn: async () => {
       const data = await getSubscriptionType();
+      return data;
+    },
+  });
+export const useGetSubscriptionByUserId = (payload) =>
+  useQuery({
+    queryKey: ["getSubscriptionByUserId"],
+    queryFn: async () => {
+      const data = await getSubscriptionByUserId();
       return data;
     },
   });
