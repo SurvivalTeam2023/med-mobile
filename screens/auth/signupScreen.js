@@ -22,7 +22,7 @@ import { useRegisterUser } from "../../hooks/auth.hook";
 import { Navigate } from "../../constants/navigate";
 const SignupScreen = ({ navigation }) => {
   const [isFailed, setIsFailed] = useState(null);
-
+  const [errorMessage, setErrorMessage] = useState();
   //signup
   const [state, setState] = useState({
     showPassword: false,
@@ -49,6 +49,10 @@ const SignupScreen = ({ navigation }) => {
           }, 2000);
         },
         onError: (error) => {
+          setErrorMessage(
+            error.response.data.error[0].message.errorMessage ||
+              error.response.data.error[0].message
+          );
           setIsFailed(true);
         },
       }
@@ -94,8 +98,8 @@ const SignupScreen = ({ navigation }) => {
         </MaskedView>
         {isFailed && (
           <View style={styles.failWarningWrapper}>
-            <Text style={{ color: "red" }}>
-              Something went wrong. Please double-check and try again
+            <Text style={{ color: "red", fontStyle: "italic" }}>
+              {errorMessage}
             </Text>
             <Feather
               name="delete"
