@@ -17,10 +17,14 @@ import { useIsValidQuiz } from "../../hooks/question.hook";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Ionicons } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
+import { store } from "../../core/store/store";
 
 const OptionScreen = ({ navigation }) => {
   let isQuestionValid;
   let isFavoriteExisted;
+  const userInfo = store.getState().user.data;
+  const hasUserInfoDob = !!userInfo.dob; // Check if userInfo.dob has data
+
   const {
     data: dataIsValidQuiz,
     isSuccess: successIsValidQuiz,
@@ -65,13 +69,41 @@ const OptionScreen = ({ navigation }) => {
   }, [isQuestionValid, isFavoriteExisted]);
 
   const validate = () => {
-    if (isQuestionValid === true && isFavoriteExisted === true) {
+    if (
+      isQuestionValid === true &&
+      isFavoriteExisted === true &&
+      hasUserInfoDob === false
+    ) {
       navigation.push(Navigate.BOTTOM_TAB_BAR);
-    } else if (isQuestionValid === false && isFavoriteExisted === true) {
+    } else if (
+      isQuestionValid === false &&
+      isFavoriteExisted === true &&
+      hasUserInfoDob === true
+    ) {
       navigation.push(Navigate.QUIZ);
-    } else if (isQuestionValid === true && isFavoriteExisted === false) {
+    } else if (
+      isQuestionValid === true &&
+      isFavoriteExisted === false &&
+      hasUserInfoDob === false
+    ) {
       navigation.push(Navigate.CHOOSE_MUSIC);
-    } else if (isQuestionValid === false && isFavoriteExisted === false) {
+    } else if (
+      isQuestionValid === false &&
+      isFavoriteExisted === false &&
+      hasUserInfoDob === true
+    ) {
+      navigation.push(Navigate.QUIZ);
+    } else if (
+      isQuestionValid === false &&
+      isFavoriteExisted === false &&
+      hasUserInfoDob === false
+    ) {
+      navigation.push(Navigate.BOTTOM_TAB_BAR);
+    } else if (
+      isQuestionValid === true &&
+      isFavoriteExisted === true &&
+      hasUserInfoDob === true
+    ) {
       navigation.push(Navigate.QUIZ);
     }
   };

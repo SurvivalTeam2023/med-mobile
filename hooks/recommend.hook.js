@@ -6,6 +6,6 @@ export const useGetRecommendAudioByQuizResultAPI = (payload) =>
     queryKey: ["getRecommendAudioByQuizResult"],
     queryFn: async () => {
       const data = await getRecommendAudioByQuizResultAPI();
-      return data["items"];
+      return data;
     },
   });

@@ -21,6 +21,7 @@ import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import MaskedView from "@react-native-masked-view/masked-view";
 const ResultScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
   let quizResult;

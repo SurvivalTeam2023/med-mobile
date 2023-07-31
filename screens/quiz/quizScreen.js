@@ -16,12 +16,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
+import { store } from "../../core/store/store";
 
 const Separator = () => <View style={styles.separator} />;
-let isFavoriteExisted = [];
 
+let isFavoriteExisted = [];
 const QuizScreen = () => {
   const navigation = useNavigation();
+
   const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
     useIsFavoriteExisted();
   if (successIsFavoriteExisted) {
@@ -85,7 +87,7 @@ const QuizScreen = () => {
           <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
           <View style={{ alignItems: "center", paddingTop: 4 }}>
             <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Quiz! This quiz is designed to help you
+              Welcome to the Emotion Servey! This quiz is designed to help you
               gain insight into your emotional landscape and explore the
               complexities of your feelings.
             </Text>

@@ -22,6 +22,7 @@ import { useUpdateUserAccountDetails } from "../../hooks/user.hook";
 import { Alert } from "react-native";
 import { Navigate } from "../../constants/navigate";
 import moment from "moment";
+import { store } from "../../core/store/store";
 
 const EditUserScreen = ({ navigation, route }) => {
   const profile = route.params.profile;
@@ -47,6 +48,8 @@ const EditUserScreen = ({ navigation, route }) => {
     backClickCount,
   } = state;
   const { mutate } = useUpdateUserAccountDetails();
+  const access_token = store.getState().user.token;
+
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -116,8 +119,11 @@ const EditUserScreen = ({ navigation, route }) => {
   const handleUpdateAccountDetails = async (form) => {
     mutate(form, {
       onSuccess: (data) => {
-        console.log("Update Success", data);
         Alert.alert("Update Success");
+        const userData = fetchUserData(access_token);
+        if (userData) {
+          dispatch(userAction.storeUser(userData));
+        }
         setTimeout(() => {
           navigation.push(Navigate.BOTTOM_TAB_BAR);
         }, 3000);
@@ -214,12 +220,12 @@ const EditUserScreen = ({ navigation, route }) => {
         {dobTextField()}
         {cityTextField()}
         {avatarTextField()}
-        {signInButton()}
+        {updateButton()}
       </View>
     );
   }
 
-  function signInButton() {
+  function updateButton() {
     return (
       <Pressable
         style={styles.signInButtonStyle}
@@ -255,7 +261,7 @@ const EditUserScreen = ({ navigation, route }) => {
             value={firstName}
             onChangeText={(text) => updateState({ firstName: text })}
             selectionColor={Colors.grayColor}
-            placeholder={profile.firstName}
+            placeholder={profile.firstName || "input firstName"}
             placeholderTextColor={Colors.grayColor}
             style={{
               flex: 1,
@@ -276,7 +282,7 @@ const EditUserScreen = ({ navigation, route }) => {
           value={lastName}
           onChangeText={(text) => updateState({ lastName: text })}
           selectionColor={Colors.grayColor}
-          placeholder={profile.lastName}
+          placeholder={profile.lastName || "input lastName"}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -295,7 +301,7 @@ const EditUserScreen = ({ navigation, route }) => {
           value={email}
           onChangeText={(text) => updateState({ email: text })}
           selectionColor={Colors.grayColor}
-          placeholder={profile.email}
+          placeholder={profile.email || "email"}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -314,7 +320,7 @@ const EditUserScreen = ({ navigation, route }) => {
           value={city}
           onChangeText={(text) => updateState({ city: text })}
           selectionColor={Colors.grayColor}
-          placeholder={profile.city}
+          placeholder={profile.city || "input city"}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -333,7 +339,7 @@ const EditUserScreen = ({ navigation, route }) => {
           value={address}
           onChangeText={(text) => updateState({ address: text })}
           selectionColor={Colors.grayColor}
-          placeholder={profile.address}
+          placeholder={profile.address || "input address"}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
@@ -352,7 +358,10 @@ const EditUserScreen = ({ navigation, route }) => {
           value={dob}
           onChangeText={(text) => updateState({ dob: text })}
           selectionColor={Colors.grayColor}
-          placeholder={moment(profile.dob).format("DD-MM-YYYY")}
+          placeholder={
+            moment(profile.dob).format("DD-MM-YYYY") ||
+            "input dob with format YYYY-MM-DD"
+          }
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
