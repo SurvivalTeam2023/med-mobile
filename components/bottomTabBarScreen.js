@@ -78,10 +78,10 @@ const BottomTabBarScreen = ({ navigation }) => {
       index: 2,
       icon: "local-fire-department",
     },
-    {
-      index: 3,
-      icon: "library-music",
-    },
+    // {
+    //   index: 3,
+    //   icon: "library-music",
+    // },
     {
       index: 4,
       icon: "supervised-user-circle",

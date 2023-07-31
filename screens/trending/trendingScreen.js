@@ -26,6 +26,8 @@ import { useGetAudioListAPI } from "../../hooks/audio.hook";
 import QuizScreen from "../quiz/quizScreen";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
 import { store } from "../../core/store/store";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const { width } = Dimensions.get("window");
 
@@ -81,6 +83,7 @@ const topTrendingsList = [
 const TrendingScreen = ({ navigation }) => {
   const userInfo = store.getState().user.data;
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
+  const dispatch = useDispatch();
   //Recommend audio
   const {
     data: dataAudioList,
@@ -121,7 +124,10 @@ const TrendingScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
-
+  function handleNavigateNowPlayling(audio) {
+    dispatch(nowPlayingAction.addAudioToPlayList(audio));
+    navigation.push("NowPlaying", { audio });
+  }
   function genre() {
     const renderItem = ({ item }) => (
       <TouchableOpacity

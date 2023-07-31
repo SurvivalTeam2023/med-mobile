@@ -23,9 +23,13 @@ import { Alert } from "react-native";
 import { Navigate } from "../../constants/navigate";
 import moment from "moment";
 import { store } from "../../core/store/store";
+import { fetchUserData } from "../../redux/auth/auth.action";
+import { userAction } from "../../redux/auth/auth.slice";
+import { useDispatch } from "react-redux";
 
 const EditUserScreen = ({ navigation, route }) => {
   const profile = route.params.profile;
+  const dispatch = useDispatch();
   const [state, setState] = useState({
     firstName: null,
     lastName: null,
@@ -118,15 +122,15 @@ const EditUserScreen = ({ navigation, route }) => {
   };
   const handleUpdateAccountDetails = async (form) => {
     mutate(form, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         Alert.alert("Update Success");
-        const userData = fetchUserData(access_token);
+        const userData = await fetchUserData(access_token);
         if (userData) {
           dispatch(userAction.storeUser(userData));
+          setTimeout(() => {
+            navigation.push(Navigate.BOTTOM_TAB_BAR);
+          }, 3000);
         }
-        setTimeout(() => {
-          navigation.push(Navigate.BOTTOM_TAB_BAR);
-        }, 3000);
       },
       onError: (error) => {
         console.log("Update failed", error);
@@ -358,10 +362,7 @@ const EditUserScreen = ({ navigation, route }) => {
           value={dob}
           onChangeText={(text) => updateState({ dob: text })}
           selectionColor={Colors.grayColor}
-          placeholder={
-            moment(profile.dob).format("DD-MM-YYYY") ||
-            "input dob with format YYYY-MM-DD"
-          }
+          placeholder={"input dob with format YYYY-MM-DD"}
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,

@@ -119,7 +119,7 @@ const ResultScreen = ({ navigation }) => {
   };
 
   const onPressHandler = () => {
-    navigation.push(Navigate.RECOMMENDED_GENRE);
+    navigation.push(Navigate.BOTTOM_TAB_BAR);
   };
 
   const quizHistory = () => {
@@ -139,7 +139,6 @@ const ResultScreen = ({ navigation }) => {
                 marginLeft: 8,
               }}
             >
-              <AntDesign name="medicinebox" size={24} color="black" />
               <MaskedView
                 style={{ flex: 1, height: 28 }}
                 maskElement={

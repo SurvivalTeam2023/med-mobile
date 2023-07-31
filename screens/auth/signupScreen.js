@@ -143,6 +143,25 @@ const SignupScreen = ({ navigation }) => {
       </View>
     );
   }
+  function emailAddressTextField() {
+    return (
+      <View style={styles.textFieldWrapStyle}>
+        <MaterialIcons name="email" color={Colors.grayColor} size={20} />
+        <TextInput
+          value={emailAddress}
+          onChangeText={(text) => updateState({ emailAddress: text })}
+          selectionColor={Colors.grayColor}
+          placeholder="Email Address"
+          placeholderTextColor={Colors.grayColor}
+          style={{
+            marginLeft: Sizes.fixPadding,
+            flex: 1,
+            ...Fonts.blackColor14Bold,
+          }}
+        />
+      </View>
+    );
+  }
 
   function alreadyHaveAccountInfo() {
     return (

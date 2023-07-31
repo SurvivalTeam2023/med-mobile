@@ -22,10 +22,11 @@ import {
   getUserDataByUsernameApi,
   getUserProfileByUserIdApi,
 } from "../../api/user.api";
+import { store } from "../../core/store/store";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
-
+  console.log(store.getState().user.data);
   let quizResult;
   const { data: quizHistoryData, isSuccess: isSuccessQuizHistory } =
     useGetFinishedQuizHistoryApi(userId);
@@ -37,12 +38,12 @@ const ProfileScreen = ({ navigation }) => {
   const { data, isSuccess } = useGetUserDataByUsernameApi(username);
 
   if (isSuccess) {
-    profile = data.user_db;
+    profile = data?.user_db;
   }
 
   useEffect(() => {
     if (isSuccess) {
-      profile = data.user_db;
+      profile = data?.user_db;
     }
   }, []);
 
