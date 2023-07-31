@@ -34,10 +34,6 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
     resultFilter = quizResult?.filter((e) => {
       return e.point !== 0;
     });
-  }
-  if (isErrorResultDetail) {
-    console.log("Cannot get quiz history", errorResultDetail);
-  }
 
   const data = resultFilter?.map((e, index) => {
     return {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -11,57 +11,34 @@ import {
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
-import {
-  useGetUserDataByUsernameApi,
-  useGetUserProfile,
-} from "../../hooks/user.hook";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { SharedElement } from "react-navigation-shared-element";
-import { Menu, MenuItem } from "react-native-material-menu";
-import { getUserFromDb } from "../../utils/app.util";
+import { useGetUserDataByUsernameApi } from "../../hooks/user.hook";
+import { Ionicons } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
-import { store } from "../../core/store/store";
 import moment from "moment";
 import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 import { useSelector } from "react-redux";
-import { AntDesign } from "@expo/vector-icons";
+import MaskedView from "@react-native-masked-view/masked-view";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
 
   let quizResult;
-  const {
-    data: quizHistoryData,
-    isSuccess: isSuccessQuizHistory,
-    isError: isErrorQuizHistory,
-    error: errorQuizHistory,
-  } = useGetFinishedQuizHistoryApi(userId);
+  const { data: quizHistoryData, isSuccess: isSuccessQuizHistory } =
+    useGetFinishedQuizHistoryApi(userId);
   const username = useSelector((state) => state.user.data.username);
   if (isSuccessQuizHistory) {
     quizResult = quizHistoryData;
-    console.log(quizResult);
-  }
-  if (isErrorQuizHistory) {
-    console.log("Cannot get quiz history", errorQuizHistory);
   }
 
-  const { data, isSuccess, isError, error } =
-    useGetUserDataByUsernameApi(username);
+  const { data, isSuccess } = useGetUserDataByUsernameApi(username);
 
   if (isSuccess) {
     profile = data.user_db;
-  }
-  if (isError) {
-    console.log("error", error);
   }
 
   useEffect(() => {
     if (isSuccess) {
       profile = data.user_db;
-    }
-    if (isError) {
-      console.log("error", error);
     }
   }, []);
 
@@ -74,27 +51,26 @@ const ProfileScreen = ({ navigation }) => {
         }}
       >
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: 8,
-              }}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 8,
+            }}
+          >
+            <MaskedView
+              style={{ flex: 1, height: 28 }}
+              maskElement={
+                <Text style={{ ...Fonts.bold22 }}>Quiz History</Text>
+              }
             >
-              <AntDesign name="medicinebox" size={24} color="black" />
-              <Text
-                style={{
-                  fontSize: 24,
-                  textAlign: "left",
-                  marginLeft: 8,
-                  fontWeight: "450",
-                  paddingVertical: 8,
-                }}
-              >
-                Quiz History
-              </Text>
-            </View>
+              <LinearGradient
+                start={{ x: 1, y: 0.2 }}
+                end={{ x: 1, y: 1 }}
+                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                style={{ flex: 1 }}
+              />
+            </MaskedView>
 
             {quizResult ? (
               // Render the list of quizzes if quizResult has data
@@ -195,9 +171,13 @@ const ProfileScreen = ({ navigation }) => {
               }}
             >
               <Image
-                source={{
-                  uri: profile?.avatar?.url,
-                }}
+                source={
+                  profile?.avatar?.url
+                    ? {
+                        uri: profile?.avatar?.url,
+                      }
+                    : require("../../assets/images/songsCoverPicks/coverImage1.png")
+                }
                 style={styles.image}
               />
             </View>
