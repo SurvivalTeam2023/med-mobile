@@ -25,8 +25,6 @@ export const useGetAudioForArtistAPI = (payload) =>
       const data = await getAudioForArtistAPI();
       if (data !== null) {
         return data;
-      } else {
-        console.log("Can not get audio List from API");
       }
     },
   });

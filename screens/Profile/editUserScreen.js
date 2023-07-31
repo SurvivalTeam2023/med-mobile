@@ -25,7 +25,6 @@ import moment from "moment";
 
 const EditUserScreen = ({ navigation, route }) => {
   const profile = route.params.profile;
-  console.log(profile);
   const [state, setState] = useState({
     firstName: null,
     lastName: null,

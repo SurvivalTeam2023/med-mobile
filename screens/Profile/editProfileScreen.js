@@ -108,7 +108,6 @@ const editProfileScreen = ({ navigation }) => {
   const handleUpdateAccountDetails = async (form) => {
     mutatee(form, {
       onSuccess: (data) => {
-        console.log("Success");
         refetch();
         setTimeout(() => {
           navigation.push(Navigate.BOTTOM_TAB_BAR);

@@ -40,9 +40,6 @@ const ResultScreen = ({ navigation }) => {
   if (isSuccessQuizHistory) {
     quizResult = quizHistoryData;
   }
-  if (isErrorQuizHistory) {
-    console.log("Cannot get quiz history", errorQuizHistory);
-  }
   const data = feelingFilter?.map((e, index) => {
     return {
       id: index + 1,
@@ -142,17 +139,19 @@ const ResultScreen = ({ navigation }) => {
               }}
             >
               <AntDesign name="medicinebox" size={24} color="black" />
-              <Text
-                style={{
-                  fontSize: 24,
-                  textAlign: "left",
-                  marginLeft: 8,
-                  fontWeight: "450",
-                  paddingVertical: 8,
-                }}
+              <MaskedView
+                style={{ flex: 1, height: 28 }}
+                maskElement={
+                  <Text style={{ ...Fonts.bold22 }}>Quiz History</Text>
+                }
               >
-                Quiz History
-              </Text>
+                <LinearGradient
+                  start={{ x: 1, y: 0.2 }}
+                  end={{ x: 1, y: 1 }}
+                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                  style={{ flex: 1 }}
+                />
+              </MaskedView>
             </View>
 
             {quizResult ? (

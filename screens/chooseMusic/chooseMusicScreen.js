@@ -30,9 +30,6 @@ const ChooseMusicScreen = ({ navigation }) => {
   if (isSuccess) {
     musicsList = data;
   }
-  if (isError) {
-    console.log("error", error);
-  }
 
   const createFavorite = () => {
     mutate(

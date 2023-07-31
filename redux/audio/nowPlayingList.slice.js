@@ -15,12 +15,11 @@ const beatifulAudioFormat = (audio) => {
   const audioInfo = audio["audio"] || audio;
   const artist = audioInfo["artist"];
   const audioFile = audioInfo["audioFile"][0];
-
   const latestFile = audioFile["file"];
   const formated = {
     artist: artist["artist_name"] || "Unknow",
     imageUrl: audioInfo["imageUrl"],
-    id: audioInfo["audioId"],
+    id: audioInfo["id"],
     likeNumber: audioInfo["liked"],
     name: audioInfo["name"],
     status: audioInfo["status"],
@@ -35,7 +34,6 @@ const reducer = createSlice({
   reducers: {
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
-      console.log(beatifulAudioFormat(action.payload));
       // Check if the new audio already exists in the playingList
       const isExisted = playingList?.findIndex(
         (audio) => audio.name === beatifulAudioFormat(action.payload).name

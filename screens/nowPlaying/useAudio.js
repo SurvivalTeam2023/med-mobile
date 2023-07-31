@@ -3,6 +3,7 @@ import { Audio } from "expo-av";
 import { useDispatch, useSelector } from "react-redux";
 import { MILLI_SECOND } from "../../constants/app";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { createHistoryApi } from "../../api/history.api";
 
 const useAudio = () => {
   const audioList = useSelector((state) => state.nowPlayingList.playingList);
@@ -35,8 +36,8 @@ const useAudio = () => {
 
   const loadSound = useCallback(async () => {
     if (!audioList || audioList.length === 0) return;
-    console.log(audioList);
-    const { url } = audioList[currentAudioIndex];
+    console.log(audioList[currentAudioIndex]);
+    const { url, id } = audioList[currentAudioIndex];
     try {
       console.log("Sound Loading...", url);
       const { sound } = await Audio.Sound.createAsync(
@@ -44,6 +45,9 @@ const useAudio = () => {
           uri: url,
         },
         { shouldPlay: true }
+      );
+      createHistoryApi({ audioId: id }).then((res) =>
+        console.log("log history")
       );
       setSound((prevSound) => {
         if (prevSound) {

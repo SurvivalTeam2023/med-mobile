@@ -134,7 +134,6 @@ const SignInScreen = ({ navigation }) => {
         )
         .then(function (response) {
           email = response.data["email"];
-          console.log("GOT SUBJECT_TOKEN: ", token);
           handleLoginWithGmail();
         });
     }

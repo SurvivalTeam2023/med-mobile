@@ -66,7 +66,6 @@ const CreateAudioArtistScreen = ({ navigation }) => {
         },
         onError: (error) => {
           alert("Some errors happened please try again later");
-          console.log("error", error);
         },
       }
     );

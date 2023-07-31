@@ -23,7 +23,7 @@ import { ActivityIndicator } from "react-native-paper";
 
 const subscriptionAllowsList = [
   "Download unlimited songs",
-  "View song lyrics while playing song",
+  "Remove ads",
   "High quality sound quality",
   "Add free song play",
 ];

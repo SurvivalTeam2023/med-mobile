@@ -77,12 +77,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorRecentlyPlay,
     error: errorRecentlyPlay,
   } = useGetRecentlyPlayHistoryAudioListAPI();
-  if (isSuccessRecentlyPlay) {
-    console.log("Get recently list successful");
-  }
-  if (isErrorRecentlyPlay) {
-    console.log("Get recently list failed", errorRecentlyPlay);
-  }
 
   //Recommend audio
   const {
@@ -91,12 +85,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorAudioList,
     error: errorAudioList,
   } = useGetAudioListAPI();
-  if (isSuccessAudioList) {
-    console.log("Get audio list successful");
-  }
-  if (isErrorAudioList) {
-    console.log("Get audio list failed", errorAudioList);
-  }
   //Favorited gendre (first time and user choose and user like gendre)
   const {
     data: dataFavGenre,
@@ -104,12 +92,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorFavGenre,
     error: errorFavGenre,
   } = useGetFavoriteGenreAPI();
-  if (isSuccessFavGenre) {
-    console.log("Get favorite genre successful");
-  }
-  if (isErrorFavGenre) {
-    console.log("Get favorite genre failed", errorFavGenre);
-  }
   //Favorited Playlist
   const { data: playListFavoritedData, isSuccess: isPlayListFavoritedSuccess } =
     useGetPlaylist({
@@ -413,7 +395,7 @@ const ExploreScreen = ({ navigation }) => {
         ) : (
           <FlatList
             data={dataRecentlyPlay}
-            keyExtractor={(item) => `${item.id}`}
+            // keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal
             showsHorizontalScrollIndicator={false}

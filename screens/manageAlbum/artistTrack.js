@@ -75,11 +75,7 @@ const artistTracksScreen = ({ navigation }) => {
       const filteredTracksList = dataTracksFromPlaylist["data"].items.filter(
         (item) => item.status === "ACTIVE"
       );
-      console.log("get audio list successfully", filteredTracksList);
       setTrackList(filteredTracksList);
-    }
-    if (isErrorTracksFromPlaylist) {
-      console.log("Error get audio list", errorTracksFromPlaylist);
     }
   }, [successTracksFromPlaylist]);
 
@@ -94,7 +90,6 @@ const artistTracksScreen = ({ navigation }) => {
       onSuccess: (data) => {},
       onError: (error) => {
         alert("Some errors happened please try again later");
-        console.log("error", error);
       },
     });
     updateAudioList();
