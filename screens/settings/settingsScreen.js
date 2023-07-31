@@ -24,20 +24,30 @@ import { userAction } from "../../redux/auth/auth.slice";
 import { configOptionsGlobal } from "../../utils/app.configuration";
 import { Navigate } from "../../constants/navigate";
 import { SUBSCRIPTION_STATUS } from "../../constants/app";
+import { fetchUserData } from "../../redux/auth/auth.action";
 
 const { width } = Dimensions.get("window");
-
+let userData;
 const SettingsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const access_token = store.getState().user.token;
+  const getUserDataAndDispatch = async () => {
+    const access_token = store.getState().user.token;
 
-  const userInfo = fetchUserData(access_token);
-  if (userInfo) {
-    dispatch(userAction.storeUser(userData));
-  }
-  const userData = useSelector((state) => state.user.data);
+    try {
+      const userInfo = await fetchUserData(access_token);
+      if (userInfo) {
+        userData = userInfo;
+        dispatch(userAction.storeUser(userInfo));
+      }
+    } catch (error) {
+      userData = useSelector((state) => state.user.data);
+      console.error("Error fetching user data:", error);
+    }
+  };
+  getUserDataAndDispatch();
   const audioConfig = store.getState().user.audio || { ...configOptionsGlobal };
-  const subscriptionStatus = userData["lastestSub"];
+
+  const subscriptionStatus = userData?.lastestSub || null;
   const [state, setState] = useState({
     email: userData?.email,
     password: "••••••••••",

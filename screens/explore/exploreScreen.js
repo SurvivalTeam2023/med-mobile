@@ -139,7 +139,6 @@ const ExploreScreen = ({ navigation }) => {
           {forYouInfo()}
           {playListInfo()}
           {albumsInfo()}
-          {topArtistInfo()}
         </ScrollView>
       </View>
     </SafeAreaView>
