@@ -18,6 +18,10 @@ import moment from "moment";
 import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 import { useSelector } from "react-redux";
 import MaskedView from "@react-native-masked-view/masked-view";
+import {
+  getUserDataByUsernameApi,
+  getUserProfileByUserIdApi,
+} from "../../api/user.api";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
@@ -216,14 +220,20 @@ const ProfileScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>
                     Firstname
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "100",
-                    }}
-                  >
-                    {profile.firstName}
-                  </Text>
+                  {profile.firstName ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "100",
+                      }}
+                    >
+                      {profile.firstName}
+                    </Text>
+                  ) : (
+                    <Text style={styles.noticeText}>
+                      Please update firstname
+                    </Text>
+                  )}
                 </View>
               </View>
               <View style={styles.wrapperUserInfo}>
@@ -231,14 +241,20 @@ const ProfileScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>
                     Lastname
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "100",
-                    }}
-                  >
-                    {profile.lastName}
-                  </Text>
+                  {profile.lastName ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "100",
+                      }}
+                    >
+                      {profile.lastName}
+                    </Text>
+                  ) : (
+                    <Text style={styles.noticeText}>
+                      Please update lastname
+                    </Text>
+                  )}
                 </View>
               </View>
               <View style={styles.wrapperUserInfo}>
@@ -246,14 +262,18 @@ const ProfileScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>
                     Gender
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "100",
-                    }}
-                  >
-                    {profile.gender}
-                  </Text>
+                  {profile.gender ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "100",
+                      }}
+                    >
+                      {profile.gender}
+                    </Text>
+                  ) : (
+                    <Text style={styles.noticeText}>Please update gender</Text>
+                  )}
                 </View>
               </View>
               <View style={styles.wrapperUserInfo}>
@@ -261,14 +281,18 @@ const ProfileScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>
                     Address
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "100",
-                    }}
-                  >
-                    {profile.address}
-                  </Text>
+                  {profile.address ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "100",
+                      }}
+                    >
+                      {profile.address}
+                    </Text>
+                  ) : (
+                    <Text style={styles.noticeText}>Please update address</Text>
+                  )}
                 </View>
               </View>
               <View style={styles.wrapperUserInfo}>
@@ -276,14 +300,18 @@ const ProfileScreen = ({ navigation }) => {
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>
                     Date of birth
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "100",
-                    }}
-                  >
-                    {moment(profile.dob).format("DD-MM-YYYY")}
-                  </Text>
+                  {profile.dob ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "100",
+                      }}
+                    >
+                      {moment(profile.dob).format("DD-MM-YYYY")}
+                    </Text>
+                  ) : (
+                    <Text style={styles.noticeText}>Please update dob</Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -385,6 +413,12 @@ const styles = StyleSheet.create({
     color: "#121212",
     alignItems: "flex-start",
     fontWeight: "bold",
+  },
+  noticeText: {
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "100",
+    paddingVertical: 8,
   },
   playlists: {
     color: "#121212",

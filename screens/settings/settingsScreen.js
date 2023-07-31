@@ -29,6 +29,12 @@ const { width } = Dimensions.get("window");
 
 const SettingsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const access_token = store.getState().user.token;
+
+  const userInfo = fetchUserData(access_token);
+  if (userInfo) {
+    dispatch(userAction.storeUser(userData));
+  }
   const userData = useSelector((state) => state.user.data);
   const audioConfig = store.getState().user.audio || { ...configOptionsGlobal };
   const subscriptionStatus = userData["lastestSub"];

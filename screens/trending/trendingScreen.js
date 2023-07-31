@@ -25,6 +25,7 @@ import { useGetGenreList } from "../../hooks/genre.hook";
 import { useGetAudioListAPI } from "../../hooks/audio.hook";
 import QuizScreen from "../quiz/quizScreen";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
+import { store } from "../../core/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -78,6 +79,7 @@ const topTrendingsList = [
 ];
 
 const TrendingScreen = ({ navigation }) => {
+  const userInfo = store.getState().user.data;
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   //Recommend audio
   const {
@@ -331,26 +333,47 @@ const TrendingScreen = ({ navigation }) => {
   }
 
   function startQuizTitle() {
-    return (
-      <View style={{ marginTop: 44 }}>
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.startQuizInfo}
-        >
-          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
-          <View style={{ alignItems: "center", paddingTop: 4 }}>
-            <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Quiz! This quiz is designed to help you
-              gain insight into your emotional landscape and explore the
-              complexities of your feelings.
-            </Text>
-          </View>
-        </LinearGradient>
-        {startQuizBtn()}
-      </View>
-    );
+    // Check if userInfo.dob has data
+    const hasDobData = !!userInfo.dob;
+
+    if (hasDobData) {
+      return (
+        <View style={{ marginTop: 44 }}>
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            style={styles.startQuizInfo}
+          >
+            <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+            <View style={{ alignItems: "center", paddingTop: 4 }}>
+              <Text style={styles.describeQuizText}>
+                Welcome to the Emotion Quiz! This quiz is designed to help you
+                gain insight into your emotional landscape and explore the
+                complexities of your feelings.
+              </Text>
+            </View>
+          </LinearGradient>
+          {startQuizBtn()}
+        </View>
+      );
+    } else {
+      // Render the Text element if userInfo.dob does not have data
+      return (
+        <View>
+          <Text
+            style={{
+              fontSize: 20,
+              textAlign: "center",
+              fontWeight: "100",
+              paddingVertical: 8,
+            }}
+          >
+            No quiz available. Please provide your date of birth in Profile.
+          </Text>
+        </View>
+      );
+    }
   }
 
   function startQuizBtn() {
