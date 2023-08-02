@@ -20,12 +20,13 @@ export const loginWithGoogleApi = (payload) => {
 
 export const registerUserApi = (payload) => {
   const url = "/user/user";
-  const { username, email, password, repassword } = payload;
+  const { username, email, password, repassword, dob } = payload;
   return CallAPI.post(url, {
     username,
     email,
     password,
     repassword,
+    dob,
   });
 };
 

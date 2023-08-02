@@ -15,10 +15,10 @@
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "app-bundle"
       },
       "env": {
-        "ANDROID_SDK_ROOT": "/Users/x2pherion/Library/Android/sdk"
+        "ANDROID_SDK_ROOT": "C:/Users/USER/AppData/Local/Android/Sdk"
       }
     }
   }

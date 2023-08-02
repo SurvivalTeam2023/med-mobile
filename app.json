@@ -4,6 +4,8 @@
     "slug": "med-app",
     "version": "1.1.0",
     "scheme": "com.med.vn",
+    "owner": "deeptryvcl",
+    "admin": "mediatation",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -14,14 +16,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "med-app",
       "buildNumber": "1.0.0"
     },
     "android": {
       "package": "com.med.medapp",
-      "versionCode": 2,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
@@ -35,7 +39,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "a241cd0e-c379-42e9-9a88-510cf079d74b"
+        "projectId": "8afc823c-8968-4046-a4a1-4e94d70cfb21"
       }
     }
   }
