@@ -30,6 +30,7 @@ const SignupScreen = ({ navigation }) => {
     emailAddress: null,
     password: null,
     rePassword: null,
+    dob: null,
   });
 
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -41,6 +42,7 @@ const SignupScreen = ({ navigation }) => {
         email: state["emailAddress"],
         password: state["password"],
         repassword: state["rePassword"],
+        dob: state["dob"],
       },
       {
         onSuccess: () => {
@@ -58,7 +60,8 @@ const SignupScreen = ({ navigation }) => {
       }
     );
   };
-  const { showPassword, username, emailAddress, password, rePassword } = state;
+  const { showPassword, username, emailAddress, password, rePassword, dob } =
+    state;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -114,6 +117,7 @@ const SignupScreen = ({ navigation }) => {
 
         {usernameTextField()}
         {emailAddressTextField()}
+        {dobTextField()}
         {passwordTextField()}
         {rePasswordTextField()}
         {signupButton()}
@@ -124,15 +128,15 @@ const SignupScreen = ({ navigation }) => {
     );
   }
 
-  function emailAddressTextField() {
+  function dobTextField() {
     return (
       <View style={styles.textFieldWrapStyle}>
         <MaterialIcons name="email" color={Colors.grayColor} size={20} />
         <TextInput
-          value={emailAddress}
-          onChangeText={(text) => updateState({ emailAddress: text })}
+          value={dob}
+          onChangeText={(text) => updateState({ dob: text })}
           selectionColor={Colors.grayColor}
-          placeholder="Email Address"
+          placeholder="Input dob format YYYY-MM-DD"
           placeholderTextColor={Colors.grayColor}
           style={{
             marginLeft: Sizes.fixPadding,
