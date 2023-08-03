@@ -33,15 +33,22 @@ const SubscribeScreen = ({ navigation }) => {
     data: subscribePackageListData,
     isSuccess: isSubscribePackageListSuccess,
   } = useGetSubscriptionType();
-  const { mutate, isSuccess, data } = useCreateSubscriptionApi();
+  const { mutate } = useCreateSubscriptionApi();
+
   const createSubscription = (planId) => {
-    mutate({
-      planId: planId,
-    });
-    if (isSuccess) {
-      const url = data["links"][0].href;
-      handleWebNavigation(url);
-    }
+    mutate(
+      { planId: planId },
+      {
+        onSuccess: (data) => {
+          const url = data["links"][0].href;
+          handleWebNavigation(url);
+          console.log("here");
+        },
+        onError: (error) => {
+          console.log("Create subscription failed", error);
+        },
+      }
+    );
   };
 
   return (
