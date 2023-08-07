@@ -3,6 +3,11 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: "Montserrat_Bold",
   },
+
+  light14: {
+    fontSize: 14,
+    fontFamily: "Montserrat_Light",
+  },
   light16: {
     fontSize: 16,
     fontFamily: "Montserrat_Light",

@@ -271,7 +271,7 @@ const QuestionScreen = () => {
           <Text
             style={{
               alignItems: "baseline",
-              paddingLeft: 8,
+              paddingLeft: 4,
               ...Fonts.light18,
             }}
           >
@@ -304,19 +304,19 @@ const QuestionScreen = () => {
               style={{
                 paddingTop: 5,
                 paddingLeft: 5,
+                display: "flex",
+                alignContent: "center",
               }}
             >
-              <View>
-                <Text
-                  style={{
-                    paddingLeft: 5,
-                    ...Fonts.light16,
-                    marginTop: 8,
-                  }}
-                >
-                  {item.option}
-                </Text>
-              </View>
+              <Text
+                style={{
+                  paddingLeft: 4,
+                  ...Fonts.light14,
+                  marginTop: 8,
+                }}
+              >
+                {item.option}
+              </Text>
             </View>
           </Pressable>
         ))}
@@ -341,7 +341,13 @@ const QuestionScreen = () => {
             </View>
           ) : null}
           <View>
-            <Text style={styles.titleQuizText}>
+            <Text
+              style={{
+                ...Fonts.blackColor16SemiBold,
+                marginTop: 4,
+                paddingLeft: 10,
+              }}
+            >
               {index + 1}/{totalQuestions}
             </Text>
           </View>
@@ -439,7 +445,7 @@ const styles = StyleSheet.create({
 
   titleQuizText: {
     ...Fonts.blackColor16SemiBold,
-    textAlign: "justify",
+    textAlign: "center",
     paddingLeft: 10,
   },
 
@@ -465,8 +471,7 @@ const styles = StyleSheet.create({
 
   questionInfo: {
     marginTop: 15,
-    justifyContent: "flex-start",
-    maxHeight: 50,
+    maxHeight: "95%",
   },
   answerInfo: {
     alignContent: "center",
@@ -474,7 +479,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     width: 380,
     marginHorizontal: 6,
-    height: 45,
+    height: 40,
     borderRadius: 20,
   },
   answerInfoChoose: {
@@ -484,7 +489,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     width: 380,
     backgroundColor: "green",
-    height: 45,
+    maxHeight: "30%",
+    height: 40,
     borderRadius: 20,
   },
   quizInfo: {
