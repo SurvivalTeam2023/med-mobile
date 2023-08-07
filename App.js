@@ -128,7 +128,14 @@ const App = () => {
               component={SelectGenreArtistScreen}
             />
             <Stack.Screen name="Question" component={QuestionScreen} />
-            <Stack.Screen name="Result" component={ResultScreen} />
+            <Stack.Screen
+              name="Result"
+              component={ResultScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.data;
+                return data;
+              }}
+            />
             <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
             <Stack.Screen name="IntroAi" component={IntroAIScreen} />
             <Stack.Screen

@@ -7,6 +7,14 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: "Montserrat_Light",
   },
+  light18: {
+    fontSize: 18,
+    fontFamily: "Montserrat_Light",
+  },
+  light20: {
+    fontSize: 20,
+    fontFamily: "Montserrat_Light",
+  },
   medium16: {
     fontSize: 16,
     fontFamily: "Montserrat_Medium",
@@ -32,6 +40,18 @@ export const Fonts = {
   bold35: {
     fontSize: 35,
     fontFamily: "Montserrat_Bold",
+  },
+  semiBold16: {
+    fontSize: 16,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  semiBold18: {
+    fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  semiBold20: {
+    fontSize: 20,
+    fontFamily: "Montserrat_SemiBold",
   },
 
   whiteColor20Light: {

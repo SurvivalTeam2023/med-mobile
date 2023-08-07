@@ -22,7 +22,9 @@ import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import MaskedView from "@react-native-masked-view/masked-view";
-const ResultScreen = ({ navigation }) => {
+const ResultScreen = ({ navigation, route }) => {
+  const result = route.params.data;
+  console.log(result);
   const userId = useSelector((state) => state.user.data.id);
   let quizResult;
 
@@ -33,13 +35,17 @@ const ResultScreen = ({ navigation }) => {
     error: errorQuizHistory,
   } = useGetFinishedQuizHistoryApi(userId);
 
-  let feeling = store.getState().question.result;
+  let feeling = result;
   let feelingFilter = feeling.filter((e) => {
     return e.point !== 0;
   });
 
   if (isSuccessQuizHistory) {
+    console.log("Get quiz History success");
     quizResult = quizHistoryData;
+  }
+  if (isErrorQuizHistory) {
+    console.log("Get quiz history failed", errorQuizHistory);
   }
   const data = feelingFilter?.map((e, index) => {
     return {
