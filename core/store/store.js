@@ -22,4 +22,3 @@ export const store = configureStore({
     nowPlayingList: nowPlayingListReducer,
   },
 });
-export const useAppDispatch = () => useDispatch;

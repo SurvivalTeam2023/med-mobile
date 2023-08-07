@@ -151,7 +151,9 @@ const QuestionScreen = () => {
 
   const setQuizStatus = () => {
     mutate(questionBankId, {
-      onSuccess: (data) => {},
+      onSuccess: (data) => {
+        console.log("Set quiz status success");
+      },
       onError: (error) => {
         console.log("Failing set quiz status", error);
       },
@@ -179,8 +181,8 @@ const QuestionScreen = () => {
       {
         onSuccess: (data) => {
           console.log("Save quiz result successfully");
-          dispatch(questionAction.storeQuizResult(data));
-          navigation.navigate("Result");
+          setQuizStatus();
+          navigation.navigate("Result", { data });
         },
         onError: (error) => {
           console.log("Failing save quiz result", error);
@@ -270,7 +272,7 @@ const QuestionScreen = () => {
             style={{
               alignItems: "baseline",
               paddingLeft: 8,
-              ...Fonts.blackColor18SemiBold,
+              ...Fonts.light18,
             }}
           >
             {questionData?.question}
@@ -308,7 +310,7 @@ const QuestionScreen = () => {
                 <Text
                   style={{
                     paddingLeft: 5,
-                    ...Fonts.blackColor16SemiBold,
+                    ...Fonts.light16,
                     marginTop: 8,
                   }}
                 >
@@ -364,7 +366,7 @@ const QuestionScreen = () => {
         {index + 1 >= questions.length ? (
           <Pressable
             onPress={() => {
-              getOptionAndQuestionBankId(), setQuizStatus();
+              getOptionAndQuestionBankId();
             }}
           >
             <LinearGradient
@@ -436,7 +438,7 @@ const styles = StyleSheet.create({
   },
 
   titleQuizText: {
-    ...Fonts.blackColor20Bold,
+    ...Fonts.blackColor16SemiBold,
     textAlign: "justify",
     paddingLeft: 10,
   },
@@ -472,7 +474,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     width: 380,
     marginHorizontal: 6,
-    height: 50,
+    height: 45,
     borderRadius: 20,
   },
   answerInfoChoose: {
@@ -482,7 +484,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     width: 380,
     backgroundColor: "green",
-    height: 50,
+    height: 45,
     borderRadius: 20,
   },
   quizInfo: {

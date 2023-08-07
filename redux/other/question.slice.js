@@ -3,8 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   questionBankId: null,
   answer: [],
-  isValidQuiz: null,
-  result: null,
 };
 
 const reducer = createSlice({
@@ -41,11 +39,10 @@ const reducer = createSlice({
     storeQuestionBankId: (state, action) => {
       state.questionBankId = action.payload;
     },
-    storeIsValidQuiz: (state, action) => {
-      state.isValidQuiz = action.payload;
-    },
-    storeQuizResult: (state, action) => {
-      state.result = action.payload;
+
+    resetState: (state, action) => {
+      state.questionBankId = null;
+      state.answer = [];
     },
   },
 });

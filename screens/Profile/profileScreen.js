@@ -56,83 +56,81 @@ const ProfileScreen = ({ navigation }) => {
         }}
       >
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 8,
-            }}
-          >
-            <MaskedView
-              style={{ flex: 1, height: 28 }}
-              maskElement={
-                <Text style={{ ...Fonts.bold22 }}>Quiz History</Text>
-              }
-            >
-              <LinearGradient
-                start={{ x: 1, y: 0.2 }}
-                end={{ x: 1, y: 1 }}
-                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-                style={{ flex: 1 }}
-              />
-            </MaskedView>
+          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+            <View>
+              <MaskedView
+                style={{ flex: 1, height: 28 }}
+                maskElement={
+                  <Text style={{ ...Fonts.bold22, paddingLeft: 8 }}>
+                    Quiz History
+                  </Text>
+                }
+              >
+                <LinearGradient
+                  start={{ x: 1, y: 0.2 }}
+                  end={{ x: 1, y: 1 }}
+                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                  style={{ flex: 1 }}
+                />
+              </MaskedView>
 
-            {quizResult ? (
-              // Render the list of quizzes if quizResult has data
-              quizResult.slice(0, 5).map((e) => (
-                <TouchableOpacity
-                  key={e.quizId}
-                  style={{
-                    borderTopWidth: 0.5,
-                    borderColor: "grey",
-                    paddingHorizontal: 8,
-                    paddingVertical: 12,
-                  }}
-                  onPress={() => {
-                    navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
-                      e,
-                    });
-                  }}
-                >
-                  <View
+              {quizResult ? (
+                // Render the list of quizzes if quizResult has data
+                quizResult.slice(0, 5).map((e) => (
+                  <TouchableOpacity
+                    key={e.quizId}
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      borderTopWidth: 0.5,
+                      borderColor: "grey",
+                      paddingHorizontal: 8,
+                      paddingVertical: 12,
+                    }}
+                    onPress={() => {
+                      navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
+                        e,
+                      });
                     }}
                   >
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      Symptoms:
-                    </Text>
-                    <Text style={{ fontSize: 14, marginTop: 2 }}>
-                      {e.mentalHealth.toString()}
-                    </Text>
-                  </View>
-                  <View style={{ marginTop: 4 }}>
-                    <Text
+                    <View
                       style={{
-                        fontSize: 10,
-                        color: "#aaa",
-                        fontStyle: "italic",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
-                      Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              // Render the "No data" text if quizResult is empty
-              <Text
-                style={{
-                  fontSize: 24,
-                  textAlign: "center",
-                  fontWeight: "450",
-                  paddingVertical: 8,
-                }}
-              >
-                No data
-              </Text>
-            )}
+                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                        Symptoms:
+                      </Text>
+                      <Text style={{ fontSize: 14, marginTop: 2 }}>
+                        {e.mentalHealth.toString()}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 4 }}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          color: "#aaa",
+                          fontStyle: "italic",
+                        }}
+                      >
+                        Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                // Render the "No data" text if quizResult is empty
+                <Text
+                  style={{
+                    fontSize: 24,
+                    textAlign: "center",
+                    fontWeight: "450",
+                    paddingVertical: 8,
+                  }}
+                >
+                  No data
+                </Text>
+              )}
+            </View>
           </View>
         </View>
       </View>
