@@ -92,7 +92,7 @@ const TrendingScreen = ({ navigation }) => {
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
   if (isSuccessAudioList) {
-    console.log("Rec audios successful", dataAudioList);
+    console.log("Rec audios successful");
   }
   if (isErrorAudioList) {
     console.log("Rec audios failed", errorAudioList);

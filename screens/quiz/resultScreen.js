@@ -67,19 +67,18 @@ const ResultScreen = ({ navigation, route }) => {
     return {
       id: index + 1,
       value: e.point * 0.01,
-      color: generateColor(),
+      color: getColorForDegree(e.degree),
       type:
         e.mentalHealth?.charAt(0).toUpperCase() +
         e.mentalHealth?.slice(1).toLowerCase(),
       percentage: e.point?.toFixed(2),
+      degree: e.degree,
     };
   });
 
   //None: #00CD00, Mild: #FFFF00, Moderate: #A67E00, Severe: #FF0000
 
   const progressQuiz = () => {
-    const degree = "Severe"; // Replace this with your actual degree value
-    const color = getColorForDegree(degree);
     return (
       <View
         style={{
@@ -132,7 +131,7 @@ const ResultScreen = ({ navigation, route }) => {
                     <ProgressBar
                       style={{ height: 20, borderRadius: 8, marginTop: 4 }}
                       progress={e.value}
-                      color={color}
+                      color={e.color}
                     />
                   </View>
                   <View style={{ flexDirection: "row", marginTop: 4 }}>
@@ -145,10 +144,10 @@ const ResultScreen = ({ navigation, route }) => {
                         fontWeight: "600",
                         fontStyle: "italic",
                         paddingLeft: 8,
-                        color: color,
+                        color: e.color,
                       }}
                     >
-                      {degree}
+                      {e.degree}
                     </Text>
                   </View>
                 </View>

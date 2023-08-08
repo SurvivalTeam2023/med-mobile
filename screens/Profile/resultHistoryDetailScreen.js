@@ -32,14 +32,28 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
     resultFilter = resultDetailData?.filter((e) => {
       return e.point !== 0;
     });
-
+    const getColorForDegree = (degree) => {
+      switch (degree) {
+        case "None":
+          return "#00CD00";
+        case "Mild":
+          return "#fdc500";
+        case "Moderate":
+          return "#fd8c00";
+        case "Severe":
+          return "#dc0000";
+        default:
+          return "black"; // Default color if degree doesn't match any case
+      }
+    };
     const dataFilter = resultFilter?.map((e, index) => {
       return {
         id: index + 1,
         value: e.percentage * 0.01,
-        color: generateColor(),
+        color: getColorForDegree(e.degree),
         type: e.mentalHealth,
         percentage: e.percentage.toFixed(2),
+        degree: e.degree,
       };
     });
     console.log(dataFilter);
@@ -76,7 +90,7 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                 }}
               >
                 {dataFilter?.map((e) => (
-                  <View key={e.id}>
+                  <View key={e.id} style={{ marginTop: 18 }}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -84,7 +98,7 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                         alignContent: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 18, fontWeight: "400" }}>
+                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
                         {e.type}
                       </Text>
                       <Text
@@ -103,6 +117,22 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                         progress={e.value}
                         color={e.color}
                       />
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: 4 }}>
+                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                        Degree:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: "600",
+                          fontStyle: "italic",
+                          paddingLeft: 8,
+                          color: e.color,
+                        }}
+                      >
+                        {e.degree}
+                      </Text>
                     </View>
                   </View>
                 ))}
