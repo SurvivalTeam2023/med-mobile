@@ -27,5 +27,6 @@ export const Navigate = {
   EDIT_USER_SCREEN: "EditUser",
   RESULT_HISTORY_DETAIL: "ResultHistoryDetail",
   SEARCH_SCREEN: "Search",
+  PROFILE_SCREEN: "Profile",
   QUESTION_SCREEN: "Question",
 };

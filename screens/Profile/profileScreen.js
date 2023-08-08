@@ -18,15 +18,12 @@ import moment from "moment";
 import { useGetFinishedQuizHistoryApi } from "../../hooks/question.hook";
 import { useSelector } from "react-redux";
 import MaskedView from "@react-native-masked-view/masked-view";
-import {
-  getUserDataByUsernameApi,
-  getUserProfileByUserIdApi,
-} from "../../api/user.api";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import { store } from "../../core/store/store";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
-  console.log(store.getState().user.data);
   let quizResult;
   const { data: quizHistoryData, isSuccess: isSuccessQuizHistory } =
     useGetFinishedQuizHistoryApi(userId);
@@ -144,7 +141,6 @@ const ProfileScreen = ({ navigation }) => {
         <FlatList
           ListHeaderComponent={
             <View>
-              {cornerImage()}
               {header()}
               {Profile()}
               {quizHistory()}
@@ -176,10 +172,10 @@ const ProfileScreen = ({ navigation }) => {
               <Image
                 source={
                   profile?.avatar?.url
-                    ? {
-                        uri: profile?.avatar?.url,
+                    ? { uri: profile?.avatar?.url }
+                    : {
+                        uri: "https://e-s-center.kz/images/articles/123123.png",
                       }
-                    : require("../../assets/images/songsCoverPicks/coverImage1.png")
                 }
                 style={styles.image}
               />
@@ -337,6 +333,21 @@ const ProfileScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.pop()}>
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={24}
+            colors={[
+              { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+              { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+            ]}
+            style={{
+              marginRight: Sizes.fixPadding - 5.0,
+              marginTop: Sizes.fixPadding - 5.0,
+              alignSelf: "center",
+            }}
+          />
+        </TouchableOpacity>
         <MaskedView
           style={{ flex: 1, height: 28 }}
           maskElement={<Text style={{ ...Fonts.bold22 }}>Profile</Text>}
@@ -365,7 +376,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 30.0,
+    marginTop: Sizes.fixPadding,
     marginBottom: Sizes.fixPadding + 5.0,
   },
   userInfo: {

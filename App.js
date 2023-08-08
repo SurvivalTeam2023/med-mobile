@@ -50,6 +50,7 @@ import PlaylistAudioScreen from "./screens/tracks/playlistAudioScreen";
 import ResultHistoryDetailScreen from "./screens/Profile/resultHistoryDetailScreen";
 import { navigationRef } from "./core/RootNavigation";
 import ToastManager from "toastify-react-native";
+import ProfileScreen from "./screens/Profile/profileScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();

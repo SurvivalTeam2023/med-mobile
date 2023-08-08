@@ -49,6 +49,7 @@ const SettingsScreen = ({ navigation }) => {
 
   const subscriptionStatus = userData?.lastestSub || null;
   const [state, setState] = useState({
+    username: userData?.username,
     email: userData?.email,
     password: "••••••••••",
     sleepTime: false,
@@ -78,6 +79,7 @@ const SettingsScreen = ({ navigation }) => {
     dispatch(userAction.logout());
   };
   const {
+    username,
     email,
     password,
     sleepTime,
@@ -118,8 +120,6 @@ const SettingsScreen = ({ navigation }) => {
           {playBackInfo()}
           {divider()}
           {generalInfo()}
-          {divider()}
-          {connectionsInfo()}
           {divider()}
           {logoutText()}
         </ScrollView>
@@ -468,7 +468,6 @@ const SettingsScreen = ({ navigation }) => {
       <View style={{ marginHorizontal: Sizes.fixPadding * 2.0 }}>
         <Text style={{ ...Fonts.blackColor15Bold }}>GENERAL</Text>
         {darkModeInfo()}
-        {playBackWhenDeviceConnectInfo()}
       </View>
     );
   }
@@ -526,14 +525,7 @@ const SettingsScreen = ({ navigation }) => {
     return (
       <View style={{ marginHorizontal: Sizes.fixPadding * 2.0 }}>
         <Text style={{ ...Fonts.blackColor15Bold }}>PLAYBACK</Text>
-        {sleepTimeInfo()}
-        {musicQualityInfo()}
         {autoPlayInfo()}
-        {audioNormalizationInfo()}
-        {SmartVolumeInfo()}
-        {controlMusicFromLockInfo()}
-        {skipSlienceBetweenTracksInfo()}
-        {musicWithScreenOffInfo()}
       </View>
     );
   }
@@ -790,7 +782,7 @@ const SettingsScreen = ({ navigation }) => {
                 resizeMode="contain"
               >
                 <Text style={{ ...Fonts.whiteColor18Bold }}>
-                  Your are Subscripted!
+                  You are Subscribed!
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
@@ -906,7 +898,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text
           style={{
             marginVertical: Sizes.fixPadding,
-            ...Fonts.blackColor15Bold,
+            ...Fonts.blackColor18Bold,
           }}
         >
           USER ACCOUNT
@@ -919,13 +911,17 @@ const SettingsScreen = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ ...Fonts.blackColor13SemiBold }}>{email}</Text>
-          <Text
-            onPress={() => updateState({ showEmailDialog: true })}
-            style={{ ...Fonts.grayColor12SemiBold }}
-          >
-            EDIT
-          </Text>
+          <Text style={{ ...Fonts.semiBold16 }}>{username}</Text>
+        </View>
+        <View
+          style={{
+            marginBottom: Sizes.fixPadding - 5.0,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ ...Fonts.semiBold16 }}>{email}</Text>
         </View>
         <View
           style={{
@@ -934,12 +930,11 @@ const SettingsScreen = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ ...Fonts.blackColor13SemiBold }}>{password}</Text>
           <Text
             onPress={() => updateState({ showPasswordDialog: true })}
             style={{ ...Fonts.grayColor12SemiBold }}
           >
-            EDIT
+            Change password
           </Text>
         </View>
       </View>
@@ -965,7 +960,7 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Settings</Text>}
+          maskElement={<Text style={{ ...Fonts.bold24 }}>Settings</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}

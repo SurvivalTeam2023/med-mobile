@@ -36,6 +36,7 @@ const ResultScreen = ({ navigation, route }) => {
   } = useGetFinishedQuizHistoryApi(userId);
 
   let feeling = result;
+
   let feelingFilter = feeling.filter((e) => {
     return e.point !== 0;
   });
@@ -47,6 +48,21 @@ const ResultScreen = ({ navigation, route }) => {
   if (isErrorQuizHistory) {
     console.log("Get quiz history failed", errorQuizHistory);
   }
+
+  const getColorForDegree = (degree) => {
+    switch (degree) {
+      case "None":
+        return "#00CD00";
+      case "Mild":
+        return "#fdc500";
+      case "Moderate":
+        return "#fd8c00";
+      case "Severe":
+        return "#dc0000";
+      default:
+        return "black"; // Default color if degree doesn't match any case
+    }
+  };
   const data = feelingFilter?.map((e, index) => {
     return {
       id: index + 1,
@@ -59,7 +75,11 @@ const ResultScreen = ({ navigation, route }) => {
     };
   });
 
+  //None: #00CD00, Mild: #FFFF00, Moderate: #A67E00, Severe: #FF0000
+
   const progressQuiz = () => {
+    const degree = "Severe"; // Replace this with your actual degree value
+    const color = getColorForDegree(degree);
     return (
       <View
         style={{
@@ -99,7 +119,7 @@ const ResultScreen = ({ navigation, route }) => {
                       alignContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: "400" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
                       {e.type}
                     </Text>
                     <Text
@@ -112,8 +132,24 @@ const ResultScreen = ({ navigation, route }) => {
                     <ProgressBar
                       style={{ height: 20, borderRadius: 8, marginTop: 4 }}
                       progress={e.value}
-                      color={e.color}
+                      color={color}
                     />
+                  </View>
+                  <View style={{ flexDirection: "row", marginTop: 4 }}>
+                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                      Degree:
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "600",
+                        fontStyle: "italic",
+                        paddingLeft: 8,
+                        color: color,
+                      }}
+                    >
+                      {degree}
+                    </Text>
                   </View>
                 </View>
               ))}
@@ -283,7 +319,7 @@ function cornerImage() {
 }
 const styles = StyleSheet.create({
   progressBar: {
-    marginTop: 12,
+    marginTop: 18,
   },
   resultInfo: {
     paddingVertical: Sizes.fixPadding + 50.0,

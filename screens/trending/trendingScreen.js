@@ -26,7 +26,7 @@ import { useGetAudioListAPI } from "../../hooks/audio.hook";
 import QuizScreen from "../quiz/quizScreen";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
 import { store } from "../../core/store/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const { width } = Dimensions.get("window");
@@ -81,7 +81,7 @@ const topTrendingsList = [
 ];
 
 const TrendingScreen = ({ navigation }) => {
-  const userInfo = store.getState().user.data;
+  const userInfo = useSelector((state) => state.user.data);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   const dispatch = useDispatch();
   //Recommend audio
@@ -114,7 +114,6 @@ const TrendingScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
-          {cornerImage()}
           {header()}
           {trendingCategories()}
           {selectedCategory === "Genre" && genre()}
@@ -433,17 +432,33 @@ const TrendingScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
+        <TouchableOpacity
+          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+        >
+          <Image
+            source={
+              userInfo?.avatar?.url
+                ? { uri: userInfo?.avatar?.url }
+                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+            }
+            style={styles.image}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
 };
 
 const styles = StyleSheet.create({
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 90,
+  },
   headerWrapStyle: {
     flexDirection: "row",
-    alignItems: "center",
     marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 30.0,
+    marginTop: Sizes.fixPadding,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,

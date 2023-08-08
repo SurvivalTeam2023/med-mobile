@@ -78,20 +78,13 @@ const BottomTabBarScreen = ({ navigation }) => {
       index: 2,
       icon: "local-fire-department",
     },
-    // {
-    //   index: 3,
-    //   icon: "library-music",
-    // },
+
     {
-      index: 4,
-      icon: "supervised-user-circle",
-    },
-    {
-      index: 5,
+      index: 3,
       icon: "camera-alt",
     },
     {
-      index: 6,
+      index: 4,
       icon: "settings",
     },
   ];
@@ -105,10 +98,6 @@ const BottomTabBarScreen = ({ navigation }) => {
         ) : currentIndex == 2 ? (
           <TrendingScreen navigation={navigation} />
         ) : currentIndex == 3 ? (
-          <LibraryScreen navigation={navigation} />
-        ) : currentIndex == 4 ? (
-          <ProfileScreen navigation={navigation} />
-        ) : currentIndex == 5 ? (
           <IntroAIScreen navigation={navigation} />
         ) : (
           <SettingsScreen navigation={navigation} />

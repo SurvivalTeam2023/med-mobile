@@ -28,7 +28,7 @@ import {
   useGetRecentlyPlayHistoryAudioListAPI,
 } from "../../hooks/audio.hook";
 import { TextInput } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 let recentlyPlayedList = null;
@@ -65,6 +65,7 @@ let topArtistList = [
 
 //Random playlist
 const ExploreScreen = ({ navigation }) => {
+  const userData = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
@@ -130,7 +131,6 @@ const ExploreScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
-          {cornerImage()}
           {header()}
           {searchField()}
           {recommendedInfo()}
@@ -410,7 +410,6 @@ const ExploreScreen = ({ navigation }) => {
 
   function handleNavigateNowPlayling(audio) {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
-    console.log(audio);
     navigation.push("NowPlaying", { audio });
   }
 
@@ -582,7 +581,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={styles.headerWrapStyle}>
         <MaskedView
-          style={{ flex: 1, height: 28 }}
+          style={{ flex: 1 }}
           maskElement={<Text style={{ ...Fonts.bold22 }}>Explore</Text>}
         >
           <LinearGradient
@@ -592,83 +591,33 @@ const ExploreScreen = ({ navigation }) => {
             style={{ flex: 1 }}
           />
         </MaskedView>
-        <Menu
-          visible={showOptions}
-          style={{ height: 150.0, backgroundColor: Colors.whiteColor }}
-          anchor={
-            <MaterialIcons
-              name="more-vert"
-              size={24}
-              color={Colors.blackColor}
-              style={{ alignSelf: "flex-end" }}
-              onPress={() => updateState({ showOptions: true })}
-            />
-          }
-          onRequestClose={() => updateState({ showOptions: false })}
+        <TouchableOpacity
+          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
         >
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            View By Album Artist
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 40.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Sound Quality and Effects
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 70.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Tracks
-          </MenuItem>
-          <MenuItem
-            pressColor="transparent"
-            textStyle={{
-              marginRight: Sizes.fixPadding * 3.0,
-              marginTop: Sizes.fixPadding - 100.0,
-              ...Fonts.blackColor12SemiBold,
-            }}
-            onPress={() => {
-              updateState({ showOptions: false });
-            }}
-          >
-            Contact Us
-          </MenuItem>
-        </Menu>
+          <Image
+            source={
+              userData?.avatar?.url
+                ? { uri: userData?.avatar?.url }
+                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+            }
+            style={styles.image}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
 };
 
 const styles = StyleSheet.create({
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 90,
+  },
   headerWrapStyle: {
     flexDirection: "row",
-    alignItems: "center",
     marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 30.0,
+    marginTop: Sizes.fixPadding,
   },
   searchFieldWrapStyle: {
     backgroundColor: Colors.lightGrayColor,

@@ -3,6 +3,10 @@ export const Fonts = {
     fontSize: 16,
     fontFamily: "Montserrat_Bold",
   },
+  semiBold16: {
+    fontSize: 16,
+    fontFamily: "Montserrat_SemiBold",
+  },
 
   light14: {
     fontSize: 14,
@@ -30,6 +34,10 @@ export const Fonts = {
   },
   bold22: {
     fontSize: 22,
+    fontFamily: "Montserrat_Bold",
+  },
+  bold24: {
+    fontSize: 24,
     fontFamily: "Montserrat_Bold",
   },
   bold26: {
@@ -240,8 +248,8 @@ export const Fonts = {
 
   grayColor12SemiBold: {
     color: "#9E9E9E",
-    fontSize: 12,
-    fontFamily: "Montserrat_SemiBold",
+    fontSize: 16,
+    fontFamily: "Montserrat_Bold",
   },
 
   grayColor13SemiBold: {
