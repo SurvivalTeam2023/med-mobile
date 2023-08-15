@@ -13,6 +13,7 @@ import {
   ImageBackground,
   Pressable,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -33,56 +34,11 @@ const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 
-const songOptionsList = [
-  "Share",
-  "Track Details",
-  "Add to Playlist",
-  "Album",
-  "Artist",
-  "Set as",
-];
-
-const topTrendingsList = [
-  {
-    id: "1",
-    image: require("../../assets/images/songsCoverPicks/coverImage5.png"),
-    songName: "Shape of you",
-    artist: "Ed shreean",
-    plays: "2.5M",
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/songsCoverPicks/coverImage6.png"),
-    songName: "Waka waka",
-    artist: "Shakira",
-    plays: "2.2M",
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/songsCoverPicks/coverImage7.png"),
-    songName: "Let her go",
-    artist: "Passenger",
-    plays: "2.0M",
-  },
-  {
-    id: "4",
-    image: require("../../assets/images/songsCoverPicks/coverImage8.png"),
-    songName: "See you again",
-    artist: "Wiz khalifa",
-    plays: "1.5M",
-  },
-  {
-    id: "5",
-    image: require("../../assets/images/songsCoverPicks/coverImage9.png"),
-    songName: "Preety Girl",
-    artist: "Maggie Lindemann",
-    plays: "1.0M",
-  },
-];
-
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
+  const [modalVisible, setModalVisible] = useState(false);
+  console.log(genreData);
   const dispatch = useDispatch();
   //Recommend audio
   const {
@@ -129,64 +85,66 @@ const TrendingScreen = ({ navigation }) => {
   }
   function genre() {
     const renderItem = ({ item }) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() =>
-          navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
-            genreId: item.id,
-          })
-        }
+      <View
+        style={{
+          backgroundColor: "#eeeeee",
+          borderRadius: 8,
+        }}
       >
-        <ImageBackground
-          source={{ uri: `${item?.image}` }}
-          style={{
-            width: 125,
-            height: 120.0,
-            marginRight: Sizes.fixPadding,
-            marginTop: Sizes.fixPadding,
-          }}
-          borderRadius={Sizes.fixPadding - 5.0}
-        >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,0.5)", "rgba(41, 10, 89, 0.5)"]}
-            style={{ flex: 1, borderRadius: Sizes.fixPadding - 5.0 }}
-          >
-            <Text
-              style={{
-                padding: Sizes.fixPadding - 5.0,
-                ...Fonts.whiteColor12Medium,
-              }}
-            >
-              {item.name}
-            </Text>
-          </LinearGradient>
-        </ImageBackground>
-      </TouchableOpacity>
+        <View style={{ paddingHorizontal: 8, paddingVertical: 8 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 4 }}>
+            <View style={{ paddingHorizontal: 8 }}>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() =>
+                    navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
+                      genreId: item.id,
+                    })
+                  }
+                  style={{ paddingTop: 12, alignItems: "center" }}
+                >
+                  <ImageBackground
+                    source={{ uri: `${item?.image}` }}
+                    style={{
+                      width: 125,
+                      height: 120.0,
+                    }}
+                    borderRadius={Sizes.fixPadding - 5.0}
+                  ></ImageBackground>
+                </TouchableOpacity>
+              </View>
+              <Text
+                style={{
+                  paddingTop: 12,
+                  paddingBottom: 8,
+                  ...Fonts.light14,
+                }}
+              >
+                {item.desc}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
     );
 
     return (
       <View>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Genres </Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {genreData ? (
           <FlatList
             data={genreData}
-            numColumns={3}
+            numColumns={1}
             keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal={false}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               paddingLeft: 8,
-              width: "50%",
+              width: "100%",
             }}
           />
         ) : (
@@ -450,11 +408,53 @@ const TrendingScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  colorDot: {
+    borderRadius: "50%",
+    backgroundColor: "red", // You can change the color here
+    marginRight: 8, // Adjust this value as needed
+  },
   image: {
     width: 40,
     height: 40,
     borderRadius: 90,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    marginVertical: Sizes.fixPadding * 25,
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingVertical: 10,
+    width: 300,
+    height: 50,
+    borderWidth: 1, // Add border width
+    borderColor: "#000",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    marginBottom: 12,
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
   headerWrapStyle: {
     flexDirection: "row",
     marginHorizontal: Sizes.fixPadding * 2.0,
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.blackColor15Bold,
+    ...Fonts.blackColor16Bold,
   },
   describeQuizText: {
     ...Fonts.whiteColor16Light,
