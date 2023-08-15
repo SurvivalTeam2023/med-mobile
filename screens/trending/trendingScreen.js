@@ -38,7 +38,6 @@ const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(genreData);
   const dispatch = useDispatch();
   //Recommend audio
   const {
