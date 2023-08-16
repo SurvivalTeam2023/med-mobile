@@ -41,7 +41,6 @@ const IllnessDetailScreen = ({ navigation, route }) => {
           style={{
             backgroundColor: "#eeeeee",
             borderRadius: 10,
-            paddingTop: 24,
           }}
         >
           <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>

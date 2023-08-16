@@ -70,7 +70,6 @@ const ExploreScreen = ({ navigation }) => {
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
-
   //Recently played
   const {
     data: dataRecentlyPlay,
@@ -171,11 +170,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Top Tracks</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         <FlatList
           data={topArtistList}
@@ -220,11 +214,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Genres</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {isAllGendreSuccess ? (
           <FlatList
@@ -275,11 +264,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Favorited Playlist</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {isPlayListFavoritedSuccess ? (
           <FlatList
@@ -307,11 +291,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Favorited Genre</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {isSuccessFavGenre ? (
           dataFavGenre?.map((item) => (
@@ -381,11 +360,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Recently Played</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {!dataRecentlyPlay ? (
           <View style={styles.container}>
@@ -444,11 +418,6 @@ const ExploreScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Audios</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {!dataAudioList ? (
           <View style={styles.container}>
@@ -509,11 +478,6 @@ const ExploreScreen = ({ navigation }) => {
       <View>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Recommended Genres For You</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {isRecommendedGenreSucess ? (
           <FlatList
