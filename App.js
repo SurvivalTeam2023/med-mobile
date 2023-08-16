@@ -51,6 +51,7 @@ import ResultHistoryDetailScreen from "./screens/Profile/resultHistoryDetailScre
 import { navigationRef } from "./core/RootNavigation";
 import ToastManager from "toastify-react-native";
 import ProfileScreen from "./screens/Profile/profileScreen";
+import IllnessDetailScreen from "./screens/Profile/illnessDetailScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -132,6 +133,14 @@ const App = () => {
             <Stack.Screen
               name="Result"
               component={ResultScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.data;
+                return data;
+              }}
+            />
+            <Stack.Screen
+              name="IllnessDetail"
+              component={IllnessDetailScreen}
               sharedElements={(route, otherRoute, showing) => {
                 const data = route.params.data;
                 return data;

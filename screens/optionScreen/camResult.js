@@ -79,7 +79,7 @@ const CamResultScreen = ({ navigation }) => {
                 style={{
                   fontSize: 24,
                   textAlign: "center",
-                  fontWeight: "450",
+                  fontWeight: "400",
                   paddingVertical: 8,
                   borderBottomWidth: 0.5,
                   borderColor: "#ddd",

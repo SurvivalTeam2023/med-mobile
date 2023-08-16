@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
@@ -16,9 +17,10 @@ import { generateColor } from "../../utils/app.util";
 import { ProgressBar } from "react-native-paper";
 import { useGetResultByIdApi } from "../../hooks/question.hook";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { Navigate } from "../../constants/navigate";
+import { MaterialIcons } from "@expo/vector-icons";
 const ResultHistoryDetailScreen = ({ navigation, route }) => {
   const quizId = route.params.e.id;
-  console.log(quizId);
   let quizResult;
   let resultFilter;
   const {
@@ -49,14 +51,16 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
     const dataFilter = resultFilter?.map((e, index) => {
       return {
         id: index + 1,
-        value: e.percentage * 0.01,
-        color: getColorForDegree(e.degree),
-        type: e.mentalHealth,
-        percentage: e.percentage.toFixed(2),
-        degree: e.degree,
+        value: e?.percentage * 0.01,
+        color: getColorForDegree(e?.degree),
+        type: e?.mentalHealth,
+        percentage: e.percentage?.toFixed(2),
+        degree: e?.degree,
+        desc: e?.degreeDesc,
+        mentalHealthDesc: e?.mentalHealthDesc,
+        mentalHealth: e?.mentalHealth,
       };
     });
-    console.log(dataFilter);
 
     const progressQuiz = () => {
       return (
@@ -69,13 +73,20 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
         >
           <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
             <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-              <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignContent: "center",
+                  paddingTop: 8,
+                }}
+              >
+                {backBtn()}
                 <Text
                   style={{
                     fontSize: 24,
                     textAlign: "center",
-                    fontWeight: "450",
-                    paddingVertical: 8,
+                    fontWeight: "400",
+                    paddingLeft: 105,
                     borderBottomWidth: 1,
                     borderColor: "#ddd",
                   }}
@@ -90,7 +101,18 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                 }}
               >
                 {dataFilter?.map((e) => (
-                  <View key={e.id} style={{ marginTop: 18 }}>
+                  <Pressable
+                    key={e.id}
+                    style={{ marginTop: 18 }}
+                    onPress={() => {
+                      navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
+                        data: {
+                          mentalHealth: e.mentalHealth,
+                          mentalHealthDesc: e.mentalHealthDesc,
+                        },
+                      });
+                    }}
+                  >
                     <View
                       style={{
                         flexDirection: "row",
@@ -113,7 +135,11 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                     </View>
                     <View>
                       <ProgressBar
-                        style={{ height: 20, borderRadius: 8, marginTop: 4 }}
+                        style={{
+                          height: 20,
+                          borderRadius: 8,
+                          marginTop: 4,
+                        }}
                         progress={e.value}
                         color={e.color}
                       />
@@ -134,12 +160,33 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                         {e.degree}
                       </Text>
                     </View>
-                  </View>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "600",
+                        fontStyle: "italic",
+                        paddingTop: 4,
+                        color: e.color,
+                      }}
+                    >
+                      {e.desc}
+                    </Text>
+                  </Pressable>
                 ))}
               </View>
             </View>
           </View>
         </View>
+      );
+    };
+    const backBtn = () => {
+      return (
+        <MaterialIcons
+          name="keyboard-arrow-left"
+          color={Colors.blackColor}
+          size={25}
+          onPress={() => navigation.pop()}
+        />
       );
     };
     return (
@@ -151,7 +198,6 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
           >
-            {cornerImage()}
             <ScrollView
               scrollEnabled={false}
               contentContainerStyle={{

@@ -73,6 +73,9 @@ const ResultScreen = ({ navigation, route }) => {
         e.mentalHealth?.slice(1).toLowerCase(),
       percentage: e.point?.toFixed(2),
       degree: e.degree,
+      desc: e?.degreeDesc,
+      mentalHealthDesc: e?.mentalHealthDesc,
+      mentalHealth: e?.mentalHealth,
     };
   });
 
@@ -94,7 +97,7 @@ const ResultScreen = ({ navigation, route }) => {
                 style={{
                   fontSize: 24,
                   textAlign: "center",
-                  fontWeight: "450",
+                  fontWeight: "400",
                   paddingVertical: 8,
                   borderBottomWidth: 1,
                   borderColor: "#ddd",
@@ -110,7 +113,18 @@ const ResultScreen = ({ navigation, route }) => {
               }}
             >
               {data?.map((e) => (
-                <View key={e.id} style={styles.progressBar}>
+                <Pressable
+                  key={e.id}
+                  style={{ marginTop: 18 }}
+                  onPress={() => {
+                    navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
+                      data: {
+                        mentalHealth: e.mentalHealth,
+                        mentalHealthDesc: e.mentalHealthDesc,
+                      },
+                    });
+                  }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
@@ -122,14 +136,22 @@ const ResultScreen = ({ navigation, route }) => {
                       {e.type}
                     </Text>
                     <Text
-                      style={{ fontSize: 14, fontWeight: "400", marginTop: 4 }}
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "400",
+                        marginTop: 4,
+                      }}
                     >
                       {e.percentage}%
                     </Text>
                   </View>
                   <View>
                     <ProgressBar
-                      style={{ height: 20, borderRadius: 8, marginTop: 4 }}
+                      style={{
+                        height: 20,
+                        borderRadius: 8,
+                        marginTop: 4,
+                      }}
                       progress={e.value}
                       color={e.color}
                     />
@@ -150,7 +172,18 @@ const ResultScreen = ({ navigation, route }) => {
                       {e.degree}
                     </Text>
                   </View>
-                </View>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      fontStyle: "italic",
+                      paddingTop: 4,
+                      color: e.color,
+                    }}
+                  >
+                    {e.desc}
+                  </Text>
+                </Pressable>
               ))}
             </View>
           </View>
@@ -244,7 +277,7 @@ const ResultScreen = ({ navigation, route }) => {
                 style={{
                   fontSize: 24,
                   textAlign: "center",
-                  fontWeight: "450",
+                  fontWeight: "400",
                   paddingVertical: 8,
                 }}
               >

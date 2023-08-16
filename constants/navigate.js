@@ -29,4 +29,5 @@ export const Navigate = {
   SEARCH_SCREEN: "Search",
   PROFILE_SCREEN: "Profile",
   QUESTION_SCREEN: "Question",
+  ILLNESS_DETAIL_SCREEN: "IllnessDetail",
 };
