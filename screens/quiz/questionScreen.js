@@ -182,6 +182,7 @@ const QuestionScreen = () => {
         onSuccess: (data) => {
           console.log("Save quiz result successfully");
           setQuizStatus();
+          dispatch(questionAction.resetState());
           navigation.navigate("Result", { data });
         },
         onError: (error) => {

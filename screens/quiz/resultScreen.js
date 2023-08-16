@@ -298,7 +298,6 @@ const ResultScreen = ({ navigation, route }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          {cornerImage()}
           <ScrollView
             scrollEnabled={false}
             contentContainerStyle={{

@@ -31,6 +31,7 @@ import axios from "axios";
 import { Navigate } from "../../constants/navigate";
 import { fetchUserData } from "../../redux/auth/auth.action";
 import { Toast } from "toastify-react-native";
+import { storeDisclaimerToLocal } from "../../utils/app.local_handler";
 
 const SignInScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -84,6 +85,8 @@ const SignInScreen = ({ navigation }) => {
           const userData = await fetchUserData(access_token);
           if (userData) {
             dispatch(userAction.storeUser(userData));
+            const isRead = false;
+            storeDisclaimerToLocal(isRead);
             Toast.success("Welcome " + state["userName"]);
             navigation.push(Navigate.OPTION_SCREEN);
           } else {
