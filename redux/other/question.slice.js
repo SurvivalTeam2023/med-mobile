@@ -40,10 +40,7 @@ const reducer = createSlice({
       state.questionBankId = action.payload;
     },
 
-    resetState: (state, action) => {
-      state.questionBankId = null;
-      state.answer = [];
-    },
+    resetState: () => initialState, // Simply return the initialState
   },
 });
 

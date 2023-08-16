@@ -30,7 +30,28 @@ export const getUserFromLocal = async () => {
     console.log("fetch_user_local_fail");
   }
 };
+export const getDisclaimerFromLocal = async () => {
+  try {
+    const value = await AsyncStorage.getItem("Disclaimer");
+    if (value !== null) {
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        console.log("Failed to parse disclaimer:", error);
+      }
+    }
+  } catch (e) {
+    console.log("fetch_user_local_fail");
+  }
+};
 
+export const storeDisclaimerToLocal = async (payload) => {
+  try {
+    await AsyncStorage.setItem("Disclaimer", payload);
+  } catch (error) {
+    console.log("store_disclaimer_error: ", error);
+  }
+};
 export const storeTokenToLocal = async (payload) => {
   try {
     await AsyncStorage.setItem(TOKEN_KEY_STORAGE, JSON.stringify(payload));

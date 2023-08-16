@@ -37,7 +37,6 @@ const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
-  const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   //Recommend audio
   const {
@@ -189,11 +188,6 @@ const TrendingScreen = ({ navigation }) => {
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Audios</Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            color={Colors.blackColor}
-            size={25}
-          />
         </View>
         {!dataAudioList ? (
           <View style={styles.container}>
@@ -247,9 +241,6 @@ const TrendingScreen = ({ navigation }) => {
                 activeOpacity={0.9}
                 onPress={() => {
                   updateState({ selectedCategory: item });
-                  if (selectedCategory === "Quiz") {
-                    navigation.push(Navigate.QUIZ);
-                  }
                 }}
               >
                 <LinearGradient

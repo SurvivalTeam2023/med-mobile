@@ -36,11 +36,12 @@ const IllnessDetailScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
+      <View>
         <View
           style={{
             backgroundColor: "#eeeeee",
             borderRadius: 10,
+            paddingBottom: 12,
           }}
         >
           <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
@@ -73,6 +74,8 @@ const IllnessDetailScreen = ({ navigation, route }) => {
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{
                     paddingBottom: Sizes.fixPadding,
+                    height: "95%",
+                    paddingHorizontal: 2,
                   }}
                 >
                   <Text>{degree?.mentalHealthDesc}</Text>

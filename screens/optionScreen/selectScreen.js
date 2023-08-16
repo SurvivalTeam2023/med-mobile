@@ -20,13 +20,20 @@ import { Ionicons } from "@expo/vector-icons";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import { FlatList } from "react-native-gesture-handler";
+import { useState } from "react";
+import { getDisclaimerFromLocal } from "../../utils/app.local_handler";
 
 const OptionScreen = ({ navigation }) => {
+  let isRead;
+
   let isQuestionValid;
   let isFavoriteExisted;
   const userInfo = store.getState().user.data;
   const hasUserInfoDob = !!userInfo.dob; // Check if userInfo.dob has data
-
+  // const fetchData = async () => {
+  //   isRead = await getDisclaimerFromLocal(); // Use await here
+  // };
+  // fetchData();
   const {
     data: dataIsValidQuiz,
     isSuccess: successIsValidQuiz,
@@ -40,19 +47,12 @@ const OptionScreen = ({ navigation }) => {
     isError: isErrorIsFavoriteExisted,
     error: errorIsFavoriteExisted,
   } = useIsFavoriteExisted();
-
-  if (isErrorIsFavoriteExisted) {
-    console.log("get existed fav genre failed", errorIsFavoriteExisted);
-  }
-
-  if (isErrorIsValidQuiz) {
-    console.log("Checking Valid Quiz failed", errorIsValidQuiz);
-  }
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted.exists;
-  }
-  if (successIsValidQuiz) {
+  if (successIsValidQuiz && successIsFavoriteExisted) {
     isQuestionValid = dataIsValidQuiz;
+    isFavoriteExisted = dataIsFavoriteExisted.exists;
+  } else {
+    console.log("error fav existed", errorIsFavoriteExisted);
+    console.log("error valid quiz", errorIsValidQuiz);
   }
 
   function startQuizTitle() {
@@ -182,7 +182,7 @@ const OptionScreen = ({ navigation }) => {
     } else if (
       isQuestionValid === true &&
       isFavoriteExisted === false &&
-      hasUserInfoDob === false
+      hasUserInfoDob === true
     ) {
       navigation.push(Navigate.CHOOSE_MUSIC);
     } else if (
@@ -202,17 +202,21 @@ const OptionScreen = ({ navigation }) => {
       isFavoriteExisted === true &&
       hasUserInfoDob === true
     ) {
-      navigation.push(Navigate.QUIZ);
+      navigation.push(Navigate.BOTTOM_TAB_BAR);
     }
   };
-
+  const changePage = () => {
+    setTimeout(() => {
+      validate();
+    }, 1000); // Adjust the delay time (in milliseconds) as needed
+  };
   function startQuizBtn() {
     return (
       <Pressable
         style={styles.startQuizButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
-          validate();
+          changePage();
         }}
       >
         <LinearGradient
@@ -229,14 +233,15 @@ const OptionScreen = ({ navigation }) => {
 
   function cornerImage() {
     return (
-      <View>
-        <Image
-          source={require("../../assets/images/corner-design.png")}
-          style={{
-            width: "100%",
-            height: 170,
-          }}
-        />
+      <View style={{ height: "90%" }}>
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          style={styles.startQuizInfo}
+        >
+          <Text style={styles.titleInfoStyle}>Loading...</Text>
+        </LinearGradient>
       </View>
     );
   }
