@@ -70,7 +70,6 @@ const ProfileScreen = ({ navigation }) => {
                   style={{ flex: 1 }}
                 />
               </MaskedView>
-
               {quizResult ? (
                 // Render the list of quizzes if quizResult has data
                 quizResult.slice(0, 5).map((e) => (
@@ -120,7 +119,7 @@ const ProfileScreen = ({ navigation }) => {
                   style={{
                     fontSize: 24,
                     textAlign: "center",
-                    fontWeight: "450",
+                    fontWeight: "400",
                     paddingVertical: 8,
                   }}
                 >

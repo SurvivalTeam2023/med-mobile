@@ -100,7 +100,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontWeight: "450",
+                    fontWeight: "400",
                   }}
                 >
                   {dataGetPlaylistByGenreId?.name}
