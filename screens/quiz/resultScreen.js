@@ -76,6 +76,7 @@ const ResultScreen = ({ navigation, route }) => {
       desc: e?.degreeDesc,
       mentalHealthDesc: e?.mentalHealthDesc,
       mentalHealth: e?.mentalHealth,
+      mentalHealthImg: e?.mentalHealthImg,
     };
   });
 
@@ -121,6 +122,7 @@ const ResultScreen = ({ navigation, route }) => {
                       data: {
                         mentalHealth: e.mentalHealth,
                         mentalHealthDesc: e.mentalHealthDesc,
+                        mentalHealthImg: e.mentalHealthImg,
                       },
                     });
                   }}
