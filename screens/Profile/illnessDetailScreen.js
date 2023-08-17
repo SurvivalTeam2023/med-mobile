@@ -20,7 +20,6 @@ const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 
 const IllnessDetailScreen = ({ navigation, route }) => {
   const degree = route?.params?.data;
-  console.log(degree.mentalHealthDesc);
 
   const backBtn = () => {
     return (
