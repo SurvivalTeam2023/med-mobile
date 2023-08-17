@@ -64,12 +64,16 @@ const TrendingScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
+        {header()}
+        {trendingCategories()}
+
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
+          contentContainerStyle={{
+            paddingTop: 12,
+            paddingBottom: Sizes.fixPadding * 15.0,
+          }}
         >
-          {header()}
-          {trendingCategories()}
           {selectedCategory === "Genre" && genre()}
           {selectedCategory === "Audio" && song()}
           {selectedCategory === "Quiz" && startQuizTitle()}
@@ -132,6 +136,7 @@ const TrendingScreen = ({ navigation }) => {
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Genres </Text>
         </View>
+
         {genreData ? (
           <FlatList
             data={genreData}
@@ -501,7 +506,6 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding - 4.0,
   },
   trendingCategoriesWrapStyle: {
-    flex: 1,
     marginVertical: Sizes.fixPadding + 5.0,
     marginHorizontal: Sizes.fixPadding * 2.0,
     flexDirection: "row",
@@ -509,22 +513,8 @@ const styles = StyleSheet.create({
   },
   trendingCategoriesStyle: {
     alignItems: "center",
-    flex: 1,
     borderRadius: Sizes.fixPadding * 2.0,
-    paddingVertical: Sizes.fixPadding - 5.0,
-  },
-  songNumberWrapStyle: {
-    width: 18.0,
-    height: 18.0,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: Sizes.fixPadding - 5.0,
-  },
-  topTrendingInfoWrapStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginBottom: Sizes.fixPadding * 2.0,
+    paddingVertical: 8,
   },
 });
 

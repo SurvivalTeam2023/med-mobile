@@ -47,7 +47,7 @@ export const getDisclaimerFromLocal = async () => {
 
 export const storeDisclaimerToLocal = async (payload) => {
   try {
-    await AsyncStorage.setItem("Disclaimer", payload);
+    await AsyncStorage.setItem("Disclaimer", JSON.stringify(payload));
   } catch (error) {
     console.log("store_disclaimer_error: ", error);
   }
