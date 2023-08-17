@@ -96,7 +96,20 @@ const IllnessDetailScreen = ({ navigation, route }) => {
                     paddingHorizontal: 2,
                   }}
                 >
-                  <Text>{degree?.mentalHealthDesc}</Text>
+                  {degree?.mentalHealthDesc ? (
+                    <Text>{degree?.mentalHealthDesc}</Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        textAlign: "center",
+                        fontWeight: "100",
+                        paddingVertical: 8,
+                      }}
+                    >
+                      No data!
+                    </Text>
+                  )}
                 </ScrollView>
               </View>
             </View>
