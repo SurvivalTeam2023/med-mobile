@@ -27,6 +27,7 @@ const sortOptions = ["Name", "Date Added", "Artist"];
 const PlaylistGenreScreen = ({ navigation, route }) => {
   let playlist;
   const genreId = route.params.genreId;
+  console.log(genreId);
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const [state, setState] = useState({
     search: "",
@@ -199,17 +200,6 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                     <View>
                       <Text style={{ fontSize: 16, fontWeight: "400" }}>
                         {playListInfor.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          marginTop: 2,
-                          fontWeight: "200",
-                          color: "#808080",
-                          fontStyle: "italic",
-                        }}
-                      >
-                        {playListInfor["author"]["lastName"] || "Unknow"}
                       </Text>
                     </View>
                   </View>

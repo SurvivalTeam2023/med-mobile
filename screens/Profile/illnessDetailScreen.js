@@ -7,6 +7,7 @@ import {
   StatusBar,
   Text,
   StyleSheet,
+  Image,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -19,7 +20,6 @@ const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 
 const IllnessDetailScreen = ({ navigation, route }) => {
   const degree = route?.params?.data;
-  console.log(degree);
 
   const backBtn = () => {
     return (
@@ -61,7 +61,7 @@ const IllnessDetailScreen = ({ navigation, route }) => {
                       textAlign: "center",
                       fontWeight: "400",
                       paddingVertical: 8,
-                      paddingLeft: 100,
+                      paddingLeft: 120,
                       borderBottomWidth: 1,
                       borderColor: "#ddd",
                     }}
@@ -69,16 +69,47 @@ const IllnessDetailScreen = ({ navigation, route }) => {
                     {degree?.mentalHealth}
                   </Text>
                 </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    source={
+                      degree?.mentalHealthImg
+                        ? { uri: degree?.mentalHealthImg }
+                        : {
+                            uri: "https://i.pinimg.com/564x/49/e5/8d/49e58d5922019b8ec4642a2e2b9291c2.jpg",
+                          }
+                    }
+                    style={styles.image}
+                  />
+                </View>
 
                 <ScrollView
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{
                     paddingBottom: Sizes.fixPadding,
                     height: "95%",
+                    paddingTop: 8,
                     paddingHorizontal: 2,
                   }}
                 >
-                  <Text>{degree?.mentalHealthDesc}</Text>
+                  {degree?.mentalHealthDesc ? (
+                    <Text>{degree?.mentalHealthDesc}</Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        textAlign: "center",
+                        fontWeight: "100",
+                        paddingVertical: 8,
+                      }}
+                    >
+                      No data!
+                    </Text>
+                  )}
                 </ScrollView>
               </View>
             </View>
@@ -96,9 +127,8 @@ const styles = StyleSheet.create({
     marginRight: 8, // Adjust this value as needed
   },
   image: {
-    width: 40,
-    height: 40,
-    borderRadius: 90,
+    width: 275,
+    height: 275,
   },
   centeredView: {
     flex: 1,

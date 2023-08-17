@@ -180,13 +180,6 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
                   <Text style={{ ...Fonts.blackColor13SemiBold }}>
                     {item.audio.name}
                   </Text>
-                  <Text
-                    style={{
-                      ...Fonts.grayColor11Medium,
-                    }}
-                  >
-                    {item?.audio.artist?.artist_name}
-                  </Text>
                 </View>
               </View>
 

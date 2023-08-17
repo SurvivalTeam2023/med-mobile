@@ -59,9 +59,10 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
         desc: e?.degreeDesc,
         mentalHealthDesc: e?.mentalHealthDesc,
         mentalHealth: e?.mentalHealth,
+        mentalHealthImg: e?.mentalHealthImg,
       };
     });
-
+    console.log(quizResult);
     const progressQuiz = () => {
       return (
         <View
@@ -109,6 +110,7 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                         data: {
                           mentalHealth: e.mentalHealth,
                           mentalHealthDesc: e.mentalHealthDesc,
+                          mentalHealthImg: e.mentalHealthImg,
                         },
                       });
                     }}
