@@ -76,6 +76,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
           backgroundColor: "#eeeeee",
           borderRadius: 10,
           marginTop: 8,
+          height: "100%",
         }}
       >
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
@@ -85,6 +86,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                 flexDirection: "row",
                 justifyContent: "flex-start",
                 alignItems: "center",
+                marginRight: 110,
               }}
             >
               <View style={{ paddingVertical: 12, marginLeft: 8 }}>
@@ -157,66 +159,64 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
       );
     }
     return (
-      <View style={{ backgroundColor: "#eeeeee", borderRadius: 10 }}>
-        <View style={{ paddingHorizontal: 2, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            {playlist?.map((playListInfor, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                      playlistId: playListInfor.id,
-                    })
-                  }
+      <View style={{ paddingHorizontal: 2, paddingVertical: 16 }}>
+        <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+          {playlist?.map((playListInfor, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                    playlistId: playListInfor.id,
+                  })
+                }
+              >
+                <View
+                  style={{
+                    borderColor: "grey",
+                    paddingHorizontal: 10,
+                    paddingVertical: 12,
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
                 >
+                  <View>
+                    <Text>{index + 1}</Text>
+                  </View>
+                  <View style={{ marginLeft: 8 }}>
+                    <Image
+                      source={{ uri: playListInfor.imageUrl }}
+                      style={styles.imagePlaylist}
+                    />
+                  </View>
                   <View
                     style={{
-                      borderColor: "grey",
-                      paddingHorizontal: 10,
-                      paddingVertical: 12,
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
+                      flexDirection: "column",
+                      marginLeft: 10,
                     }}
                   >
                     <View>
-                      <Text>{index + 1}</Text>
-                    </View>
-                    <View style={{ marginLeft: 8 }}>
-                      <Image
-                        source={{ uri: playListInfor.imageUrl }}
-                        style={styles.imagePlaylist}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        marginLeft: 10,
-                      }}
-                    >
-                      <View>
-                        <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                          {playListInfor.name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 14,
-                            marginTop: 2,
-                            fontWeight: "200",
-                            color: "#808080",
-                            fontStyle: "italic",
-                          }}
-                        >
-                          {playListInfor["author"]["lastName"] || "Unknow"}
-                        </Text>
-                      </View>
+                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                        {playListInfor.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          marginTop: 2,
+                          fontWeight: "200",
+                          color: "#808080",
+                          fontStyle: "italic",
+                        }}
+                      >
+                        {playListInfor["author"]["lastName"] || "Unknow"}
+                      </Text>
                     </View>
                   </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
     );
