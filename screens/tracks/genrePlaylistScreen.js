@@ -140,6 +140,12 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
               </View>
             </View>
           </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 4 }}
+          >
+            {genrePlaylist()}
+          </ScrollView>
         </View>
       </View>
     );
@@ -152,7 +158,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
     }
     return (
       <View style={{ backgroundColor: "#eeeeee", borderRadius: 10 }}>
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+        <View style={{ paddingHorizontal: 2, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             {playlist?.map((playListInfor, index) => {
               return (
@@ -167,7 +173,7 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
                   <View
                     style={{
                       borderColor: "grey",
-                      paddingHorizontal: 8,
+                      paddingHorizontal: 10,
                       paddingVertical: 12,
                       flexDirection: "row",
                       justifyContent: "flex-start",
@@ -221,15 +227,9 @@ const PlaylistGenreScreen = ({ navigation, route }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       {isSuccessGetPlaylistByGenreId ? (
         <View style={{ flex: 1 }}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
-          >
-            {cornerImage()}
-            {header()}
-            {genreInfo()}
-            {genrePlaylist()}
-          </ScrollView>
+          {cornerImage()}
+          {header()}
+          {genreInfo()}
         </View>
       ) : null}
     </SafeAreaView>

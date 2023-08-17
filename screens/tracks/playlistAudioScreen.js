@@ -64,13 +64,14 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
+        {cornerImage()}
+        {header()}
+        {sortingIcons()}
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
         >
-          {cornerImage()}
-          {header()}
-          {sortingIcons()}
           {tracks()}
         </ScrollView>
       </View>
