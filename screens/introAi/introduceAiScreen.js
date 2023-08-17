@@ -30,22 +30,9 @@ const IntroAIScreen = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={true}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-            }}
-          >
-            {startQuizTitle()}
-            {startQuizBtn()}
-          </ScrollView>
-        </ScrollView>
+        {cornerImage()}
+        {startQuizTitle()}
+        {startQuizBtn()}
       </View>
     </SafeAreaView>
   );

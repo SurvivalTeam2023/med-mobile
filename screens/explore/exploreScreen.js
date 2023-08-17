@@ -126,12 +126,12 @@ const ExploreScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
+        {header()}
+        {searchField()}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
-          {header()}
-          {searchField()}
           {recommendedInfo()}
           {popularSongsInfo()}
           {recentlyPlayedInfo()}

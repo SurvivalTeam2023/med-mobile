@@ -87,7 +87,6 @@ export const Fonts = {
     color: "#ffffff",
     fontSize: 16,
     fontStyle: "italic",
-    fontFamily: "Montserrat",
   },
   whiteColor14Light: {
     color: "#ffffff",
@@ -189,6 +188,11 @@ export const Fonts = {
   blackColor18SemiBold: {
     color: "#000000",
     fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  blackColor26SemiBold: {
+    color: "#000000",
+    fontSize: 26,
     fontFamily: "Montserrat_SemiBold",
   },
 

@@ -108,10 +108,7 @@ const SettingsScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
-        >
+        <View>
           {cornerImage()}
           {header()}
           {userAccountInfo()}
@@ -122,7 +119,7 @@ const SettingsScreen = ({ navigation }) => {
           {generalInfo()}
           {divider()}
           {logoutText()}
-        </ScrollView>
+        </View>
       </View>
       {editEmailDialog()}
       {editPasswordDialog()}
@@ -139,7 +136,6 @@ const SettingsScreen = ({ navigation }) => {
       >
         <View
           style={{
-            backgroundColor: "white",
             alignItems: "center",
           }}
         >
