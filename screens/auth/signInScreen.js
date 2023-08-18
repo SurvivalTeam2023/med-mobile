@@ -85,8 +85,7 @@ const SignInScreen = ({ navigation }) => {
           const userData = await fetchUserData(access_token);
           if (userData) {
             dispatch(userAction.storeUser(userData));
-            const isRead = false;
-            storeDisclaimerToLocal(isRead);
+            storeDisclaimerToLocal(false);
             Toast.success("Welcome " + state["userName"]);
             navigation.push(Navigate.OPTION_SCREEN);
           } else {

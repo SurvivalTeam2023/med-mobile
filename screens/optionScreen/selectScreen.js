@@ -21,11 +21,25 @@ import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import { FlatList } from "react-native-gesture-handler";
 import { useState } from "react";
-import { getDisclaimerFromLocal } from "../../utils/app.local_handler";
+import {
+  getDisclaimerFromLocal,
+  storeDisclaimerToLocal,
+} from "../../utils/app.local_handler";
 
 const OptionScreen = ({ navigation }) => {
-  let isRead;
+  const [isRead, setIsRead] = useState();
+  const fetchData = async () => {
+    setIsRead(await getDisclaimerFromLocal());
+  };
+  fetchData();
 
+  console.log("linh bien thai", isRead);
+
+  const setData = async () => {
+    if (isRead === false) {
+      isRead = true;
+    }
+  };
   let isQuestionValid;
   let isFavoriteExisted;
   const userInfo = store.getState().user.data;
@@ -210,12 +224,14 @@ const OptionScreen = ({ navigation }) => {
       validate();
     }, 1000); // Adjust the delay time (in milliseconds) as needed
   };
+
   function startQuizBtn() {
     return (
       <Pressable
         style={styles.startQuizButtonStyle}
         activeOpacity={0.9}
         onPress={() => {
+          storeDisclaimerToLocal(true);
           changePage();
         }}
       >
@@ -242,14 +258,16 @@ const OptionScreen = ({ navigation }) => {
         >
           <Text style={styles.titleInfoStyle}>Loading...</Text>
         </LinearGradient>
+        {changePage()}
       </View>
     );
   }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1, paddingTop: 24 }}>{startQuizTitle()}</View>
+      <View style={{ flex: 1, paddingTop: 24 }}>
+        {isRead ? cornerImage() : startQuizTitle()}
+      </View>
     </SafeAreaView>
   );
 };
