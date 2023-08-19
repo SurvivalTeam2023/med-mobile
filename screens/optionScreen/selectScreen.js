@@ -33,13 +33,6 @@ const OptionScreen = ({ navigation }) => {
   };
   fetchData();
 
-  console.log("linh bien thai", isRead);
-
-  const setData = async () => {
-    if (isRead === false) {
-      isRead = true;
-    }
-  };
   let isQuestionValid;
   let isFavoriteExisted;
   const userInfo = store.getState().user.data;
