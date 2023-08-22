@@ -23,7 +23,7 @@ const beatifulAudioFormat = (audio) => {
     likeNumber: audioInfo["liked"],
     name: audioInfo["name"],
     status: audioInfo["status"],
-    isLike: false,
+    isLiked: audio["isLiked"] || audioInfo["isLiked"],
     url: latestFile["url"],
   };
   return formated;
@@ -69,6 +69,21 @@ const reducer = createSlice({
     triggerAudioPlayer: (state, action) => {
       state.audioAction = action.payload["audioAction"];
       state.audioActionValue = action.payload["audioActionVaue"];
+    },
+    setAudioLiked: (state, action) => {
+      state.playingList = state.playingList.map((audio) => {
+        if (audio.id === action.payload) {
+          return (audio["isLiked"] = true);
+        }
+      });
+    },
+    setAudioUnliked: (state, action) => {
+      console.log(state.playingList);
+      state.playingList = state.playingList.map((audio) => {
+        if (audio.id === action.payload) {
+          return (audio["isLiked"] = false);
+        }
+      });
     },
   },
 });

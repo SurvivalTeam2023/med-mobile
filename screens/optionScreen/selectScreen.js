@@ -28,35 +28,28 @@ import {
 
 const OptionScreen = ({ navigation }) => {
   const [isRead, setIsRead] = useState();
-  const fetchData = async () => {
-    setIsRead(await getDisclaimerFromLocal());
-  };
-  fetchData();
 
   let isQuestionValid;
   let isFavoriteExisted;
   const userInfo = store.getState().user.data;
   const hasUserInfoDob = !!userInfo.dob; // Check if userInfo.dob has data
-  // const fetchData = async () => {
-  //   isRead = await getDisclaimerFromLocal(); // Use await here
-  // };
-  // fetchData();
+
   const {
     data: dataIsValidQuiz,
     isSuccess: successIsValidQuiz,
     isError: isErrorIsValidQuiz,
     error: errorIsValidQuiz,
   } = useIsValidQuiz();
-
   const {
     data: dataIsFavoriteExisted,
     isSuccess: successIsFavoriteExisted,
     isError: isErrorIsFavoriteExisted,
     error: errorIsFavoriteExisted,
   } = useIsFavoriteExisted();
+
   if (successIsValidQuiz && successIsFavoriteExisted) {
     isQuestionValid = dataIsValidQuiz;
-    isFavoriteExisted = dataIsFavoriteExisted.exists;
+    isFavoriteExisted = dataIsFavoriteExisted?.exists;
   } else {
     console.log("error fav existed", errorIsFavoriteExisted);
     console.log("error valid quiz", errorIsValidQuiz);
@@ -212,12 +205,22 @@ const OptionScreen = ({ navigation }) => {
       navigation.push(Navigate.BOTTOM_TAB_BAR);
     }
   };
-  const changePage = () => {
-    setTimeout(() => {
-      validate();
-    }, 1000); // Adjust the delay time (in milliseconds) as needed
-  };
+  useEffect(() => {
+    const initializeIsRead = async () => {
+      try {
+        const disclaimerValue = await getDisclaimerFromLocal();
+        setIsRead(disclaimerValue);
+        if (disclaimerValue) {
+          validate();
+        }
+      } catch (error) {
+        console.log("Failed to fetch disclaimer:", error);
+      }
+    };
 
+    initializeIsRead();
+  }, [isQuestionValid, isFavoriteExisted]);
+  console.log("isRead", isRead);
   function startQuizBtn() {
     return (
       <Pressable
@@ -225,7 +228,7 @@ const OptionScreen = ({ navigation }) => {
         activeOpacity={0.9}
         onPress={() => {
           storeDisclaimerToLocal(true);
-          changePage();
+          validate();
         }}
       >
         <LinearGradient
@@ -251,15 +254,15 @@ const OptionScreen = ({ navigation }) => {
         >
           <Text style={styles.titleInfoStyle}>Loading...</Text>
         </LinearGradient>
-        {changePage()}
       </View>
     );
   }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1, paddingTop: 24 }}>
-        {isRead ? cornerImage() : startQuizTitle()}
+        {!isRead ? startQuizTitle() : cornerImage()}
       </View>
     </SafeAreaView>
   );

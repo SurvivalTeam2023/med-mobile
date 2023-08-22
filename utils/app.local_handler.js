@@ -35,8 +35,6 @@ export const getDisclaimerFromLocal = async () => {
     const value = await AsyncStorage.getItem("Disclaimer");
     if (value !== null) {
       try {
-        console.log("linh BD", value);
-
         return JSON.parse(value);
       } catch (error) {
         console.log("Failed to parse disclaimer:", error);

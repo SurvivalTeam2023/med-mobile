@@ -30,8 +30,8 @@ export const useFinishedQuiz = (payload) =>
 export const useIsValidQuiz = (payload) =>
   useQuery({
     queryKey: ["getValidQuiz"],
-    queryFn: () => {
-      const data = isValidQuiz();
+    queryFn: async () => {
+      const data = await isValidQuiz();
       return data;
     },
   });
