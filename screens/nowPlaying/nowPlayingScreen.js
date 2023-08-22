@@ -17,16 +17,18 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
 
 import {
   ACTION_TYPE,
   nowPlayingAction,
 } from "../../redux/audio/nowPlayingList.slice";
 import { useGetSubscriptionByUserId } from "../../hooks/subscription.hook";
-import { Toast } from "toastify-react-native";
-
+import { useLikeAudioAPI } from "../../hooks/audio.hook";
+import { useState } from "react";
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isUpdate, setIsUpdate] = useState(false);
   const {
     data: subscriptionData,
     isSuccess: isSuccessSubscription,
@@ -34,10 +36,68 @@ const NowPlayingScreen = ({ navigation }) => {
     error: errorSubScription,
   } = useGetSubscriptionByUserId();
 
+  const { mutate } = useLikeAudioAPI();
+  const likeObj = {
+    audioId: null,
+    isLiked: null,
+  };
+
+  const likeAudio = () => {
+    mutate(
+      { audioId: likeObj.audioId, isLiked: likeObj.isLiked },
+      {
+        onSuccess: (data) => {
+          console.log("Like success", data);
+          dispatch(nowPlayingAction.setAudioLiked(likeObj.audioId));
+        },
+        onError: (error) => {
+          console.log("Like failed", error);
+        },
+      }
+    );
+  };
+  const unLikeAudio = () => {
+    mutate(
+      { audioId: likeObj.audioId, isLiked: likeObj.isLiked },
+      {
+        onSuccess: (data) => {
+          console.log("Unlike success", data);
+          dispatch(nowPlayingAction.setAudioLiked(likeObj.audioId));
+        },
+        onError: (error) => {
+          console.log("Unlike failed", error);
+        },
+      }
+    );
+  };
+
   const { currentAudioIndex, soundStatus } = useSelector(
     (state) => state.nowPlayingList.currentPlaying
   );
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
+
+  const downloadMP3File = async () => {
+    const currentAudio = playingList[currentAudioIndex];
+
+    try {
+      const downloadResult = await FileSystem.downloadAsync(
+        currentAudio.url,
+        FileSystem.documentDirectory + "audio.mp3" // Use a .mp3 file extension
+      );
+
+      if (downloadResult.status === 200) {
+        console.log("Downloaded MP3 file uri:", downloadResult.uri);
+      } else {
+        console.error(
+          "File download failed with status:",
+          downloadResult.status
+        );
+      }
+    } catch (error) {
+      console.error("Error downloading MP3 file:", error);
+    }
+  };
+
   const audioPlayer = (audioAction, audioActionVaue) => {
     dispatch(
       nowPlayingAction.triggerAudioPlayer({
@@ -50,32 +110,22 @@ const NowPlayingScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
+        {cornerImage()}
+        {header()}
+        {songInfo()}
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
         >
-          {cornerImage()}
-          {header()}
-          {songInfo()}
           {nextOnTheLists()}
         </ScrollView>
       </View>
     </SafeAreaView>
   );
-
   function nextOnTheLists() {
     return (
       <View>
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 5.0,
-            marginBottom: Sizes.fixPadding + 5.0,
-            marginHorizontal: Sizes.fixPadding * 2.0,
-            ...Fonts.blackColor15Bold,
-          }}
-        >
-          Tracks list
-        </Text>
         {playingList.map((item, index) => (
           <View key={item.id}>
             <TouchableOpacity
@@ -126,54 +176,87 @@ const NowPlayingScreen = ({ navigation }) => {
 
   function downloadIcon() {
     return (
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        {subscriptionData?.length > 1 ? (
-          <MaterialCommunityIcons
-            name="download"
-            size={22}
-            color={Colors.black}
-          />
-        ) : (
-          <MaterialCommunityIcons
-            name="download"
-            size={22}
-            color={Colors.grayColor}
-          />
-        )}
+      <View>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          {subscriptionData?.length > 1 ? (
+            <MaterialCommunityIcons
+              name="download"
+              size={22}
+              color={Colors.grayColor}
+            />
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                downloadMP3File();
+              }}
+            >
+              <MaterialCommunityIcons
+                name="download"
+                size={22}
+                color={Colors.black}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View>
+          <Text
+            style={{
+              marginTop: Sizes.fixPadding - 5.0,
+              marginBottom: Sizes.fixPadding + 5.0,
+              marginHorizontal: Sizes.fixPadding * 2.0,
+              ...Fonts.blackColor15Bold,
+            }}
+          >
+            Tracks list
+          </Text>
+        </View>
       </View>
     );
   }
-
   function favoriteShuffleAndRepeatInfo() {
     return (
       <View style={styles.favoriteShuffleAndRepeatInfoWrapStyle}>
         <MaterialIcons name="repeat" size={20} color="black" />
         <TouchableOpacity activeOpacity={0.9} style={{}}>
-          {playingList[currentAudioIndex]?.isLoved ? (
-            <Icon
-              size={18}
-              mode="linear"
-              colors={[
-                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
-                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
-              ]}
-              style={{
-                marginHorizontal: Sizes.fixPadding * 4.0,
-                alignSelf: "center",
-              }}
-              name="favorite"
-              type="material"
-            />
+          {playingList[currentAudioIndex]?.isLiked ? (
+            <TouchableOpacity>
+              <MaterialIcons
+                name="favorite"
+                size={18}
+                style={{
+                  marginHorizontal: Sizes.fixPadding * 4.0,
+                  alignSelf: "center",
+                }}
+                color="rgba(255, 124, 0,1)"
+                onPress={() => {
+                  (likeObj.audioId = playingList[currentAudioIndex].id),
+                    (likeObj.isLiked = false);
+
+                  setIsUpdate(!isUpdate);
+                  unLikeAudio();
+                }}
+              />
+            </TouchableOpacity>
           ) : (
-            <MaterialIcons
-              name="favorite-border"
-              size={18}
-              style={{
-                marginHorizontal: Sizes.fixPadding * 4.0,
-                alignSelf: "center",
+            <TouchableOpacity
+              onPress={() => {
+                (likeObj.audioId = playingList[currentAudioIndex].id),
+                  (likeObj.isLiked = true);
+
+                setIsUpdate(!isUpdate);
+                likeAudio();
               }}
-              color="rgba(255, 124, 0,1)"
-            />
+            >
+              <MaterialIcons
+                name="favorite-border"
+                size={18}
+                style={{
+                  marginHorizontal: Sizes.fixPadding * 4.0,
+                  alignSelf: "center",
+                }}
+                color="rgba(255, 124, 0,1)"
+              />
+            </TouchableOpacity>
           )}
         </TouchableOpacity>
         <MaterialIcons name="shuffle" size={20} color="black" />

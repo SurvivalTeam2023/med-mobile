@@ -36,7 +36,6 @@ const useAudio = () => {
 
   const loadSound = useCallback(async () => {
     if (!audioList || audioList.length === 0) return;
-    console.log(audioList[currentAudioIndex]);
     const { url, id } = audioList[currentAudioIndex];
     try {
       console.log("Sound Loading...", url);

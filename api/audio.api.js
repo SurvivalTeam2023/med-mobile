@@ -13,3 +13,8 @@ export const getRecentlyPlayHistoryAudioListAPI = () => {
   const url = "/history";
   return CallAPI.get(url);
 };
+export const likeAudioAPI = (payload) => {
+  const { audioId, isLiked } = payload;
+  const url = "/audioUser";
+  return CallAPI.post(url, { audioId, isLiked });
+};
