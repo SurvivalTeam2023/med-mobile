@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -74,10 +74,10 @@ const SettingsScreen = ({ navigation }) => {
     confirmPassword: null,
     showLogoutDialog: false,
   });
-
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const removeData = () => {
     dispatch(userAction.logout());
+    dispatch(nowPlayingAction.resetNowPlayingState());
   };
   const {
     username,

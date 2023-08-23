@@ -75,7 +75,7 @@ const NowPlayingScreen = ({ navigation }) => {
     (state) => state.nowPlayingList.currentPlaying
   );
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
-
+  console.log(playingList);
   const downloadMP3File = async () => {
     const currentAudio = playingList[currentAudioIndex];
 
@@ -126,7 +126,7 @@ const NowPlayingScreen = ({ navigation }) => {
   function nextOnTheLists() {
     return (
       <View>
-        {playingList.map((item, index) => (
+        {playingList?.map((item, index) => (
           <View key={item.id}>
             <TouchableOpacity
               key={item.id}

@@ -24,7 +24,7 @@ const beatifulAudioFormat = (audio) => {
     name: audioInfo["name"],
     status: audioInfo["status"],
     isLiked: audio["isLiked"] || audioInfo["isLiked"],
-    url: latestFile["url"],
+    url: latestFile["url"] || "hello",
   };
   return formated;
 };
@@ -34,9 +34,10 @@ const reducer = createSlice({
   reducers: {
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
+
       // Check if the new audio already exists in the playingList
       const isExisted = playingList?.findIndex(
-        (audio) => audio.name === beatifulAudioFormat(action.payload).name
+        (audio) => audio?.name === beatifulAudioFormat(action.payload)?.name
       );
       if (isExisted === -1) {
         playingList.push(beatifulAudioFormat(action.payload));

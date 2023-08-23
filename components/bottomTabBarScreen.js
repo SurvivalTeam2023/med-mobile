@@ -89,35 +89,12 @@ const BottomTabBarScreen = ({ navigation }) => {
     },
   ];
   const { currentIndex, pauseSong, backClickCount } = state;
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <View style={{ flex: 1, backgroundColor: Colors.backColor }}>
-        <StatusBar translucent={false} backgroundColor={Colors.primaryColor} />
-        {currentIndex == 1 ? (
-          <ExploreScreen navigation={navigation} />
-        ) : currentIndex == 2 ? (
-          <TrendingScreen navigation={navigation} />
-        ) : currentIndex == 3 ? (
-          <IntroAIScreen navigation={navigation} />
-        ) : (
-          <SettingsScreen navigation={navigation} />
-        )}
-        {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
-        <View style={styles.bottomTabBarStyle}>
-          {bottonNavigation.map((item) => bottomTabBarItem(item))}
-        </View>
-      </View>
-      {backClickCount == 1 ? (
-        <View style={[styles.animatedView]}>
-          <Text style={{ ...Fonts.whiteColor12Medium }}>
-            Press Back Once Again to Exit
-          </Text>
-        </View>
-      ) : null}
-    </SafeAreaView>
-  );
 
+  console.log("audioList", playingList);
   function currentlyPlayedSong() {
+    if (playingList.length === 0) {
+      return null; // Don't render anything
+    }
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -127,7 +104,7 @@ const BottomTabBarScreen = ({ navigation }) => {
         style={styles.currentlyPlayedSongInfoWrapStyle}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <SharedElement id="image">
+          <SharedElement id={playingList[currentAudioIndex]?.id}>
             <Image
               source={{ uri: playingList[currentAudioIndex]?.imageUrl }}
               style={{
@@ -192,6 +169,7 @@ const BottomTabBarScreen = ({ navigation }) => {
   function bottomTabBarItem({ index, icon }) {
     return (
       <TouchableOpacity
+        key={index} // Assign a unique key here
         activeOpacity={0.9}
         style={{ alignItems: "center" }}
         onPress={() => updateState({ currentIndex: index })}
@@ -216,6 +194,33 @@ const BottomTabBarScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   }
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      <View style={{ flex: 1, backgroundColor: Colors.backColor }}>
+        <StatusBar translucent={false} backgroundColor={Colors.primaryColor} />
+        {currentIndex == 1 ? (
+          <ExploreScreen navigation={navigation} />
+        ) : currentIndex == 2 ? (
+          <TrendingScreen navigation={navigation} />
+        ) : currentIndex == 3 ? (
+          <IntroAIScreen navigation={navigation} />
+        ) : (
+          <SettingsScreen navigation={navigation} />
+        )}
+        {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
+        <View style={styles.bottomTabBarStyle}>
+          {bottonNavigation.map((item) => bottomTabBarItem(item))}
+        </View>
+      </View>
+      {backClickCount == 1 ? (
+        <View style={[styles.animatedView]}>
+          <Text style={{ ...Fonts.whiteColor12Medium }}>
+            Press Back Once Again to Exit
+          </Text>
+        </View>
+      ) : null}
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
