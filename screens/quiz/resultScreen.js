@@ -22,12 +22,18 @@ import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 const ResultScreen = ({ navigation, route }) => {
   const result = route.params.data;
   console.log(result);
   const userId = useSelector((state) => state.user.data.id);
   let quizResult;
-
+  let isFavoriteExisted;
+  const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
+    useIsFavoriteExisted();
+  if (successIsFavoriteExisted) {
+    isFavoriteExisted = dataIsFavoriteExisted;
+  }
   const {
     data: quizHistoryData,
     isSuccess: isSuccessQuizHistory,
@@ -195,7 +201,12 @@ const ResultScreen = ({ navigation, route }) => {
   };
 
   const onPressHandler = () => {
-    navigation.push(Navigate.BOTTOM_TAB_BAR);
+    if (isFavoriteExisted.exists === true) {
+      navigation.navigate("BottomTabBar");
+    }
+    if (isFavoriteExisted.exists === false) {
+      navigation.navigate("ChooseMusic");
+    }
   };
 
   const quizHistory = () => {
