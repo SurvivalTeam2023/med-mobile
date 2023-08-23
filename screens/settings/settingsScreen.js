@@ -78,7 +78,6 @@ const SettingsScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const removeData = () => {
     dispatch(userAction.logout());
-    dispatch(nowPlayingAction.resetNowPlayingState());
   };
   const {
     username,
