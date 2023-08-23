@@ -62,7 +62,6 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
         mentalHealthImg: e?.mentalHealthImg,
       };
     });
-    console.log(quizResult);
     const progressQuiz = () => {
       return (
         <View
