@@ -85,6 +85,7 @@ const reducer = createSlice({
         }
       });
     },
+    resetNowPlayingState: () => initialState, // S
   },
 });
 const markAudioListen = (listAudio) => {

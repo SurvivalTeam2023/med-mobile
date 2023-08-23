@@ -25,6 +25,7 @@ import { configOptionsGlobal } from "../../utils/app.configuration";
 import { Navigate } from "../../constants/navigate";
 import { SUBSCRIPTION_STATUS } from "../../constants/app";
 import { fetchUserData } from "../../redux/auth/auth.action";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const { width } = Dimensions.get("window");
 let userData;
@@ -77,6 +78,7 @@ const SettingsScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
   const removeData = () => {
     dispatch(userAction.logout());
+    dispatch(nowPlayingAction.resetNowPlayingState());
   };
   const {
     username,
