@@ -27,10 +27,12 @@
     "expo-av": "~13.2.1",
     "expo-blur": "~12.2.2",
     "expo-camera": "~13.2.1",
+    "expo-file-system": "~15.2.2",
     "expo-image-manipulator": "~11.1.1",
     "expo-image-picker": "~14.1.1",
     "expo-linear-gradient": "~12.1.2",
     "expo-modules-autolinking": "~1.1.0 || ~1.2.0",
+    "expo-sharing": "^11.5.0",
     "expo-status-bar": "~1.4.4",
     "hermesvm": "^0.1.1",
     "jsc-android": "^250231.0.0",
@@ -49,8 +51,7 @@
     "react-navigation-shared-element": "^3.1.3",
     "react-query": "^3.39.3",
     "react-redux": "^8.1.1",
-    "toastify-react-native": "^3.1.0",
-    "expo-file-system": "~15.2.2"
+    "toastify-react-native": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

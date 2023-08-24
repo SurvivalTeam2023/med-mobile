@@ -10,7 +10,6 @@ const useAudio = () => {
   const currentAudioId = useSelector(
     (state) => state.nowPlayingList.currentPlaying.currentAudioIndex
   );
-  console.log("current audio Index", currentAudioId);
   const [sound, setSound] = useState(null);
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -151,7 +150,6 @@ const useAudio = () => {
         sound.unloadAsync();
       }
       if (!index) return;
-      console.log(index);
       setCurrentAudioIndex(index);
       setSoundStatus((prevStatus) => ({ ...prevStatus, isPlaying: false }));
     },
