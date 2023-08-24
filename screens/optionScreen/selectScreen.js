@@ -220,7 +220,6 @@ const OptionScreen = ({ navigation }) => {
 
     initializeIsRead();
   }, [isQuestionValid, isFavoriteExisted]);
-  console.log("isRead", isRead);
   function startQuizBtn() {
     return (
       <Pressable

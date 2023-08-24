@@ -10,6 +10,7 @@ const useAudio = () => {
   const currentAudioId = useSelector(
     (state) => state.nowPlayingList.currentPlaying.currentAudioIndex
   );
+  console.log("current audio Index", currentAudioId);
   const [sound, setSound] = useState(null);
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -36,6 +37,7 @@ const useAudio = () => {
 
   const loadSound = useCallback(async () => {
     if (!audioList || audioList.length === 0) return;
+
     const { url, id } = audioList[currentAudioIndex];
     try {
       console.log("Sound Loading...", url);
@@ -159,6 +161,9 @@ const useAudio = () => {
   useEffect(() => {
     loadSound();
   }, [currentAudioIndex]);
+  useEffect(() => {
+    loadSound();
+  }, [audioList]);
 
   useEffect(() => {
     const timer = setInterval(async () => {

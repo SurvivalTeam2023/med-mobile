@@ -47,13 +47,8 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
     pauseSong: true,
     name: null,
   });
-  const handleSelectAudio = (trackList, currentId) => {
-    dispatch(
-      nowPlayingAction.addListToPlayList({
-        tracklist: trackList,
-        currentId: currentId,
-      })
-    );
+  const handleSelectAudio = (audio) => {
+    dispatch(nowPlayingAction.addAudioToPlayList(audio));
     navigation.push(Navigate.NOW_PLAYING);
   };
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
@@ -160,7 +155,7 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
           <View key={`${item.id}`}>
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => handleSelectAudio(tracksList, index)}
+              onPress={() => handleSelectAudio(item)}
               style={styles.tracksInfoWrapStyle}
             >
               <View

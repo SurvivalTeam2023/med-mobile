@@ -7,10 +7,11 @@ import {
 } from "../../redux/audio/nowPlayingList.slice";
 
 const NowPlayingBackground = ({ navigation }) => {
-  const audioAction = useSelector((state) => state.nowPlayingList.audioAction);
+  const audioAction = useSelector((state) => state.nowPlayingList?.audioAction);
   const audioActionValue = useSelector(
-    (state) => state.nowPlayingList.audioActionValue
+    (state) => state.nowPlayingList?.audioActionValue
   );
+
   const dispatch = useDispatch();
   //generate audio
   const {
