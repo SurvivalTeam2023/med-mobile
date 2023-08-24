@@ -90,7 +90,6 @@ const BottomTabBarScreen = ({ navigation }) => {
   ];
   const { currentIndex, pauseSong, backClickCount } = state;
 
-  console.log("audioList", playingList);
   function currentlyPlayedSong() {
     if (playingList.length === 0) {
       return null; // Don't render anything

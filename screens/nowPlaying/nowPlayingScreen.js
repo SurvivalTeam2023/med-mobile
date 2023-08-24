@@ -17,7 +17,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as FileSystem from "expo-file-system";
 
 import {
   ACTION_TYPE,
@@ -26,6 +25,8 @@ import {
 import { useGetSubscriptionByUserId } from "../../hooks/subscription.hook";
 import { useLikeAudioAPI } from "../../hooks/audio.hook";
 import { useState } from "react";
+import * as FileSystem from "expo-file-system";
+import { shareAsync } from "expo-sharing";
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isUpdate, setIsUpdate] = useState(false);
@@ -75,26 +76,55 @@ const NowPlayingScreen = ({ navigation }) => {
     (state) => state.nowPlayingList.currentPlaying
   );
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
-  console.log(playingList);
-  const downloadMP3File = async () => {
-    const currentAudio = playingList[currentAudioIndex];
-
-    try {
-      const downloadResult = await FileSystem.downloadAsync(
-        currentAudio.url,
-        FileSystem.documentDirectory + "audio.mp3" // Use a .mp3 file extension
-      );
-
-      if (downloadResult.status === 200) {
-        console.log("Downloaded MP3 file uri:", downloadResult.uri);
+  const save = async (uri, filename, mimetype) => {
+    if (Platform.OS === "android") {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (permissions.granted) {
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          filename,
+          mimetype
+        )
+          .then(async (uri) => {
+            await FileSystem.writeAsStringAsync(uri, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+          })
+          .catch((e) => console.log(e));
       } else {
-        console.error(
-          "File download failed with status:",
-          downloadResult.status
-        );
+        shareAsync(uri);
       }
+    } else {
+      shareAsync(uri);
+    }
+  };
+
+  const saveFile = async (uri) => {
+    shareAsync(uri);
+  };
+
+  const downloadAudio = async (file) => {
+    try {
+      const formatName = file.name.replace(/\s+/g, "");
+      const filename = `${formatName}.mp3`; // Use the provided filename
+      const directoryPath = FileSystem.documentDirectory;
+
+      // Create the document directory if it doesn't exist
+      await FileSystem.makeDirectoryAsync(directoryPath, {
+        intermediates: true,
+      });
+
+      const filePath = directoryPath + filename;
+      const { uri } = await FileSystem.downloadAsync(file.url, filePath);
+      console.log("Downloaded URI:", uri);
+      saveFile(uri); // Call the saveFile function
+      // Now you can use the downloaded file URI as needed
     } catch (error) {
-      console.error("Error downloading MP3 file:", error);
+      console.error("Error downloading audio:", error);
     }
   };
 
@@ -178,7 +208,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {subscriptionData?.length > 1 ? (
+          {subscriptionData ? (
             <MaterialCommunityIcons
               name="download"
               size={22}
@@ -187,7 +217,12 @@ const NowPlayingScreen = ({ navigation }) => {
           ) : (
             <TouchableOpacity
               onPress={() => {
-                downloadMP3File();
+                try {
+                  console.log("hehe");
+                  downloadAudio(playingList[currentAudioIndex]);
+                } catch (error) {
+                  console.error("Error while initiating download:", error);
+                }
               }}
             >
               <MaterialCommunityIcons

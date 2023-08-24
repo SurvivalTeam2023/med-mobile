@@ -41,11 +41,14 @@ const SettingsScreen = ({ navigation }) => {
         dispatch(userAction.storeUser(userInfo));
       }
     } catch (error) {
-      userData = useSelector((state) => state.user.data);
+      const data = useSelector((state) => state.user.data);
+      console.log("linhlox3", data);
+      userData = data;
       console.error("Error fetching user data:", error);
     }
   };
   getUserDataAndDispatch();
+  console.log("Linh lo", userData);
   const audioConfig = store.getState().user.audio || { ...configOptionsGlobal };
 
   const subscriptionStatus = userData?.lastestSub || null;
@@ -104,6 +107,7 @@ const SettingsScreen = ({ navigation }) => {
     confirmPassword,
     showLogoutDialog,
   } = state;
+  console.log("Linh lo x2", state);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
