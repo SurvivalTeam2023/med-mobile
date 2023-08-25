@@ -32,7 +32,7 @@ import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 
 const { width } = Dimensions.get("window");
 
-const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
+const trendingCategoriesList = ["Genre", "Audio", "Survey"];
 
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
@@ -76,7 +76,7 @@ const TrendingScreen = ({ navigation }) => {
         >
           {selectedCategory === "Genre" && genre()}
           {selectedCategory === "Audio" && song()}
-          {selectedCategory === "Quiz" && startQuizTitle()}
+          {selectedCategory === "Survey" && startQuizTitle()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -106,6 +106,15 @@ const TrendingScreen = ({ navigation }) => {
                   }
                   style={{ paddingTop: 12, alignItems: "center" }}
                 >
+                  <Text
+                    style={{
+                      paddingTop: 12,
+                      paddingBottom: 8,
+                      ...Fonts.blackColor15SemiBold,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
                   <ImageBackground
                     source={{ uri: `${item?.image}` }}
                     style={{
@@ -116,6 +125,7 @@ const TrendingScreen = ({ navigation }) => {
                   ></ImageBackground>
                 </TouchableOpacity>
               </View>
+
               <Text
                 style={{
                   paddingTop: 12,
@@ -134,7 +144,7 @@ const TrendingScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Genres </Text>
+          <Text style={styles.titleStyle}>Healing Genres </Text>
         </View>
 
         {genreData ? (
@@ -192,7 +202,7 @@ const TrendingScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Audios</Text>
+          <Text style={styles.titleStyle}>Audios for your illness</Text>
         </View>
         {!dataAudioList ? (
           <View style={styles.container}>
@@ -205,7 +215,7 @@ const TrendingScreen = ({ navigation }) => {
                 paddingVertical: 8,
               }}
             >
-              Please do quiz to get recommended audio
+              Please do survey to get recommended audio
             </Text>
           </View>
         ) : dataAudioList.length > 0 ? (
@@ -229,7 +239,7 @@ const TrendingScreen = ({ navigation }) => {
               paddingVertical: 8,
             }}
           >
-            Please do quiz to get recommended audio
+            Please do survey to get recommended audio
           </Text>
         )}
       </View>
@@ -303,11 +313,11 @@ const TrendingScreen = ({ navigation }) => {
             colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
             style={styles.startQuizInfo}
           >
-            <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+            <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
             <View style={{ alignItems: "center", paddingTop: 4 }}>
               <Text style={styles.describeQuizText}>
-                Welcome to the Emotion Quiz! This quiz is designed to help you
-                gain insight into your emotional landscape and explore the
+                Welcome to the Emotion Survey! This survey is designed to help
+                you gain insight into your emotional landscape and explore the
                 complexities of your feelings.
               </Text>
             </View>
@@ -350,7 +360,7 @@ const TrendingScreen = ({ navigation }) => {
             colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
             style={styles.startQuizGradientStyle}
           >
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Do quiz</Text>
+            <Text style={{ ...Fonts.whiteColor16Bold }}>Do Survey</Text>
           </LinearGradient>
         </Pressable>
       </View>
@@ -376,7 +386,7 @@ const TrendingScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Recomendation</Text>}
+          maskElement={<Text style={{ ...Fonts.bold22 }}>Made for You</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}

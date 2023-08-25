@@ -30,6 +30,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
 
 let recentlyPlayedList = null;
 
@@ -77,6 +78,112 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorRecentlyPlay,
     error: errorRecentlyPlay,
   } = useGetRecentlyPlayHistoryAudioListAPI();
+
+  //Recommend audio ID
+  const {
+    data: dataAudioRec,
+    isSuccess: isSuccessAudioRec,
+    isError: isErrorAudioRec,
+    error: errorAudioRec,
+  } = useGetRecommendAudioByQuizResultAPI();
+  if (isSuccessAudioRec) {
+    console.log("Rec audios successful");
+  }
+  if (isErrorAudioRec) {
+    console.log("Rec audios failed", errorAudioRec);
+  }
+  //Recommend audio ID
+  const {
+    data: dataPlaylist,
+    isSuccess: isSuccessPlaylist,
+    isError: isErrorPlaylist,
+    error: errorPlaylist,
+  } = useGetPlaylist();
+  if (isSuccessPlaylist) {
+    console.log(dataPlaylist);
+    console.log("Rec audios successful");
+  }
+  if (isErrorPlaylist) {
+    console.log("Rec audios failed", errorPlaylist);
+  }
+  function handleNavigateNowPlayling(audio) {
+    dispatch(nowPlayingAction.addAudioToPlayList(audio));
+    navigation.push("NowPlaying", { audio });
+  }
+
+  function song() {
+    const renderItem = ({ item }) => (
+      <View style={{ marginTop: 8 }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => handleNavigateNowPlayling(item)}
+        >
+          <SharedElement id={`${item.id}`}>
+            <Image
+              source={{ uri: `${item.imageUrl}` }}
+              style={styles.popularSongImageStyle}
+            />
+          </SharedElement>
+        </TouchableOpacity>
+        <View>
+          <Text
+            style={{
+              ...Fonts.blackColor12SemiBold,
+              width: "70%",
+            }}
+          >
+            {item.name}
+          </Text>
+        </View>
+      </View>
+    );
+
+    return (
+      <View style={{ marginTop: Sizes.fixPadding }}>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Audio for your illness</Text>
+        </View>
+        {!dataAudioRec ? (
+          <View style={styles.container}>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+                fontWeight: "100",
+                display: "flex",
+                paddingVertical: 8,
+              }}
+            >
+              Please do survey to get recommended audio
+            </Text>
+          </View>
+        ) : dataAudioRec.length > 0 ? (
+          <FlatList
+            data={dataAudioRec}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              fontSize: 20,
+              textAlign: "center",
+              fontWeight: "100",
+              paddingVertical: 8,
+            }}
+          >
+            Please do quiz to get recommended audio
+          </Text>
+        )}
+      </View>
+    );
+  }
 
   //Recommend audio
   const {
@@ -133,11 +240,11 @@ const ExploreScreen = ({ navigation }) => {
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
           {recommendedInfo()}
-          {popularSongsInfo()}
-          {recentlyPlayedInfo()}
-          {forYouInfo()}
-          {playListInfo()}
+          {song()}
           {albumsInfo()}
+          {forYouInfo()}
+
+          {recentlyPlayedInfo()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -190,13 +297,15 @@ const ExploreScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => {
-          navigation.push("GenreTracks");
-        }}
+        onPress={() =>
+          navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+            playlistId: item.id,
+          })
+        }
       >
         <SharedElement id={item.id}>
           <Image
-            source={{ uri: `${item?.image}` }}
+            source={{ uri: `${item?.imageUrl}` }}
             style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
@@ -206,18 +315,18 @@ const ExploreScreen = ({ navigation }) => {
             ...Fonts.blackColor12SemiBold,
           }}
         >
-          {item.name}
+          {item?.name}
         </Text>
       </TouchableOpacity>
     );
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Genres</Text>
+          <Text style={styles.titleStyle}>Playlist for the soul</Text>
         </View>
-        {isAllGendreSuccess ? (
+        {isSuccessPlaylist ? (
           <FlatList
-            data={allGendreData}
+            data={dataPlaylist}
             keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal
@@ -359,7 +468,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Recently Played</Text>
+          <Text style={styles.titleStyle}>History Listend</Text>
         </View>
         {!dataRecentlyPlay ? (
           <View style={styles.container}>
@@ -477,7 +586,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Recommended Genres For You</Text>
+          <Text style={styles.titleStyle}>Healing Genres</Text>
         </View>
         {isRecommendedGenreSucess ? (
           <FlatList
@@ -546,7 +655,9 @@ const ExploreScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Explore</Text>}
+          maskElement={
+            <Text style={{ ...Fonts.bold22 }}>Believe in yourself</Text>
+          }
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}

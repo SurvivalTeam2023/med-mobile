@@ -59,7 +59,7 @@ const ProfileScreen = ({ navigation }) => {
                 style={{ flex: 1, height: 28 }}
                 maskElement={
                   <Text style={{ ...Fonts.bold22, paddingLeft: 8 }}>
-                    Quiz History
+                    Survey History
                   </Text>
                 }
               >
