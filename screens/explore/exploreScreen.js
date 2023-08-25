@@ -298,8 +298,8 @@ const ExploreScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() =>
-          navigation.push(Navigate.GENRE_PLAYLIST_SCREEN, {
-            genreId: item.id,
+          navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+            playlistId: item.id,
           })
         }
       >
