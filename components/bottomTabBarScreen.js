@@ -72,11 +72,11 @@ const BottomTabBarScreen = ({ navigation }) => {
   const bottonNavigation = [
     {
       index: 1,
-      icon: "music-note",
+      icon: "headset",
     },
     {
       index: 2,
-      icon: "local-fire-department",
+      icon: "add-alert",
     },
 
     {

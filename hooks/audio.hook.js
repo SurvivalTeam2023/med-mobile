@@ -2,6 +2,8 @@ import { useMutation, useQuery } from "react-query";
 import {
   getAudioListAPI,
   getAudioListByNameAPI,
+  getAudioRecommendAPI,
+  getAudioRecommendByMentalIdAPI,
   getRecentlyPlayHistoryAudioListAPI,
   likeAudioAPI,
 } from "../api/audio.api";
@@ -35,4 +37,13 @@ export const useGetRecentlyPlayHistoryAudioListAPI = (payload) =>
       const data = await getRecentlyPlayHistoryAudioListAPI();
       return data;
     },
+  });
+export const useGetAudioRecommendByMentalIdAPI = (payload) =>
+  useQuery({
+    queryKey: ["getAudioRecommendAPI", payload],
+    queryFn: async () => {
+      const data = await getAudioRecommendByMentalIdAPI(payload);
+      return data;
+    },
+    enabled: !!payload,
   });

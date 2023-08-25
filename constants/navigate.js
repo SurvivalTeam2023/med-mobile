@@ -30,4 +30,5 @@ export const Navigate = {
   PROFILE_SCREEN: "Profile",
   QUESTION_SCREEN: "Question",
   ILLNESS_DETAIL_SCREEN: "IllnessDetail",
+  AUDIO_MENTAL_SCREEN: "AudioMental",
 };

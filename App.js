@@ -52,6 +52,7 @@ import { navigationRef } from "./core/RootNavigation";
 import ToastManager from "toastify-react-native";
 import ProfileScreen from "./screens/Profile/profileScreen";
 import IllnessDetailScreen from "./screens/Profile/illnessDetailScreen";
+import AudioMentalScreen from "./screens/tracks/audioMentalScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -86,6 +87,14 @@ const App = () => {
               options={{ ...TransitionPresets.DefaultTransition }}
             />
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen
+              name="AudioMental"
+              component={AudioMentalScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const mental = route.params.item;
+                return mental;
+              }}
+            />
             <Stack.Screen
               name="CreatePlaylistUser"
               component={CreatePlaylistScreenUser}

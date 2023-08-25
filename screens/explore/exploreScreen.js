@@ -31,6 +31,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
+import { useGetMentalHealthListAPI } from "../../hooks/mentalHealth";
 
 let recentlyPlayedList = null;
 
@@ -92,6 +93,93 @@ const ExploreScreen = ({ navigation }) => {
   if (isErrorAudioRec) {
     console.log("Rec audios failed", errorAudioRec);
   }
+  //Get mental health list
+  const {
+    data: dataMentalHealth,
+    isSuccess: isSuccessMentalHealth,
+    isError: isErrorMentalHealth,
+    error: errorMentalHealth,
+  } = useGetMentalHealthListAPI();
+  if (isSuccessMentalHealth) {
+    console.log("Get mentalhealth successful", dataMentalHealth);
+  }
+  if (isErrorMentalHealth) {
+    console.log("Rec audios failed", errorMentalHealth);
+  }
+
+  const mentalHealth = () => {
+    const renderItem = ({ item }) => (
+      <View>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() =>
+            navigation.push(Navigate.AUDIO_MENTAL_SCREEN, {
+              item,
+            })
+          }
+        >
+          <SharedElement id={`${item.id}`}>
+            <Image
+              source={{ uri: `${item.imageUrl}` }}
+              style={styles.popularSongImageStyle}
+            />
+          </SharedElement>
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.infoTextStyle}>{item.name}</Text>
+        </View>
+      </View>
+    );
+
+    return (
+      <View style={{ marginTop: Sizes.fixPadding }}>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Mental Health</Text>
+          <Text style={styles.descriptionTextStyle}>
+            Choose Healing Sounds for Your Well-being
+          </Text>
+        </View>
+        {!dataMentalHealth ? (
+          <View style={styles.container}>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+                fontWeight: "100",
+                display: "flex",
+                paddingVertical: 8,
+              }}
+            >
+              Loading
+            </Text>
+          </View>
+        ) : dataMentalHealth.length > 0 ? (
+          <FlatList
+            data={dataMentalHealth}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={renderItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: Sizes.fixPadding * 2.0,
+              paddingRight: Sizes.fixPadding,
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              fontSize: 20,
+              textAlign: "center",
+              fontWeight: "100",
+              paddingVertical: 8,
+            }}
+          >
+            Loading...
+          </Text>
+        )}
+      </View>
+    );
+  };
   //Recommend audio ID
   const {
     data: dataPlaylist,
@@ -113,7 +201,7 @@ const ExploreScreen = ({ navigation }) => {
 
   function song() {
     const renderItem = ({ item }) => (
-      <View style={{ marginTop: 8 }}>
+      <View>
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => handleNavigateNowPlayling(item)}
@@ -126,14 +214,7 @@ const ExploreScreen = ({ navigation }) => {
           </SharedElement>
         </TouchableOpacity>
         <View>
-          <Text
-            style={{
-              ...Fonts.blackColor12SemiBold,
-              width: "70%",
-            }}
-          >
-            {item.name}
-          </Text>
+          <Text style={styles.infoTextStyle}>{item.name}</Text>
         </View>
       </View>
     );
@@ -141,7 +222,10 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Audio for your illness</Text>
+          <Text style={styles.titleStyle}>Healing Through Sound</Text>
+          <Text style={styles.descriptionTextStyle}>
+            This audio based on your survey result
+          </Text>
         </View>
         {!dataAudioRec ? (
           <View style={styles.container}>
@@ -239,6 +323,7 @@ const ExploreScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
+          {mentalHealth()}
           {recommendedInfo()}
           {song()}
           {albumsInfo()}
@@ -309,20 +394,18 @@ const ExploreScreen = ({ navigation }) => {
             style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item?.name}
-        </Text>
+        <Text style={styles.infoTextStyle}>{item?.name}</Text>
       </TouchableOpacity>
     );
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Playlist for the soul</Text>
+          <Text style={styles.titleStyle}>
+            Healing Playlist: Embrace the Journey
+          </Text>
+          <Text style={styles.descriptionTextStyle}>
+            Elevate your mindfulness practice with this collection
+          </Text>
         </View>
         {isSuccessPlaylist ? (
           <FlatList
@@ -359,14 +442,7 @@ const ExploreScreen = ({ navigation }) => {
             style={styles.recentlyPlayedSongImageStyle}
           />
         </SharedElement>
-        <Text
-          style={{
-            marginTop: Sizes.fixPadding - 7.0,
-            ...Fonts.blackColor12SemiBold,
-          }}
-        >
-          {item.name}
-        </Text>
+        <Text style={styles.infoTextStyle}>{item.name}</Text>
       </TouchableOpacity>
     );
     return (
@@ -399,7 +475,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Favorited Genre</Text>
+          <Text style={styles.titleStyle}>Favorited Genres</Text>
         </View>
         {isSuccessFavGenre ? (
           dataFavGenre?.map((item) => (
@@ -418,8 +494,8 @@ const ExploreScreen = ({ navigation }) => {
                     <Image
                       source={{ uri: `${item.genre.image}` }}
                       style={{
-                        width: 50.0,
-                        height: 50.0,
+                        width: 90,
+                        height: 80,
                         borderRadius: Sizes.fixPadding - 5.0,
                       }}
                     />
@@ -563,30 +639,20 @@ const ExploreScreen = ({ navigation }) => {
           source={{ uri: `${item?.image}` }}
           style={{ width: 130.0, height: 120.0, marginRight: Sizes.fixPadding }}
           borderRadius={Sizes.fixPadding - 5.0}
-        >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,0.5)", "rgba(41, 10, 89, 0.5)"]}
-            style={{ flex: 1, borderRadius: Sizes.fixPadding - 5.0 }}
-          >
-            <Text
-              style={{
-                padding: Sizes.fixPadding - 5.0,
-                ...Fonts.whiteColor12Medium,
-              }}
-            >
-              {item.name}
-            </Text>
-          </LinearGradient>
-        </ImageBackground>
+        ></ImageBackground>
+        <Text style={styles.infoTextStyle}>{item.name}</Text>
       </TouchableOpacity>
     );
 
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Healing Genres</Text>
+          <Text style={styles.titleStyle}>
+            Healing Genres: Music for the Mind
+          </Text>
+          <Text style={styles.descriptionTextStyle}>
+            Genres to help you improve mental health
+          </Text>
         </View>
         {isRecommendedGenreSucess ? (
           <FlatList
@@ -656,7 +722,7 @@ const ExploreScreen = ({ navigation }) => {
         <MaskedView
           style={{ flex: 1 }}
           maskElement={
-            <Text style={{ ...Fonts.bold22 }}>Believe in yourself</Text>
+            <Text style={{ ...Fonts.bold22 }}>Your Healing Companion</Text>
           }
         >
           <LinearGradient
@@ -689,10 +755,20 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 90,
   },
+  descriptionTextStyle: {
+    paddingBottom: 4,
+    ...Fonts.light14Italic,
+  },
+  infoTextStyle: {
+    paddingBottom: 4,
+    ...Fonts.light15,
+    width: "70%",
+  },
   headerWrapStyle: {
     flexDirection: "row",
     marginHorizontal: Sizes.fixPadding * 2.0,
     marginTop: Sizes.fixPadding,
+    width: "85%",
   },
   searchFieldWrapStyle: {
     backgroundColor: Colors.lightGrayColor,
@@ -718,15 +794,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: Sizes.fixPadding + 5.0,
   },
   titleStyle: {
-    marginTop: Sizes.fixPadding - 5.0,
-    marginBottom: Sizes.fixPadding,
-    ...Fonts.blackColor15Bold,
+    marginTop: Sizes.fixPadding,
+    marginBottom: 4,
+    ...Fonts.semiBold18,
   },
   titleWrapStyle: {
     marginRight: Sizes.fixPadding + 5.0,
     marginLeft: Sizes.fixPadding * 2.0,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
     justifyContent: "space-between",
   },
   popularSongImageStyle: {
