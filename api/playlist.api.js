@@ -9,6 +9,13 @@ export const getPlaylistAPI = (payload) => {
   });
   return CallAPI.get(requestUrl);
 };
+export const getAllPlaylistAPI = (payload) => {
+  const requestUrl = queryString.stringifyUrl({
+    url: "/playlist",
+    query: payload,
+  });
+  return CallAPI.get(requestUrl);
+};
 export const getPlaylistByGenreIdAPI = (genreId) => {
   const url = "/genres/" + `${genreId}`;
   return CallAPI.get(url);

@@ -141,14 +141,14 @@ const NowPlayingScreen = ({ navigation }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         {cornerImage()}
-        {header()}
-        {songInfo()}
 
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
         >
-          {nextOnTheLists()}
+          {header()}
+
+          {songInfo()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -200,6 +200,7 @@ const NowPlayingScreen = ({ navigation }) => {
         {songPlayInfo()}
         {favoriteShuffleAndRepeatInfo()}
         {downloadIcon()}
+        {nextOnTheLists()}
       </View>
     );
   }
@@ -428,14 +429,17 @@ const NowPlayingScreen = ({ navigation }) => {
             ]}
             style={{
               marginRight: Sizes.fixPadding - 5.0,
-              marginTop: Sizes.fixPadding - 5.0,
               alignSelf: "center",
+              width: 20,
+              height: 20,
             }}
           />
         </TouchableOpacity>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Now Playing</Text>}
+          maskElement={
+            <Text style={{ ...Fonts.bold22 }}>Present Healing Sound</Text>
+          }
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
@@ -466,7 +470,6 @@ const NowPlayingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   headerWrapStyle: {
     marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 40.0,
     flexDirection: "row",
     flex: 1,
     alignItems: "center",

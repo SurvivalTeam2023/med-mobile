@@ -386,7 +386,11 @@ const TrendingScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Made for You</Text>}
+          maskElement={
+            <Text style={{ ...Fonts.bold22 }}>
+              Gentle Relief: Tough Day Mix
+            </Text>
+          }
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
