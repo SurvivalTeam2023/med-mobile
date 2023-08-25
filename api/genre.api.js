@@ -3,7 +3,7 @@ import { CallAPI } from "../core/api/baseAxios";
 
 export const getGenreListApi = (payload) => {
   const requestUrl = queryString.stringifyUrl({
-    url: "/genres",
+    url: "/genres?status=ACTIVE",
     query: payload,
   });
   return CallAPI.get(requestUrl);

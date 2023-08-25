@@ -4,7 +4,7 @@ import queryString from "query-string";
 
 export const getPlaylistAPI = (payload) => {
   const requestUrl = queryString.stringifyUrl({
-    url: "/playlist",
+    url: "/playlist?page=1&limit=10",
     query: payload,
   });
   return CallAPI.get(requestUrl);
