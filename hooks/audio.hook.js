@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "react-query";
 import {
   getAudioListAPI,
   getAudioListByNameAPI,
-  getAudioRecommendAPI,
   getAudioRecommendByMentalIdAPI,
   getRecentlyPlayHistoryAudioListAPI,
   likeAudioAPI,

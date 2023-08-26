@@ -33,15 +33,19 @@ import { useGetAudioRecommendByMentalIdAPI } from "../../hooks/audio.hook";
 
 const AudioMentalScreen = ({ navigation, route }) => {
   let tracksList;
-  const mentalDetail = route.params.item;
+  const mentalDetail = route?.params?.item;
+  console.log(mentalDetail);
 
   const sortOptions = ["Name", "Date Added", "Artist"];
-  const { data, isSuccess } = useGetAudioRecommendByMentalIdAPI(
-    mentalDetail.id
+  const { data, isSuccess, isError, error } = useGetAudioRecommendByMentalIdAPI(
+    mentalDetail?.id
   );
   if (isSuccess) {
-    const audioList = data;
-    tracksList = audioList;
+    tracksList = data["audios"];
+    console.log("Success get audio", tracksList);
+  }
+  if (isError) {
+    console.log("Errot get audio", error);
   }
   const dispatch = useDispatch();
   const [state, setState] = useState({
@@ -153,51 +157,38 @@ const AudioMentalScreen = ({ navigation, route }) => {
         c.name.toLowerCase().includes(search.toLowerCase())
       );
     }
-    return tracksList ? (
-      tracksList.length > 0 ? (
-        tracksList?.map((item, index) => (
-          <View key={`${item.id}`}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => handleSelectAudio(item)}
-              style={styles.tracksInfoWrapStyle}
+    return tracksList && tracksList.length > 0 ? (
+      tracksList.map((item, index) => (
+        <View key={`${item?.id}`}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => handleSelectAudio(item)}
+            style={styles.tracksInfoWrapStyle}
+          >
+            <View
+              style={{ flexDirection: "row", justifyContent: "flex-start" }}
             >
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
-                <SharedElement id={item.id}>
-                  <ImageBackground
-                    source={{ uri: `${item.imageUrl}` }}
-                    style={{
-                      width: 50,
-                      height: 50,
-                    }}
-                    borderRadius={Sizes.fixPadding - 5.0}
-                  ></ImageBackground>
-                </SharedElement>
-                <View style={{ marginLeft: 8, marginTop: 10 }}>
-                  <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                    {item?.name}
-                  </Text>
-                </View>
+              <SharedElement id={item?.id}>
+                <ImageBackground
+                  source={{ uri: `${item?.imageUrl}` }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                  }}
+                  borderRadius={Sizes.fixPadding - 5.0}
+                ></ImageBackground>
+              </SharedElement>
+              <View style={{ marginLeft: 8, marginTop: 10 }}>
+                <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                  {item?.name}
+                </Text>
               </View>
+            </View>
 
-              <CustomMenu id={item.id} />
-            </TouchableOpacity>
-          </View>
-        ))
-      ) : (
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            fontWeight: "100",
-            paddingVertical: 8,
-          }}
-        >
-          No data!
-        </Text>
-      )
+            <CustomMenu id={item.id} />
+          </TouchableOpacity>
+        </View>
+      ))
     ) : (
       <Text
         style={{
@@ -368,7 +359,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
               style={{ flex: 1, height: 28 }}
               maskElement={
                 <Text style={{ ...Fonts.bold22 }}>
-                  {mentalDetail.name} Audio
+                  Audio reducing {mentalDetail.name}
                 </Text>
               }
             >

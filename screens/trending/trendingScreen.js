@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -29,13 +29,83 @@ import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook"
 import { store } from "../../core/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import {
+  useGetFinishedQuizHistoryApi,
+  useGetResultByIdApi,
+} from "../../hooks/question.hook";
+import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 
 const { width } = Dimensions.get("window");
 
-const trendingCategoriesList = ["Genre", "Audio", "Survey"];
+const trendingCategoriesList = ["Song", "Survey"];
 
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
+  //Get quiz History
+  const {
+    data: quizHistoryData,
+    isSuccess: isSuccessQuizHistory,
+    isError: isErrorQuizHistory,
+    error: errorQuizHistory,
+  } = useGetFinishedQuizHistoryApi(userInfo.id);
+  if (isSuccessQuizHistory) {
+    console.log("History quiz call success");
+  }
+  if (isErrorQuizHistory) {
+    console.log("History quiz call success", errorQuizHistory);
+  }
+  // Sort the array based on createdAt timestamps in descending order
+  let latestItem;
+  const getLatestQuiz = () => {
+    try {
+      if (quizHistoryData) {
+        quizHistoryData?.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        latestItem = quizHistoryData[0];
+      }
+    } catch (error) {
+      console.log("sorting failed");
+    }
+  };
+
+  // Get the first item (latest) after sorting
+
+  const {
+    data: resultDetailData,
+    isSuccess: isSuccessResultDetail,
+    isError: isErrorResultDetail,
+    error: errorResultDetail,
+  } = useGetResultByIdApi(latestItem?.id);
+
+  if (isSuccessResultDetail) {
+    console.log("get result success");
+  }
+
+  let audioMental = [];
+  const getAudioMental = async () => {
+    try {
+      if (resultDetailData) {
+        let responses = [];
+        resultDetailData.forEach(async (item) => {
+          const mentalId = item.id;
+          const response = await getAudioRecommendByMentalIdAPI(mentalId);
+          audioMental.push(response);
+          // Process the response data or do something with it
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // Call the function
+  useEffect(() => {
+    getLatestQuiz();
+    getAudioMental();
+  }, []);
+
+  console.log("Nghia", audioMental);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   const dispatch = useDispatch();
   //Recommend audio
@@ -74,8 +144,7 @@ const TrendingScreen = ({ navigation }) => {
             paddingBottom: Sizes.fixPadding * 15.0,
           }}
         >
-          {selectedCategory === "Genre" && genre()}
-          {selectedCategory === "Audio" && song()}
+          {selectedCategory === "Song" && song()}
           {selectedCategory === "Survey" && startQuizTitle()}
         </ScrollView>
       </View>
@@ -110,19 +179,21 @@ const TrendingScreen = ({ navigation }) => {
                     style={{
                       paddingTop: 12,
                       paddingBottom: 8,
-                      ...Fonts.blackColor15SemiBold,
+                      ...Fonts.grey5555Color15SemiBold,
                     }}
                   >
                     {item.name}
                   </Text>
-                  <ImageBackground
+                  <Image
                     source={{ uri: `${item?.image}` }}
                     style={{
                       width: 125,
                       height: 120.0,
+                      borderWidth: 0.2,
+                      borderColor: "#11823b",
+                      borderRadius: "5",
                     }}
-                    borderRadius={Sizes.fixPadding - 5.0}
-                  ></ImageBackground>
+                  ></Image>
                 </TouchableOpacity>
               </View>
 
@@ -130,7 +201,7 @@ const TrendingScreen = ({ navigation }) => {
                 style={{
                   paddingTop: 12,
                   paddingBottom: 8,
-                  ...Fonts.light14,
+                  ...Fonts.grey4444,
                 }}
               >
                 {item.desc}
@@ -174,11 +245,11 @@ const TrendingScreen = ({ navigation }) => {
       <View style={{ flexDirection: "row", marginTop: 8 }}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => handleNavigateNowPlayling(item)}
+          onPress={() => handleNavigateNowPlayling(item[1])}
         >
-          <SharedElement id={`${item.id}`}>
+          <SharedElement id={`${item?.id}`}>
             <Image
-              source={{ uri: `${item.imageUrl}` }}
+              source={{ uri: `${item?.imageUrl}` }}
               style={styles.popularSongImageStyle}
             />
           </SharedElement>
@@ -190,10 +261,7 @@ const TrendingScreen = ({ navigation }) => {
               width: "70%",
             }}
           >
-            {item.name}
-          </Text>
-          <Text style={{ ...Fonts.grayColor10Medium }}>
-            {item.artist.artist_name}
+            {item?.name}
           </Text>
         </View>
       </View>
@@ -204,7 +272,7 @@ const TrendingScreen = ({ navigation }) => {
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>Audios for your illness</Text>
         </View>
-        {!dataAudioList ? (
+        {!audioMental ? (
           <View style={styles.container}>
             <Text
               style={{
@@ -215,13 +283,13 @@ const TrendingScreen = ({ navigation }) => {
                 paddingVertical: 8,
               }}
             >
-              Please do survey to get recommended audio
+              Please do a survey to get recommended audio
             </Text>
           </View>
-        ) : dataAudioList.length > 0 ? (
+        ) : audioMental?.length > 0 ? (
           <FlatList
-            data={dataAudioList}
-            keyExtractor={(item) => `${item.id}`}
+            data={audioMental}
+            keyExtractor={(item) => `${item.mentalHealth}`}
             renderItem={renderItem}
             horizontal={false}
             showsHorizontalScrollIndicator={false}
@@ -239,7 +307,7 @@ const TrendingScreen = ({ navigation }) => {
               paddingVertical: 8,
             }}
           >
-            Please do survey to get recommended audio
+            Please do a survey to get recommended audio
           </Text>
         )}
       </View>
@@ -386,11 +454,7 @@ const TrendingScreen = ({ navigation }) => {
       <View style={styles.headerWrapStyle}>
         <MaskedView
           style={{ flex: 1, height: 28 }}
-          maskElement={
-            <Text style={{ ...Fonts.bold22 }}>
-              Gentle Relief: Tough Day Mix
-            </Text>
-          }
+          maskElement={<Text style={{ ...Fonts.bold22 }}>Calm Yourself</Text>}
         >
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
@@ -401,6 +465,7 @@ const TrendingScreen = ({ navigation }) => {
         </MaskedView>
         <TouchableOpacity
           onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
         >
           <Image
             source={
@@ -485,7 +550,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.blackColor16Bold,
+    ...Fonts.colorBold18,
   },
   describeQuizText: {
     ...Fonts.whiteColor16Light,

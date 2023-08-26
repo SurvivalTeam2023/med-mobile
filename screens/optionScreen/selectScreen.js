@@ -214,7 +214,7 @@ const OptionScreen = ({ navigation }) => {
           validate();
         }
       } catch (error) {
-        console.log("Failed to fetch disclaimer:", error);
+        console.log("Failed fetching disclaimer:", error);
       }
     };
 
