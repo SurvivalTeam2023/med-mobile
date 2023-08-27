@@ -34,7 +34,6 @@ import { useGetAudioRecommendByMentalIdAPI } from "../../hooks/audio.hook";
 const AudioMentalScreen = ({ navigation, route }) => {
   let tracksList;
   const mentalDetail = route?.params?.item;
-  console.log(mentalDetail);
 
   const sortOptions = ["Name", "Date Added", "Artist"];
   const { data, isSuccess, isError, error } = useGetAudioRecommendByMentalIdAPI(
@@ -42,7 +41,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
   );
   if (isSuccess) {
     tracksList = data["audios"];
-    console.log("Success get audio", tracksList);
+    console.log("Success get audio");
   }
   if (isError) {
     console.log("Errot get audio", error);

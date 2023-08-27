@@ -201,6 +201,11 @@ export const Fonts = {
     fontSize: 15,
     fontFamily: "Montserrat_Regular",
   },
+  grey5555ColorSemiBold: {
+    color: "#222222",
+    fontSize: 20,
+    fontFamily: "Montserrat_Regular",
+  },
   blackColor16SemiBold: {
     color: "#000000",
     fontSize: 16,

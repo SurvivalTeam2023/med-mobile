@@ -41,6 +41,8 @@ const trendingCategoriesList = ["Song", "Survey"];
 
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
+  const [value, setValue] = useState([]);
+
   //Get quiz History
   const {
     data: quizHistoryData,
@@ -54,6 +56,7 @@ const TrendingScreen = ({ navigation }) => {
   if (isErrorQuizHistory) {
     console.log("History quiz call success", errorQuizHistory);
   }
+
   // Sort the array based on createdAt timestamps in descending order
   let latestItem;
   const getLatestQuiz = () => {
@@ -70,6 +73,7 @@ const TrendingScreen = ({ navigation }) => {
   };
 
   // Get the first item (latest) after sorting
+  getLatestQuiz();
 
   const {
     data: resultDetailData,
@@ -82,30 +86,43 @@ const TrendingScreen = ({ navigation }) => {
     console.log("get result success");
   }
 
-  let audioMental = [];
-  const getAudioMental = async () => {
-    try {
-      if (resultDetailData) {
-        let responses = [];
-        resultDetailData.forEach(async (item) => {
-          const mentalId = item.id;
-          const response = await getAudioRecommendByMentalIdAPI(mentalId);
-          audioMental.push(response);
-          // Process the response data or do something with it
-        });
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  // const getAudioMental = async () => {
+  //   try {
+  //     if (resultDetailData) {
+  //       let responses = [];
+  //       for (const item of resultDetailData) {
+  //         const response = await getAudioRecommendByMentalIdAPI(item.id);
+  //         responses.push(response);
+  //       }
+  //       return responses;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
-  // Call the function
   useEffect(() => {
-    getLatestQuiz();
-    getAudioMental();
-  }, []);
+    let data;
+    const getAudioMental = async () => {
+      try {
+        if (resultDetailData) {
+          let responses = [];
 
-  console.log("Nghia", audioMental);
+          for (const item of resultDetailData) {
+            const response = await getAudioRecommendByMentalIdAPI(item.id);
+            responses.push(response);
+          }
+          data = responses;
+          setValue(responses);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+    getAudioMental();
+  }, [resultDetailData]);
+  // console.log(audioMental);
+  console.log("Outside", value);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   const dispatch = useDispatch();
   //Recommend audio
@@ -242,37 +259,46 @@ const TrendingScreen = ({ navigation }) => {
 
   function song() {
     const renderItem = ({ item }) => (
-      <View style={{ flexDirection: "row", marginTop: 8 }}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => handleNavigateNowPlayling(item[1])}
+      <View style={{ marginTop: 8 }}>
+        <Text
+          style={{
+            paddingTop: 12,
+            paddingBottom: 8,
+            ...Fonts.grey5555ColorSemiBold,
+            textAlign: "center",
+          }}
         >
-          <SharedElement id={`${item?.id}`}>
-            <Image
-              source={{ uri: `${item?.imageUrl}` }}
-              style={styles.popularSongImageStyle}
-            />
-          </SharedElement>
-        </TouchableOpacity>
-        <View style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}>
-          <Text
-            style={{
-              ...Fonts.blackColor12SemiBold,
-              width: "70%",
-            }}
-          >
-            {item?.name}
-          </Text>
-        </View>
+          {item.mentalHealth}
+        </Text>
+        {item?.audios?.map((e) => (
+          <View key={e?.id} style={{ flexDirection: "row", marginTop: 8 }}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => handleNavigateNowPlayling(e)}
+            >
+              <SharedElement id={`${e?.id}`}>
+                <Image
+                  source={{ uri: `${e?.imageUrl}` }}
+                  style={styles.popularSongImageStyle}
+                />
+              </SharedElement>
+            </TouchableOpacity>
+            <View style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}>
+              <Text style={styles.infoTextStyle}>{e?.name}</Text>
+            </View>
+          </View>
+        ))}
       </View>
     );
 
     return (
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>Audios for your illness</Text>
+          <Text style={styles.titleStyle}>
+            Audios based on your survey's result
+          </Text>
         </View>
-        {!audioMental ? (
+        {!value ? (
           <View style={styles.container}>
             <Text
               style={{
@@ -286,9 +312,9 @@ const TrendingScreen = ({ navigation }) => {
               Please do a survey to get recommended audio
             </Text>
           </View>
-        ) : audioMental?.length > 0 ? (
+        ) : value?.length > 0 ? (
           <FlatList
-            data={audioMental}
+            data={value}
             keyExtractor={(item) => `${item.mentalHealth}`}
             renderItem={renderItem}
             horizontal={false}
@@ -482,6 +508,10 @@ const TrendingScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  infoTextStyle: {
+    paddingBottom: 4,
+    ...Fonts.grey777714,
+  },
   colorDot: {
     borderRadius: "50%",
     backgroundColor: "red", // You can change the color here
@@ -545,6 +575,8 @@ const styles = StyleSheet.create({
     marginRight: Sizes.fixPadding,
     width: 110,
     height: 100,
+    borderColor: "#004d25",
+    borderWidth: 0.2,
     borderRadius: Sizes.fixPadding - 5.0,
   },
   titleStyle: {
