@@ -37,6 +37,12 @@ const NowPlayingScreen = ({ navigation }) => {
     error: errorSubScription,
   } = useGetSubscriptionByUserId();
 
+  {
+    isSuccessSubscription;
+  }
+  {
+    console.log("Get sub done", subscriptionData);
+  }
   const { mutate } = useLikeAudioAPI();
   const likeObj = {
     audioId: null,
@@ -209,13 +215,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {subscriptionData ? (
-            <MaterialCommunityIcons
-              name="download"
-              size={22}
-              color={Colors.grayColor}
-            />
-          ) : (
+          {subscriptionData.length > 0 ? (
             <TouchableOpacity
               onPress={() => {
                 try {
@@ -232,6 +232,12 @@ const NowPlayingScreen = ({ navigation }) => {
                 color={Colors.black}
               />
             </TouchableOpacity>
+          ) : (
+            <MaterialCommunityIcons
+              name="download"
+              size={22}
+              color={Colors.grayColor}
+            />
           )}
         </View>
         <View>

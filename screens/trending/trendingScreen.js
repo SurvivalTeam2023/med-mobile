@@ -122,7 +122,6 @@ const TrendingScreen = ({ navigation }) => {
     getAudioMental();
   }, [resultDetailData]);
   // console.log(audioMental);
-  console.log("Outside", value);
   const { data: genreData, isSuccess: isSucessGenre } = useGetGenreList();
   const dispatch = useDispatch();
   //Recommend audio
