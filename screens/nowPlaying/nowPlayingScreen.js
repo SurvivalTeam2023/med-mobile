@@ -215,7 +215,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {subscriptionData.length > 0 ? (
+          {subscriptionData?.length > 0 ? (
             <TouchableOpacity
               onPress={() => {
                 try {
