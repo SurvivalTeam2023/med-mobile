@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
 
   questionInfo: {
     marginTop: 15,
-    maxHeight: "95w%",
+    maxHeight: "95%",
   },
   answerInfo: {
     alignContent: "center",

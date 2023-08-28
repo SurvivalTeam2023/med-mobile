@@ -763,7 +763,7 @@ const SettingsScreen = ({ navigation }) => {
             resizeMode="contain"
           >
             <Text style={{ ...Fonts.whiteColor18Bold }}>
-              Upgrade to Mediation Premium
+              Upgrade to Premium
             </Text>
           </ImageBackground>
         </TouchableOpacity>

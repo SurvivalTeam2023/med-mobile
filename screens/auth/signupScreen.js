@@ -25,7 +25,7 @@ const SignupScreen = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState();
   //signup
   const [state, setState] = useState({
-    showPassword: false,
+    showPassword: true,
     username: null,
     emailAddress: null,
     password: null,
@@ -294,7 +294,7 @@ const SignupScreen = ({ navigation }) => {
           />
         </View>
         <MaterialCommunityIcons
-          name={showPassword ? "eye-outline" : "eye-off-outline"}
+          name={showPassword ? "eye-off-outline" : "eye-outline"}
           color={Colors.grayColor}
           size={20}
           onPress={() => updateState({ showPassword: !showPassword })}
@@ -328,7 +328,7 @@ const SignupScreen = ({ navigation }) => {
           />
         </View>
         <MaterialCommunityIcons
-          name={showPassword ? "eye-outline" : "eye-off-outline"}
+          name={showPassword ? "eye-off-outline" : "eye-outline"}
           color={Colors.grayColor}
           size={20}
           onPress={() => updateState({ showPassword: !showPassword })}

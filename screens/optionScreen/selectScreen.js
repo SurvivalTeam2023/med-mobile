@@ -51,8 +51,6 @@ const OptionScreen = ({ navigation }) => {
     isQuestionValid = dataIsValidQuiz;
     isFavoriteExisted = dataIsFavoriteExisted?.exists;
   } else {
-    console.log("error fav existed", errorIsFavoriteExisted);
-    console.log("error valid quiz", errorIsValidQuiz);
   }
 
   function startQuizTitle() {

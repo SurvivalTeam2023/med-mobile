@@ -1,5 +1,6 @@
 export const config = {
-  SERVER_URL: "https://api_dev.mediatation.tokyo/api",
+  SERVER_URL: "http://167.86.69.42:7000/api",
+  // SERVER_URL: "http://192.168.1.9:19000/api",
 };
 export const USER_KEY_STORAGE = "@MedApp:user";
 export const TOKEN_KEY_STORAGE = "@MedApp:token";

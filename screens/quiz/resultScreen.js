@@ -110,7 +110,7 @@ const ResultScreen = ({ navigation, route }) => {
                   borderColor: "#ddd",
                 }}
               >
-                Quiz Result
+                Survey Result
               </Text>
             </View>
             <View
@@ -189,7 +189,7 @@ const ResultScreen = ({ navigation, route }) => {
                       color: e.color,
                     }}
                   >
-                    {e.desc}
+                    Remind: {e.desc}
                   </Text>
                 </Pressable>
               ))}
@@ -229,7 +229,7 @@ const ResultScreen = ({ navigation, route }) => {
               <MaskedView
                 style={{ flex: 1, height: 28 }}
                 maskElement={
-                  <Text style={{ ...Fonts.bold22 }}>Quiz History</Text>
+                  <Text style={{ ...Fonts.bold22 }}>Survey History</Text>
                 }
               >
                 <LinearGradient

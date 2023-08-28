@@ -36,6 +36,11 @@
     },
     "expo-camera": {
       "cameraPermission": "Allow $(med-app) to access your camera."
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8afc823c-8968-4046-a4a1-4e94d70cfb21"
+      }
     }
   }
 }

@@ -87,7 +87,7 @@ const QuizScreen = () => {
           <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
           <View style={{ alignItems: "center", paddingTop: 4 }}>
             <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Servey! This quiz is designed to help you
+              Welcome to the Emotion Survey! This quiz is designed to help you
               gain insight into your emotional landscape and explore the
               complexities of your feelings.
             </Text>

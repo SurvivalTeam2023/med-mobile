@@ -42,7 +42,7 @@ const SignInScreen = ({ navigation }) => {
   const { mutate: mutateLoginGoogle } = useLoginWithGmail();
   //State
   const [state, setState] = useState({
-    showPassword: false,
+    showPassword: true,
     userName: null,
     password: null,
     email: null,
@@ -407,7 +407,7 @@ const SignInScreen = ({ navigation }) => {
           />
         </View>
         <MaterialCommunityIcons
-          name={showPassword ? "eye-outline" : "eye-off-outline"}
+          name={showPassword ? "eye-off-outline" : "eye-outline"}
           color={Colors.grayColor}
           size={20}
           onPress={() => updateState({ showPassword: !showPassword })}

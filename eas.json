@@ -15,11 +15,12 @@
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       },
       "env": {
         "ANDROID_SDK_ROOT": "C:/Users/USER/AppData/Local/Android/Sdk"
       }
     }
+    
   }
 }

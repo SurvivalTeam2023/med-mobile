@@ -107,8 +107,31 @@ const NowPlayingScreen = ({ navigation }) => {
     }
   };
 
-  const saveFile = async (uri) => {
-    shareAsync(uri);
+  const saveFile = async (uri, filename, mimetype) => {
+    if (Platform.OS === "android") {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (permissions.granted) {
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          filename,
+          mimetype
+        )
+          .then(async (uri) => {
+            await FileSystem.writeAsStringAsync(uri, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+          })
+          .catch((e) => console.log(e));
+      } else {
+        shareAsync(uri);
+      }
+    } else {
+      shareAsync(uri);
+    }
   };
 
   const downloadAudio = async (file) => {
@@ -123,9 +146,10 @@ const NowPlayingScreen = ({ navigation }) => {
       });
 
       const filePath = directoryPath + filename;
-      const { uri } = await FileSystem.downloadAsync(file.url, filePath);
-      console.log("Downloaded URI:", uri);
-      saveFile(uri); // Call the saveFile function
+
+      const result = await FileSystem.downloadAsync(file.url, filePath);
+      console.log(result);
+      saveFile(result.uri, filename, result.headers["Content-Type"]); // Call the saveFile function
       // Now you can use the downloaded file URI as needed
     } catch (error) {
       console.error("Error downloading audio:", error);
