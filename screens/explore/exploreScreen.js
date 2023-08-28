@@ -92,12 +92,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorAudioRec,
     error: errorAudioRec,
   } = useGetRecommendAudioByQuizResultAPI();
-  if (isSuccessAudioRec) {
-    console.log("Rec audios successful");
-  }
-  if (isErrorAudioRec) {
-    console.log("Rec audios failed", errorAudioRec);
-  }
 
   const mentalData = dataAudioRec?.mentalHealths?.map((e, index) => {
     return {
@@ -113,12 +107,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorMentalHealth,
     error: errorMentalHealth,
   } = useGetMentalHealthListAPI();
-  if (isSuccessMentalHealth) {
-    console.log("Get mentalhealth successful");
-  }
-  if (isErrorMentalHealth) {
-    console.log("Rec audios failed", errorMentalHealth);
-  }
 
   const mentalHealth = () => {
     const renderItem = ({ item }) => (
@@ -198,12 +186,6 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorPlaylist,
     error: errorPlaylist,
   } = useGetPlaylist();
-  if (isSuccessPlaylist) {
-    console.log("Rec audios successful");
-  }
-  if (isErrorPlaylist) {
-    console.log("Rec audios failed", errorPlaylist);
-  }
   function handleNavigateNowPlayling(audio) {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
     navigation.push("NowPlaying", { audio });

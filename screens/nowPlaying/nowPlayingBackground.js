@@ -8,6 +8,7 @@ import {
 
 const NowPlayingBackground = ({ navigation }) => {
   const audioAction = useSelector((state) => state.nowPlayingList?.audioAction);
+  const disableAction = useSelector((state)=> state.nowPlayingList.disableAction);
   const audioActionValue = useSelector(
     (state) => state.nowPlayingList?.audioActionValue
   );
@@ -37,7 +38,7 @@ const NowPlayingBackground = ({ navigation }) => {
   );
 
   useEffect(() => {
-    if (audioAction) {
+    if (audioAction && !disableAction) {
       console.log("audio_player_action: ", audioAction, audioActionValue);
       switch (audioAction) {
         case ACTION_TYPE.NEXT_SONG:

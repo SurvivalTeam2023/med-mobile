@@ -40,9 +40,7 @@ const NowPlayingScreen = ({ navigation }) => {
   {
     isSuccessSubscription;
   }
-  {
-    console.log("Get sub done", subscriptionData);
-  }
+
   const { mutate } = useLikeAudioAPI();
   const likeObj = {
     audioId: null,

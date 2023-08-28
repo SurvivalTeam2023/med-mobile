@@ -28,7 +28,6 @@ const requestInterceptor = (config) => {
   if (token) {
     config.headers[HEADER_AUTHORIZATION] = `Bearer ${token}`;
   }
-  console.debug("request_url:", `${config.baseURL}${config.url}`);
   return config;
 };
 
@@ -36,7 +35,7 @@ const responseInterceptor = (response) => {
   return response.data;
 };
 const errorInterceptor = (error) => {
-  console.error(error.response.status);
+  // console.error(error.response.status);
   if (error.response.status == "401") {
     Toast.error("Login expired!");
     RootNavigation.navigate(Navigate.SIGN_IN, {});

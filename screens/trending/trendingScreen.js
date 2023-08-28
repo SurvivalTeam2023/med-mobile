@@ -131,12 +131,6 @@ const TrendingScreen = ({ navigation }) => {
     isError: isErrorAudioList,
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
-  if (isSuccessAudioList) {
-    console.log("Rec audios successful");
-  }
-  if (isErrorAudioList) {
-    console.log("Rec audios failed", errorAudioList);
-  }
 
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],

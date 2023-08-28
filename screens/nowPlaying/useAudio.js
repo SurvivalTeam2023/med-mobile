@@ -10,6 +10,10 @@ const useAudio = () => {
   const currentAudioId = useSelector(
     (state) => state.nowPlayingList.currentPlaying.currentAudioIndex
   );
+  const trialNumberLeft = useSelector(
+    (state) => state.nowPlayingList.trialNumberLeft
+  );
+  const currentUser = useSelector((state) => state.user.data);
   const [sound, setSound] = useState(null);
   const [soundStatus, setSoundStatus] = useState({
     isSoundLoaded: false,
@@ -36,19 +40,28 @@ const useAudio = () => {
 
   const loadSound = useCallback(async () => {
     if (!audioList || audioList.length === 0) return;
+    console.log(trialNumberLeft);
 
     const { url, id } = audioList[currentAudioIndex];
+    let playUrl = url;
+    if (currentUser?.latestSub?.status != "ACTIVE" && trialNumberLeft < 1) {
+      dispatch(nowPlayingAction.setTrailAudioLeft(3));
+      playUrl =
+        "https://public-med-bucket-v2.s3.ap-southeast-1.amazonaws.com/med-audio/24768980-c28d-44db-85a6-daf50b7afeb6-Mediatation%20Premium.mp3";
+      dispatch(nowPlayingAction.setDisableAction(true));
+    }
     try {
-      console.log("Sound Loading...", url);
+      console.log("Sound Loading...", playUrl);
       const { sound } = await Audio.Sound.createAsync(
         {
-          uri: url,
+          uri: playUrl,
         },
         { shouldPlay: true }
       );
-      createHistoryApi({ audioId: id }).then((res) =>
-        console.log("log history")
-      );
+      if (currentUser?.latestSub?.status != "ACTIVE" && trialNumberLeft > 0){
+        dispatch(nowPlayingAction.setTrailAudioLeft(trialNumberLeft - 1));
+      }
+      createHistoryApi({ audioId: id }).then((res) => {});
       setSound((prevSound) => {
         if (prevSound) {
           prevSound.unloadAsync();
@@ -176,6 +189,11 @@ const useAudio = () => {
             100
           ).toFixed(0),
         }));
+        if (
+          ((status.positionMillis / status.durationMillis) * 100).toFixed(0) == 100
+        ) {
+          dispatch(nowPlayingAction.setDisableAction(false))
+        }
       }
     }, 1000);
     return () => {

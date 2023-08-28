@@ -9,6 +9,8 @@ const initialState = {
   audioActionValue: "",
   currentAction: null,
   isLoading: true,
+  trialNumberLeft: 3,
+  disableAction: false
 };
 const beatifulAudioFormat = (audio) => {
   if (!audio) return;
@@ -79,14 +81,20 @@ const reducer = createSlice({
       });
     },
     setAudioUnliked: (state, action) => {
-      console.log(state.playingList);
       state.playingList = state.playingList.map((audio) => {
         if (audio.id === action.payload) {
           return (audio["isLiked"] = false);
         }
       });
     },
-    resetNowPlayingState: () => initialState, // S
+    setTrailAudioLeft: (state, action) => {
+      state.trialNumberLeft = action.payload
+    },
+    setDisableAction: (state, action) => {
+      state.disableAction = action.payload
+    },
+    resetNowPlayingState: () => initialState,
+
   },
 });
 const markAudioListen = (listAudio) => {
