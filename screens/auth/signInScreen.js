@@ -188,8 +188,6 @@ const SignInScreen = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          {cornerImage()}
-
           <ScrollView
             scrollEnabled={false}
             contentContainerStyle={{
@@ -225,7 +223,7 @@ const SignInScreen = ({ navigation }) => {
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
             end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={{ flex: 1 }}
           />
         </MaskedView>
@@ -303,11 +301,7 @@ const SignInScreen = ({ navigation }) => {
               <LinearGradient
                 start={{ x: 1, y: 0 }}
                 end={{ x: 0, y: 0 }}
-                colors={[
-                  "rgba(255, 124, 0,1)",
-                  "rgba(255, 124, 0,1)",
-                  "rgba(41, 10, 89, 0.9)",
-                ]}
+                colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                 style={{ flex: 1 }}
               />
             </MaskedView>
@@ -372,7 +366,7 @@ const SignInScreen = ({ navigation }) => {
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.signInButtonGradientStyle}
         >
           <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN IN</Text>
@@ -512,6 +506,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding - 5.0,
+    marginHorizontal: Sizes.fixPadding * 10,
   },
   signInButtonStyle: {
     justifyContent: "center",

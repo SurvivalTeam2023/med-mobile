@@ -59,7 +59,7 @@ const OptionScreen = ({ navigation }) => {
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.startQuizInfo}
         >
           <Text style={styles.titleInfoStyle}>Meditation App Disclaimer</Text>
@@ -170,37 +170,37 @@ const OptionScreen = ({ navigation }) => {
       isFavoriteExisted === true &&
       hasUserInfoDob === false
     ) {
-      navigation.push(Navigate.BOTTOM_TAB_BAR);
+      navigation.push(Navigate.AGE_VERIFY);
     } else if (
       isQuestionValid === false &&
       isFavoriteExisted === true &&
       hasUserInfoDob === true
     ) {
-      navigation.push(Navigate.QUIZ);
+      navigation.push(Navigate.AGE_VERIFY);
     } else if (
       isQuestionValid === true &&
       isFavoriteExisted === false &&
       hasUserInfoDob === true
     ) {
-      navigation.push(Navigate.CHOOSE_MUSIC);
+      navigation.push(Navigate.AGE_VERIFY);
     } else if (
       isQuestionValid === false &&
       isFavoriteExisted === false &&
       hasUserInfoDob === true
     ) {
-      navigation.push(Navigate.QUIZ);
+      navigation.push(Navigate.AGE_VERIFY);
     } else if (
       isQuestionValid === false &&
       isFavoriteExisted === false &&
       hasUserInfoDob === false
     ) {
-      navigation.push(Navigate.BOTTOM_TAB_BAR);
+      navigation.push(Navigate.AGE_VERIFY);
     } else if (
       isQuestionValid === true &&
       isFavoriteExisted === true &&
       hasUserInfoDob === true
     ) {
-      navigation.push(Navigate.BOTTOM_TAB_BAR);
+      navigation.push(Navigate.AGE_VERIFY);
     }
   };
   useEffect(() => {
@@ -231,7 +231,7 @@ const OptionScreen = ({ navigation }) => {
         <LinearGradient
           start={{ x: 1, y: 3 }}
           end={{ x: 0, y: 2 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.startQuizGradientStyle}
         >
           <Text style={{ ...Fonts.whiteColor16Bold }}>I agree</Text>

@@ -31,4 +31,6 @@ export const Navigate = {
   QUESTION_SCREEN: "Question",
   ILLNESS_DETAIL_SCREEN: "IllnessDetail",
   AUDIO_MENTAL_SCREEN: "AudioMental",
+  CHOOSE_MENTAL_SCREEN: "ShowMentalHealth",
+  AGE_VERIFY: "AgeVerify",
 };

@@ -37,7 +37,7 @@ import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 
 const { width } = Dimensions.get("window");
 
-const trendingCategoriesList = ["Song", "Survey"];
+const trendingCategoriesList = ["Song", "Survey", "Test"];
 
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
@@ -156,6 +156,7 @@ const TrendingScreen = ({ navigation }) => {
         >
           {selectedCategory === "Song" && song()}
           {selectedCategory === "Survey" && startQuizTitle()}
+          {selectedCategory === "Test" && startQuizBtn()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -438,7 +439,7 @@ const TrendingScreen = ({ navigation }) => {
           style={styles.startQuizButtonStyle}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.push(Navigate.QUESTION_SCREEN);
+            navigation.push(Navigate.AGE_VERIFY);
           }}
         >
           <LinearGradient
@@ -447,7 +448,7 @@ const TrendingScreen = ({ navigation }) => {
             colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
             style={styles.startQuizGradientStyle}
           >
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Do Survey</Text>
+            <Text style={{ ...Fonts.whiteColor16Bold }}>Ask Age</Text>
           </LinearGradient>
         </Pressable>
       </View>

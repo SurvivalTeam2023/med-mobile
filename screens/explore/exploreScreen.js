@@ -72,7 +72,6 @@ let topArtistList = [
 //Random playlist
 const ExploreScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.user.data);
-
   const dispatch = useDispatch();
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =

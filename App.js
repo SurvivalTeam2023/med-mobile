@@ -53,6 +53,8 @@ import ToastManager from "toastify-react-native";
 import ProfileScreen from "./screens/Profile/profileScreen";
 import IllnessDetailScreen from "./screens/Profile/illnessDetailScreen";
 import AudioMentalScreen from "./screens/tracks/audioMentalScreen";
+import AgeVerifyScreen from "./screens/ageVerifiedScreen/ageVerfiyScreen";
+import ChooseMentalHealthScreen from "./screens/mentalHealthScreen/ShowMentalHealthScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -86,6 +88,7 @@ const App = () => {
               component={signInScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
+
             <Stack.Screen name="SignUp" component={signupScreen} />
             <Stack.Screen
               name="AudioMental"
@@ -99,6 +102,11 @@ const App = () => {
               name="CreatePlaylistUser"
               component={CreatePlaylistScreenUser}
             />
+            <Stack.Screen
+              name="ShowMentalHealth"
+              component={ChooseMentalHealthScreen}
+            />
+            <Stack.Screen name="AgeVerify" component={AgeVerifyScreen} />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />
