@@ -14,12 +14,12 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
 import { useGetGenreList } from "../../hooks/genre.hook";
-
-import { useCreateFavoriteApi } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
-import { useGetMentalHealthListAPI } from "../../hooks/mentalHealth";
+import {
+  useGetMentalHealthListAPI,
+  useSelectUserMentalHealthAPI,
+} from "../../hooks/mentalHealth";
 
 const { width } = Dimensions.get("window");
 
@@ -27,7 +27,7 @@ let musicsList = [];
 
 const ChooseMentalHealthScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
-  const { mutate } = useCreateFavoriteApi();
+  const { mutate } = useSelectUserMentalHealthAPI();
   //Get mental health list
   const {
     data: dataMentalHealth,
@@ -39,12 +39,13 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
     musicsList = dataMentalHealth;
   }
 
-  const createFavorite = () => {
+  const selectMentalHealth = () => {
     mutate(
-      { genreId: [selectedGenreIds] },
+      { mentalHealthId: [selectedGenreIds] },
 
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log(data);
           navigation.push(Navigate.BOTTOM_TAB_BAR);
         },
         onError: (error) => {
@@ -70,21 +71,54 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
     .filter((item) => item.selected === true)
     .map((item) => item.id);
 
+  const button = () => {
+    return selectedGenreIds.length > 0 ? (
+      <TouchableOpacity
+        onPress={() => {
+          selectMentalHealth();
+        }}
+        style={styles.signInButtonStyle}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.signInButtonGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor18Bold }}>That's all for now</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
+        }}
+        style={styles.signInButtonStyle}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.signInButtonGradientStyle}
+        >
+          <Text style={{ ...Fonts.whiteColor18Bold }}>Maybe Later</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         <FlatList
           ListHeaderComponent={
             <>
-              {cornerImage()}
-              {skipAndNextText()}
               {chooseMusicTitle()}
               {musics()}
             </>
           }
           showsVerticalScrollIndicator={false}
         ></FlatList>
+        {button()}
       </View>
     </SafeAreaView>
   );
@@ -120,75 +154,47 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
           <ImageBackground
             source={{ uri: `${item.imageUrl}` }}
             style={{
-              width: width / 3.6,
-              height: width / 3.6,
-              borderRadius: 0.5,
+              width: width / 2.4,
+              height: width / 4.0,
+              justifyContent: "center", // Center vertically
+              alignItems: "center", // Center horizontally
+              borderRadius: 20, // Adjust the borderRadius value to control roundness
+              overflow: "hidden", // Clip the contents within the rounded border
+              position: "relative", // To enable absolute positioning of the checkbox
             }}
           >
             {item.selected ? (
               <View
                 style={{
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  width: width / 3.6,
-                  height: width / 3.6,
-                  borderRadius: 0.5,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  padding: 2, // Adjust the padding to position the checkbox
+                  backgroundColor: "#FAF9F6",
+                  borderRadius: 90,
                 }}
               >
                 <MaterialIcons
                   name="check"
-                  color={Colors.whiteColor}
-                  size={25}
+                  color={Colors.greenLightColor}
+                  size={20}
                 />
               </View>
             ) : null}
+            <Text
+              style={{
+                display: "flex",
+                textAlign: "center",
+                alignContent: "center",
+                paddingHorizontal: 12,
+                marginTop: Sizes.fixPadding - 8.0,
+                ...Fonts.blackColor14SemiBold,
+              }}
+            >
+              {item.name}
+            </Text>
           </ImageBackground>
         </TouchableOpacity>
-
-        {item.selected ? (
-          <MaskedView
-            style={{ width: width / 3.6, height: 18 }}
-            maskElement={
-              <Text
-                style={{
-                  marginTop: Sizes.fixPadding - 8.0,
-                  textAlign: "center",
-                  ...Fonts.blackColor14SemiBold,
-                }}
-              >
-                {item.name}
-              </Text>
-            }
-          >
-            <LinearGradient
-              start={{ x: 1, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-              style={{ flex: 1 }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  marginTop: Sizes.fixPadding - 8.0,
-                  color: "transparent",
-                }}
-              >
-                {item.name}
-              </Text>
-            </LinearGradient>
-          </MaskedView>
-        ) : (
-          <Text
-            style={{
-              textAlign: "center",
-              marginTop: Sizes.fixPadding - 8.0,
-              ...Fonts.blackColor14SemiBold,
-            }}
-          >
-            {item.name}
-          </Text>
-        )}
       </View>
     );
     return (
@@ -214,67 +220,18 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
           marginBottom: Sizes.fixPadding * 3.5,
         }}
       >
-        <Image
-          source={require("../../assets/images/music-note.png")}
-          style={{
-            marginBottom: Sizes.fixPadding,
-            alignSelf: "center",
-            width: 30.0,
-            height: 30.0,
-          }}
-          resizeMode="contain"
-        />
-        <MaskedView
-          style={{ height: 22 }}
-          maskElement={
-            <Text style={{ textAlign: "center", ...Fonts.blackColor18Bold }}>
-              Choose Mental Health
-            </Text>
-          }
-        >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-      </View>
-    );
-  }
-
-  function skipAndNextText() {
-    return (
-      <View style={styles.skipAndNextTextWrapStyle}>
-        <Text
-          onPress={() => navigation.push("BottomTabBar")}
-          style={{ ...Fonts.grayColor15Medium }}
-        >
-          Skip
+        <Text style={{ textAlign: "center", ...Fonts.grey26Color55555 }}>
+          Building up your space...
         </Text>
         <Text
-          onPress={() => {
-            createFavorite();
-            // navigation.push("BottomTabBar");
-          }}
-          style={{ ...Fonts.grayColor15Medium }}
-        >
-          Next
-        </Text>
-      </View>
-    );
-  }
-
-  function cornerImage() {
-    return (
-      <View>
-        <Image
-          source={require("../../assets/images/corner-design.png")}
           style={{
-            width: "100%",
-            height: 170,
+            ...Fonts.grayColor18Medium,
+            textAlign: "center",
+            marginTop: 16,
           }}
-        />
+        >
+          Add mental health you want to improve
+        </Text>
       </View>
     );
   }
@@ -287,6 +244,17 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  signInButtonStyle: {
+    marginBottom: Sizes.fixPadding * 10,
+    borderRadius: Sizes.fixPadding - 5.0,
+  },
+  signInButtonGradientStyle: {
+    paddingVertical: Sizes.fixPadding + 3.0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Sizes.fixPadding + 5,
+    marginHorizontal: Sizes.fixPadding * 5,
   },
 });
 

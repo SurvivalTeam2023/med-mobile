@@ -16,17 +16,12 @@ import {
   Modal,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { Navigate } from "../../constants/navigate";
 import { useGetGenreList } from "../../hooks/genre.hook";
-import { useGetAudioListAPI } from "../../hooks/audio.hook";
-import QuizScreen from "../quiz/quizScreen";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
-import { store } from "../../core/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import {
@@ -34,6 +29,7 @@ import {
   useGetResultByIdApi,
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
+import CountDown from "react-native-countdown-component";
 
 const { width } = Dimensions.get("window");
 
@@ -42,7 +38,11 @@ const trendingCategoriesList = ["Song", "Survey", "Test"];
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const [value, setValue] = useState([]);
+  const [countdownKey, setCountdownKey] = useState(0); // Key to force re-mounting
 
+  const handleCountdownFinish = () => {
+    setCountdownFinished(true);
+  };
   //Get quiz History
   const {
     data: quizHistoryData,
@@ -86,21 +86,6 @@ const TrendingScreen = ({ navigation }) => {
     console.log("get result success");
   }
 
-  // const getAudioMental = async () => {
-  //   try {
-  //     if (resultDetailData) {
-  //       let responses = [];
-  //       for (const item of resultDetailData) {
-  //         const response = await getAudioRecommendByMentalIdAPI(item.id);
-  //         responses.push(response);
-  //       }
-  //       return responses;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-
   useEffect(() => {
     let data;
     const getAudioMental = async () => {
@@ -139,7 +124,24 @@ const TrendingScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { selectedCategory } = state;
-
+  const countDown = () => {
+    return (
+      <CountDown
+        id={countdownKey}
+        until={60}
+        size={30}
+        onFinish={() => alert("Finished")}
+        digitStyle={{
+          backgroundColor: "#FFF",
+          borderWidth: 2,
+          borderColor: "#1CC625",
+        }}
+        digitTxtStyle={{ color: "#1CC625" }}
+        timeToShow={["M", "S"]}
+        timeLabels={{ m: "Minutes", s: "Seconds" }}
+      />
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -156,7 +158,7 @@ const TrendingScreen = ({ navigation }) => {
         >
           {selectedCategory === "Song" && song()}
           {selectedCategory === "Survey" && startQuizTitle()}
-          {selectedCategory === "Test" && startQuizBtn()}
+          {selectedCategory === "Test" && countDown()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -165,6 +167,7 @@ const TrendingScreen = ({ navigation }) => {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
     navigation.push("NowPlaying", { audio });
   }
+
   function genre() {
     const renderItem = ({ item }) => (
       <View
@@ -398,7 +401,7 @@ const TrendingScreen = ({ navigation }) => {
           <LinearGradient
             start={{ x: 1, y: 0 }}
             end={{ x: 0, y: 0 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={styles.startQuizInfo}
           >
             <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
@@ -434,24 +437,21 @@ const TrendingScreen = ({ navigation }) => {
 
   function startQuizBtn() {
     return (
-      <View>
-        <Pressable
-          style={styles.startQuizButtonStyle}
-          activeOpacity={0.9}
-          onPress={() => {
-            navigation.push(Navigate.AGE_VERIFY);
-          }}
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push(Navigate.QUESTION_SCREEN);
+        }}
+        style={styles.startQuizButtonStyle}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.startQuizGradientStyle}
         >
-          <LinearGradient
-            start={{ x: 1, y: 3 }}
-            end={{ x: 0, y: 2 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-            style={styles.startQuizGradientStyle}
-          >
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Ask Age</Text>
-          </LinearGradient>
-        </Pressable>
-      </View>
+          <Text style={{ ...Fonts.whiteColor18Bold }}>Do survey</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     );
   }
 

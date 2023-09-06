@@ -1,5 +1,8 @@
-import { useQuery } from "react-query";
-import { getMentalHealthList } from "../api/mentalHealth";
+import { useMutation, useQuery } from "react-query";
+import {
+  getMentalHealthList,
+  selectUserMentalHealth,
+} from "../api/mentalHealth";
 
 export const useGetMentalHealthListAPI = (payload) => {
   return useQuery({
@@ -10,3 +13,8 @@ export const useGetMentalHealthListAPI = (payload) => {
     },
   });
 };
+
+export const useSelectUserMentalHealthAPI = (payload) =>
+  useMutation({
+    mutationFn: (payload) => selectUserMentalHealth(payload),
+  });
