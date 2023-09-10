@@ -55,6 +55,7 @@ import IllnessDetailScreen from "./screens/Profile/illnessDetailScreen";
 import AudioMentalScreen from "./screens/tracks/audioMentalScreen";
 import AgeVerifyScreen from "./screens/ageVerifiedScreen/ageVerfiyScreen";
 import ChooseMentalHealthScreen from "./screens/mentalHealthScreen/ShowMentalHealthScreen";
+import SettingsScreen from "./screens/settings/settingsScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -107,6 +108,7 @@ const App = () => {
               component={ChooseMentalHealthScreen}
             />
             <Stack.Screen name="AgeVerify" component={AgeVerifyScreen} />
+            <Stack.Screen name="Setting" component={SettingsScreen} />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />

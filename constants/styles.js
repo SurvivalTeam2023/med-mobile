@@ -99,6 +99,11 @@ export const Fonts = {
     fontSize: 18,
     fontFamily: "Montserrat_Light",
   },
+  whiteColor18SemiBold: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
   whiteColor16Light: {
     color: "#ffffff",
     fontSize: 16,
@@ -267,6 +272,11 @@ export const Fonts = {
     fontSize: 18,
     fontFamily: "Montserrat_Bold",
   },
+  blackColor18SemiBold: {
+    color: "#000000",
+    fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
 
   blackColor20Bold: {
     color: "#000000",
@@ -301,6 +311,31 @@ export const Fonts = {
     color: "#555555",
     fontSize: 18,
     fontFamily: "Montserrat_Medium",
+  },
+  grayColor24SemiBold: {
+    color: "#555555",
+    fontSize: 24,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  grayColor20SemiBold: {
+    color: "#555555",
+    fontSize: 20,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  grayColor18SemiBold: {
+    color: "#555555",
+    fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  grayColor18Bold: {
+    color: "#555555",
+    fontSize: 18,
+    fontFamily: "Montserrat_Bold",
+  },
+  grayColor16SemiBold: {
+    color: "#555555",
+    fontSize: 16,
+    fontFamily: "Montserrat_SemiBold",
   },
   grayColor16Medium: {
     color: "#555555",

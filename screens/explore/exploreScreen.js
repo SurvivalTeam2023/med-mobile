@@ -37,6 +37,8 @@ import {
   useGetResultByIdApi,
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { Header } from "@rneui/base";
 let recentlyPlayedList = null;
 
 let forYouList = [];
@@ -67,15 +69,18 @@ let topArtistList = [
     songsCount: 179,
   },
 ];
+
 //top music
 
 //Random playlist
 const ExploreScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
+
   //Recommend gendre (if user finished their exam)
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
+
   //Recently played
   const {
     data: dataRecentlyPlay,
@@ -110,23 +115,44 @@ const ExploreScreen = ({ navigation }) => {
   const mentalHealth = () => {
     const renderItem = ({ item }) => (
       <View>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() =>
-            navigation.push(Navigate.AUDIO_MENTAL_SCREEN, {
-              item,
-            })
-          }
+        <View
+          style={{
+            justifyContent: "center",
+            width: 120,
+            alignItems: "center", // Center the contents horizontally
+          }}
         >
-          <SharedElement id={`${item.id}`}>
-            <Image
-              source={{ uri: `${item.imageUrl}` }}
-              style={styles.popularSongImageStyle}
-            />
-          </SharedElement>
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.infoTextStyle}>{item.name}</Text>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() =>
+              navigation.push(Navigate.AUDIO_MENTAL_SCREEN, {
+                item,
+              })
+            }
+          >
+            <SharedElement id={`${item.id}`}>
+              <View
+                style={{
+                  borderColor: "#004d25",
+                  borderWidth: 0.5,
+                  borderRadius: 90,
+                  width: 70,
+                  height: 70,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image
+                  source={{ uri: `${item.imageUrl}` }}
+                  style={styles.popularSongImageStyle}
+                />
+              </View>
+            </SharedElement>
+          </TouchableOpacity>
+
+          <View>
+            <Text style={styles.infoTextStyle}>{item.name}</Text>
+          </View>
         </View>
       </View>
     );
@@ -134,7 +160,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>How do you feel?</Text>
+          <Text style={styles.titleStyle}>SELF-CARE</Text>
         </View>
         {!dataMentalHealth ? (
           <View style={styles.container}>
@@ -143,7 +169,6 @@ const ExploreScreen = ({ navigation }) => {
                 fontSize: 20,
                 textAlign: "center",
                 fontWeight: "100",
-                display: "flex",
                 paddingVertical: 8,
               }}
             >
@@ -158,8 +183,8 @@ const ExploreScreen = ({ navigation }) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
-              paddingLeft: Sizes.fixPadding * 2.0,
-              paddingRight: Sizes.fixPadding,
+              paddingHorizontal: Sizes.fixPadding,
+              marginTop: 4,
             }}
           />
         ) : (
@@ -268,6 +293,7 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorAudioList,
     error: errorAudioList,
   } = useGetAudioListAPI();
+
   //Favorited gendre (first time and user choose and user like gendre)
   const {
     data: dataFavGenre,
@@ -275,6 +301,7 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorFavGenre,
     error: errorFavGenre,
   } = useGetFavoriteGenreAPI();
+
   //Favorited Playlist
   const { data: playListFavoritedData, isSuccess: isPlayListFavoritedSuccess } =
     useGetPlaylist({
@@ -305,22 +332,221 @@ const ExploreScreen = ({ navigation }) => {
 
   const { showOptions, search } = state;
 
+  const test = () => {
+    return (
+      <Header
+        backgroundImageStyle={{}}
+        barStyle="default"
+        centerComponent={{
+          text: "MY TITLE",
+          style: { color: "#fff" },
+        }}
+        centerContainerStyle={{}}
+        containerStyle={{ width: 350 }}
+        leftComponent={{ icon: "menu", color: "#fff" }}
+        leftContainerStyle={{}}
+        linearGradientProps={{}}
+        placement="center"
+        rightComponent={{ icon: "home", color: "#fff" }}
+        rightContainerStyle={{}}
+        statusBarProps={{}}
+      />
+    );
+  };
+
+  const myPacks = () => {
+    const data = [
+      {
+        id: 0,
+        name: "Access Yourself",
+        imageUrl:
+          "https://thumbs.dreamstime.com/b/abstract-gradient-blue-light-background-retro-colors-lot-space-text-composition-art-image-website-magazine-97327659.jpg",
+        numOfExercises: 7,
+      },
+      {
+        id: 1,
+        name: "Put Your Mind To Ease",
+        imageUrl:
+          "https://thumbs.dreamstime.com/b/abstract-gradient-blue-light-background-retro-colors-lot-space-text-composition-art-image-website-magazine-97327659.jpg",
+        numOfExercises: 7,
+      },
+      {
+        id: 2,
+        name: "Sleep Habit Pack",
+        imageUrl:
+          "https://thumbs.dreamstime.com/b/abstract-gradient-blue-light-background-retro-colors-lot-space-text-composition-art-image-website-magazine-97327659.jpg",
+        numOfExercises: 7,
+      },
+      {
+        id: 3,
+        name: "For Being Mindful",
+        imageUrl:
+          "https://thumbs.dreamstime.com/b/abstract-gradient-blue-light-background-retro-colors-lot-space-text-composition-art-image-website-magazine-97327659.jpg",
+        numOfExercises: 7,
+      },
+    ];
+
+    return (
+      <View>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>MY THERAPIST</Text>
+        </View>
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {data.map((item, index) => (
+            <View
+              key={item.id}
+              style={{
+                width: "50%", // This makes each item take up 50% of the row width
+                padding: 8, // Add padding between items
+                alignItems: "center", // Center items horizontally
+              }}
+            >
+              <ImageBackground
+                source={{ uri: item.imageUrl }}
+                style={{
+                  width: 175,
+                  height: 200,
+                  borderRadius: 10,
+                  overflow: "hidden", // Clip the image to the rounded border
+                }} // Adjust the dimensions as needed>
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+
+                    padding: 4,
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...Fonts.whiteColor18SemiBold,
+                      textAlign: "left",
+                      paddingRight: 8,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 8,
+                    left: 8,
+                    borderRadius: 10,
+                    backgroundColor: "black",
+                    padding: 4,
+                    marginBottom: 8,
+                  }}
+                >
+                  <Text
+                    style={{ ...Fonts.grayColor12SemiBold }}
+                  >{`${item.numOfExercises} EXERCISES`}</Text>
+                </View>
+              </ImageBackground>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  };
+  const suggestion = () => {
+    const data = [
+      {
+        id: 0,
+        name: "Access Yourself",
+        imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
+        numOfExercises: 7,
+        desc: "Something to describe",
+      },
+      {
+        id: 1,
+        name: "Put Your Mind To Ease",
+        imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
+        numOfExercises: 7,
+        desc: "Something to describe",
+      },
+      {
+        id: 2,
+        name: "Sleep Habit Pack",
+        imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
+        numOfExercises: 7,
+        desc: "Something to describe",
+      },
+      {
+        id: 3,
+        name: "For Being Mindful",
+        imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
+        numOfExercises: 7,
+        desc: "Something to describe",
+      },
+    ];
+
+    return (
+      <View>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Recommended</Text>
+        </View>
+        <View style={{ flexDirection: "column", justifyContent: "center" }}>
+          {data.map((item, index) => (
+            <View
+              key={item.id}
+              style={{
+                padding: 8, // Add padding between items
+                alignItems: "center", // Center items horizontally
+              }}
+            >
+              <ImageBackground
+                source={{ uri: item.imageUrl }}
+                style={{
+                  width: 375,
+                  height: 200,
+                  borderRadius: 10,
+                  overflow: "hidden", // Clip the image to the rounded border
+                }} // Adjust the dimensions as needed>
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 8,
+                    left: 8,
+                    padding: 4,
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...Fonts.whiteColor18SemiBold,
+                      textAlign: "left",
+                      paddingRight: 8,
+                    }}
+                  >
+                    {item.desc}
+                  </Text>
+                </View>
+              </ImageBackground>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         {header()}
-        {searchField()}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
           {mentalHealth()}
-          {recommendedInfo()}
-          {albumsInfo()}
-          {forYouInfo()}
-
-          {recentlyPlayedInfo()}
+          {myPacks()}
+          {suggestion()}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -518,7 +744,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>History Listened</Text>
+          <Text style={styles.titleStyle}>MY THERAPIST</Text>
         </View>
         {!dataRecentlyPlay ? (
           <View style={styles.container}>
@@ -590,7 +816,6 @@ const ExploreScreen = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
-              paddingLeft: Sizes.fixPadding * 2.0,
               paddingRight: Sizes.fixPadding,
             }}
           />
@@ -689,32 +914,46 @@ const ExploreScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1 }}
-          maskElement={
-            <Text style={{ ...Fonts.bold22 }}>Healing Companion</Text>
-          }
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userData?.username}'s Space
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-        <TouchableOpacity
-          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
-          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
-        >
-          <Image
-            source={
-              userData?.avatar?.url
-                ? { uri: userData?.avatar?.url }
-                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
-            }
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userData?.avatar?.url
+                  ? { uri: userData?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -732,13 +971,16 @@ const styles = StyleSheet.create({
   },
   infoTextStyle: {
     paddingBottom: 4,
+    textAlign: "center",
     ...Fonts.grey777714,
   },
   headerWrapStyle: {
     flexDirection: "row",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding,
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
   },
   searchFieldWrapStyle: {
     backgroundColor: Colors.lightGrayColor,
@@ -775,12 +1017,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   popularSongImageStyle: {
-    marginRight: Sizes.fixPadding,
-    width: 110,
-    height: 100,
-    borderColor: "#004d25",
-    borderWidth: 0.2,
-    borderRadius: Sizes.fixPadding - 5.0,
+    width: 60,
+    height: 60,
+    borderRadius: 90,
   },
   recentlyPlayedSongImageStyle: {
     marginRight: Sizes.fixPadding,

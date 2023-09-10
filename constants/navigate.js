@@ -33,4 +33,5 @@ export const Navigate = {
   AUDIO_MENTAL_SCREEN: "AudioMental",
   CHOOSE_MENTAL_SCREEN: "ShowMentalHealth",
   AGE_VERIFY: "AgeVerify",
+  SETTING_SCREEN: "Setting",
 };

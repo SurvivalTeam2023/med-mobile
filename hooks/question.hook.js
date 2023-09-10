@@ -42,6 +42,7 @@ export const useGetFinishedQuizHistoryApi = (payload) =>
       const data = await getFinishedQuizHistory(payload);
       return data;
     },
+    enabled: !!payload,
   });
 export const useGetResultByIdApi = (payload) =>
   useQuery({

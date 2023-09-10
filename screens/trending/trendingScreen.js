@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -14,6 +14,7 @@ import {
   Pressable,
   ActivityIndicator,
   Modal,
+  Button,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,7 +31,8 @@ import {
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 import CountDown from "react-native-countdown-component";
-
+import moment from "moment";
+import TimerCountdown from "react-native-timer-countdown";
 const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = ["Song", "Survey", "Test"];
@@ -38,11 +40,8 @@ const trendingCategoriesList = ["Song", "Survey", "Test"];
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const [value, setValue] = useState([]);
-  const [countdownKey, setCountdownKey] = useState(0); // Key to force re-mounting
+  const [seconds, setSeconds] = useState(10);
 
-  const handleCountdownFinish = () => {
-    setCountdownFinished(true);
-  };
   //Get quiz History
   const {
     data: quizHistoryData,
@@ -54,7 +53,7 @@ const TrendingScreen = ({ navigation }) => {
     console.log("History quiz call success");
   }
   if (isErrorQuizHistory) {
-    console.log("History quiz call success", errorQuizHistory);
+    console.log("History quiz call failed", errorQuizHistory);
   }
 
   // Sort the array based on createdAt timestamps in descending order
@@ -117,6 +116,23 @@ const TrendingScreen = ({ navigation }) => {
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
 
+  //   //If you are making a quize type app then you need to make a simple timer
+  //   //which can be done by using the simple like given below
+  //   //that.setState({ totalDuration: 30 }); //which is 30 sec
+  //   var date = moment().utcOffset("+05:30").format("YYYY-MM-DD hh:mm:ss");
+  //   //Getting the current date-time with required formate and UTC
+  //   var expirydate = "2020-12-23 04:00:45"; //You can set your own date-time
+  //   //Let suppose we have to show the countdown for above date-time
+  //   var diffr = moment.duration(moment(expirydate).diff(moment(date)));
+  //   //difference of the expiry date-time given and current date-time
+  //   var hours = parseInt(diffr.asHours());
+  //   var minutes = parseInt(diffr.minutes());
+  //   var seconds = parseInt(diffr.seconds());
+  //   var d = hours * 60 * 60 + minutes * 60 + seconds;
+  //   //converting in seconds
+  //   setTotalDuration(d);
+  //   //Settign up the duration of countdown in seconds to re-render
+  // }, []);
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],
   });
@@ -125,27 +141,76 @@ const TrendingScreen = ({ navigation }) => {
 
   const { selectedCategory } = state;
   const countDown = () => {
+    //Clock logic
+    const [isRunning, setIsRunning] = useState(false);
+    // const timerRef = useRef(null);
+
+    // const handleStart = () => {
+    //   setIsRunning(true);
+    //   timerRef.current.start();
+    // };
+
+    // const handleStop = () => {
+    //   setIsRunning(false);
+    //   timerRef.current.stop();
+    // };
+
+    // const handlePause = () => {
+    //   setIsRunning(false);
+    //   timerRef.current.pause();
+    // };
+
+    // const handleResume = () => {
+    //   setIsRunning(true);
+    //   timerRef.current.resume();
+    // };
     return (
-      <CountDown
-        id={countdownKey}
-        until={60}
-        size={30}
-        onFinish={() => alert("Finished")}
-        digitStyle={{
-          backgroundColor: "#FFF",
-          borderWidth: 2,
-          borderColor: "#1CC625",
-        }}
-        digitTxtStyle={{ color: "#1CC625" }}
-        timeToShow={["M", "S"]}
-        timeLabels={{ m: "Minutes", s: "Seconds" }}
-      />
+      <View style={{ paddingLeft: 125 }}>
+        <View style={styles.clockContainer}>
+          <TimerCountdown
+            initialSecondsRemaining={1000 * 60}
+            onTick={(secondsRemaining) => console.log("tick", secondsRemaining)}
+            onComplete={() => console.log("complete")}
+            formatSecondsRemaining={(milliseconds) => {
+              const remainingSec = Math.round(milliseconds / 1000);
+              const seconds = parseInt((remainingSec % 60).toString(), 10);
+              const minutes = parseInt(
+                ((remainingSec / 60) % 60).toString(),
+                10
+              );
+              const hours = parseInt((remainingSec / 3600).toString(), 10);
+              const s = seconds < 10 ? "0" + seconds : seconds;
+              const m = minutes < 10 ? "0" + minutes : minutes;
+              let h = hours < 10 ? "0" + hours : hours;
+              h = h === "00" ? "" : h + ":";
+              return h + m + ":" + s;
+            }}
+            allowFontScaling={true}
+            ref={timerRef}
+            style={styles.clockText}
+          />
+        </View>
+        /*{" "}
+        <View>
+          <View style={styles.buttonContainer}>
+            <Button title="Start" onPress={handleStart} disabled={isRunning} />
+            <Button title="Stop" onPress={handleStop} disabled={!isRunning} />
+            <Button title="Pause" onPress={handlePause} disabled={!isRunning} />
+            <Button
+              title="Resume"
+              onPress={handleResume}
+              disabled={isRunning}
+            />
+          </View>
+        </View>
+        */
+      </View>
     );
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
+      <View>
         {header()}
         {trendingCategories()}
 
@@ -505,6 +570,36 @@ const styles = StyleSheet.create({
   infoTextStyle: {
     paddingBottom: 4,
     ...Fonts.grey777714,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  clockContainer: {
+    flex: 1,
+    backgroundColor: "#9CAF88",
+    width: 150,
+    height: 150,
+    borderRadius: 90,
+    justifyContent: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 20, // Adjust the elevation value as needed
+      },
+    }),
+  },
+  clockText: {
+    display: "flex",
+    textAlign: "center",
+    alignContent: "center",
+    ...Fonts.grayColor24SemiBold,
   },
   colorDot: {
     borderRadius: "50%",
