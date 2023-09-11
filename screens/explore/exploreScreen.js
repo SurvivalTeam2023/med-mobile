@@ -38,7 +38,6 @@ import {
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import { Header } from "@rneui/base";
 let recentlyPlayedList = null;
 
 let forYouList = [];
@@ -332,33 +331,11 @@ const ExploreScreen = ({ navigation }) => {
 
   const { showOptions, search } = state;
 
-  const test = () => {
-    return (
-      <Header
-        backgroundImageStyle={{}}
-        barStyle="default"
-        centerComponent={{
-          text: "MY TITLE",
-          style: { color: "#fff" },
-        }}
-        centerContainerStyle={{}}
-        containerStyle={{ width: 350 }}
-        leftComponent={{ icon: "menu", color: "#fff" }}
-        leftContainerStyle={{}}
-        linearGradientProps={{}}
-        placement="center"
-        rightComponent={{ icon: "home", color: "#fff" }}
-        rightContainerStyle={{}}
-        statusBarProps={{}}
-      />
-    );
-  };
-
   const myPacks = () => {
     const data = [
       {
         id: 0,
-        name: "Access Yourself",
+        name: "Healing Yourself",
         imageUrl:
           "https://thumbs.dreamstime.com/b/abstract-gradient-blue-light-background-retro-colors-lot-space-text-composition-art-image-website-magazine-97327659.jpg",
         numOfExercises: 7,
@@ -401,50 +378,56 @@ const ExploreScreen = ({ navigation }) => {
                 alignItems: "center", // Center items horizontally
               }}
             >
-              <ImageBackground
-                source={{ uri: item.imageUrl }}
-                style={{
-                  width: 175,
-                  height: 200,
-                  borderRadius: 10,
-                  overflow: "hidden", // Clip the image to the rounded border
-                }} // Adjust the dimensions as needed>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.push(Navigate.MEDITATE_SCREEN);
+                }}
               >
-                <View
+                <ImageBackground
+                  source={{ uri: item.imageUrl }}
                   style={{
-                    position: "absolute",
-                    top: 8,
-                    left: 8,
-
-                    padding: 4,
-                  }}
+                    width: 175,
+                    height: 200,
+                    borderRadius: 10,
+                    overflow: "hidden", // Clip the image to the rounded border
+                  }} // Adjust the dimensions as needed>
                 >
-                  <Text
+                  <View
                     style={{
-                      ...Fonts.whiteColor18SemiBold,
-                      textAlign: "left",
-                      paddingRight: 8,
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+
+                      padding: 4,
                     }}
                   >
-                    {item.name}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    position: "absolute",
-                    bottom: 8,
-                    left: 8,
-                    borderRadius: 10,
-                    backgroundColor: "black",
-                    padding: 4,
-                    marginBottom: 8,
-                  }}
-                >
-                  <Text
-                    style={{ ...Fonts.grayColor12SemiBold }}
-                  >{`${item.numOfExercises} EXERCISES`}</Text>
-                </View>
-              </ImageBackground>
+                    <Text
+                      style={{
+                        ...Fonts.whiteColor18SemiBold,
+                        textAlign: "left",
+                        paddingRight: 8,
+                      }}
+                    >
+                      {item.name}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 8,
+                      left: 8,
+                      borderRadius: 10,
+                      backgroundColor: "black",
+                      padding: 4,
+                      marginBottom: 8,
+                    }}
+                  >
+                    <Text
+                      style={{ ...Fonts.grayColor12SemiBold }}
+                    >{`${item.numOfExercises} EXERCISES`}</Text>
+                  </View>
+                </ImageBackground>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
