@@ -19,6 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import { useFocusEffect } from "@react-navigation/native";
 import ProfileScreen from "../screens/Profile/profileScreen";
+import { AntDesign } from "@expo/vector-icons";
 import {
   ACTION_TYPE,
   nowPlayingAction,
@@ -72,20 +73,16 @@ const BottomTabBarScreen = ({ navigation }) => {
   const bottonNavigation = [
     {
       index: 1,
-      icon: "headset",
+      icon: "home",
     },
     {
       index: 2,
-      icon: "add-alert",
+      icon: "hearto",
     },
 
     {
       index: 3,
-      icon: "camera-alt",
-    },
-    {
-      index: 4,
-      icon: "settings",
+      icon: "camerao",
     },
   ];
   const { currentIndex, pauseSong, backClickCount } = state;
@@ -167,30 +164,42 @@ const BottomTabBarScreen = ({ navigation }) => {
 
   function bottomTabBarItem({ index, icon }) {
     return (
-      <TouchableOpacity
-        key={index} // Assign a unique key here
-        activeOpacity={0.9}
-        style={{ alignItems: "center" }}
-        onPress={() => updateState({ currentIndex: index })}
-      >
-        {index == currentIndex ? (
-          <MaterialIcons
-            size={35}
-            mode="linear"
-            color={Colors.secondaryColor}
-            style={{ alignSelf: "center" }}
-            name={icon}
-            type="material"
-          />
+      <View>
+        {index === currentIndex ? (
+          <TouchableOpacity
+            key={index} // Assign a unique key here
+            activeOpacity={0.9}
+            style={{
+              alignItems: "center",
+            }}
+            onPress={() => updateState({ currentIndex: index })}
+          >
+            <AntDesign
+              size={25}
+              mode="linear"
+              color={Colors.greenLightColor}
+              style={{
+                alignSelf: "center",
+              }}
+              name={icon}
+            />
+          </TouchableOpacity>
         ) : (
-          <MaterialIcons
-            color={Colors.blackColor}
-            size={35}
-            style={{ alignSelf: "center" }}
-            name={icon}
-          />
+          <TouchableOpacity
+            key={index} // Assign a unique key here
+            activeOpacity={0.9}
+            style={{ alignItems: "center" }}
+            onPress={() => updateState({ currentIndex: index })}
+          >
+            <AntDesign
+              color={Colors.blackColor}
+              size={25}
+              style={{ alignSelf: "center" }}
+              name={icon}
+            />
+          </TouchableOpacity>
         )}
-      </TouchableOpacity>
+      </View>
     );
   }
   return (
@@ -201,10 +210,8 @@ const BottomTabBarScreen = ({ navigation }) => {
           <ExploreScreen navigation={navigation} />
         ) : currentIndex == 2 ? (
           <TrendingScreen navigation={navigation} />
-        ) : currentIndex == 3 ? (
-          <IntroAIScreen navigation={navigation} />
         ) : (
-          <SettingsScreen navigation={navigation} />
+          <IntroAIScreen navigation={navigation} />
         )}
         {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
         <View style={styles.bottomTabBarStyle}>

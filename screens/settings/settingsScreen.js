@@ -958,6 +958,7 @@ const SettingsScreen = ({ navigation }) => {
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
@@ -967,8 +968,8 @@ const SettingsScreen = ({ navigation }) => {
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
               ]}
             />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
           </TouchableOpacity>
-          <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
         </View>
 
         <View style={{ width: "33.33%" }}>

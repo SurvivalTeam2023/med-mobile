@@ -9,9 +9,9 @@ import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { Text } from "react-native";
 import TimerCountdown from "react-native-timer-countdown";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import Markdown from "react-native-simple-markdown";
+import { Feather } from "@expo/vector-icons";
+
 const MeditateScreen = ({ navigation }) => {
   const header = () => {
     return (
@@ -20,6 +20,7 @@ const MeditateScreen = ({ navigation }) => {
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
@@ -29,8 +30,8 @@ const MeditateScreen = ({ navigation }) => {
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
               ]}
             />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
           </TouchableOpacity>
-          <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
         </View>
 
         <View style={{ width: "33.33%" }}>
@@ -48,7 +49,7 @@ const MeditateScreen = ({ navigation }) => {
     const [secondsRemaining, setSecondsRemaining] = useState(1000 * 60);
     const [currentTime, setCurrentTime] = useState(1000 * 60);
     const [startTimerOnMount, setStartTimerOnMount] = useState(false);
-
+    const [countComplete, setCountComplete] = useState(false);
     useEffect(() => {
       let timer;
 
@@ -60,8 +61,13 @@ const MeditateScreen = ({ navigation }) => {
 
               clearInterval(timer);
               return 0;
+            } else if (prevSeconds > 0) {
+              return prevSeconds;
+            } else {
+              setIsRunning(false);
+              clearInterval(timer);
+              return 0;
             }
-            return prevSeconds - 1000;
           });
         }, 1000);
       }
@@ -75,12 +81,13 @@ const MeditateScreen = ({ navigation }) => {
 
     const handleStart = () => {
       setStartTimerOnMount(true);
+      setCountComplete(false);
       setIsRunning(true);
     };
 
     const handleStop = () => {
       setIsRunning(false);
-      setSecondsRemaining(1000 * 60); // Reset the timer to the initial value
+      setCurrentTime(1000 * 60); // Reset the timer to the initial value
       setStartTimerOnMount(false);
     };
 
@@ -96,7 +103,7 @@ const MeditateScreen = ({ navigation }) => {
     };
     return (
       <View>
-        <View style={{ paddingLeft: 125, paddingTop: 16 }}>
+        <View style={styles.container}>
           <View style={styles.clockContainer}>
             <TimerCountdown
               initialSecondsRemaining={
@@ -107,7 +114,9 @@ const MeditateScreen = ({ navigation }) => {
               }}
               onComplete={() => {
                 console.log("complete");
-                setIsRunning(false); // Stop the timer when it completes
+                setCountComplete(true);
+                // Stop the timer when it completes
+                handleStop();
               }}
               formatSecondsRemaining={(milliseconds) => {
                 const remainingSec = Math.round(milliseconds / 1000);
@@ -119,42 +128,73 @@ const MeditateScreen = ({ navigation }) => {
                 const m = minutes < 10 ? "0" + minutes : minutes;
                 const h = hours < 10 ? "0" + hours : hours;
 
-                return h + ":" + m + ":" + s;
+                return m + ":" + s;
               }}
               allowFontScaling={true}
               style={styles.clockText}
             />
           </View>
         </View>
-        <View>
-          <View style={styles.buttonContainer}>
-            <AntDesign
-              name="play"
-              size={24}
-              color="black"
-              onPress={handleStart}
-            />
-            <Button title="Stop" onPress={handleStop} disabled={!isRunning} />
-            <Button title="Pause" onPress={handlePause} disabled={!isRunning} />
-            <Button
-              title="Resume"
-              onPress={handleResume}
-              disabled={isRunning}
-            />
-          </View>
+        <View style={{ paddingBottom: 20 }}>
+          {countComplete ? (
+            <View style={styles.completeContainer}>
+              <Text style={{ paddingBottom: 4 }}>
+                Healing complete. Press start to start again
+              </Text>
+              <AntDesign
+                name="play"
+                size={30}
+                color="#435334"
+                onPress={handleStart}
+              />
+            </View>
+          ) : (
+            <View style={styles.buttonContainer}>
+              {isRunning && !countComplete ? (
+                <AntDesign
+                  name="pausecircleo"
+                  size={30}
+                  color={Colors.greenDarkColor}
+                  onPress={handlePause}
+                />
+              ) : (
+                <AntDesign
+                  name="play"
+                  size={30}
+                  color={Colors.greenDarkColor}
+                  onPress={handleStart}
+                />
+              )}
+              {isRunning && !countComplete ? (
+                <Feather
+                  name="stop-circle"
+                  size={30}
+                  color={Colors.greenDarkColor}
+                  onPress={handleStop}
+                />
+              ) : (
+                <Feather name="stop-circle" size={30} color="gray" />
+              )}
+            </View>
+          )}
         </View>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.greenLightColor }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#CEDEBD" }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         {header()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
+          contentContainerStyle={{
+            paddingBottom: Sizes.fixPadding * 15.0,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           {countDown()}
         </ScrollView>
@@ -164,6 +204,11 @@ const MeditateScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   headerWrapStyle: {
     width: "100%",
     flexDirection: "row",
@@ -173,11 +218,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGrayColor,
   },
   clockContainer: {
-    flex: 1,
-    backgroundColor: "#9CAF88",
-    width: 150,
-    height: 150,
-    borderRadius: 90,
+    backgroundColor: "#9EB384",
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     justifyContent: "center",
     ...Platform.select({
       ios: {
@@ -200,7 +244,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    marginTop: 12,
+  },
+  completeContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 12,
   },
 });
 

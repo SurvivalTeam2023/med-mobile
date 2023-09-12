@@ -388,6 +388,7 @@ export const Colors = {
   grayColor: "#9E9E9E",
   lightGrayColor: "#EEEEEE",
   greenLightColor: "#A8DF8E",
+  greenDarkColor: "#435334",
 };
 
 export const Sizes = {
