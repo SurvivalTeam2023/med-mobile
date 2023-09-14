@@ -199,7 +199,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>SELF-CARE</Text>
+          <Text style={styles.titleStyle}>YOUR SELF-CARE</Text>
         </View>
         {!dataSelectedMental ? (
           <View style={styles.container}>
@@ -391,70 +391,60 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>MY THERAPIST</Text>
+          <Text style={styles.titleStyle}>THERAPIST</Text>
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {data.map((item, index) => (
-            <View
-              key={item.id}
-              style={{
-                width: "50%", // This makes each item take up 50% of the row width
-                padding: 8, // Add padding between items
-                alignItems: "center", // Center items horizontally
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  getAudioByMentalHealthId();
+          {dataMentalHealth ? (
+            dataMentalHealth.map((item, index) => (
+              <View
+                key={item.id}
+                style={{
+                  width: "50%", // This makes each item take up 50% of the row width
+                  padding: 8, // Add padding between items
+                  alignItems: "center", // Center items horizontally
                 }}
               >
-                <ImageBackground
-                  source={{ uri: item.imageUrl }}
-                  style={{
-                    width: 175,
-                    height: 200,
-                    borderRadius: 10,
-                    overflow: "hidden", // Clip the image to the rounded border
-                  }} // Adjust the dimensions as needed>
+                <TouchableOpacity
+                  onPress={() => {
+                    getAudioByMentalHealthId();
+                  }}
                 >
-                  <View
+                  <ImageBackground
+                    source={{ uri: item.imageUrl }}
                     style={{
-                      position: "absolute",
-                      top: 8,
-                      left: 8,
-
-                      padding: 4,
-                    }}
+                      width: 175,
+                      height: 200,
+                      borderRadius: 10,
+                      overflow: "hidden", // Clip the image to the rounded border
+                    }} // Adjust the dimensions as needed>
                   >
-                    <Text
+                    <View
                       style={{
-                        ...Fonts.whiteColor18SemiBold,
-                        textAlign: "left",
-                        paddingRight: 8,
+                        position: "absolute",
+                        top: 8,
+                        left: 8,
+                        padding: 4,
                       }}
                     >
-                      {item.name}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      position: "absolute",
-                      bottom: 8,
-                      left: 8,
-                      borderRadius: 10,
-                      backgroundColor: "black",
-                      padding: 4,
-                      marginBottom: 8,
-                    }}
-                  >
-                    <Text
-                      style={{ ...Fonts.grayColor12SemiBold }}
-                    >{`${item.numOfExercises} EXERCISES`}</Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
+                      <Text
+                        style={{
+                          ...Fonts.whiteColor18SemiBold,
+                          textAlign: "left",
+                          paddingRight: 8,
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <View style={styles.container}>
+              <ActivityIndicator size="small" color="#f8b26a" />
             </View>
-          ))}
+          )}
         </View>
       </View>
     );
@@ -752,7 +742,7 @@ const ExploreScreen = ({ navigation }) => {
     return (
       <View style={{ marginTop: Sizes.fixPadding - 5.0 }}>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>MY THERAPIST</Text>
+          <Text style={styles.titleStyle}>THERAPIST</Text>
         </View>
         {!dataRecentlyPlay ? (
           <View style={styles.container}>

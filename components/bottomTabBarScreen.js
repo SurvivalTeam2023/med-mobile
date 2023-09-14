@@ -27,6 +27,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../constants/navigate";
 import IntroAIScreen from "../screens/introAi/introduceAiScreen";
+import MusicScreen from "../screens/musicScreen/musicScreen";
 
 const { width } = Dimensions.get("window");
 
@@ -79,9 +80,13 @@ const BottomTabBarScreen = ({ navigation }) => {
       index: 2,
       icon: "hearto",
     },
-
     {
       index: 3,
+      icon: "staro",
+    },
+
+    {
+      index: 4,
       icon: "camerao",
     },
   ];
@@ -201,6 +206,8 @@ const BottomTabBarScreen = ({ navigation }) => {
           <ExploreScreen navigation={navigation} />
         ) : currentIndex == 2 ? (
           <TrendingScreen navigation={navigation} />
+        ) : currentIndex == 3 ? (
+          <MusicScreen navigation={navigation} />
         ) : (
           <IntroAIScreen navigation={navigation} />
         )}

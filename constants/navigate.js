@@ -35,4 +35,5 @@ export const Navigate = {
   AGE_VERIFY: "AgeVerify",
   SETTING_SCREEN: "Setting",
   MEDITATE_SCREEN: "Meditate",
+  MUSIC_SCREEN: "Music",
 };

@@ -33,7 +33,8 @@ import { useGetAudioRecommendByMentalIdAPI } from "../../hooks/audio.hook";
 
 const AudioMentalScreen = ({ navigation, route }) => {
   let tracksList;
-  const mentalDetail = route?.params?.item;
+  const mentalDetail = route?.params.data;
+  console.log(mentalDetail);
 
   const sortOptions = ["Name", "Date Added", "Artist"];
   const { data, isSuccess, isError, error } = useGetAudioRecommendByMentalIdAPI(
@@ -68,8 +69,8 @@ const AudioMentalScreen = ({ navigation, route }) => {
       <View style={{ flex: 1 }}>
         {cornerImage()}
         {header()}
-        {sortingIcons()}
 
+        {sortingIcons()}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
