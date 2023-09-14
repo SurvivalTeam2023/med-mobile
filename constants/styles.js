@@ -232,6 +232,21 @@ export const Fonts = {
     fontSize: 18,
     fontFamily: "Montserrat_SemiBold",
   },
+  blackColor20SemiBold: {
+    color: "#000000",
+    fontSize: 20,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  blackColor22SemiBold: {
+    color: "#000000",
+    fontSize: 22,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  blackColor24SemiBold: {
+    color: "#000000",
+    fontSize: 24,
+    fontFamily: "Montserrat_SemiBold",
+  },
   blackColor26SemiBold: {
     color: "#000000",
     fontSize: 26,

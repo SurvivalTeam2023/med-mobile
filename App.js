@@ -108,7 +108,14 @@ const App = () => {
               name="ShowMentalHealth"
               component={ChooseMentalHealthScreen}
             />
-            <Stack.Screen name="Meditate" component={MeditateScreen} />
+            <Stack.Screen
+              name="Meditate"
+              component={MeditateScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const mental = route.params.item;
+                return mental;
+              }}
+            />
             <Stack.Screen name="AgeVerify" component={AgeVerifyScreen} />
             <Stack.Screen name="Setting" component={SettingsScreen} />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />

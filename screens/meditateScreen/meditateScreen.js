@@ -11,35 +11,18 @@ import TimerCountdown from "react-native-timer-countdown";
 import { useEffect, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
-const MeditateScreen = ({ navigation }) => {
+import Markdown from "react-native-simple-markdown";
+const MeditateScreen = ({ navigation, route }) => {
+  const mentalAudioList = route.params.data;
+  console.log(mentalAudioList);
   const header = () => {
     return (
       <View style={styles.headerWrapStyle}>
-        <View style={{ flexDirection: "row", width: "33.33%" }}>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => navigation.pop()}
-            style={{ flexDirection: "row" }}
-          >
-            <MaterialIcons
-              name="keyboard-arrow-left"
-              size={24}
-              colors={[
-                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
-                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
-              ]}
-            />
-            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ width: "33.33%" }}>
-          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
-            Timer
+        <View>
+          <Text style={{ ...Fonts.blackColor22SemiBold, textAlign: "center" }}>
+            Healing Space
           </Text>
         </View>
-        <View style={{ width: "33.33%" }}></View>
       </View>
     );
   };
@@ -52,7 +35,6 @@ const MeditateScreen = ({ navigation }) => {
     const [countComplete, setCountComplete] = useState(false);
     useEffect(() => {
       let timer;
-
       if (startTimerOnMount && isRunning) {
         timer = setInterval(() => {
           setSecondsRemaining((prevSeconds) => {
@@ -101,8 +83,16 @@ const MeditateScreen = ({ navigation }) => {
       setIsRunning(true);
       setStartTimerOnMount(true);
     };
+
     return (
       <View>
+        <View style={styles.markdownView}>
+          <Markdown style={styles.markdownStyles}>
+            *"Live slower, savor each moment, and let the unhurried pace of life
+            reveal its hidden beauty"*
+          </Markdown>
+        </View>
+
         <View style={styles.container}>
           <View style={styles.clockContainer}>
             <TimerCountdown
@@ -134,6 +124,9 @@ const MeditateScreen = ({ navigation }) => {
               style={styles.clockText}
             />
           </View>
+          <Text style={{ ...Fonts.grayColor20SemiBold, paddingTop: 36 }}>
+            Mediate Song long AF
+          </Text>
         </View>
         <View style={{ paddingBottom: 20 }}>
           {countComplete ? (
@@ -165,18 +158,36 @@ const MeditateScreen = ({ navigation }) => {
                   onPress={handleStart}
                 />
               )}
-              {isRunning && !countComplete ? (
-                <Feather
-                  name="stop-circle"
-                  size={30}
-                  color={Colors.greenDarkColor}
-                  onPress={handleStop}
-                />
-              ) : (
-                <Feather name="stop-circle" size={30} color="gray" />
-              )}
+              <Feather
+                name="stop-circle"
+                size={30}
+                color={Colors.greenDarkColor}
+                onPress={handleStop}
+              />
             </View>
           )}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              paddingTop: 40,
+            }}
+          >
+            <Text
+              style={{
+                ...Fonts.grayColor18SemiBold,
+                borderWidth: 1,
+                borderColor: Colors.greenDarkColor,
+                paddingVertical: 8,
+                borderRadius: 10,
+                paddingHorizontal: 36,
+              }}
+            >
+              Back
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -209,19 +220,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  markdownView: {
+    paddingTop: 16,
+    paddingHorizontal: 24,
+    textAlign: "center",
+  },
+  markdownStyles: {
+    color: "red",
+  },
   headerWrapStyle: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingVertical: 12,
-    borderBottomWidth: 0.5,
-    backgroundColor: Colors.lightGrayColor,
   },
   clockContainer: {
     backgroundColor: "#9EB384",
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 225,
+    height: 225,
+    borderRadius: 150,
     justifyContent: "center",
     ...Platform.select({
       ios: {
@@ -244,7 +261,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 12,
+    paddingVertical: 12,
   },
   completeContainer: {
     justifyContent: "center",

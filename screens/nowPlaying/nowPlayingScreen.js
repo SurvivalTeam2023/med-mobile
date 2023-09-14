@@ -241,7 +241,6 @@ const NowPlayingScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 try {
-                  console.log("hehe");
                   downloadAudio(playingList[currentAudioIndex]);
                 } catch (error) {
                   console.error("Error while initiating download:", error);

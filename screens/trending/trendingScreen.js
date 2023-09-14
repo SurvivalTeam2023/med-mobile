@@ -30,17 +30,14 @@ import {
   useGetResultByIdApi,
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
-import CountDown from "react-native-countdown-component";
-import moment from "moment";
-import TimerCountdown from "react-native-timer-countdown";
+
 const { width } = Dimensions.get("window");
 
-const trendingCategoriesList = ["Song", "Survey", "Test"];
+const trendingCategoriesList = ["Song", "Survey"];
 
 const TrendingScreen = ({ navigation }) => {
   const userInfo = useSelector((state) => state.user.data);
   const [value, setValue] = useState([]);
-  const [seconds, setSeconds] = useState(10);
 
   //Get quiz History
   const {
@@ -140,73 +137,7 @@ const TrendingScreen = ({ navigation }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { selectedCategory } = state;
-  const countDown = () => {
-    //Clock logic
-    const [isRunning, setIsRunning] = useState(false);
-    // const timerRef = useRef(null);
 
-    // const handleStart = () => {
-    //   setIsRunning(true);
-    //   timerRef.current.start();
-    // };
-
-    // const handleStop = () => {
-    //   setIsRunning(false);
-    //   timerRef.current.stop();
-    // };
-
-    // const handlePause = () => {
-    //   setIsRunning(false);
-    //   timerRef.current.pause();
-    // };
-
-    // const handleResume = () => {
-    //   setIsRunning(true);
-    //   timerRef.current.resume();
-    // };
-    return (
-      <View style={{ paddingLeft: 125 }}>
-        <View style={styles.clockContainer}>
-          <TimerCountdown
-            initialSecondsRemaining={1000 * 60}
-            onTick={(secondsRemaining) => console.log("tick", secondsRemaining)}
-            onComplete={() => console.log("complete")}
-            formatSecondsRemaining={(milliseconds) => {
-              const remainingSec = Math.round(milliseconds / 1000);
-              const seconds = parseInt((remainingSec % 60).toString(), 10);
-              const minutes = parseInt(
-                ((remainingSec / 60) % 60).toString(),
-                10
-              );
-              const hours = parseInt((remainingSec / 3600).toString(), 10);
-              const s = seconds < 10 ? "0" + seconds : seconds;
-              const m = minutes < 10 ? "0" + minutes : minutes;
-              let h = hours < 10 ? "0" + hours : hours;
-              h = h === "00" ? "" : h + ":";
-              return h + m + ":" + s;
-            }}
-            allowFontScaling={true}
-            ref={timerRef}
-            style={styles.clockText}
-          />
-        </View>
-        /*{" "}
-        <View>
-          <View style={styles.buttonContainer}>
-            <Button title="Start" onPress={handleStart} disabled={isRunning} />
-            <Button title="Stop" onPress={handleStop} disabled={!isRunning} />
-            <Button title="Pause" onPress={handlePause} disabled={!isRunning} />
-            <Button
-              title="Resume"
-              onPress={handleResume}
-              disabled={isRunning}
-            />
-          </View>
-        </View>
-        */
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -223,7 +154,6 @@ const TrendingScreen = ({ navigation }) => {
         >
           {selectedCategory === "Song" && song()}
           {selectedCategory === "Survey" && startQuizTitle()}
-          {selectedCategory === "Test" && countDown()}
         </ScrollView>
       </View>
     </SafeAreaView>

@@ -25,13 +25,17 @@ import { Navigate } from "../../constants/navigate";
 import { useGetFavoriteGenreAPI } from "../../hooks/favorite.hook";
 import {
   useGetAudioListAPI,
+  useGetAudioRecommendByMentalIdAPI,
   useGetRecentlyPlayHistoryAudioListAPI,
 } from "../../hooks/audio.hook";
 import { TextInput } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
-import { useGetMentalHealthListAPI } from "../../hooks/mentalHealth";
+import {
+  useGetMentalHealthListAPI,
+  useGetSelectedMentalHealthListAPI,
+} from "../../hooks/mentalHealth";
 import {
   useGetFinishedQuizHistoryApi,
   useGetResultByIdApi,
@@ -80,6 +84,49 @@ const ExploreScreen = ({ navigation }) => {
   const { data: recommendedGenre, isSuccess: isRecommendedGenreSucess } =
     useGetGenreList();
 
+  //get audio based on mental health id
+  const { data: dataMentalIdAudio, isSuccess: isSuccessMentalIdAudio } =
+    useGetAudioRecommendByMentalIdAPI();
+
+  //get selected mental health list
+  const { data: dataSelectedMental, isSuccess: isSuccessSelectedMental } =
+    useGetSelectedMentalHealthListAPI();
+
+  const getAudioByMentalHealthId = async () => {
+    try {
+      if (isSuccessSelectedMental) {
+        let selectedMentalList = dataSelectedMental;
+        let responses = [];
+        let audioListMentalId;
+        let audioSingleMental;
+        let randomAudio;
+        if (selectedMentalList) {
+          for (const item of selectedMentalList) {
+            try {
+              const response = await getAudioRecommendByMentalIdAPI(item.id);
+
+              if (response) responses.push(response);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          if (responses) {
+            audioListMentalId = responses?.map((e, index) => e.audios);
+            randomAudio =
+              audioListMentalId[
+                Math.floor(Math.random() * audioListMentalId.length)
+              ];
+          }
+
+          navigation.push(Navigate.MEDITATE_SCREEN, {
+            data: audioListMentalId,
+          });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   //Recently played
   const {
     data: dataRecentlyPlay,
@@ -96,13 +143,6 @@ const ExploreScreen = ({ navigation }) => {
     error: errorAudioRec,
   } = useGetRecommendAudioByQuizResultAPI();
 
-  const mentalData = dataAudioRec?.mentalHealths?.map((e, index) => {
-    return {
-      id: index + 1,
-      point: e.point,
-      mentalHealth: e.mentalHealth,
-    };
-  });
   //Get mental health list
   const {
     data: dataMentalHealth,
@@ -161,22 +201,13 @@ const ExploreScreen = ({ navigation }) => {
         <View style={styles.titleWrapStyle}>
           <Text style={styles.titleStyle}>SELF-CARE</Text>
         </View>
-        {!dataMentalHealth ? (
+        {!dataSelectedMental ? (
           <View style={styles.container}>
-            <Text
-              style={{
-                fontSize: 20,
-                textAlign: "center",
-                fontWeight: "100",
-                paddingVertical: 8,
-              }}
-            >
-              Loading
-            </Text>
+            <ActivityIndicator size="small" color="#f8b26a" />
           </View>
-        ) : dataMentalHealth.length > 0 ? (
+        ) : dataSelectedMental.length > 0 ? (
           <FlatList
-            data={dataMentalHealth}
+            data={dataSelectedMental}
             keyExtractor={(item) => `${item.id}`}
             renderItem={renderItem}
             horizontal={true}
@@ -187,16 +218,9 @@ const ExploreScreen = ({ navigation }) => {
             }}
           />
         ) : (
-          <Text
-            style={{
-              fontSize: 20,
-              textAlign: "center",
-              fontWeight: "100",
-              paddingVertical: 8,
-            }}
-          >
-            Loading...
-          </Text>
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
         )}
       </View>
     );
@@ -209,6 +233,7 @@ const ExploreScreen = ({ navigation }) => {
     isError: isErrorPlaylist,
     error: errorPlaylist,
   } = useGetPlaylist();
+
   function handleNavigateNowPlayling(audio) {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
     navigation.push("NowPlaying", { audio });
@@ -380,7 +405,7 @@ const ExploreScreen = ({ navigation }) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  navigation.push(Navigate.MEDITATE_SCREEN);
+                  getAudioByMentalHealthId();
                 }}
               >
                 <ImageBackground

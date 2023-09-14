@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -28,13 +29,16 @@ let musicsList = [];
 const ChooseMentalHealthScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
   const { mutate } = useSelectUserMentalHealthAPI();
+
   //Get mental health list
   const {
     data: dataMentalHealth,
     isSuccess: isSuccessMentalHealth,
     isError: isErrorMentalHealth,
+    isLoading: isLoadingMentalHealth,
     error: errorMentalHealth,
   } = useGetMentalHealthListAPI();
+
   if (isSuccessMentalHealth) {
     musicsList = dataMentalHealth;
   }
@@ -144,57 +148,63 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={item.selected ? styles.selectedItem : styles.item}
-          onPress={() => {
-            updateMusics({ id: item?.id });
-          }}
-        >
-          <ImageBackground
-            source={{ uri: `${item.imageUrl}` }}
-            style={{
-              width: width / 2.4,
-              height: width / 4.0,
-              justifyContent: "center", // Center vertically
-              alignItems: "center", // Center horizontally
-              borderRadius: 20, // Adjust the borderRadius value to control roundness
-              overflow: "hidden", // Clip the contents within the rounded border
-              position: "relative", // To enable absolute positioning of the checkbox
+        {isSuccessMentalHealth ? (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={item.selected ? styles.selectedItem : styles.item}
+            onPress={() => {
+              updateMusics({ id: item?.id });
             }}
           >
-            {item.selected ? (
-              <View
-                style={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
-                  padding: 2, // Adjust the padding to position the checkbox
-                  backgroundColor: "#FAF9F6",
-                  borderRadius: 90,
-                }}
-              >
-                <MaterialIcons
-                  name="check"
-                  color={Colors.greenLightColor}
-                  size={20}
-                />
-              </View>
-            ) : null}
-            <Text
+            <ImageBackground
+              source={{ uri: `${item.imageUrl}` }}
               style={{
-                display: "flex",
-                textAlign: "center",
-                alignContent: "center",
-                paddingHorizontal: 12,
-                marginTop: Sizes.fixPadding - 8.0,
-                ...Fonts.blackColor14SemiBold,
+                width: width / 2.4,
+                height: width / 4.0,
+                justifyContent: "center", // Center vertically
+                alignItems: "center", // Center horizontally
+                borderRadius: 20, // Adjust the borderRadius value to control roundness
+                overflow: "hidden", // Clip the contents within the rounded border
+                position: "relative", // To enable absolute positioning of the checkbox
               }}
             >
-              {item.name}
-            </Text>
-          </ImageBackground>
-        </TouchableOpacity>
+              {item.selected ? (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    padding: 2, // Adjust the padding to position the checkbox
+                    backgroundColor: "#FAF9F6",
+                    borderRadius: 90,
+                  }}
+                >
+                  <MaterialIcons
+                    name="check"
+                    color={Colors.greenLightColor}
+                    size={20}
+                  />
+                </View>
+              ) : null}
+              <Text
+                style={{
+                  display: "flex",
+                  textAlign: "center",
+                  alignContent: "center",
+                  paddingHorizontal: 12,
+                  marginTop: Sizes.fixPadding - 8.0,
+                  ...Fonts.blackColor14SemiBold,
+                }}
+              >
+                {item.name}
+              </Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        )}
       </View>
     );
     return (

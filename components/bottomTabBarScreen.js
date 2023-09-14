@@ -164,42 +164,33 @@ const BottomTabBarScreen = ({ navigation }) => {
 
   function bottomTabBarItem({ index, icon }) {
     return (
-      <View>
+      <TouchableOpacity
+        key={index} // Assign a unique key here
+        activeOpacity={0.9}
+        style={{
+          alignItems: "center",
+        }}
+        onPress={() => updateState({ currentIndex: index })}
+      >
         {index === currentIndex ? (
-          <TouchableOpacity
-            key={index} // Assign a unique key here
-            activeOpacity={0.9}
+          <AntDesign
+            size={25}
+            mode="linear"
+            color={Colors.greenLightColor}
             style={{
-              alignItems: "center",
+              alignSelf: "center",
             }}
-            onPress={() => updateState({ currentIndex: index })}
-          >
-            <AntDesign
-              size={25}
-              mode="linear"
-              color={Colors.greenLightColor}
-              style={{
-                alignSelf: "center",
-              }}
-              name={icon}
-            />
-          </TouchableOpacity>
+            name={icon}
+          />
         ) : (
-          <TouchableOpacity
-            key={index} // Assign a unique key here
-            activeOpacity={0.9}
-            style={{ alignItems: "center" }}
-            onPress={() => updateState({ currentIndex: index })}
-          >
-            <AntDesign
-              color={Colors.blackColor}
-              size={25}
-              style={{ alignSelf: "center" }}
-              name={icon}
-            />
-          </TouchableOpacity>
+          <AntDesign
+            color={Colors.blackColor}
+            size={25}
+            style={{ alignSelf: "center" }}
+            name={icon}
+          />
         )}
-      </View>
+      </TouchableOpacity>
     );
   }
   return (
