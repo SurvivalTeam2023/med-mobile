@@ -13,8 +13,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Markdown from "react-native-simple-markdown";
 const MeditateScreen = ({ navigation, route }) => {
-  const mentalAudioList = route.params.data;
-  console.log(mentalAudioList);
   const header = () => {
     return (
       <View style={styles.headerWrapStyle}>

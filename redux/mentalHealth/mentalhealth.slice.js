@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  selectedId: null,
+  idSelected: null,
+  dataSelected: null,
 };
 const reducer = createSlice({
   name: "mentalHealth",
@@ -9,7 +10,9 @@ const reducer = createSlice({
   reducers: {
     resetState: () => ({ ...initialState }),
     setSelectMentalHealth: (state, payload) => {
-      state.selectedId = payload.payload;
+      const { id, data } = payload.payload;
+      state.idSelected = id;
+      state.dataSelected = data;
     },
   },
 });

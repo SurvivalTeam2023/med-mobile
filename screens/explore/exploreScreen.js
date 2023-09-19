@@ -34,7 +34,7 @@ const ExploreScreen = ({ navigation }) => {
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
           {mentalHealth(dataSelectedMental)}
-          {exercise([])}
+          {exercise({ navigation })}
           {suggestion()}
         </ScrollView>
       </View>

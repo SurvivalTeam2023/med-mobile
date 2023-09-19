@@ -17,12 +17,12 @@ export const Fonts = {
   light14: {
     color: "#333333",
     fontSize: 14,
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Regular",
   },
   grey4444: {
     color: "#777777",
     fontSize: 14,
-    fontFamily: "Montserrat",
+    fontFamily: "Montserrat_Regular",
   },
   light14Italic: {
     fontSize: 14,
@@ -339,6 +339,11 @@ export const Fonts = {
   },
   grayColor18SemiBold: {
     color: "#555555",
+    fontSize: 18,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  grayColorf8f9fa18SemiBold: {
+    color: "#e9ecef",
     fontSize: 18,
     fontFamily: "Montserrat_SemiBold",
   },

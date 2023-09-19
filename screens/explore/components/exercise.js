@@ -5,6 +5,8 @@ import { ImageBackground } from "react-native";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useGetExercisesListBySingleMentalIdAPI } from "../../../hooks/exercise.hook";
+import { Navigate } from "../../../constants/navigate";
+import { DEFAULT } from "../../../constants/keyword";
 
 //not trash do not delete
 // const getAudioByMentalHealthId = async () => {
@@ -36,13 +38,19 @@ import { useGetExercisesListBySingleMentalIdAPI } from "../../../hooks/exercise.
 //   } catch (error) {}
 // };
 
-export const exercise = () => {
-  const mentalHealthSelectedId = useSelector(
-    (state) => state.mentalHealth.selectedId
-  );
-
+export const exercise = ({ navigation }) => {
+  const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
-    useGetExercisesListBySingleMentalIdAPI(mentalHealthSelectedId);
+    useGetExercisesListBySingleMentalIdAPI(idSelected);
+
+  const handleClickExercise = (exercise) => {
+    const { type, content } = exercise;
+    if (type === DEFAULT) {
+      navigation.push(content);
+    } else {
+      navigation.push(Navigate.EXERCISE_CONTENT_SCREEN, { data: exercise });
+    }
+  };
 
   return (
     <View>
@@ -59,7 +67,7 @@ export const exercise = () => {
         >
           {dataExercises?.map((item, index) => (
             <View
-              key={item.id}
+              key={item?.id}
               style={{
                 width: "50%", // This makes each item take up 50% of the row width
                 padding: 8, // Add padding between items
@@ -68,19 +76,20 @@ export const exercise = () => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  getAudioByMentalHealthId();
+                  handleClickExercise(item);
                 }}
               >
                 <ImageBackground
                   source={{
                     uri:
-                      item.imageUrl ||
+                      item.image ||
                       "https://e0.pxfuel.com/wallpapers/219/820/desktop-wallpaper-chill-cartoon-top-chill-cartoon-background-for-your-mobile-tablet-explore-chill-background-chill-vibes-be-more-chill-chill-aesthetic.jpg",
                   }}
                   style={{
                     width: 175,
                     height: 200,
                     borderRadius: 10,
+                    borderWidth: 0.2,
                     overflow: "hidden", // Clip the image to the rounded border
                   }} // Adjust the dimensions as needed>
                 >
@@ -94,7 +103,7 @@ export const exercise = () => {
                   >
                     <Text
                       style={{
-                        ...Fonts.whiteColor18SemiBold,
+                        ...Fonts.grayColorf8f9fa18SemiBold,
                         textAlign: "left",
                         paddingRight: 8,
                       }}

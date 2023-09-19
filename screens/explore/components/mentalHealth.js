@@ -20,8 +20,9 @@ export const mentalHealth = (dataSelectedMental) => {
   const handleClickMentalHealth = (mentalhealth) => {
     const { id } = mentalhealth;
     setSelectedid(id);
-    console.log("selected", mentalhealth.id);
-    dispatch(mentalHealthAction.setSelectMentalHealth(id));
+    dispatch(
+      mentalHealthAction.setSelectMentalHealth({ id: id, data: mentalhealth })
+    );
   };
 
   const renderItem = useCallback(
@@ -44,15 +45,13 @@ export const mentalHealth = (dataSelectedMental) => {
                 <View
                   style={{
                     borderColor: isSelected ? "green" : "#004d25",
-                    borderWidth: 0.5,
-                    borderRadius: 90,
+                    borderWidth: isSelected ? 2 : 1,
+                    borderRadius: 50,
                     width: 70,
                     height: 70,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderStyle: isSelected ? "dotted" : "solid",
-                    backgroundColor: selectedId,
-                    backgroundColor: isSelected ? "green" : "white",
+                    borderStyle: isSelected ? "dashed" : "solid",
                   }}
                 >
                   <Image

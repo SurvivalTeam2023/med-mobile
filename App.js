@@ -58,6 +58,8 @@ import ChooseMentalHealthScreen from "./screens/mentalHealthScreen/ShowMentalHea
 import SettingsScreen from "./screens/settings/settingsScreen";
 import MeditateScreen from "./screens/meditateScreen/meditateScreen";
 import MusicScreen from "./screens/musicScreen/musicScreen";
+import ExerciseContentScreen from "./screens/exerciseContentScreen/exerciseContentScreen";
+import IntroRecAlbumScreen from "./screens/recAlbum/introRecAlbum";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -93,6 +95,7 @@ const App = () => {
             />
 
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen name="Intro Music" component={IntroRecAlbumScreen} />
             <Stack.Screen
               name="AudioMental"
               component={AudioMentalScreen}
@@ -171,6 +174,14 @@ const App = () => {
             <Stack.Screen
               name="IllnessDetail"
               component={IllnessDetailScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.data;
+                return data;
+              }}
+            />
+            <Stack.Screen
+              name="ExerciseContent"
+              component={ExerciseContentScreen}
               sharedElements={(route, otherRoute, showing) => {
                 const data = route.params.data;
                 return data;
