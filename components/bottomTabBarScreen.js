@@ -19,6 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { SharedElement } from "react-navigation-shared-element";
 import { useFocusEffect } from "@react-navigation/native";
 import ProfileScreen from "../screens/Profile/profileScreen";
+import { AntDesign } from "@expo/vector-icons";
 import {
   ACTION_TYPE,
   nowPlayingAction,
@@ -26,6 +27,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "../constants/navigate";
 import IntroAIScreen from "../screens/introAi/introduceAiScreen";
+import MusicScreen from "../screens/musicScreen/musicScreen";
 
 const { width } = Dimensions.get("window");
 
@@ -72,20 +74,20 @@ const BottomTabBarScreen = ({ navigation }) => {
   const bottonNavigation = [
     {
       index: 1,
-      icon: "headset",
+      icon: "home",
     },
     {
       index: 2,
-      icon: "add-alert",
+      icon: "hearto",
+    },
+    {
+      index: 3,
+      icon: "staro",
     },
 
     {
-      index: 3,
-      icon: "camera-alt",
-    },
-    {
       index: 4,
-      icon: "settings",
+      icon: "camerao",
     },
   ];
   const { currentIndex, pauseSong, backClickCount } = state;
@@ -170,22 +172,25 @@ const BottomTabBarScreen = ({ navigation }) => {
       <TouchableOpacity
         key={index} // Assign a unique key here
         activeOpacity={0.9}
-        style={{ alignItems: "center" }}
+        style={{
+          alignItems: "center",
+        }}
         onPress={() => updateState({ currentIndex: index })}
       >
-        {index == currentIndex ? (
-          <MaterialIcons
-            size={35}
+        {index === currentIndex ? (
+          <AntDesign
+            size={25}
             mode="linear"
-            color={Colors.secondaryColor}
-            style={{ alignSelf: "center" }}
+            color={Colors.greenLightColor}
+            style={{
+              alignSelf: "center",
+            }}
             name={icon}
-            type="material"
           />
         ) : (
-          <MaterialIcons
+          <AntDesign
             color={Colors.blackColor}
-            size={35}
+            size={25}
             style={{ alignSelf: "center" }}
             name={icon}
           />
@@ -202,9 +207,9 @@ const BottomTabBarScreen = ({ navigation }) => {
         ) : currentIndex == 2 ? (
           <TrendingScreen navigation={navigation} />
         ) : currentIndex == 3 ? (
-          <IntroAIScreen navigation={navigation} />
+          <MusicScreen navigation={navigation} />
         ) : (
-          <SettingsScreen navigation={navigation} />
+          <IntroAIScreen navigation={navigation} />
         )}
         {soundStatus.isSoundLoaded ? currentlyPlayedSong() : null}
         <View style={styles.bottomTabBarStyle}>

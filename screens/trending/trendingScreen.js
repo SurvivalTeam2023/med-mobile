@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -14,19 +14,15 @@ import {
   Pressable,
   ActivityIndicator,
   Modal,
+  Button,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Menu, MenuItem } from "react-native-material-menu";
 import { SharedElement } from "react-navigation-shared-element";
 import { Navigate } from "../../constants/navigate";
 import { useGetGenreList } from "../../hooks/genre.hook";
-import { useGetAudioListAPI } from "../../hooks/audio.hook";
-import QuizScreen from "../quiz/quizScreen";
 import { useGetRecommendAudioByQuizResultAPI } from "../../hooks/recommend.hook";
-import { store } from "../../core/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import {
@@ -54,7 +50,7 @@ const TrendingScreen = ({ navigation }) => {
     console.log("History quiz call success");
   }
   if (isErrorQuizHistory) {
-    console.log("History quiz call success", errorQuizHistory);
+    console.log("History quiz call failed", errorQuizHistory);
   }
 
   // Sort the array based on createdAt timestamps in descending order
@@ -85,21 +81,6 @@ const TrendingScreen = ({ navigation }) => {
   if (isSuccessResultDetail) {
     console.log("get result success");
   }
-
-  // const getAudioMental = async () => {
-  //   try {
-  //     if (resultDetailData) {
-  //       let responses = [];
-  //       for (const item of resultDetailData) {
-  //         const response = await getAudioRecommendByMentalIdAPI(item.id);
-  //         responses.push(response);
-  //       }
-  //       return responses;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
 
   useEffect(() => {
     let data;
@@ -132,6 +113,23 @@ const TrendingScreen = ({ navigation }) => {
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
 
+  //   //If you are making a quize type app then you need to make a simple timer
+  //   //which can be done by using the simple like given below
+  //   //that.setState({ totalDuration: 30 }); //which is 30 sec
+  //   var date = moment().utcOffset("+05:30").format("YYYY-MM-DD hh:mm:ss");
+  //   //Getting the current date-time with required formate and UTC
+  //   var expirydate = "2020-12-23 04:00:45"; //You can set your own date-time
+  //   //Let suppose we have to show the countdown for above date-time
+  //   var diffr = moment.duration(moment(expirydate).diff(moment(date)));
+  //   //difference of the expiry date-time given and current date-time
+  //   var hours = parseInt(diffr.asHours());
+  //   var minutes = parseInt(diffr.minutes());
+  //   var seconds = parseInt(diffr.seconds());
+  //   var d = hours * 60 * 60 + minutes * 60 + seconds;
+  //   //converting in seconds
+  //   setTotalDuration(d);
+  //   //Settign up the duration of countdown in seconds to re-render
+  // }, []);
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],
   });
@@ -143,7 +141,7 @@ const TrendingScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
+      <View>
         {header()}
         {trendingCategories()}
 
@@ -164,6 +162,7 @@ const TrendingScreen = ({ navigation }) => {
     dispatch(nowPlayingAction.addAudioToPlayList(audio));
     navigation.push("NowPlaying", { audio });
   }
+
   function genre() {
     const renderItem = ({ item }) => (
       <View
@@ -397,7 +396,7 @@ const TrendingScreen = ({ navigation }) => {
           <LinearGradient
             start={{ x: 1, y: 0 }}
             end={{ x: 0, y: 0 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={styles.startQuizInfo}
           >
             <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
@@ -433,24 +432,21 @@ const TrendingScreen = ({ navigation }) => {
 
   function startQuizBtn() {
     return (
-      <View>
-        <Pressable
-          style={styles.startQuizButtonStyle}
-          activeOpacity={0.9}
-          onPress={() => {
-            navigation.push(Navigate.QUESTION_SCREEN);
-          }}
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push(Navigate.QUESTION_SCREEN);
+        }}
+        style={styles.startQuizButtonStyle}
+      >
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.startQuizGradientStyle}
         >
-          <LinearGradient
-            start={{ x: 1, y: 3 }}
-            end={{ x: 0, y: 2 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-            style={styles.startQuizGradientStyle}
-          >
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Do Survey</Text>
-          </LinearGradient>
-        </Pressable>
-      </View>
+          <Text style={{ ...Fonts.whiteColor18Bold }}>Do survey</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     );
   }
 
@@ -504,6 +500,36 @@ const styles = StyleSheet.create({
   infoTextStyle: {
     paddingBottom: 4,
     ...Fonts.grey777714,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  clockContainer: {
+    flex: 1,
+    backgroundColor: "#9CAF88",
+    width: 150,
+    height: 150,
+    borderRadius: 90,
+    justifyContent: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 20, // Adjust the elevation value as needed
+      },
+    }),
+  },
+  clockText: {
+    display: "flex",
+    textAlign: "center",
+    alignContent: "center",
+    ...Fonts.grayColor24SemiBold,
   },
   colorDot: {
     borderRadius: "50%",

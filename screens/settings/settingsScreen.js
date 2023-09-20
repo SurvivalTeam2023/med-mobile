@@ -26,7 +26,7 @@ import { Navigate } from "../../constants/navigate";
 import { SUBSCRIPTION_STATUS } from "../../constants/app";
 import { fetchUserData } from "../../redux/auth/auth.action";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
-
+import { MaterialIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 let userData;
 const SettingsScreen = ({ navigation }) => {
@@ -108,10 +108,8 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-      <View style={{ flex: 1 }}>
+      <View>
         <View>
-          {cornerImage()}
           {header()}
           {userAccountInfo()}
           {divider()}
@@ -956,17 +954,30 @@ const SettingsScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold24 }}>Settings</Text>}
-        >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            Settings
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
       </View>
     );
   }
@@ -974,10 +985,11 @@ const SettingsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   headerWrapStyle: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 30.0,
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   upgradePremiumButtonStyle: {
     alignItems: "center",

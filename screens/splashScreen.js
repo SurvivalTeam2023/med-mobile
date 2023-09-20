@@ -64,11 +64,11 @@ const SplashScreen = ({ navigation }) => {
         <LinearGradient
           start={{ x: 1, y: 0.2 }}
           end={{ x: 1, y: 1 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={{ flex: 1 }}
         >
           <ImageBackground
-            source={require(".././assets/images/bg.png")}
+            source={require("../assets/images/bg.png")}
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
             <Image
@@ -76,8 +76,8 @@ const SplashScreen = ({ navigation }) => {
               style={{ height: 150.0, width: "100%" }}
             />
             <Text style={{ marginTop: Sizes.fixPadding - 60.0 }}>
-              <Text style={{ ...Fonts.whiteColor35Bold }}>Music</Text>
-              <Text style={{ ...Fonts.whiteColor15Bold }}>{` `}of you</Text>
+              <Text style={Fonts.whiteColor35Bold}>Music </Text>
+              <Text style={Fonts.whiteColor15Bold}>{` `}Therapy</Text>
             </Text>
           </ImageBackground>
         </LinearGradient>

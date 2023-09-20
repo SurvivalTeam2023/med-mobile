@@ -53,6 +53,13 @@ import ToastManager from "toastify-react-native";
 import ProfileScreen from "./screens/Profile/profileScreen";
 import IllnessDetailScreen from "./screens/Profile/illnessDetailScreen";
 import AudioMentalScreen from "./screens/tracks/audioMentalScreen";
+import AgeVerifyScreen from "./screens/ageVerifiedScreen/ageVerfiyScreen";
+import ChooseMentalHealthScreen from "./screens/mentalHealthScreen/ShowMentalHealthScreen";
+import SettingsScreen from "./screens/settings/settingsScreen";
+import MeditateScreen from "./screens/meditateScreen/meditateScreen";
+import MusicScreen from "./screens/musicScreen/musicScreen";
+import ExerciseContentScreen from "./screens/exerciseContentScreen/exerciseContentScreen";
+import IntroRecAlbumScreen from "./screens/recAlbum/introRecAlbum";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -86,7 +93,9 @@ const App = () => {
               component={signInScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
+
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen name="Intro Music" component={IntroRecAlbumScreen} />
             <Stack.Screen
               name="AudioMental"
               component={AudioMentalScreen}
@@ -99,10 +108,25 @@ const App = () => {
               name="CreatePlaylistUser"
               component={CreatePlaylistScreenUser}
             />
+            <Stack.Screen
+              name="ShowMentalHealth"
+              component={ChooseMentalHealthScreen}
+            />
+            <Stack.Screen
+              name="Meditate"
+              component={MeditateScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const mental = route.params.item;
+                return mental;
+              }}
+            />
+            <Stack.Screen name="AgeVerify" component={AgeVerifyScreen} />
+            <Stack.Screen name="Setting" component={SettingsScreen} />
             <Stack.Screen name="OptionScreen" component={OptionScreen} />
             <Stack.Screen name="ShowCam" component={ShowCamScreen} />
             <Stack.Screen name="CamResult" component={CamResultScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
+            <Stack.Screen name="MusicScreen" component={MusicScreen} />
             <Stack.Screen
               name="PlaylistAudio"
               component={PlaylistAudioScreen}
@@ -150,6 +174,14 @@ const App = () => {
             <Stack.Screen
               name="IllnessDetail"
               component={IllnessDetailScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.data;
+                return data;
+              }}
+            />
+            <Stack.Screen
+              name="ExerciseContent"
+              component={ExerciseContentScreen}
               sharedElements={(route, otherRoute, showing) => {
                 const data = route.params.data;
                 return data;
