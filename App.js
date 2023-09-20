@@ -60,6 +60,7 @@ import MeditateScreen from "./screens/meditateScreen/meditateScreen";
 import MusicScreen from "./screens/musicScreen/musicScreen";
 import ExerciseContentScreen from "./screens/exerciseContentScreen/exerciseContentScreen";
 import IntroRecAlbumScreen from "./screens/recAlbum/introRecAlbum";
+import QuizHistoryScreen from "./screens/quiz/quizHistoryScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -95,6 +96,7 @@ const App = () => {
             />
 
             <Stack.Screen name="SignUp" component={signupScreen} />
+            <Stack.Screen name="QuizHistory" component={QuizHistoryScreen} />
             <Stack.Screen name="Intro Music" component={IntroRecAlbumScreen} />
             <Stack.Screen
               name="AudioMental"

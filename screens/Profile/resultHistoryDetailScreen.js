@@ -20,6 +20,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { Navigate } from "../../constants/navigate";
 import { MaterialIcons } from "@expo/vector-icons";
 const ResultHistoryDetailScreen = ({ navigation, route }) => {
+  console.log("hehe");
   const quizId = route.params.e.id;
   let quizResult;
   let resultFilter;
