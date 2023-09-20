@@ -38,4 +38,5 @@ export const Navigate = {
   MUSIC_SCREEN: "Music",
   EXERCISE_CONTENT_SCREEN: "ExerciseContent",
   INTRO_REC_ALBUM_SCREEN: "Intro Music",
+  CHAT: "Chat",
 };

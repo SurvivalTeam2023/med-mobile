@@ -45,6 +45,7 @@
     "react-native-date-picker": "^4.2.13",
     "react-native-dialog": "^9.3.0",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-gifted-chat": "^2.4.0",
     "react-native-gradient-icon": "^0.2.1",
     "react-native-markdown-package": "^1.8.2",
     "react-native-material-menu": "^2.0.0",
