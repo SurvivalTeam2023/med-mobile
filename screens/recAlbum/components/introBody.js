@@ -8,7 +8,6 @@ export const introRecAlbumBody = () => {
   const selectedMentalhealth = useSelector((state) => state.mentalHealth);
   const { name } = selectedMentalhealth.dataSelected;
   const { idSelected } = selectedMentalhealth;
-  console.log(idSelected);
   const { data: dataAudio, isSuccess: isSuccessAudio } =
     useGetAudioRecommendByMentalIdAPI(idSelected);
   if (isSuccessAudio) {
