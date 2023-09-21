@@ -26,6 +26,8 @@ const data = [
       "https://pub-static.fotor.com/assets/bg/246400f6-8a87-48ad-9698-281d55b388f5.jpg",
     numOfExercises: 7,
     desc: "Music For Today",
+    notify: "Take Our Survey To Get Your Mental Health Evaluation",
+    notify_2: "Press To See Your Survey Result",
   },
   {
     id: 2,
@@ -34,6 +36,8 @@ const data = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
     numOfExercises: 7,
     desc: "Something to describe",
+    notify: "Take Our Survey To Get Your Music Recommendation",
+    notify_2: "Press To See Your Survey Result",
   },
   {
     id: 3,
@@ -42,6 +46,8 @@ const data = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
     numOfExercises: 7,
     desc: "Something to describe",
+    notify: "Take Our Survey To Get Your Mental Health Evaluation",
+    notify_2: "Press To See Your Survey Result",
   },
 ];
 
@@ -53,7 +59,7 @@ export const suggestion = ({ navigation }) => {
     console.log("Here");
     switch (name) {
       case QUIZ_RESULT:
-        if (dataQuizHis) {
+        if (dataQuizHis.length > 0) {
           navigation.push(Navigate.QUIZ_HISTORY_SCREEN);
         } else {
           navigation.push(Navigate.QUIZ);
@@ -75,6 +81,7 @@ export const suggestion = ({ navigation }) => {
       <View style={{ flexDirection: "column", justifyContent: "center" }}>
         {data.map((item, index) => (
           <TouchableOpacity
+            key={item.id}
             onPress={() => {
               handleClick(item.name);
             }}
@@ -93,6 +100,9 @@ export const suggestion = ({ navigation }) => {
                   height: 200,
                   borderRadius: 10,
                   overflow: "hidden",
+                }}
+                onProgress={() => {
+                  console.log("testtt");
                 }}
               >
                 <View
@@ -132,15 +142,22 @@ export const suggestion = ({ navigation }) => {
                     </Text>
                   </View>
                 ) : (
-                  <Text
+                  <View
                     style={{
-                      ...Fonts.whiteColor16Light,
-                      textAlign: "center",
-                      paddingBottom: 50,
+                      position: "absolute",
+                      bottom: 8,
+                      left: 8,
+                      paddingRight: 4,
                     }}
                   >
-                    {item.notify}
-                  </Text>
+                    <Text
+                      style={{
+                        ...Fonts.whiteColor16Light,
+                      }}
+                    >
+                      {item.notify}
+                    </Text>
+                  </View>
                 )}
               </ImageBackground>
             </View>

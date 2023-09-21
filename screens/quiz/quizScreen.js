@@ -17,6 +17,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
+import { ImageBackground } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -40,20 +42,29 @@ const QuizScreen = () => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {cornerImage()}
-          <ScrollView
-            scrollEnabled={true}
-            contentContainerStyle={{
-              justifyContent: "center",
-            }}
-          >
-            {startQuizTitle()}
-            {startQuizBtn()}
-          </ScrollView>
-        </ScrollView>
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.startQuizInfo}
+        >
+          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+          <View style={{ alignItems: "center", paddingTop: 4 }}>
+            <Text style={styles.describeQuizText}>
+              Welcome to the Emotion Survey! This quiz is designed to help you
+              gain insight into your emotional landscape and explore the
+              complexities of your feelings.
+            </Text>
+            <ImageBackground
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/5336/5336520.png",
+              }}
+              style={styles.image}
+            ></ImageBackground>
+          </View>
+          {startQuizBtn()}
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -99,42 +110,22 @@ const QuizScreen = () => {
 
   function startQuizBtn() {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 30,
-          marginTop: 20,
-        }}
-      >
-        <View stylele={{ marginBottom: 8 }}>
-          <Text
-            style={{ ...Fonts.medium16, color: "#583D72" }}
-            onPress={() => {
-              onPressHandler();
-            }}
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.push(Navigate.QUESTION_SCREEN);
+          }}
+          style={styles.btn}
+        >
+          <LinearGradient
+            start={{ x: 1, y: 3 }}
+            end={{ x: 0, y: 1 }}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+            style={{ borderRadius: 10 }}
           >
-            Skip
-          </Text>
-        </View>
-        <View>
-          <Pressable
-            activeOpacity={0.9}
-            onPress={() => {
-              navigation.push(Navigate.QUESTION_SCREEN);
-            }}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 3 }}
-              end={{ x: 0, y: 2 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-              style={{ borderRadius: 20 }}
-            >
-              <Ionicons name="arrow-forward" size={30} color="white" />
-            </LinearGradient>
-          </Pressable>
-        </View>
+            <Text style={styles.btnText}>Getting started</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -155,25 +146,37 @@ const QuizScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  btn: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 40,
+  },
+  btnText: {
+    ...Fonts.whiteColor18SemiBold,
+    borderWidth: 1,
+    borderColor: Colors.greenDarkColor,
+    paddingVertical: 8,
+    borderRadius: 10,
+    paddingHorizontal: 36,
+  },
   titleInfoStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.whiteColor18Bold,
+    ...Fonts.whiteColor30Bold,
     textAlign: "center",
   },
   quizzingTitleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.whiteColor18Bold,
+    ...Fonts.whiteColor26Bold,
     textAlign: "center",
   },
   startQuizInfo: {
     paddingVertical: Sizes.fixPadding + 10,
     paddingBottom: 30,
-    marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
+    height: "100%",
     alignItems: "center",
-    borderRadius: Sizes.fixPadding + 20.0,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
@@ -219,7 +222,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
   separator: {
     marginVertical: 20,
     marginHorizontal: -80,
@@ -230,6 +238,7 @@ const styles = StyleSheet.create({
     ...Fonts.whiteColor16Light,
     width: 300,
     justifyContent: "center",
+    paddingBottom: 20,
   },
 
   questionInfo: {

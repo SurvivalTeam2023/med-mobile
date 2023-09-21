@@ -165,6 +165,31 @@ export const Fonts = {
     fontSize: 20,
     fontFamily: "Montserrat_SemiBold",
   },
+  whiteColor22Bold: {
+    color: "#ffffff",
+    fontSize: 22,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  whiteColor24Bold: {
+    color: "#ffffff",
+    fontSize: 24,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  whiteColor26Bold: {
+    color: "#ffffff",
+    fontSize: 26,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  whiteColor28Bold: {
+    color: "#ffffff",
+    fontSize: 28,
+    fontFamily: "Montserrat_SemiBold",
+  },
+  whiteColor30Bold: {
+    color: "#ffffff",
+    fontSize: 30,
+    fontFamily: "Montserrat_SemiBold",
+  },
 
   whiteColor35Bold: {
     color: "#ffffff",

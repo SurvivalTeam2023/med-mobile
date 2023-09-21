@@ -59,7 +59,6 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar backgroundColor={Colors.secondaryColor} />
       <View style={{ flex: 1 }}>
         <LinearGradient
           start={{ x: 1, y: 0.2 }}

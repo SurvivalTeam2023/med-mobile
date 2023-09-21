@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Pressable,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
@@ -24,6 +25,7 @@ import { questionAction } from "../../redux/other/question.slice";
 import { formatQuestionData } from "../../utils/app.util";
 const Separator = () => <View style={styles.separator} />;
 import { AntDesign } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 let questions = [
   {
     question:
@@ -228,12 +230,21 @@ const QuestionScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {cornerImage()}
-          {quizzingInfo()}
-        </ScrollView>
+        <LinearGradient
+          start={{ x: 2, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.startQuizInfo}
+        >
+          {isSuccess ? (
+            quizzingInfo()
+          ) : (
+            <View style={styles.container}>
+              <ActivityIndicator size="small" color="#f8b26a" />
+            </View>
+          )}
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -265,15 +276,14 @@ const QuestionScreen = () => {
       <View style={styles.quizInfo}>
         <View style={styles.titleQuiz}>
           <Text style={styles.titleQuizText}>
-            Your Progress: ({index + 1}/{totalQuestions}) answered
+            Question {index + 1} out of {totalQuestions}
           </Text>
         </View>
         <View style={styles.questionInfo}>
           <Text
             style={{
-              alignItems: "baseline",
-              paddingLeft: 4,
-              ...Fonts.light18,
+              textAlign: "center",
+              ...Fonts.whiteColor20Bold,
             }}
           >
             {questionData?.question}
@@ -301,19 +311,11 @@ const QuestionScreen = () => {
                 : styles.answerInfo
             }
           >
-            <View
-              style={{
-                paddingTop: 5,
-                paddingLeft: 5,
-                display: "flex",
-                alignContent: "center",
-              }}
-            >
+            <View>
               <Text
                 style={{
-                  paddingLeft: 4,
-                  ...Fonts.light14,
-                  marginTop: 8,
+                  textAlign: "center",
+                  ...Fonts.blackColor16SemiBold,
                 }}
               >
                 {item.option}
@@ -371,20 +373,23 @@ const QuestionScreen = () => {
           ) : null}
         </View>
         {index + 1 >= questions.length ? (
-          <Pressable
-            onPress={() => {
-              getOptionAndQuestionBankId();
-            }}
-          >
-            <LinearGradient
-              start={{ x: 1, y: 3 }}
-              end={{ x: 0, y: 2 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-              style={styles.nextQuizBtnGradientStyle}
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                getOptionAndQuestionBankId();
+              }}
+              style={styles.btn}
             >
-              <Text style={{ ...Fonts.whiteColor16Bold }}>Done</Text>
-            </LinearGradient>
-          </Pressable>
+              <LinearGradient
+                start={{ x: 1, y: 3 }}
+                end={{ x: 0, y: 1 }}
+                colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+                style={{ borderRadius: 10 }}
+              >
+                <Text style={styles.btnText}>Done</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         ) : isSelected === null ? null : null}
       </View>
     );
@@ -392,11 +397,31 @@ const QuestionScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  btn: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 40,
+  },
+  btnText: {
+    ...Fonts.whiteColor18SemiBold,
+    borderWidth: 1,
+    borderColor: Colors.greenDarkColor,
+    paddingVertical: 8,
+    borderRadius: 10,
+    paddingHorizontal: 36,
+  },
   titleInfoStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
     ...Fonts.whiteColor20Bold,
     textAlign: "center",
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
   },
   quizzingTitleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
@@ -404,13 +429,7 @@ const styles = StyleSheet.create({
     ...Fonts.whiteColor18Bold,
     textAlign: "center",
   },
-  startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 30.0,
-    marginHorizontal: Sizes.fixPadding + 10.0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: Sizes.fixPadding + 40.0,
-  },
+
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
     justifyContent: "center",
@@ -451,8 +470,6 @@ const styles = StyleSheet.create({
   },
 
   titleQuiz: {
-    width: 350,
-    height: 30,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -471,31 +488,40 @@ const styles = StyleSheet.create({
   },
 
   questionInfo: {
-    marginTop: 15,
+    paddingTop: 15,
+    paddingBottom: 36,
+    paddingHorizontal: 8,
     maxHeight: "95%",
   },
   answerInfo: {
     alignContent: "center",
-    backgroundColor: "#D8E2E8",
+    backgroundColor: "white",
     marginTop: 40,
     width: 380,
-    marginHorizontal: 6,
-    height: 40,
-    borderRadius: 20,
+    paddingHorizontal: 16,
+    height: 50,
+    borderRadius: 10,
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
   },
   answerInfoChoose: {
+    display: "flex",
     alignContent: "center",
-    backgroundColor: "#D8E2E8",
+    justifyContent: "center",
     marginTop: 40,
     marginHorizontal: 5,
     width: 380,
-    backgroundColor: "green",
-    maxHeight: "30%",
-    height: 40,
-    borderRadius: 20,
+    backgroundColor: "#95E02F",
+    height: 50,
+
+    borderRadius: 10,
   },
   quizInfo: {
-    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
     paddingHorizontal: 8,
   },
   roundButton1: {
