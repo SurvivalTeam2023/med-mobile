@@ -17,14 +17,17 @@ export const styles = StyleSheet.create({
     alignContent: "center",
   },
   textTitle: {
-    ...Fonts.blackColor26SemiBold,
-    paddingHorizontal: 36,
-    paddingBottom: 50,
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor26Bold,
+    textAlign: "center",
   },
   textInfo: {
-    ...Fonts.grayColor18SemiBold,
+    ...Fonts.whiteColor16Light,
+    justifyContent: "center",
+    textAlign: "center",
     paddingHorizontal: 36,
-    marginBottom: 50,
+    paddingBottom: 20,
   },
   image: {
     width: 150,
@@ -38,12 +41,18 @@ export const styles = StyleSheet.create({
     marginBottom: 40,
   },
   btnText: {
-    ...Fonts.grayColor16SemiBold,
+    ...Fonts.whiteColor18SemiBold,
     borderWidth: 1,
     borderColor: Colors.greenDarkColor,
     paddingVertical: 8,
     borderRadius: 10,
     paddingHorizontal: 36,
-    backgroundColor: Colors.greenLightColor,
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
   },
 });

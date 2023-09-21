@@ -40,4 +40,5 @@ export const Navigate = {
   INTRO_REC_ALBUM_SCREEN: "Intro Music",
   QUIZ_HISTORY_SCREEN: "QuizHistory",
   CHAT: "Chat",
+  AI_CHAT_SCREEN: "Chat with AI",
 };

@@ -29,9 +29,9 @@ const IntroRecAlbumScreen = ({ navigation }) => {
         </View>
 
         <View style={{ width: "33.33%" }}>
-          <Text
-            style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}
-          ></Text>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            Music
+          </Text>
         </View>
         <View style={{ width: "33.33%" }}></View>
       </View>
