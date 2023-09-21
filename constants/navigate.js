@@ -38,5 +38,7 @@ export const Navigate = {
   MUSIC_SCREEN: "Music",
   EXERCISE_CONTENT_SCREEN: "ExerciseContent",
   INTRO_REC_ALBUM_SCREEN: "Intro Music",
+  QUIZ_HISTORY_SCREEN: "QuizHistory",
   CHAT: "Chat",
+  AI_CHAT_SCREEN: "Chat with AI",
 };

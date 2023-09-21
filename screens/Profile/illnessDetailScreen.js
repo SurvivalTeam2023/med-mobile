@@ -8,116 +8,126 @@ import {
   Text,
   StyleSheet,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { MaterialIcons } from "@expo/vector-icons";
-
-const { width } = Dimensions.get("window");
-
-const trendingCategoriesList = ["Genre", "Audio", "Quiz"];
 
 const IllnessDetailScreen = ({ navigation, route }) => {
   const degree = route?.params?.data;
 
-  const backBtn = () => {
+  const illnessDetail = () => {
     return (
-      <MaterialIcons
-        name="keyboard-arrow-left"
-        color={Colors.blackColor}
-        size={25}
-        style={{ paddingTop: 10 }}
-        onPress={() => navigation.pop()}
-      />
+      <View
+        style={{
+          backgroundColor: Colors.greenLightColor,
+          borderRadius: 10,
+        }}
+      >
+        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+          <View
+            style={{ backgroundColor: "white", borderRadius: 16, padding: 8 }}
+          >
+            <View
+              style={{
+                marginLeft: 8,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  paddingVertical: 24,
+                }}
+              >
+                <Image
+                  source={
+                    degree?.mentalHealthImg
+                      ? { uri: degree?.mentalHealthImg }
+                      : {
+                          uri: "https://i.pinimg.com/564x/49/e5/8d/49e58d5922019b8ec4642a2e2b9291c2.jpg",
+                        }
+                  }
+                  style={styles.image}
+                />
+              </View>
+
+              {degree?.mentalHealthDesc ? (
+                <Text style={{ ...Fonts.blackColor14 }}>
+                  {degree?.mentalHealthDesc}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 20,
+                    textAlign: "center",
+                    fontWeight: "100",
+                    paddingVertical: 8,
+                  }}
+                >
+                  No data!
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+      </View>
     );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
-        <View
-          style={{
-            backgroundColor: "#eeeeee",
-            borderRadius: 10,
-            paddingBottom: 12,
-          }}
-        >
-          <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-            <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-              <View
-                style={{
-                  marginLeft: 8,
-                }}
-              >
-                <View
-                  style={{ flexDirection: "row", justifyContent: "flex-start" }}
-                >
-                  {backBtn()}
-                  <Text
-                    style={{
-                      fontSize: 24,
-                      textAlign: "center",
-                      fontWeight: "400",
-                      paddingVertical: 8,
-                      paddingLeft: 120,
-                      borderBottomWidth: 1,
-                      borderColor: "#ddd",
-                    }}
-                  >
-                    {degree?.mentalHealth}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Image
-                    source={
-                      degree?.mentalHealthImg
-                        ? { uri: degree?.mentalHealthImg }
-                        : {
-                            uri: "https://i.pinimg.com/564x/49/e5/8d/49e58d5922019b8ec4642a2e2b9291c2.jpg",
-                          }
-                    }
-                    style={styles.image}
-                  />
-                </View>
+        {header()}
 
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{
-                    paddingBottom: Sizes.fixPadding,
-                    height: "95%",
-                    paddingTop: 8,
-                    paddingHorizontal: 2,
-                  }}
-                >
-                  {degree?.mentalHealthDesc ? (
-                    <Text>{degree?.mentalHealthDesc}</Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        textAlign: "center",
-                        fontWeight: "100",
-                        paddingVertical: 8,
-                      }}
-                    >
-                      No data!
-                    </Text>
-                  )}
-                </ScrollView>
-              </View>
-            </View>
-          </View>
+        <View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: Sizes.fixPadding,
+              height: "95%",
+              paddingTop: 8,
+              paddingHorizontal: 16,
+            }}
+          >
+            {illnessDetail()}
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
   );
+
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            {degree?.mentalHealth}
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -126,9 +136,17 @@ const styles = StyleSheet.create({
     backgroundColor: "red", // You can change the color here
     marginRight: 8, // Adjust this value as needed
   },
+
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 50,
+    borderBottomWidth: 0.5,
+  },
   image: {
-    width: 275,
-    height: 275,
+    width: 150,
+    height: 150,
   },
   centeredView: {
     flex: 1,

@@ -13,52 +13,67 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import { ImageBackground } from "react-native";
 import { TouchableOpacity } from "react-native";
 
-const Separator = () => <View style={styles.separator} />;
+const AiChatScreen = ({ navigation }) => {
+  const header = () => {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
 
-let isFavoriteExisted = [];
-const QuizScreen = () => {
-  const navigation = useNavigation();
-
-  const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
-    useIsFavoriteExisted();
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted;
-  }
-
-  const onPressHandler = () => {
-    if (isFavoriteExisted.exists === true) {
-      navigation.navigate("BottomTabBar");
-    }
-    if (isFavoriteExisted.exists === false) {
-      navigation.navigate("ChooseMusic");
-    }
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            Ai Chat
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View>
+        {header()}
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
           colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.startQuizInfo}
         >
-          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
+          <Text style={styles.titleInfoStyle}>Chat With Ai</Text>
           <View style={{ alignItems: "center", paddingTop: 4 }}>
             <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Survey! This quiz is designed to help you
-              gain insight into your emotional landscape and explore the
-              complexities of your feelings.
+              Welcome to the "Mental Health Chat with AI" feature a
+              compassionate, 24/7 support system for users dealing with mental
+              health concerns. Our AI chatbot is here to listen, provide
+              guidance, and offer resources whenever they need it, enhancing
+              well-being and emotional support within your app.
             </Text>
             <ImageBackground
               source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/5336/5336520.png",
+                uri: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
               }}
               style={styles.image}
             ></ImageBackground>
@@ -69,51 +84,12 @@ const QuizScreen = () => {
     </SafeAreaView>
   );
 
-  function startQuizTitle() {
-    return (
-      <View>
-        <View>
-          <MaskedView
-            style={{ height: 60 }}
-            maskElement={
-              <Text style={{ textAlign: "center", ...Fonts.bold22 }}>
-                To know your more
-              </Text>
-            }
-          >
-            <LinearGradient
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 0 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-              style={{ flex: 1 }}
-            />
-          </MaskedView>
-        </View>
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.startQuizInfo}
-        >
-          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
-          <View style={{ alignItems: "center", paddingTop: 4 }}>
-            <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Survey! This quiz is designed to help you
-              gain insight into your emotional landscape and explore the
-              complexities of your feelings.
-            </Text>
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  }
-
   function startQuizBtn() {
     return (
       <View>
         <TouchableOpacity
           onPress={() => {
-            navigation.push(Navigate.QUESTION_SCREEN);
+            navigation.push(Navigate.CHAT);
           }}
           style={styles.btn}
         >
@@ -150,6 +126,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 40,
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   btnText: {
     ...Fonts.whiteColor18SemiBold,
@@ -236,9 +219,9 @@ const styles = StyleSheet.create({
   },
   describeQuizText: {
     ...Fonts.whiteColor16Light,
+    justifyContent: "center",
     textAlign: "center",
     paddingHorizontal: 36,
-    justifyContent: "center",
     paddingBottom: 20,
   },
 
@@ -277,4 +260,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuizScreen;
+export default AiChatScreen;

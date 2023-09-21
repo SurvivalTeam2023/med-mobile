@@ -35,7 +35,7 @@ const ExploreScreen = ({ navigation }) => {
         >
           {mentalHealth(dataSelectedMental)}
           {exercise({ navigation })}
-          {suggestion()}
+          {suggestion({ navigation })}
         </ScrollView>
       </View>
     </SafeAreaView>

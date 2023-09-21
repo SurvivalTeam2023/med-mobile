@@ -4,6 +4,12 @@ import { BackHandler, View, ImageBackground, StyleSheet } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import { chatGPTAPI } from "../../api/chat.api";
 import { parseTokenToRole } from "../../utils/app.util";
+import { KeyboardAvoidingView } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Colors, Fonts } from "../../constants/styles";
+import { Text } from "react-native";
+import { useSelector } from "react-redux";
 
 const ChatScreen = ({ navigation }) => {
   const backAction = () => {
@@ -23,17 +29,48 @@ const ChatScreen = ({ navigation }) => {
     setMessages([
       {
         _id: 1,
-        text: "Welcome to Meditation Chat AI! Discover inner peace and mindfulness through guided meditations, mindfulness exercises, and insightful discussions. Ask questions, share experiences, and embark on your journey to tranquility. Let's explore the world of meditation together.",
+        text: "Welcome to Meditation Chat AI! Discover inner peace and miFndfulness through guided meditations, mindfulness exercises, and insightful discussions. Ask questions, share experiences, and embark on your journey to tranquility. Let's explore the world of meditation together.",
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: "React Native",
+          name: "Medy",
+          avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
         },
       },
     ]);
   }, []);
+  const header = () => {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
 
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            Medy ChatBox
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  };
   const onSend = useCallback((messages = []) => {
+    console.log(messages);
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
@@ -42,12 +79,13 @@ const ChatScreen = ({ navigation }) => {
         console.log(res);
         const newMessage = [
           {
-            _id: 1,
+            _id: 3,
             text: res,
             createdAt: new Date(),
             user: {
-              _id: 2,
-              name: "Med AI",
+              _id: 4,
+              name: "Medy",
+              avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
             },
           },
         ];
@@ -58,11 +96,12 @@ const ChatScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   }, []);
   const image = {
-    uri: "https://www.mordeo.org/files/uploads/2020/03/Miku-Anime-Girl-Flowers-4K-Ultra-HD-Mobile-Wallpaper-1152x2048.jpg",
+    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NPQf_WXzpzImkSte3VU5eyvoLsagANiaYA&usqp=CAU",
   };
 
   return (
     <View style={{ flex: 1 }}>
+      {header()}
       <ImageBackground
         source={image}
         resizeMode="cover"
@@ -85,6 +124,13 @@ const ChatScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   image: {
     flex: 1,

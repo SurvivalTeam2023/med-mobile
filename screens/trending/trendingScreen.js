@@ -434,7 +434,7 @@ const TrendingScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.push(Navigate.QUESTION_SCREEN);
+          navigation.push(Navigate.QUIZ);
         }}
         style={styles.startQuizButtonStyle}
       >

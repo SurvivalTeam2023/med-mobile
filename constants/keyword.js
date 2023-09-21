@@ -8,3 +8,5 @@ export const CHAT_WITH_AI = "Chat with AI";
 export const DO_QUIZ = "Do quiz";
 export const DEFAULT = "DEFAULT";
 export const ADD_ON = "ADD_ON";
+export const QUIZ_RESULT = "Quiz Result";
+export const MUSIC_FOR_YOU = "Music For Today";
