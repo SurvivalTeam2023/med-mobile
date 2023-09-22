@@ -41,7 +41,6 @@ import { DEFAULT } from "../../../constants/keyword";
 export const exercise = ({ navigation }) => {
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
-  console.log("vet son", dataSelected);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
 
