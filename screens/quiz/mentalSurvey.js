@@ -19,26 +19,29 @@ import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import { ImageBackground } from "react-native";
 import { TouchableOpacity } from "react-native";
+import { useCreateQuestionBankByMentalHealthIdApi } from "../../hooks/question.hook";
 
-const Separator = () => <View style={styles.separator} />;
+const MentalSurveyScreen = ({ navigation, route }) => {
+  const mentalHealth = route.params.data;
 
-let isFavoriteExisted = [];
-const QuizScreen = () => {
-  const navigation = useNavigation();
-
-  const { data: dataIsFavoriteExisted, isSuccess: successIsFavoriteExisted } =
-    useIsFavoriteExisted();
-  if (successIsFavoriteExisted) {
-    isFavoriteExisted = dataIsFavoriteExisted;
-  }
-
-  const onPressHandler = () => {
-    if (isFavoriteExisted.exists === true) {
-      navigation.navigate("BottomTabBar");
-    }
-    if (isFavoriteExisted.exists === false) {
-      navigation.navigate("ChooseMusic");
-    }
+  const { mutate } = useCreateQuestionBankByMentalHealthIdApi();
+  const handleCreateQuestion = () => {
+    mutate(
+      {
+        mentalHealthId: mentalHealth.id,
+        noQuestion: 5,
+      },
+      {
+        onSuccess: async (data) => {
+          navigation.push(Navigate.QUESTION_MENTAL_HEALTH_SCREEN, {
+            data: data,
+          });
+        },
+        onError: (error) => {
+          console.log("Create question failed", error);
+        },
+      }
+    );
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
@@ -49,7 +52,7 @@ const QuizScreen = () => {
           colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.startQuizInfo}
         >
-          <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
+          <Text style={styles.titleInfoStyle}>{mentalHealth.name} Survey</Text>
           <View style={{ alignItems: "center", paddingTop: 4 }}>
             <Text style={styles.describeQuizText}>
               Welcome to the Emotion Survey! This quiz is designed to help you
@@ -69,51 +72,12 @@ const QuizScreen = () => {
     </SafeAreaView>
   );
 
-  function startQuizTitle() {
-    return (
-      <View>
-        <View>
-          <MaskedView
-            style={{ height: 60 }}
-            maskElement={
-              <Text style={{ textAlign: "center", ...Fonts.bold22 }}>
-                To know your more
-              </Text>
-            }
-          >
-            <LinearGradient
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 0 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-              style={{ flex: 1 }}
-            />
-          </MaskedView>
-        </View>
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
-          style={styles.startQuizInfo}
-        >
-          <Text style={styles.titleInfoStyle}>Emotion Quiz</Text>
-          <View style={{ alignItems: "center", paddingTop: 4 }}>
-            <Text style={styles.describeQuizText}>
-              Welcome to the Emotion Survey! This quiz is designed to help you
-              gain insight into your emotional landscape and explore the
-              complexities of your feelings.
-            </Text>
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  }
-
   function startQuizBtn() {
     return (
       <View>
         <TouchableOpacity
           onPress={() => {
-            navigation.push(Navigate.QUESTION_SCREEN);
+            handleCreateQuestion();
           }}
           style={styles.btn}
         >
@@ -277,4 +241,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuizScreen;
+export default MentalSurveyScreen;

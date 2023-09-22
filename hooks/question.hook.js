@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import {
   createQuestionBankApi,
+  createQuestionBankByMentalHealthIdApi,
   getFinishedQuiz,
   getFinishedQuizHistory,
   getQuestionBankApi,
@@ -60,4 +61,8 @@ export const useSetQuizStatus = (payload) =>
 export const useSaveQuizResultApi = (payload) =>
   useMutation({
     mutationFn: (payload) => saveQuizResultApi(payload),
+  });
+export const useCreateQuestionBankByMentalHealthIdApi = (payload) =>
+  useMutation({
+    mutationFn: (payload) => createQuestionBankByMentalHealthIdApi(payload),
   });

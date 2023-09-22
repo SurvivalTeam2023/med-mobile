@@ -40,13 +40,16 @@ import { DEFAULT } from "../../../constants/keyword";
 
 export const exercise = ({ navigation }) => {
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
+  const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
+  console.log("vet son", dataSelected);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
 
   const handleClickExercise = (exercise) => {
     const { type, content } = exercise;
+    console.log(exercise);
     if (type === DEFAULT) {
-      navigation.push(content);
+      navigation.push(content, { data: dataSelected });
     } else {
       navigation.push(Navigate.EXERCISE_CONTENT_SCREEN, { data: exercise });
     }

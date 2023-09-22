@@ -5,6 +5,11 @@ export const createQuestionBankApi = (payload) => {
   const url = "/questionBank";
   return CallAPI.post(url);
 };
+export const createQuestionBankByMentalHealthIdApi = (payload) => {
+  const url = "/questionBank/mentalHealth";
+  const { mentalHealthId, noQuestion } = payload;
+  return CallAPI.post(url, { mentalHealthId, noQuestion });
+};
 export const saveQuizResultApi = (payload) => {
   const { questionBankId, optionId } = payload;
   const url = "/result";
