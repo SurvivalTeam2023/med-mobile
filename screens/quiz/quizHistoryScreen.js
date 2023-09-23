@@ -24,7 +24,6 @@ const QuizHistoryScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
   const { data: quizHistoryData, isSuccess: isSuccessQuizHistory } =
     useGetFinishedQuizHistoryApi(userId);
-  console.log(quizHistoryData);
   const quizHistory = () => {
     return (
       <View

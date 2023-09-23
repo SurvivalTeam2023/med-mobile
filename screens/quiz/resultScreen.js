@@ -22,10 +22,11 @@ import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 const ResultScreen = ({ navigation, route }) => {
   const result = route.params.data;
-  console.log(result);
   const userId = useSelector((state) => state.user.data.id);
   let quizResult;
   let isFavoriteExisted;
@@ -102,9 +103,8 @@ const ResultScreen = ({ navigation, route }) => {
             <View>
               <Text
                 style={{
-                  fontSize: 24,
+                  ...Fonts.blackColor20SemiBold,
                   textAlign: "center",
-                  fontWeight: "400",
                   paddingVertical: 8,
                   borderBottomWidth: 1,
                   borderColor: "#ddd",
@@ -219,26 +219,18 @@ const ResultScreen = ({ navigation, route }) => {
       >
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: 8,
-              }}
-            >
-              <MaskedView
-                style={{ flex: 1, height: 28 }}
-                maskElement={
-                  <Text style={{ ...Fonts.bold22 }}>Survey History</Text>
-                }
+            <View>
+              <Text
+                style={{
+                  ...Fonts.blackColor20SemiBold,
+
+                  textAlign: "center",
+                  paddingVertical: 16,
+                  borderColor: "#ddd",
+                }}
               >
-                <LinearGradient
-                  start={{ x: 1, y: 0.2 }}
-                  end={{ x: 1, y: 1 }}
-                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-                  style={{ flex: 1 }}
-                />
-              </MaskedView>
+                Survey History Symptoms
+              </Text>
             </View>
 
             {quizResult ? (
@@ -249,8 +241,7 @@ const ResultScreen = ({ navigation, route }) => {
                   style={{
                     borderTopWidth: 0.5,
                     borderColor: "grey",
-                    paddingHorizontal: 8,
-                    paddingVertical: 12,
+                    paddingVertical: 24,
                   }}
                   onPress={() => {
                     navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
@@ -261,22 +252,26 @@ const ResultScreen = ({ navigation, route }) => {
                   <View
                     style={{
                       flexDirection: "row",
-                      justifyContent: "space-between",
+                      justifyContent: "center",
+                      textAlign: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      Symptoms:
-                    </Text>
-                    <Text style={{ fontSize: 14, marginTop: 2 }}>
+                    <Text
+                      style={{
+                        ...Fonts.blackColor14SemiBold,
+                        textAlign: "center",
+                      }}
+                    >
                       {e.mentalHealth.toString()}
                     </Text>
                   </View>
-                  <View style={{ marginTop: 4 }}>
+                  <View>
                     <Text
                       style={{
                         fontSize: 10,
                         color: "#aaa",
                         fontStyle: "italic",
+                        textAlign: "center",
                       }}
                     >
                       Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
@@ -302,11 +297,42 @@ const ResultScreen = ({ navigation, route }) => {
       </View>
     );
   };
+
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            Settings
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
-
       <View>
+        {header()}
+
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
@@ -396,6 +422,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: Sizes.fixPadding + 20.0,
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
 });
 
