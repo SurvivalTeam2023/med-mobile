@@ -16,6 +16,13 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     ...Fonts.grey777714,
   },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
+  },
   headerWrapStyle: {
     flexDirection: "row",
     justifyContent: "space-between",
