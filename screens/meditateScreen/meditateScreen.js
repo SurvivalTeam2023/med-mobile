@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Markdown from "react-native-simple-markdown";
+import { LinearGradient } from "expo-linear-gradient";
 const MeditateScreen = ({ navigation, route }) => {
   const header = () => {
     return (
@@ -122,7 +123,7 @@ const MeditateScreen = ({ navigation, route }) => {
               style={styles.clockText}
             />
           </View>
-          <Text style={{ ...Fonts.grayColor20SemiBold, paddingTop: 36 }}>
+          <Text style={{ ...Fonts.whiteColor20Bold, paddingTop: 36 }}>
             Mediate Song long AF
           </Text>
         </View>
@@ -152,61 +153,64 @@ const MeditateScreen = ({ navigation, route }) => {
                 <AntDesign
                   name="play"
                   size={30}
-                  color={Colors.greenDarkColor}
+                  colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                   onPress={handleStart}
                 />
               )}
+
               <Feather
                 name="stop-circle"
                 size={30}
-                color={Colors.greenDarkColor}
+                colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                 onPress={handleStop}
               />
             </View>
           )}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => navigation.pop()}
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: 40,
-            }}
-          >
-            <Text
-              style={{
-                ...Fonts.grayColor18SemiBold,
-                borderWidth: 1,
-                borderColor: Colors.greenDarkColor,
-                paddingVertical: 8,
-                borderRadius: 10,
-                paddingHorizontal: 36,
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.pop();
               }}
+              style={styles.btn}
             >
-              Back
-            </Text>
-          </TouchableOpacity>
+              <LinearGradient
+                start={{ x: 1, y: 3 }}
+                end={{ x: 0, y: 1 }}
+                colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+                style={{ borderRadius: 10 }}
+              >
+                <Text style={styles.btnText}>Back</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#CEDEBD" }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        {header()}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: Sizes.fixPadding * 15.0,
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+        <LinearGradient
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+          style={styles.startQuizInfo}
         >
-          {countDown()}
-        </ScrollView>
+          {header()}
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: Sizes.fixPadding * 15.0,
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {countDown()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -217,6 +221,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  btn: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 40,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 20, // Adjust the elevation value as needed
+      },
+    }),
+  },
+  btnText: {
+    ...Fonts.whiteColor18SemiBold,
+    borderWidth: 1,
+    paddingVertical: 8,
+    borderRadius: 10,
+    paddingHorizontal: 36,
   },
   markdownView: {
     paddingTop: 16,
@@ -233,7 +260,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   clockContainer: {
-    backgroundColor: "#9EB384",
+    backgroundColor: "#77DD76",
+    borderWidth: 4,
+    borderColor: "#fff",
     width: 225,
     height: 225,
     borderRadius: 150,
@@ -250,11 +279,20 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
+  },
   clockText: {
     display: "flex",
     textAlign: "center",
     alignContent: "center",
     ...Fonts.grayColor24SemiBold,
+    color: "#fff",
+    fontSize: 32,
   },
   buttonContainer: {
     flexDirection: "row",

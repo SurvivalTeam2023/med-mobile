@@ -48,11 +48,10 @@ const ProfileScreen = ({ navigation }) => {
     return (
       <View
         style={{
-          backgroundColor: "#eeeeee",
           borderRadius: 10,
         }}
       >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+        <View style={{ paddingHorizontal: 12 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             <View>
               <MaskedView
@@ -93,10 +92,12 @@ const ProfileScreen = ({ navigation }) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                      <Text style={{ ...Fonts.blackColor16SemiBold }}>
                         Symptoms:
                       </Text>
-                      <Text style={{ fontSize: 14, marginTop: 2 }}>
+                      <Text
+                        style={{ ...Fonts.blackColor12SemiBold, marginTop: 4 }}
+                      >
                         {e.mentalHealth.toString()}
                       </Text>
                     </View>
@@ -137,16 +138,20 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
+        {header()}
+
         <FlatList
           ListHeaderComponent={
-            <View>
-              {header()}
+            <LinearGradient
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+            >
               {Profile()}
               {quizHistory()}
-            </View>
+            </LinearGradient>
           }
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         />
       </View>
     </SafeAreaView>
@@ -156,11 +161,11 @@ const ProfileScreen = ({ navigation }) => {
     return (
       <View
         style={{
-          backgroundColor: "#eeeeee",
           borderRadius: 14,
+          paddingHorizontal: 16,
         }}
       >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+        <View style={{ paddingVertical: 16 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             <View
               style={{
@@ -372,15 +377,22 @@ const ProfileScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   headerWrapStyle: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding,
-    marginBottom: Sizes.fixPadding + 5.0,
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
   userInfo: {
     flexDirection: "column",
     justifyContent: "flex-start",
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
   },
   wrapperUserInfo: {
     paddingHorizontal: 8,

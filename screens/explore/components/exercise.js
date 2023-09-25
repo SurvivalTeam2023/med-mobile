@@ -3,52 +3,68 @@ import { Fonts } from "../../../constants/styles";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ImageBackground } from "react-native";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetExercisesListBySingleMentalIdAPI } from "../../../hooks/exercise.hook";
 import { Navigate } from "../../../constants/navigate";
-import { DEFAULT } from "../../../constants/keyword";
-
-//not trash do not delete
-// const getAudioByMentalHealthId = async () => {
-//   try {
-//     if (isSuccessSelectedMental) {
-//       let selectedMentalList = dataSelectedMental;
-//       let responses = [];
-//       let audioListMentalId;
-//       let audioSingleMental;
-//       let randomAudio;
-//       if (selectedMentalList) {
-//         const promises = selectedMentalList.map((item) =>
-//           getAudioRecommendByMentalIdAPI(item.id)
-//         );
-
-//         responses = await Promise.all(promises);
-//         if (responses) {
-//           audioListMentalId = responses?.map((e, index) => e.audios);
-//           randomAudio =
-//             audioListMentalId[
-//               Math.floor(Math.random() * audioListMentalId.length)
-//             ];
-//         }
-//         navigation.push(Navigate.MEDITATE_SCREEN, {
-//           data: audioListMentalId,
-//         });
-//       }
-//     }
-//   } catch (error) {}
-// };
+import { DEFAULT, MEDITATION } from "../../../constants/keyword";
+import { nowPlayingAction } from "../../../redux/audio/nowPlayingList.slice";
+import { useGetAudioRecommendByMentalIdAPI } from "../../../hooks/audio.hook";
+import { getAudioRecommendByMentalIdAPI } from "../../../api/audio.api";
 
 export const exercise = ({ navigation }) => {
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
+  const dispatch = useDispatch();
+
+  const getAudioByMentalHealthId = async () => {
+    if (idSelected) {
+      const promises = await getAudioRecommendByMentalIdAPI(idSelected);
+      console.log(promises);
+      console.log("here");
+      // dispatch(nowPlayingAction.addAudioToPlayList(responses));
+    }
+  };
+
+  // const getAudioByMentalHealthId = async () => {
+  //   try {
+  //     if (isSuccessSelectedMental) {
+  //       let selectedMentalList = dataSelectedMental;
+  //       let responses = [];
+  //       let audioListMentalId;
+  //       let audioSingleMental;
+  //       let randomAudio;
+  //       if (selectedMentalList) {
+  //         const promises = selectedMentalList.map((item) =>
+  //           getAudioRecommendByMentalIdAPI(item.id)
+  //         );
+
+  //         responses = await Promise.all(promises);
+  //         if (responses) {
+  //           audioListMentalId = responses?.map((e, index) => e.audios);
+  //           randomAudio =
+  //             audioListMentalId[
+  //               Math.floor(Math.random() * audioListMentalId.length)
+  //             ];
+  //         }
+  //         navigation.push(Navigate.MEDITATE_SCREEN, {
+  //           data: audioListMentalId,
+  //         });
+  //       }
+  //     }
+  //   } catch (error) {}
+  // };
 
   const handleClickExercise = (exercise) => {
     const { type, content } = exercise;
-    console.log(exercise);
     if (type === DEFAULT) {
-      navigation.push(content, { data: dataSelected });
+      if (content === "Meditate") {
+        getAudioByMentalHealthId();
+      } else if (content !== "Meditate") {
+        console.log(content);
+        navigation.push(content, { data: dataSelected });
+      }
     } else {
       navigation.push(Navigate.EXERCISE_CONTENT_SCREEN, { data: exercise });
     }

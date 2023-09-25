@@ -68,12 +68,12 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
     return (
       <View
         style={{
-          backgroundColor: Colors.greenLightColor,
           borderRadius: 10,
-          marginTop: 8,
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+        <View style={{ paddingHorizontal: 12 }}>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             <View
               style={{
@@ -81,80 +81,76 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
                 paddingHorizontal: 12,
               }}
             >
-              {dataFilter?.map((e) => (
-                <Pressable
-                  key={e.id}
-                  style={{ marginTop: 18 }}
-                  onPress={() => {
-                    navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
-                      data: {
-                        mentalHealth: e.mentalHealth,
-                        mentalHealthDesc: e.mentalHealthDesc,
-                        mentalHealthImg: e.mentalHealthImg,
-                      },
-                    });
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignContent: "center",
+              {dataFilter ? (
+                dataFilter?.map((e) => (
+                  <Pressable
+                    key={e.id}
+                    style={{ marginTop: 18 }}
+                    onPress={() => {
+                      navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
+                        data: {
+                          mentalHealth: e.mentalHealth,
+                          mentalHealthDesc: e.mentalHealthDesc,
+                          mentalHealthImg: e.mentalHealthImg,
+                        },
+                      });
                     }}
                   >
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      {e.type}
-                    </Text>
-                    <Text
+                    <View
                       style={{
-                        fontSize: 14,
-                        fontWeight: "400",
-                        marginTop: 4,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignContent: "center",
                       }}
                     >
-                      {e.percentage}%
-                    </Text>
-                  </View>
-                  <View>
-                    <ProgressBar
-                      style={{
-                        height: 20,
-                        borderRadius: 8,
-                        marginTop: 4,
-                      }}
-                      progress={e.value}
-                      color={e.color}
-                    />
-                  </View>
-                  <View style={{ flexDirection: "row", marginTop: 4 }}>
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      Degree:
-                    </Text>
+                      <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                        {e.type}
+                      </Text>
+                      <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                        {e.percentage}%
+                      </Text>
+                    </View>
+                    <View>
+                      <ProgressBar
+                        style={{
+                          height: 25,
+                          borderRadius: 8,
+                          marginTop: 4,
+                        }}
+                        progress={e.value}
+                        color={e.color}
+                      />
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: 4 }}>
+                      <Text style={{ ...Fonts.blackColor16SemiBold }}>
+                        Degree:
+                      </Text>
+                      <Text
+                        style={{
+                          ...Fonts.blackColor16SemiBold,
+                          paddingLeft: 8,
+                          color: e.color,
+                        }}
+                      >
+                        {e.degree}
+                      </Text>
+                    </View>
                     <Text
                       style={{
-                        fontSize: 16,
-                        fontWeight: "600",
-                        fontStyle: "italic",
-                        paddingLeft: 8,
+                        ...Fonts.blackColor16SemiBold,
+                        paddingTop: 4,
                         color: e.color,
                       }}
                     >
-                      {e.degree}
+                      {e.desc}
                     </Text>
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "600",
-                      fontStyle: "italic",
-                      paddingTop: 4,
-                      color: e.color,
-                    }}
-                  >
-                    {e.desc}
-                  </Text>
-                </Pressable>
-              ))}
+                  </Pressable>
+                ))
+              ) : (
+                <View style={styles.container}>
+                  <ActivityIndicator size="small" color="#f8b26a" />
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -165,23 +161,22 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View style={{ flex: 1 }}>
-        {header()}
         <View>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
+          {header()}
+
+          <LinearGradient
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+            style={styles.startQuizInfo}
           >
             <ScrollView
-              scrollEnabled={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: "center",
-                paddingHorizontal: 8,
-              }}
+              contentContainerStyle={{ flexGrow: 1 }}
+              showsVerticalScrollIndicator={false}
             >
               {progressQuiz()}
             </ScrollView>
-          </ScrollView>
+          </LinearGradient>
         </View>
       </View>
     </SafeAreaView>
@@ -233,6 +228,13 @@ const ResultHistoryDetailScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   resultBar: {
     marginTop: 12,
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
   },
   headerWrapStyle: {
     width: "100%",

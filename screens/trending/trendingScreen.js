@@ -579,9 +579,11 @@ const styles = StyleSheet.create({
   },
 
   headerWrapStyle: {
+    width: "100%",
     flexDirection: "row",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding,
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
