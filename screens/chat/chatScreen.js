@@ -1,21 +1,31 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useState, useCallback, useEffect } from "react";
-import { BackHandler, View, ImageBackground, StyleSheet } from "react-native";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import { chatGPTAPI } from "../../api/chat.api";
-import { parseTokenToRole } from "../../utils/app.util";
-import { KeyboardAvoidingView } from "react-native";
-import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors, Fonts } from "../../constants/styles";
-import { Text } from "react-native";
-import { useSelector } from "react-redux";
+import {
+  BackHandler,
+  ImageBackground,
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
 
 const ChatScreen = ({ navigation }) => {
   const backAction = () => {
-    backClickCount == 1 ? BackHandler.exitApp() : _spring();
+    backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
   };
+
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    fetchFirstMessages();
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -23,13 +33,12 @@ const ChatScreen = ({ navigation }) => {
         BackHandler.removeEventListener("hardwareBackPress", backAction);
     }, [backAction])
   );
-  const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(true);
-  useEffect(() => {
-    setMessages([
+
+  const fetchFirstMessages = () => {
+    const staticMessages = [
       {
         _id: 1,
-        text: "Welcome to Meditation Chat AI! Discover inner peace and miFndfulness through guided meditations, mindfulness exercises, and insightful discussions. Ask questions, share experiences, and embark on your journey to tranquility. Let's explore the world of meditation together.",
+        text: "Welcome to Meditation Chat AI! Discover inner peace and mindfulness through guided meditations, mindfulness exercises, and insightful discussions. Ask questions, share experiences, and embark on your journey to tranquility. Let's explore the world of meditation together.",
         createdAt: new Date(),
         user: {
           _id: 2,
@@ -37,9 +46,49 @@ const ChatScreen = ({ navigation }) => {
           avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
         },
       },
-    ]);
+    ];
+    setMessages(staticMessages);
+  };
+
+  const sendMessage = (text) => {
+    chatGPTAPI(text)
+      .then((res) => {
+        const newMessage = {
+          _id: Math.random().toString(36).substring(7),
+          text: res,
+          createdAt: new Date(),
+          user: {
+            _id: 4,
+            name: "Medy",
+            avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
+          },
+        };
+        setMessages((previousMessages) =>
+          GiftedChat.append(previousMessages, [newMessage])
+        );
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const onSend = useCallback((messages = []) => {
+    const latestMessage = messages[0];
+    if (
+      latestMessage &&
+      latestMessage.text !== messages[messages.length - 2]?.text
+    ) {
+      setMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, messages)
+      );
+      const { text } = latestMessage;
+      sendMessage(text);
+    }
   }, []);
-  const header = () => {
+
+  const image = {
+    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NPQf_WXzpzImkSte3VU5eyvoLsagANiaYA&usqp=CAU",
+  };
+
+  const header = useMemo(() => {
     return (
       <View style={styles.headerWrapStyle}>
         <View style={{ flexDirection: "row", width: "33.33%" }}>
@@ -51,12 +100,12 @@ const ChatScreen = ({ navigation }) => {
             <MaterialIcons
               name="keyboard-arrow-left"
               size={24}
-              colors={[
+              color={[
                 { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
               ]}
             />
-            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+            <Text style={Fonts.grayColor18SemiBold}>Back</Text>
           </TouchableOpacity>
         </View>
 
@@ -68,40 +117,11 @@ const ChatScreen = ({ navigation }) => {
         <View style={{ width: "33.33%" }}></View>
       </View>
     );
-  };
-  const onSend = useCallback((messages = []) => {
-    console.log(messages);
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-    chatGPTAPI(messages[0].text)
-      .then((res) => {
-        console.log(res);
-        const newMessage = [
-          {
-            _id: 3,
-            text: res,
-            createdAt: new Date(),
-            user: {
-              _id: 4,
-              name: "Medy",
-              avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
-            },
-          },
-        ];
-        setMessages((previousMessages) =>
-          GiftedChat.append(previousMessages, newMessage)
-        );
-      })
-      .catch((err) => console.log(err));
-  }, []);
-  const image = {
-    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NPQf_WXzpzImkSte3VU5eyvoLsagANiaYA&usqp=CAU",
-  };
+  }, [navigation]);
 
   return (
-    <View style={{ flex: 1 }}>
-      {header()}
+    <View style={styles.container}>
+      {header}
       <ImageBackground
         source={image}
         resizeMode="cover"
@@ -110,17 +130,18 @@ const ChatScreen = ({ navigation }) => {
       >
         <GiftedChat
           messages={messages}
-          onSend={(messages) => onSend(messages)}
+          onSend={onSend}
           user={{
             _id: 1,
           }}
-          isTyping={isTyping}
+          isTyping={true}
         />
       </ImageBackground>
       {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -136,14 +157,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  text: {
-    color: "white",
-    fontSize: 42,
-    lineHeight: 84,
-    fontWeight: "bold",
-    textAlign: "center",
-    backgroundColor: "#000000c0",
-  },
 });
-
 export default ChatScreen;
