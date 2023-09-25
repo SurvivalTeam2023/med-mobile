@@ -56,7 +56,6 @@ export const suggestion = ({ navigation }) => {
   const { id } = userInfo;
 
   const handleClick = (name) => {
-    console.log("Here");
     switch (name) {
       case QUIZ_RESULT:
         if (dataQuizHis.length > 0) {

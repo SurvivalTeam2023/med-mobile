@@ -64,6 +64,8 @@ import QuizHistoryScreen from "./screens/quiz/quizHistoryScreen";
 import ChatScreen from "./screens/chat/chatScreen";
 import { Navigate } from "./constants/navigate";
 import AiChatScreen from "./screens/chat/aiChatScreen";
+import MentalSurveyScreen from "./screens/quiz/mentalSurvey";
+import QuestionMentalHealthScreen from "./screens/quiz/questionMentalHealthScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -102,6 +104,22 @@ const App = () => {
             <Stack.Screen name="Chat with AI" component={AiChatScreen} />
             <Stack.Screen name="QuizHistory" component={QuizHistoryScreen} />
             <Stack.Screen name="Intro Music" component={IntroRecAlbumScreen} />
+            <Stack.Screen
+              name="Mental Survey"
+              component={MentalSurveyScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.item;
+                return data;
+              }}
+            />
+            <Stack.Screen
+              name="Question Mental Health"
+              component={QuestionMentalHealthScreen}
+              sharedElements={(route, otherRoute, showing) => {
+                const data = route.params.item;
+                return data;
+              }}
+            />
             <Stack.Screen
               name="AudioMental"
               component={AudioMentalScreen}
