@@ -21,9 +21,12 @@ export const exercise = ({ navigation }) => {
   const getAudioByMentalHealthId = async () => {
     if (idSelected) {
       const promises = await getAudioRecommendByMentalIdAPI(idSelected);
-      console.log(promises);
-      console.log("here");
-      // dispatch(nowPlayingAction.addAudioToPlayList(responses));
+      const audioList = promises.audios;
+      const audios = audioList.map((item) =>
+        dispatch(nowPlayingAction.addAudioToPlayList(item))
+      );
+
+      navigation.push(Navigate.MEDITATE_SCREEN);
     }
   };
 
@@ -62,7 +65,6 @@ export const exercise = ({ navigation }) => {
       if (content === "Meditate") {
         getAudioByMentalHealthId();
       } else if (content !== "Meditate") {
-        console.log(content);
         navigation.push(content, { data: dataSelected });
       }
     } else {

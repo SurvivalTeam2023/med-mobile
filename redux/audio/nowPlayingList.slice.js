@@ -10,12 +10,12 @@ const initialState = {
   currentAction: null,
   isLoading: true,
   trialNumberLeft: 3,
-  disableAction: false
+  disableAction: false,
 };
 const beatifulAudioFormat = (audio) => {
   if (!audio) return;
   const audioInfo = audio["audio"] || audio;
-  const artist = audioInfo["artist"];
+  const artist = audioInfo["artist"] || "Unknow";
   const audioFile = audioInfo["audioFile"][0];
   const latestFile = audioFile["file"];
   const formated = {
@@ -36,7 +36,7 @@ const reducer = createSlice({
   reducers: {
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
-
+      console.log(playingList);
       // Check if the new audio already exists in the playingList
       const isExisted = playingList?.findIndex(
         (audio) => audio?.name === beatifulAudioFormat(action.payload)?.name
@@ -88,13 +88,12 @@ const reducer = createSlice({
       });
     },
     setTrailAudioLeft: (state, action) => {
-      state.trialNumberLeft = action.payload
+      state.trialNumberLeft = action.payload;
     },
     setDisableAction: (state, action) => {
-      state.disableAction = action.payload
+      state.disableAction = action.payload;
     },
     resetNowPlayingState: () => initialState,
-
   },
 });
 const markAudioListen = (listAudio) => {

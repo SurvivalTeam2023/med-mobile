@@ -13,7 +13,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Markdown from "react-native-simple-markdown";
 import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 const MeditateScreen = ({ navigation, route }) => {
+  const dataAudio = route.params.data;
+  const dispatch = useDispatch();
+  console.log(dataAudio);
+
   const header = () => {
     return (
       <View style={styles.headerWrapStyle}>
