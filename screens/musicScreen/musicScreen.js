@@ -33,7 +33,7 @@ import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 import { useGetMentalHealthListAPI } from "../../hooks/mentalHealth";
 import { CATEGORIES, MENTAL_HEALTH, PLAYLIST } from "../../constants/keyword";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = CATEGORIES;
@@ -140,7 +140,9 @@ const MusicScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>THERAPIST</Text>
+          <Text style={styles.titleStyle}>
+            Select Mental Health To Listen To Music
+          </Text>
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {dataMentalHealth ? (
@@ -205,60 +207,69 @@ const MusicScreen = ({ navigation }) => {
     return (
       <View style={{ paddingHorizontal: 2, paddingVertical: 16 }}>
         <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-          {dataGetPlaylist?.map((playListInfor, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() =>
-                  navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                    playlistId: playListInfor.id,
-                  })
-                }
-              >
-                <View
-                  style={{
-                    borderColor: "grey",
-                    paddingHorizontal: 10,
-                    paddingVertical: 12,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                  }}
+          <View style={styles.titleWrapStyle}>
+            <Text style={styles.titleStyle}>Mental Health Playlist</Text>
+          </View>
+          {dataGetPlaylist ? (
+            dataGetPlaylist?.map((playListInfor, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
+                      playlistId: playListInfor.id,
+                    })
+                  }
                 >
-                  <View>
-                    <Text style={{ ...Fonts.grayColor16SemiBold }}>
-                      {index + 1}
-                    </Text>
-                  </View>
                   <View
                     style={{
-                      marginLeft: 8,
-                      display: "flex",
-                      justifyContent: "center",
+                      borderColor: "grey",
+                      paddingHorizontal: 10,
+                      paddingVertical: 12,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
                       alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      source={{ uri: playListInfor.imageUrl }}
-                      style={styles.imagePlaylist}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "column",
-                      marginLeft: 10,
                     }}
                   >
                     <View>
                       <Text style={{ ...Fonts.grayColor16SemiBold }}>
-                        {playListInfor.name}
+                        {index + 1}
                       </Text>
                     </View>
+                    <View
+                      style={{
+                        marginLeft: 8,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Image
+                        source={{ uri: playListInfor.imageUrl }}
+                        style={styles.imagePlaylist}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "column",
+                        marginLeft: 10,
+                      }}
+                    >
+                      <View>
+                        <Text style={{ ...Fonts.grayColor16SemiBold }}>
+                          {playListInfor.name}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <View style={styles.container}>
+              <ActivityIndicator size="small" color="#f8b26a" />
+            </View>
+          )}
         </View>
       </View>
     );
@@ -345,30 +356,46 @@ const MusicScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Music</Text>}
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userInfo?.username}'s Space
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-        <TouchableOpacity
-          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
-          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
-        >
-          <Image
-            source={
-              userInfo?.avatar?.url
-                ? { uri: userInfo?.avatar?.url }
-                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
-            }
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userInfo?.avatar?.url
+                  ? { uri: userInfo?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -388,6 +415,11 @@ const styles = StyleSheet.create({
     width: 125,
     height: 100,
     borderRadius: 15,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   clockContainer: {
     flex: 1,
@@ -463,8 +495,11 @@ const styles = StyleSheet.create({
 
   headerWrapStyle: {
     flexDirection: "row",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,

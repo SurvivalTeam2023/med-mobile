@@ -21,6 +21,10 @@ import {
   useGetMentalHealthListAPI,
   useSelectUserMentalHealthAPI,
 } from "../../hooks/mentalHealth";
+import {
+  getMentalHealthFromLocal,
+  storeSelectedMentalHealthToLocal,
+} from "../../utils/app.local_handler";
 
 const { width } = Dimensions.get("window");
 
@@ -30,6 +34,22 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
   const { mutate } = useSelectUserMentalHealthAPI();
   const [isSelect, setIsSelected] = useState();
+
+  useEffect(() => {
+    const initializeIsRead = async () => {
+      try {
+        const mentalHealthValue = await getMentalHealthFromLocal();
+        if (mentalHealthValue) {
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
+        }
+      } catch (error) {
+        console.log("Failed fetching disclaimer:", error);
+      }
+    };
+
+    initializeIsRead();
+  }, []);
+
   //Get mental health list
   const {
     data: dataMentalHealth,
@@ -49,7 +69,7 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
 
       {
         onSuccess: (data) => {
-          console.log(data);
+          storeSelectedMentalHealthToLocal(true);
           navigation.push(Navigate.BOTTOM_TAB_BAR);
         },
         onError: (error) => {

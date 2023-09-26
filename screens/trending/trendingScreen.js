@@ -30,7 +30,7 @@ import {
   useGetResultByIdApi,
 } from "../../hooks/question.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = ["Song", "Survey"];
@@ -113,23 +113,6 @@ const TrendingScreen = ({ navigation }) => {
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
 
-  //   //If you are making a quize type app then you need to make a simple timer
-  //   //which can be done by using the simple like given below
-  //   //that.setState({ totalDuration: 30 }); //which is 30 sec
-  //   var date = moment().utcOffset("+05:30").format("YYYY-MM-DD hh:mm:ss");
-  //   //Getting the current date-time with required formate and UTC
-  //   var expirydate = "2020-12-23 04:00:45"; //You can set your own date-time
-  //   //Let suppose we have to show the countdown for above date-time
-  //   var diffr = moment.duration(moment(expirydate).diff(moment(date)));
-  //   //difference of the expiry date-time given and current date-time
-  //   var hours = parseInt(diffr.asHours());
-  //   var minutes = parseInt(diffr.minutes());
-  //   var seconds = parseInt(diffr.seconds());
-  //   var d = hours * 60 * 60 + minutes * 60 + seconds;
-  //   //converting in seconds
-  //   setTotalDuration(d);
-  //   //Settign up the duration of countdown in seconds to re-render
-  // }, []);
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],
   });
@@ -292,17 +275,7 @@ const TrendingScreen = ({ navigation }) => {
         </View>
         {!value ? (
           <View style={styles.container}>
-            <Text
-              style={{
-                fontSize: 20,
-                textAlign: "center",
-                fontWeight: "100",
-                display: "flex",
-                paddingVertical: 8,
-              }}
-            >
-              Please do a survey to get recommended audio
-            </Text>
+            <ActivityIndicator size="small" color="#f8b26a" />
           </View>
         ) : value?.length > 0 ? (
           <FlatList
@@ -348,7 +321,7 @@ const TrendingScreen = ({ navigation }) => {
                   key={`${index}`}
                   start={{ x: 1, y: 0 }}
                   end={{ x: 0, y: 1 }}
-                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                  colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                   style={{
                     marginRight:
                       trendingCategoriesList.length - 1 == index
@@ -467,30 +440,46 @@ const TrendingScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Calm Yourself</Text>}
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userInfo?.username}'s Space
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-        <TouchableOpacity
-          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
-          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
-        >
-          <Image
-            source={
-              userInfo?.avatar?.url
-                ? { uri: userInfo?.avatar?.url }
-                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
-            }
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userInfo?.avatar?.url
+                  ? { uri: userInfo?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -530,6 +519,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignContent: "center",
     ...Fonts.grayColor24SemiBold,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   colorDot: {
     borderRadius: "50%",
@@ -579,11 +573,12 @@ const styles = StyleSheet.create({
   },
 
   headerWrapStyle: {
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,

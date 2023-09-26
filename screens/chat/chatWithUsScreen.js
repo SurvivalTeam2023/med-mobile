@@ -38,7 +38,7 @@ const ChatWithUsScreen = ({ navigation }) => {
     const staticMessages = [
       {
         _id: 1,
-        text: "We value your feedback and are here to assist you. You can easily get in touch with our support team. Whether you have questions, suggestions, or just want to share your thoughts, we're just a message away. Contact us at mediataion@gmail.com",
+        text: "We value your feedback and are here to assist you. You can easily get in touch with our support team. Whether you have questions, suggestions, or just want to share your thoughts, we're just a message away. Contact us at mediataion2022@gmail.com",
         createdAt: new Date(),
         user: {
           _id: 2,
