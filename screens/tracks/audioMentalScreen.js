@@ -28,7 +28,7 @@ import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
 import { useDispatch, useSelector } from "react-redux";
-
+import { AntDesign } from "@expo/vector-icons";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import { useGetAudioRecommendByMentalIdAPI } from "../../hooks/audio.hook";
 import {
@@ -234,6 +234,8 @@ const AudioMentalScreen = ({ navigation, route }) => {
                   style={{
                     width: 50,
                     height: 50,
+                    borderRadius: 90,
+                    overflow: "hidden",
                   }}
                   borderRadius={Sizes.fixPadding - 5.0}
                 ></ImageBackground>
@@ -243,7 +245,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
               </View>
             </View>
           </TouchableOpacity>
-          <CustomMenu id={item.id} />
+          <AntDesign name="play" size={24} color="black" />
         </View>
       ))
     ) : (
@@ -461,12 +463,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    paddingVertical: 20,
+    paddingHorizontal: 8,
+    borderRadius: 90,
+    paddingVertical: 8,
     borderColor: "black",
     borderWidth: 1,
     marginBottom: Sizes.fixPadding * 2,
+    // Android shadow
+    elevation: 5, // Adjust the elevation value as needed
+    // iOS shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   sortingOptionsWrapStyle: {
     paddingTop: Sizes.fixPadding,
