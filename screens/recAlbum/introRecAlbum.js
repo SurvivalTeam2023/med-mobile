@@ -6,7 +6,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { styles } from "./style";
 import { introRecAlbumBody } from "./components/introBody";
-const IntroRecAlbumScreen = ({ navigation }) => {
+const IntroRecAlbumScreen = ({ navigation, route }) => {
   const header = () => {
     return (
       <View style={styles.headerWrapStyle}>
@@ -41,7 +41,7 @@ const IntroRecAlbumScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View style={{ flex: 1 }}>
         {header()}
-        {introRecAlbumBody()}
+        {introRecAlbumBody({ navigation })}
       </View>
     </SafeAreaView>
   );

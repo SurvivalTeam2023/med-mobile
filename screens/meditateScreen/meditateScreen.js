@@ -13,7 +13,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Markdown from "react-native-simple-markdown";
 import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch } from "react-redux";
+import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 const MeditateScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const header = () => {
     return (
       <View style={styles.headerWrapStyle}>
@@ -27,10 +30,10 @@ const MeditateScreen = ({ navigation, route }) => {
   };
 
   const countDown = () => {
-    const [isRunning, setIsRunning] = useState(false);
+    const [isRunning, setIsRunning] = useState(true);
     const [secondsRemaining, setSecondsRemaining] = useState(1000 * 60);
     const [currentTime, setCurrentTime] = useState(1000 * 60);
-    const [startTimerOnMount, setStartTimerOnMount] = useState(false);
+    const [startTimerOnMount, setStartTimerOnMount] = useState(true);
     const [countComplete, setCountComplete] = useState(false);
     useEffect(() => {
       let timer;
@@ -169,6 +172,8 @@ const MeditateScreen = ({ navigation, route }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
+                dispatch(nowPlayingAction.resetNowPlayingState());
+                console.log("yeh ha");
                 navigation.pop();
               }}
               style={styles.btn}

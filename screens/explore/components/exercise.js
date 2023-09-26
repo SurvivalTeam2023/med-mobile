@@ -2,28 +2,43 @@ import { styles } from "../style";
 import { Fonts } from "../../../constants/styles";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ImageBackground } from "react-native";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetExercisesListBySingleMentalIdAPI } from "../../../hooks/exercise.hook";
 import { Navigate } from "../../../constants/navigate";
-import { DEFAULT, MEDITATION } from "../../../constants/keyword";
+import { CHAT_WITH_AI, DEFAULT, MEDITATION } from "../../../constants/keyword";
 import { nowPlayingAction } from "../../../redux/audio/nowPlayingList.slice";
 import { useGetAudioRecommendByMentalIdAPI } from "../../../hooks/audio.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../../api/audio.api";
-
+import { MaterialIcons } from "@expo/vector-icons";
+import { validatePathConfig } from "@react-navigation/native";
+import { useGetSubscriptionByUserId } from "../../../hooks/subscription.hook";
 export const exercise = ({ navigation }) => {
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
+  const [isSubscriber, setIsSubscriber] = useState(false);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
+  const {
+    data: subscriptionData,
+    isSuccess: isSuccessSubscription,
+    isError: isErrorSubScription,
+    error: errorSubScription,
+  } = useGetSubscriptionByUserId();
+
   const dispatch = useDispatch();
 
   const getAudioByMentalHealthId = async () => {
     if (idSelected) {
-      const promises = await getAudioRecommendByMentalIdAPI(idSelected);
-      console.log(promises);
-      console.log("here");
-      // dispatch(nowPlayingAction.addAudioToPlayList(responses));
+      // Assuming getAudioRecommendByMentalIdAPI returns a promise
+      const audioList = await getAudioRecommendByMentalIdAPI(idSelected);
+      const audio = audioList.audios.map((item) =>
+        dispatch(nowPlayingAction.addAudioToPlayList(item))
+      );
+      navigation.push(Navigate.MEDITATE_SCREEN);
+      // Loop through the 'audios' array and dispatch each audio item
+
+      // Wrap audios in a resolved promise and dispatch the action
     }
   };
 
@@ -62,7 +77,6 @@ export const exercise = ({ navigation }) => {
       if (content === "Meditate") {
         getAudioByMentalHealthId();
       } else if (content !== "Meditate") {
-        console.log(content);
         navigation.push(content, { data: dataSelected });
       }
     } else {
@@ -94,7 +108,15 @@ export const exercise = ({ navigation }) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  handleClickExercise(item);
+                  // Check if the user is a subscriber before allowing access
+                  if (isSubscriber && item.content === "Chat with AI") {
+                    handleClickExercise(item);
+                  } else {
+                    // Handle non-subscriber action, e.g., show a message
+                    alert(
+                      "You need to be a subscriber to access this exercise."
+                    );
+                  }
                 }}
               >
                 <ImageBackground
@@ -109,8 +131,22 @@ export const exercise = ({ navigation }) => {
                     borderRadius: 10,
                     borderWidth: 0.2,
                     overflow: "hidden", // Clip the image to the rounded border
-                  }} // Adjust the dimensions as needed>
+                  }}
                 >
+                  {item.content === "Chat with AI" &&
+                  !subscriptionData.length > 0 ? (
+                    // Render a lock layer only for "Chat with AI" and non-subscribers
+                    <View
+                      style={{
+                        flex: 1,
+                        backgroundColor: "rgba(128, 128, 128, 0.7)",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <MaterialIcons name="lock" size={24} color="white" />
+                    </View>
+                  ) : null}
                   <View
                     style={{
                       position: "absolute",
