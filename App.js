@@ -66,6 +66,7 @@ import { Navigate } from "./constants/navigate";
 import AiChatScreen from "./screens/chat/aiChatScreen";
 import MentalSurveyScreen from "./screens/quiz/mentalSurvey";
 import QuestionMentalHealthScreen from "./screens/quiz/questionMentalHealthScreen";
+import ChatWithUsScreen from "./screens/chat/chatWithUsScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -102,6 +103,7 @@ const App = () => {
 
             <Stack.Screen name="SignUp" component={signupScreen} />
             <Stack.Screen name="Chat with AI" component={AiChatScreen} />
+            <Stack.Screen name="Chat" component={ChatWithUsScreen} />
             <Stack.Screen name="QuizHistory" component={QuizHistoryScreen} />
             <Stack.Screen name="Intro Music" component={IntroRecAlbumScreen} />
             <Stack.Screen
@@ -253,7 +255,7 @@ const App = () => {
               name="editAudioArtistScreen"
               component={EditAudioArtistScreen}
             />
-            <Stack.Screen name={Navigate.CHAT} component={ChatScreen} />
+            <Stack.Screen name={"AI Chat"} component={ChatScreen} />
             <Stack.Screen
               name="ResultHistoryDetail"
               component={ResultHistoryDetailScreen}

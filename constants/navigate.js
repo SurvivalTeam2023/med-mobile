@@ -39,8 +39,9 @@ export const Navigate = {
   EXERCISE_CONTENT_SCREEN: "ExerciseContent",
   INTRO_REC_ALBUM_SCREEN: "Intro Music",
   QUIZ_HISTORY_SCREEN: "QuizHistory",
-  CHAT: "Chat",
+  CHAT: "AI Chat",
   AI_CHAT_SCREEN: "Chat with AI",
+  CHAT_WITH_SCREEN: "Chat",
   MENTAL_SURVEY_SCREEN: "Mental Survey",
   QUESTION_MENTAL_HEALTH_SCREEN: "Question Mental Health",
 };

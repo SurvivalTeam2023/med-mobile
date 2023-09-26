@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const ChatScreen = ({ navigation }) => {
+const ChatWithUsScreen = ({ navigation }) => {
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -38,12 +38,13 @@ const ChatScreen = ({ navigation }) => {
     const staticMessages = [
       {
         _id: 1,
-        text: "Welcome to Meditation Chat AI! Discover inner peace and mindfulness through guided meditations, mindfulness exercises, and insightful discussions. Ask questions, share experiences, and embark on your journey to tranquility. Let's explore the world of meditation together.",
+        text: "We value your feedback and are here to assist you. You can easily get in touch with our support team. Whether you have questions, suggestions, or just want to share your thoughts, we're just a message away. Contact us at mediataion@gmail.com",
         createdAt: new Date(),
         user: {
           _id: 2,
           name: "Medy",
-          avatar: "https://cdn-icons-png.flaticon.com/512/4712/4712139.png",
+          avatar:
+            "https://cdn2.vectorstock.com/i/1000x1000/54/66/healing-body-leaves-logo-vector-22425466.jpg",
         },
       },
     ];
@@ -85,7 +86,7 @@ const ChatScreen = ({ navigation }) => {
   }, []);
 
   const image = {
-    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6NPQf_WXzpzImkSte3VU5eyvoLsagANiaYA&usqp=CAU",
+    uri: "https://e1.pxfuel.com/desktop-wallpaper/165/215/desktop-wallpaper-16-ui-gradients-gradient-green-background.jpg",
   };
 
   const header = useMemo(() => {
@@ -111,7 +112,7 @@ const ChatScreen = ({ navigation }) => {
 
         <View style={{ width: "33.33%" }}>
           <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
-            Medy ChatBox
+            Chat with us
           </Text>
         </View>
         <View style={{ width: "33.33%" }}></View>
@@ -158,4 +159,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-export default ChatScreen;
+export default ChatWithUsScreen;
