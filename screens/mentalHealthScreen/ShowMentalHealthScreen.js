@@ -29,7 +29,7 @@ let musicsList = [];
 const ChooseMentalHealthScreen = ({ navigation }) => {
   const { data, error, isSuccess, isError } = useGetGenreList();
   const { mutate } = useSelectUserMentalHealthAPI();
-
+  const [isSelect, setIsSelected] = useState();
   //Get mental health list
   const {
     data: dataMentalHealth,

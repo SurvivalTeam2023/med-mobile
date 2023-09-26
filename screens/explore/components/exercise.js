@@ -109,13 +109,16 @@ export const exercise = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   // Check if the user is a subscriber before allowing access
-                  if (isSubscriber && item.content === "Chat with AI") {
-                    handleClickExercise(item);
-                  } else {
+                  if (
+                    item.content === "Chat with AI" &&
+                    !subscriptionData?.length > 0
+                  ) {
                     // Handle non-subscriber action, e.g., show a message
                     alert(
                       "You need to be a subscriber to access this exercise."
                     );
+                  } else {
+                    handleClickExercise(item);
                   }
                 }}
               >
@@ -134,7 +137,7 @@ export const exercise = ({ navigation }) => {
                   }}
                 >
                   {item.content === "Chat with AI" &&
-                  !subscriptionData.length > 0 ? (
+                  !subscriptionData?.length > 0 ? (
                     // Render a lock layer only for "Chat with AI" and non-subscribers
                     <View
                       style={{

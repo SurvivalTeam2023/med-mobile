@@ -44,12 +44,33 @@ export const getDisclaimerFromLocal = async () => {
     console.log("fetch_user_local_fail");
   }
 };
+export const getMentalHealthFromLocal = async () => {
+  try {
+    const value = await AsyncStorage.getItem("MentalHealth");
+    if (value !== null) {
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        console.log("Failed to parse mentalHealth:", error);
+      }
+    }
+  } catch (e) {
+    console.log("fetch_user_local_fail");
+  }
+};
 
 export const storeDisclaimerToLocal = async (payload) => {
   try {
     await AsyncStorage.setItem("Disclaimer", JSON.stringify(payload));
   } catch (error) {
     console.log("store_disclaimer_error: ", error);
+  }
+};
+export const storeSelectedMentalHealthToLocal = async (payload) => {
+  try {
+    await AsyncStorage.setItem("MentalHealth", JSON.stringify(payload));
+  } catch (error) {
+    console.log("store_mentalHealth_error: ", error);
   }
 };
 export const storeTokenToLocal = async (payload) => {
