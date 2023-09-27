@@ -207,7 +207,6 @@ const MeditateScreen = ({ navigation, route }) => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              paddingBottom: Sizes.fixPadding * 15.0,
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
