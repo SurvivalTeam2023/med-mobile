@@ -29,8 +29,10 @@ import {
   useGetFinishedQuizHistoryApi,
   useGetResultByIdApi,
 } from "../../hooks/question.hook";
-import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
+import { AntDesign } from "@expo/vector-icons";
 
+import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
+import { SimpleLineIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = ["Song", "Survey"];
@@ -113,23 +115,6 @@ const TrendingScreen = ({ navigation }) => {
     error: errorAudioList,
   } = useGetRecommendAudioByQuizResultAPI();
 
-  //   //If you are making a quize type app then you need to make a simple timer
-  //   //which can be done by using the simple like given below
-  //   //that.setState({ totalDuration: 30 }); //which is 30 sec
-  //   var date = moment().utcOffset("+05:30").format("YYYY-MM-DD hh:mm:ss");
-  //   //Getting the current date-time with required formate and UTC
-  //   var expirydate = "2020-12-23 04:00:45"; //You can set your own date-time
-  //   //Let suppose we have to show the countdown for above date-time
-  //   var diffr = moment.duration(moment(expirydate).diff(moment(date)));
-  //   //difference of the expiry date-time given and current date-time
-  //   var hours = parseInt(diffr.asHours());
-  //   var minutes = parseInt(diffr.minutes());
-  //   var seconds = parseInt(diffr.seconds());
-  //   var d = hours * 60 * 60 + minutes * 60 + seconds;
-  //   //converting in seconds
-  //   setTotalDuration(d);
-  //   //Settign up the duration of countdown in seconds to re-render
-  // }, []);
   const [state, setState] = useState({
     selectedCategory: trendingCategoriesList[0],
   });
@@ -143,18 +128,25 @@ const TrendingScreen = ({ navigation }) => {
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View>
         {header()}
-        {trendingCategories()}
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingTop: 12,
-            paddingBottom: Sizes.fixPadding * 15.0,
-          }}
+        <LinearGradient
+          start={{ x: 1.1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+          style={styles.startQuizInfo}
         >
-          {selectedCategory === "Song" && song()}
-          {selectedCategory === "Survey" && startQuizTitle()}
-        </ScrollView>
+          {trendingCategories()}
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingTop: 12,
+              paddingHorizontal: Sizes.fixPadding * 6,
+            }}
+          >
+            {selectedCategory === "Song" && song()}
+            {selectedCategory === "Survey" && startQuizTitle()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -254,19 +246,39 @@ const TrendingScreen = ({ navigation }) => {
       <View style={{ marginTop: 8 }}>
         <Text
           style={{
-            paddingTop: 12,
-            paddingBottom: 8,
-            ...Fonts.grey5555ColorSemiBold,
+            paddingBottom: 36,
+            ...Fonts.whiteColor20Light,
             textAlign: "center",
           }}
         >
           {item.mentalHealth}
         </Text>
         {item?.audios?.map((e) => (
-          <View key={e?.id} style={{ flexDirection: "row", marginTop: 8 }}>
+          <View key={e?.id}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => handleNavigateNowPlayling(e)}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 16,
+                borderRadius: 50,
+                paddingVertical: 10,
+                borderColor: "black",
+                borderWidth: 1,
+                marginBottom: Sizes.fixPadding * 2,
+                // Android shadow
+                elevation: 5, // Adjust the elevation value as needed
+                // iOS shadow
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.5,
+                shadowRadius: 5,
+              }}
             >
               <SharedElement id={`${e?.id}`}>
                 <Image
@@ -274,10 +286,13 @@ const TrendingScreen = ({ navigation }) => {
                   style={styles.popularSongImageStyle}
                 />
               </SharedElement>
+              <View
+                style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}
+              >
+                <Text style={styles.infoTextStyle}>{e?.name}</Text>
+              </View>
+              <AntDesign name="play" size={24} color="black" />
             </TouchableOpacity>
-            <View style={{ flex: 1, justifyContent: "center", marginLeft: 10 }}>
-              <Text style={styles.infoTextStyle}>{e?.name}</Text>
-            </View>
           </View>
         ))}
       </View>
@@ -292,17 +307,7 @@ const TrendingScreen = ({ navigation }) => {
         </View>
         {!value ? (
           <View style={styles.container}>
-            <Text
-              style={{
-                fontSize: 20,
-                textAlign: "center",
-                fontWeight: "100",
-                display: "flex",
-                paddingVertical: 8,
-              }}
-            >
-              Please do a survey to get recommended audio
-            </Text>
+            <ActivityIndicator size="small" color="#f8b26a" />
           </View>
         ) : value?.length > 0 ? (
           <FlatList
@@ -311,17 +316,12 @@ const TrendingScreen = ({ navigation }) => {
             renderItem={renderItem}
             horizontal={false}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingLeft: Sizes.fixPadding * 2.0,
-              paddingRight: Sizes.fixPadding,
-            }}
           />
         ) : (
           <Text
             style={{
-              fontSize: 20,
+              ...Fonts.whiteColor18SemiBold,
               textAlign: "center",
-              fontWeight: "100",
               paddingVertical: 8,
             }}
           >
@@ -348,7 +348,7 @@ const TrendingScreen = ({ navigation }) => {
                   key={`${index}`}
                   start={{ x: 1, y: 0 }}
                   end={{ x: 0, y: 1 }}
-                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+                  colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                   style={{
                     marginRight:
                       trendingCategoriesList.length - 1 == index
@@ -392,22 +392,26 @@ const TrendingScreen = ({ navigation }) => {
 
     if (hasDobData) {
       return (
-        <View style={{ marginTop: 44 }}>
-          <LinearGradient
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0 }}
-            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-            style={styles.startQuizInfo}
-          >
-            <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
-            <View style={{ alignItems: "center", paddingTop: 4 }}>
-              <Text style={styles.describeQuizText}>
-                Welcome to the Emotion Survey! This survey is designed to help
-                you gain insight into your emotional landscape and explore the
-                complexities of your feelings.
-              </Text>
-            </View>
-          </LinearGradient>
+        <View style={{ height: "100%" }}>
+          <Text style={styles.titleInfoStyle}>Emotion Survey</Text>
+          <View style={{ alignItems: "center", paddingTop: 4 }}>
+            <Text style={styles.describeQuizText}>
+              Welcome to the Emotion Survey! This quiz is designed to help you
+              gain insight into your emotional landscape and explore the
+              complexities of your feelings.
+            </Text>
+            <ImageBackground
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/5336/5336520.png",
+              }}
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: 10,
+                overflow: "hidden",
+              }}
+            ></ImageBackground>
+          </View>
           {startQuizBtn()}
         </View>
       );
@@ -432,21 +436,23 @@ const TrendingScreen = ({ navigation }) => {
 
   function startQuizBtn() {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.push(Navigate.QUIZ);
-        }}
-        style={styles.startQuizButtonStyle}
-      >
-        <LinearGradient
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 0 }}
-          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-          style={styles.startQuizGradientStyle}
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.push(Navigate.QUESTION_SCREEN);
+          }}
+          style={styles.btn}
         >
-          <Text style={{ ...Fonts.whiteColor18Bold }}>Do survey</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+          <LinearGradient
+            start={{ x: 1, y: 3 }}
+            end={{ x: 0, y: 1 }}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+            style={{ borderRadius: 10 }}
+          >
+            <Text style={styles.btnText}>Getting started</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -467,30 +473,46 @@ const TrendingScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Calm Yourself</Text>}
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userInfo?.username}'s Space
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-        <TouchableOpacity
-          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
-          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
-        >
-          <Image
-            source={
-              userInfo?.avatar?.url
-                ? { uri: userInfo?.avatar?.url }
-                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
-            }
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userInfo?.avatar?.url
+                  ? { uri: userInfo?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -498,8 +520,20 @@ const TrendingScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   infoTextStyle: {
-    paddingBottom: 4,
-    ...Fonts.grey777714,
+    ...Fonts.whiteColor14Light,
+  },
+  btn: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 40,
+  },
+  btnText: {
+    ...Fonts.whiteColor18SemiBold,
+    borderWidth: 1,
+    borderColor: Colors.greenDarkColor,
+    paddingVertical: 8,
+    borderRadius: 10,
+    paddingHorizontal: 36,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -530,6 +564,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignContent: "center",
     ...Fonts.grayColor24SemiBold,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   colorDot: {
     borderRadius: "50%",
@@ -579,11 +618,12 @@ const styles = StyleSheet.create({
   },
 
   headerWrapStyle: {
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
@@ -594,42 +634,44 @@ const styles = StyleSheet.create({
   },
   popularSongImageStyle: {
     marginRight: Sizes.fixPadding,
-    width: 110,
-    height: 100,
+    width: 65,
+    height: 65,
     borderColor: "#004d25",
-    borderWidth: 0.2,
-    borderRadius: Sizes.fixPadding - 5.0,
+    borderWidth: 0.5,
+    borderRadius: 50,
+    overflow: "hidden",
   },
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.colorBold18,
+    ...Fonts.whiteColor18SemiBold,
+    textAlign: "center",
   },
   describeQuizText: {
     ...Fonts.whiteColor16Light,
-    width: 300,
+    textAlign: "center",
+    paddingHorizontal: 36,
     justifyContent: "center",
+    paddingBottom: 20,
   },
   titleInfoStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.whiteColor18Bold,
+    ...Fonts.whiteColor30Bold,
     textAlign: "center",
   },
   startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 10,
+    paddingVertical: Sizes.fixPadding,
     paddingBottom: 30,
-    marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
+    height: "100%",
     alignItems: "center",
-    borderRadius: Sizes.fixPadding + 20.0,
   },
   titleWrapStyle: {
-    marginRight: Sizes.fixPadding + 5.0,
-    marginLeft: Sizes.fixPadding * 2.0,
-    flexDirection: "row",
+    display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    paddingTop: 8,
   },
   startQuizButtonStyle: {
     justifyContent: "center",
@@ -647,6 +689,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: Sizes.fixPadding * 2.0,
     paddingVertical: 8,
+    borderWidth: 0.2,
   },
 });
 

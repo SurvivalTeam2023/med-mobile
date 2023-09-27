@@ -26,28 +26,8 @@ const data = [
       "https://pub-static.fotor.com/assets/bg/246400f6-8a87-48ad-9698-281d55b388f5.jpg",
     numOfExercises: 7,
     desc: "Music For Today",
-    notify: "Take Our Survey To Get Your Mental Health Evaluation",
-    notify_2: "Press To See Your Survey Result",
-  },
-  {
-    id: 2,
-    name: "Sleep Habit Pack",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
-    numOfExercises: 7,
-    desc: "Something to describe",
-    notify: "Take Our Survey To Get Your Music Recommendation",
-    notify_2: "Press To See Your Survey Result",
-  },
-  {
-    id: 3,
-    name: "For Being Mindful",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTMfJ06eDdiUlrFayVQCVrp3KeIcvFZF_j3A&usqp=CAU",
-    numOfExercises: 7,
-    desc: "Something to describe",
-    notify: "Take Our Survey To Get Your Mental Health Evaluation",
-    notify_2: "Press To See Your Survey Result",
+    notify: "Take Our Survey To Get Your Sound Reccomendation",
+    notify_2: "Press To Enjoy Sound Recommendation ",
   },
 ];
 

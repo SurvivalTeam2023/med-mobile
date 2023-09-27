@@ -67,9 +67,10 @@ const ExerciseContentScreen = ({ navigation, route }) => {
             paddingBottom: Sizes.fixPadding,
             paddingTop: 8,
             paddingHorizontal: 2,
+            borderWidth: 0.5,
           }}
         >
-          {exerciseInfo()}
+          <View>{exerciseInfo()}</View>
         </ScrollView>
       </View>
     </SafeAreaView>

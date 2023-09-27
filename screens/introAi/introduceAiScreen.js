@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
@@ -16,21 +17,23 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 const Separator = () => <View style={styles.separator} />;
 let isFavoriteExisted = [];
 
 const IntroAIScreen = () => {
   const navigation = useNavigation();
+  const userInfo = useSelector((state) => state.user.data);
 
   const onPressHandler = () => {
     navigation.navigate("BottomTabBar");
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
+      {header()}
+
       <View>
-        {cornerImage()}
         {startQuizTitle()}
         {startQuizBtn()}
       </View>
@@ -39,7 +42,7 @@ const IntroAIScreen = () => {
 
   function startQuizTitle() {
     return (
-      <View>
+      <View style={{ paddingTop: 36 }}>
         <View>
           <MaskedView
             style={{ height: 60 }}
@@ -52,7 +55,7 @@ const IntroAIScreen = () => {
             <LinearGradient
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 0 }}
-              colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+              colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
               style={{ flex: 1 }}
             />
           </MaskedView>
@@ -60,7 +63,7 @@ const IntroAIScreen = () => {
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.startQuizInfo}
         >
           <Text style={styles.titleInfoStyle}>Facial emotion recognition</Text>
@@ -80,7 +83,52 @@ const IntroAIScreen = () => {
       </View>
     );
   }
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userInfo?.username}'s Space
+        </Text>
 
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userInfo?.avatar?.url
+                  ? { uri: userInfo?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
   function startQuizBtn() {
     return (
       <View>
@@ -94,7 +142,7 @@ const IntroAIScreen = () => {
           <LinearGradient
             start={{ x: 1, y: 3 }}
             end={{ x: 0, y: 2 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={styles.startQuizGradientStyle}
           >
             <Text style={{ ...Fonts.whiteColor16Bold }}>Getting started</Text>
@@ -134,6 +182,11 @@ const styles = StyleSheet.create({
   quizzingTitleStyle: {
     ...Fonts.whiteColor18Bold,
     textAlign: "center",
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 90,
   },
   startQuizInfo: {
     paddingTop: Sizes.fixPadding + 15.0,
@@ -180,7 +233,14 @@ const styles = StyleSheet.create({
     ...Fonts.blackColor20Bold,
     textAlign: "justify",
   },
-
+  headerWrapStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
+  },
   titleQuiz: {
     width: 350,
     height: 30,

@@ -33,7 +33,7 @@ import { getAudioRecommendByMentalIdAPI } from "../../api/audio.api";
 import { useGetMentalHealthListAPI } from "../../hooks/mentalHealth";
 import { CATEGORIES, MENTAL_HEALTH, PLAYLIST } from "../../constants/keyword";
 import { useGetPlaylist } from "../../hooks/playlist.hook";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const trendingCategoriesList = CATEGORIES;
@@ -140,17 +140,25 @@ const MusicScreen = ({ navigation }) => {
     return (
       <View>
         <View style={styles.titleWrapStyle}>
-          <Text style={styles.titleStyle}>THERAPIST</Text>
+          <Text style={styles.titleStyle}>
+            Select Mental Health To Listen To Music
+          </Text>
         </View>
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            width: "100%",
+          }}
+        >
           {dataMentalHealth ? (
             dataMentalHealth.map((item, index) => (
               <View
                 key={item.id}
                 style={{
-                  width: "50%", // This makes each item take up 50% of the row width
-                  padding: 8, // Add padding between items
                   alignItems: "center", // Center items horizontally
+                  paddingLeft: 8,
+                  paddingVertical: 16,
                 }}
               >
                 <TouchableOpacity
@@ -163,8 +171,8 @@ const MusicScreen = ({ navigation }) => {
                   <ImageBackground
                     source={{ uri: item.imageUrl }}
                     style={{
-                      width: 175,
-                      height: 200,
+                      width: 130,
+                      height: 115,
                       borderRadius: 10,
                       overflow: "hidden", // Clip the image to the rounded border
                     }} // Adjust the dimensions as needed>
@@ -203,9 +211,12 @@ const MusicScreen = ({ navigation }) => {
 
   const playlist = () => {
     return (
-      <View style={{ paddingHorizontal: 2, paddingVertical: 16 }}>
-        <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-          {dataGetPlaylist?.map((playListInfor, index) => {
+      <View>
+        <View style={styles.titleWrapStyle}>
+          <Text style={styles.titleStyle}>Mental Health Playlist</Text>
+        </View>
+        {dataGetPlaylist ? (
+          dataGetPlaylist?.map((playListInfor, index) => {
             return (
               <TouchableOpacity
                 key={index}
@@ -214,19 +225,30 @@ const MusicScreen = ({ navigation }) => {
                     playlistId: playListInfor.id,
                   })
                 }
+                style={{ paddingVertical: 16 }}
               >
                 <View
                   style={{
                     borderColor: "grey",
+                    borderWidth: 0.5,
+                    borderRadius: 50,
                     paddingHorizontal: 10,
                     paddingVertical: 12,
                     flexDirection: "row",
                     justifyContent: "flex-start",
                     alignItems: "center",
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 5,
                   }}
                 >
                   <View>
-                    <Text style={{ ...Fonts.grayColor16SemiBold }}>
+                    <Text style={{ ...Fonts.whiteColor16Light }}>
                       {index + 1}
                     </Text>
                   </View>
@@ -250,7 +272,7 @@ const MusicScreen = ({ navigation }) => {
                     }}
                   >
                     <View>
-                      <Text style={{ ...Fonts.grayColor16SemiBold }}>
+                      <Text style={{ ...Fonts.whiteColor16Light }}>
                         {playListInfor.name}
                       </Text>
                     </View>
@@ -258,28 +280,40 @@ const MusicScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             );
-          })}
-        </View>
+          })
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
+        )}
       </View>
     );
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
-      <View>
+      <View style={{ flex: 1 }}>
         {header()}
-        {trendingCategories()}
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingTop: 12,
-            paddingBottom: Sizes.fixPadding * 15.0,
-          }}
+        <LinearGradient
+          start={{ x: 1.1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+          style={styles.startQuizInfo}
         >
-          {selectedCategory === MENTAL_HEALTH && myPacks()}
-          {selectedCategory === PLAYLIST && playlist()}
-        </ScrollView>
+          {trendingCategories()}
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingTop: 12,
+              paddingBottom: Sizes.fixPadding * 15.0,
+              paddingHorizontal: Sizes.fixPadding * 6,
+            }}
+          >
+            {selectedCategory === MENTAL_HEALTH && myPacks()}
+            {selectedCategory === PLAYLIST && playlist()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -345,30 +379,46 @@ const MusicScreen = ({ navigation }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <MaskedView
-          style={{ flex: 1, height: 28 }}
-          maskElement={<Text style={{ ...Fonts.bold22 }}>Music</Text>}
+        <Text style={{ ...Fonts.grayColor18SemiBold, alignContent: "center" }}>
+          {userInfo?.username}'s Space
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
         >
-          <LinearGradient
-            start={{ x: 1, y: 0.2 }}
-            end={{ x: 1, y: 1 }}
-            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-            style={{ flex: 1 }}
-          />
-        </MaskedView>
-        <TouchableOpacity
-          onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
-          style={{ borderWidth: 2, borderColor: "black", borderRadius: 50 }}
-        >
-          <Image
-            source={
-              userInfo?.avatar?.url
-                ? { uri: userInfo?.avatar?.url }
-                : { uri: "https://e-s-center.kz/images/articles/123123.png" }
-            }
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.push(Navigate.PROFILE_SCREEN)}
+            style={{
+              borderWidth: 2,
+              borderColor: "black",
+              borderRadius: 50,
+            }}
+          >
+            <Image
+              source={
+                userInfo?.avatar?.url
+                  ? { uri: userInfo?.avatar?.url }
+                  : { uri: "https://e-s-center.kz/images/articles/123123.png" }
+              }
+              style={styles.image}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push(Navigate.SETTING_SCREEN);
+            }}
+          >
+            <SimpleLineIcons
+              name="menu"
+              size={18}
+              color="black"
+              style={{ paddingTop: 12, paddingLeft: 8 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -385,9 +435,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imagePlaylist: {
-    width: 125,
-    height: 100,
+    width: 60,
+    height: 60,
     borderRadius: 15,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   clockContainer: {
     flex: 1,
@@ -463,8 +518,11 @@ const styles = StyleSheet.create({
 
   headerWrapStyle: {
     flexDirection: "row",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    padding: 8,
+    borderBottomWidth: 0.5,
   },
   startQuizGradientStyle: {
     paddingVertical: Sizes.fixPadding + 3.0,
@@ -484,7 +542,8 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.colorBold18,
+    ...Fonts.whiteColor18SemiBold,
+    textAlign: "center",
   },
   describeQuizText: {
     ...Fonts.whiteColor16Light,
@@ -498,19 +557,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   startQuizInfo: {
-    paddingVertical: Sizes.fixPadding + 10,
+    paddingVertical: Sizes.fixPadding,
     paddingBottom: 30,
-    marginHorizontal: Sizes.fixPadding + 10.0,
     justifyContent: "center",
+    height: "100%",
     alignItems: "center",
-    borderRadius: Sizes.fixPadding + 20.0,
   },
   titleWrapStyle: {
-    marginRight: Sizes.fixPadding + 5.0,
-    marginLeft: Sizes.fixPadding * 2.0,
-    flexDirection: "row",
+    display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    paddingTop: 8,
   },
   startQuizButtonStyle: {
     justifyContent: "center",

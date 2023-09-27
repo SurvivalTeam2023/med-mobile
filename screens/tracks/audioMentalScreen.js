@@ -10,6 +10,7 @@ import {
   Image,
   ImageBackground,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import {
@@ -26,15 +27,62 @@ import { audioArtistAction } from "../../redux/audio/audioArtist";
 import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AntDesign } from "@expo/vector-icons";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import { useGetAudioRecommendByMentalIdAPI } from "../../hooks/audio.hook";
+import {
+  useGetFinishedQuizHistoryApi,
+  useGetResultByIdApi,
+} from "../../hooks/question.hook";
 
 const AudioMentalScreen = ({ navigation, route }) => {
   let tracksList;
+  const userInfo = useSelector((state) => state.user.data);
   const mentalDetail = route?.params.data;
-  console.log(mentalDetail);
+  //Get quiz History
+  const {
+    data: quizHistoryData,
+    isSuccess: isSuccessQuizHistory,
+    isError: isErrorQuizHistory,
+    error: errorQuizHistory,
+  } = useGetFinishedQuizHistoryApi(userInfo.id);
+  if (isSuccessQuizHistory) {
+    console.log("History quiz call success");
+  }
+  if (isErrorQuizHistory) {
+    console.log("History quiz call failed", errorQuizHistory);
+  }
+
+  // Sort the array based on createdAt timestamps in descending order
+  let latestItem;
+  const getLatestQuiz = () => {
+    try {
+      if (quizHistoryData) {
+        quizHistoryData?.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        latestItem = quizHistoryData[0];
+        console.log(latestItem);
+      }
+    } catch (error) {
+      console.log("sorting failed");
+    }
+  };
+
+  // Get the first item (latest) after sorting
+  getLatestQuiz();
+
+  const {
+    data: resultDetailData,
+    isSuccess: isSuccessResultDetail,
+    isError: isErrorResultDetail,
+    error: errorResultDetail,
+  } = useGetResultByIdApi(latestItem?.id);
+
+  if (isSuccessResultDetail) {
+    console.log("get result success", resultDetailData);
+  }
 
   const sortOptions = ["Name", "Date Added", "Artist"];
   const { data, isSuccess, isError, error } = useGetAudioRecommendByMentalIdAPI(
@@ -62,20 +110,41 @@ const AudioMentalScreen = ({ navigation, route }) => {
   const updateState = (data) => setState((state) => ({ ...state, ...data }));
 
   const { showSortOptions, selectedSortCriteria, search } = state;
-
+  const degree = () => {
+    return (
+      <View style={styles.titleWrapStyle}>
+        {resultDetailData?.map((e) => (
+          <Text style={styles.titleStyle} key={e.degree}>
+            Mental Health Degree: {e.degree}
+          </Text>
+        ))}
+        <Text
+          style={{
+            paddingBottom: 36,
+            ...Fonts.whiteColor14Light,
+            textAlign: "center",
+          }}
+        >
+          Audios based on your mental health degree
+        </Text>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
-        {cornerImage()}
         {header()}
 
-        {sortingIcons()}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
-        >
-          {tracks()}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <LinearGradient
+            start={{ x: 1.1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+            style={styles.startQuizInfo}
+          >
+            {degree()}
+            <View style={{ paddingHorizontal: 16 }}>{tracks()}</View>
+          </LinearGradient>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -121,16 +190,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
                 marginRight: Sizes.fixPadding * 5.0,
                 ...Fonts.blackColor12SemiBold,
               }}
-              onPress={() => {
-                dispatch(audioArtistAction.setAudioArtistId(id));
-                console.log(
-                  "Audio artist saved",
-                  store.getState().audioArtist.audioArtistId
-                );
-                getAudioInfo();
-                hideMenu();
-                console.log(modalVisible);
-              }}
+              onPress={() => {}}
             >
               Edit
             </MenuItem>
@@ -141,10 +201,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
                 marginRight: Sizes.fixPadding * 5.0,
                 ...Fonts.blackColor12SemiBold,
               }}
-              onPress={() => {
-                dispatch(audioArtistAction.setAudioArtistId(id));
-                showConfirmDialog(), hideMenu();
-              }}
+              onPress={() => {}}
             >
               Delete
             </MenuItem>
@@ -159,14 +216,17 @@ const AudioMentalScreen = ({ navigation, route }) => {
     }
     return tracksList && tracksList.length > 0 ? (
       tracksList.map((item, index) => (
-        <View key={`${item?.id}`}>
+        <View key={item.id} style={styles.tracksInfoWrapStyle}>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => handleSelectAudio(item)}
-            style={styles.tracksInfoWrapStyle}
           >
             <View
-              style={{ flexDirection: "row", justifyContent: "flex-start" }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
             >
               <SharedElement id={item?.id}>
                 <ImageBackground
@@ -174,32 +234,24 @@ const AudioMentalScreen = ({ navigation, route }) => {
                   style={{
                     width: 50,
                     height: 50,
+                    borderRadius: 90,
+                    overflow: "hidden",
                   }}
                   borderRadius={Sizes.fixPadding - 5.0}
                 ></ImageBackground>
               </SharedElement>
-              <View style={{ marginLeft: 8, marginTop: 10 }}>
-                <Text style={{ ...Fonts.blackColor13SemiBold }}>
-                  {item?.name}
-                </Text>
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ ...Fonts.whiteColor14Light }}>{item?.name}</Text>
               </View>
             </View>
-
-            <CustomMenu id={item.id} />
           </TouchableOpacity>
+          <AntDesign name="play" size={24} color="black" />
         </View>
       ))
     ) : (
-      <Text
-        style={{
-          fontSize: 20,
-          textAlign: "center",
-          fontWeight: "100",
-          paddingVertical: 8,
-        }}
-      >
-        No data!
-      </Text>
+      <View style={styles.container}>
+        <ActivityIndicator size="small" color="#f8b26a" />
+      </View>
     );
   }
 
@@ -332,13 +384,13 @@ const AudioMentalScreen = ({ navigation, route }) => {
   }
 
   function header() {
-    const textInputRef = createRef();
     return (
       <View style={styles.headerWrapStyle}>
-        <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
@@ -347,31 +399,17 @@ const AudioMentalScreen = ({ navigation, route }) => {
                 { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
               ]}
-              style={{
-                marginRight: Sizes.fixPadding - 5.0,
-                marginTop: Sizes.fixPadding - 5.0,
-                alignSelf: "center",
-              }}
             />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
           </TouchableOpacity>
-          {
-            <MaskedView
-              style={{ flex: 1, height: 28 }}
-              maskElement={
-                <Text style={{ ...Fonts.bold22 }}>
-                  Audio reducing {mentalDetail.name}
-                </Text>
-              }
-            >
-              <LinearGradient
-                start={{ x: 1, y: 0.2 }}
-                end={{ x: 1, y: 1 }}
-                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-                style={{ flex: 1 }}
-              />
-            </MaskedView>
-          }
         </View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold }}>
+            {mentalDetail.name} Sound
+          </Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
       </View>
     );
   }
@@ -396,12 +434,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lightGrayColor,
     borderRadius: Sizes.fixPadding * 2.5,
   },
-  headerWrapStyle: {
-    flexDirection: "row",
+  container: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 40.0,
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    height: "100%",
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
     justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   musicIconWrapStyle: {
     width: 35.0,
@@ -415,8 +463,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginBottom: Sizes.fixPadding,
+    paddingHorizontal: 8,
+    borderRadius: 90,
+    paddingVertical: 8,
+    borderColor: "black",
+    borderWidth: 1,
+    marginBottom: Sizes.fixPadding * 2,
+    // Android shadow
+    elevation: 5, // Adjust the elevation value as needed
+    // iOS shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   sortingOptionsWrapStyle: {
     paddingTop: Sizes.fixPadding,
@@ -507,6 +569,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+  },
+  titleWrapStyle: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 8,
+  },
+  titleStyle: {
+    marginTop: Sizes.fixPadding - 5.0,
+    marginBottom: Sizes.fixPadding,
+    ...Fonts.whiteColor18SemiBold,
+    textAlign: "center",
   },
 });
 
