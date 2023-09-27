@@ -222,7 +222,7 @@ const MusicScreen = ({ navigation }) => {
                 key={index}
                 onPress={() =>
                   navigation.push(Navigate.PLAYLIST_AUDIO_SCREEN, {
-                    playlistId: playListInfor.id,
+                    playlist: playListInfor,
                   })
                 }
                 style={{ paddingVertical: 16 }}
