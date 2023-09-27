@@ -27,14 +27,16 @@ import { store } from "../../core/store/store";
 import { Navigate } from "../../constants/navigate";
 import { useGetPlaylistByIdApi } from "../../hooks/playlist.hook";
 import { useDispatch } from "react-redux";
-
+import { AntDesign } from "@expo/vector-icons";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { ActivityIndicator } from "react-native";
 
 const PlaylistAudioScreen = ({ navigation, route }) => {
   let tracksList;
-  const playlistId = route.params.playlistId;
+  const playlist = route.params.playlist;
+  console.log(playlist);
   const sortOptions = ["Name", "Date Added", "Artist"];
-  const { data, isSuccess } = useGetPlaylistByIdApi(playlistId);
+  const { data, isSuccess } = useGetPlaylistByIdApi(playlist.id);
   if (isSuccess) {
     const audioList = data["audioPlaylist"];
     tracksList = audioList;
@@ -59,16 +61,19 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
-        {cornerImage()}
         {header()}
-        {sortingIcons()}
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 7.0 }}
+        <LinearGradient
+          start={{ x: 1.1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+          style={styles.startQuizInfo}
         >
-          {tracks()}
-        </ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {searchArea()}
+            {tracks()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -152,47 +157,47 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
     return tracksList ? (
       tracksList.length > 0 ? (
         tracksList?.map((item, index) => (
-          <View key={`${item.id}`}>
+          <View key={`${item.id}`} style={{}}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => handleSelectAudio(item)}
-              style={styles.tracksInfoWrapStyle}
             >
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
+              <View style={styles.tracksInfoWrapStyle}>
                 <SharedElement id={item.id}>
                   <ImageBackground
                     source={{ uri: `${item.audio.imageUrl}` }}
                     style={{
-                      width: 50,
-                      height: 50,
+                      width: 60,
+                      height: 60,
+                      borderRadius: 50,
+                      overflow: "hidden",
                     }}
-                    borderRadius={Sizes.fixPadding - 5.0}
                   ></ImageBackground>
                 </SharedElement>
-                <View style={{ marginLeft: 8, marginTop: 10 }}>
-                  <Text style={{ ...Fonts.blackColor13SemiBold }}>
+                <View style={{}}>
+                  <Text
+                    style={{
+                      ...Fonts.blackColor13SemiBold,
+                      paddingHorizontal: 16,
+                    }}
+                  >
                     {item.audio.name}
                   </Text>
                 </View>
+                <AntDesign
+                  name="play"
+                  size={24}
+                  color="black"
+                  style={{ paddingHorizontal: 16 }}
+                />
               </View>
-
-              <CustomMenu id={item.id} />
             </TouchableOpacity>
           </View>
         ))
       ) : (
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: "center",
-            fontWeight: "100",
-            paddingVertical: 8,
-          }}
-        >
-          No data!
-        </Text>
+        <View style={styles.container}>
+          <ActivityIndicator size="small" color="#f8b26a" />
+        </View>
       )
     ) : (
       <Text
@@ -336,14 +341,45 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
     );
   }
 
-  function header() {
+  function searchArea() {
     const textInputRef = createRef();
     return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TextInput
+          ref={textInputRef}
+          selectionColor={Colors.whiteColor}
+          style={{
+            ...Fonts.whiteColor16Light,
+            borderWidth: 0.5,
+            padding: 16,
+            marginBottom: 16,
+            borderColor: Colors.greenDarkColor,
+            borderRadius: 20,
+            borderWidth: 1,
+          }}
+          value={search}
+          placeholder="Search for artist,song or lyrics..."
+          placeholderTextColor={Colors.whiteColor}
+          onChangeText={(text) => updateState({ search: text })}
+        />
+      </View>
+    );
+  }
+
+  function header() {
+    return (
       <View style={styles.headerWrapStyle}>
-        <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
@@ -352,42 +388,15 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
                 { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
                 { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
               ]}
-              style={{
-                marginRight: Sizes.fixPadding - 5.0,
-                marginTop: Sizes.fixPadding - 5.0,
-                alignSelf: "center",
-              }}
             />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
           </TouchableOpacity>
-          {
-            <MaskedView
-              style={{ flex: 1, height: 28 }}
-              maskElement={<Text style={{ ...Fonts.bold22 }}>Audio</Text>}
-            >
-              <LinearGradient
-                start={{ x: 1, y: 0.2 }}
-                end={{ x: 1, y: 1 }}
-                colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-                style={{ flex: 1 }}
-              />
-            </MaskedView>
-          }
         </View>
-        <TextInput
-          ref={textInputRef}
-          selectionColor={Colors.grayColor}
-          style={{ ...Fonts.grayColor15Medium, flex: 1 }}
-          value={search}
-          placeholder="Search for artist,song or lyrics..."
-          placeholderTextColor={Colors.grayColor}
-          onChangeText={(text) => updateState({ search: text })}
-        />
-        <MaterialIcons
-          name="search"
-          color={Colors.grayColor}
-          size={25}
-          onPress={() => textInputRef.current.focus()}
-        />
+
+        <View style={{ width: "33.33%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold }}>{playlist.name}</Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
       </View>
     );
   }
@@ -413,11 +422,18 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding * 2.5,
   },
   headerWrapStyle: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginTop: Sizes.fixPadding - 40.0,
     justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    justifyContent: "center",
+    height: "100%",
+    alignItems: "center",
   },
   musicIconWrapStyle: {
     width: 35.0,
@@ -431,8 +447,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: Sizes.fixPadding * 2.0,
-    marginBottom: Sizes.fixPadding,
+    paddingHorizontal: 8,
+    borderRadius: 90,
+    paddingVertical: 8,
+    borderColor: "black",
+    borderWidth: 1,
+    marginBottom: Sizes.fixPadding * 2,
+    // Android shadow
+    elevation: 5, // Adjust the elevation value as needed
+    // iOS shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   sortingOptionsWrapStyle: {
     paddingTop: Sizes.fixPadding,

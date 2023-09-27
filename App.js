@@ -164,8 +164,8 @@ const App = () => {
               name="PlaylistAudio"
               component={PlaylistAudioScreen}
               sharedElements={(route, otherRoute, showing) => {
-                const playlistId = route.params.playlistId;
-                return [playlistId];
+                const playlist = route.params.playlist;
+                return [playlist];
               }}
             />
             <Stack.Screen name="ChooseMusic" component={chooseMusicScreen} />
