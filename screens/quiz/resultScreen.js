@@ -335,19 +335,18 @@ const ResultScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View>
         {header()}
-        <FlatList
-          ListHeaderComponent={
-            <LinearGradient
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-            >
-              {progressQuiz()}
-              {quizHistory()}
-            </LinearGradient>
-          }
-          showsVerticalScrollIndicator={true}
-        />
+
+        <LinearGradient
+          start={{ x: 1.1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+          style={styles.startQuizInfo}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {progressQuiz()}
+            {quizHistory()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -403,7 +402,11 @@ const styles = StyleSheet.create({
     ...Fonts.whiteColor18Bold,
     textAlign: "center",
   },
-
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    height: "100%",
+  },
   logo: {
     width: 80,
     height: 70,
