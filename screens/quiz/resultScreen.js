@@ -25,6 +25,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
+import { ImageBackground } from "react-native";
+import { FlatList } from "react-native";
 const ResultScreen = ({ navigation, route }) => {
   const result = route.params.data;
   const userId = useSelector((state) => state.user.data.id);
@@ -50,8 +52,17 @@ const ResultScreen = ({ navigation, route }) => {
 
   if (isSuccessQuizHistory) {
     console.log("Get quiz History success");
-    quizResult = quizHistoryData;
+    quizResult = quizHistoryData.map((e) => {
+      return {
+        id: e.id,
+        mentalHealth: e.mentalHealth,
+        questionBankId: e.questionBankId,
+        imgUrl: "https://cdn-icons-png.flaticon.com/128/3930/3930447.png",
+      };
+    });
+    console.log(quizResult);
   }
+
   if (isErrorQuizHistory) {
     console.log("Get quiz history failed", errorQuizHistory);
   }
@@ -91,109 +102,101 @@ const ResultScreen = ({ navigation, route }) => {
 
   const progressQuiz = () => {
     return (
-      <View
-        style={{
-          backgroundColor: "#eeeeee",
-          borderRadius: 10,
-          marginTop: 8,
-        }}
-      >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <View>
-              <Text
-                style={{
-                  ...Fonts.blackColor20SemiBold,
-                  textAlign: "center",
-                  paddingVertical: 8,
-                  borderBottomWidth: 1,
-                  borderColor: "#ddd",
-                }}
-              >
-                Survey Result
-              </Text>
-            </View>
-            <View
+      <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
+        <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+          <View>
+            <Text
               style={{
-                marginBottom: Sizes.fixPadding * 2,
-                paddingHorizontal: 12,
+                ...Fonts.blackColor20SemiBold,
+                textAlign: "center",
+                paddingVertical: 8,
+                borderBottomWidth: 1,
+                borderColor: "#ddd",
               }}
             >
-              {data?.map((e) => (
-                <Pressable
-                  key={e.id}
-                  style={{ marginTop: 18 }}
-                  onPress={() => {
-                    navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
-                      data: {
-                        mentalHealth: e.mentalHealth,
-                        mentalHealthDesc: e.mentalHealthDesc,
-                        mentalHealthImg: e.mentalHealthImg,
-                      },
-                    });
+              Survey Result
+            </Text>
+          </View>
+          <View
+            style={{
+              marginBottom: Sizes.fixPadding * 2,
+              paddingHorizontal: 12,
+            }}
+          >
+            {data?.map((e) => (
+              <Pressable
+                key={e.id}
+                style={{ marginTop: 18 }}
+                onPress={() => {
+                  navigation.push(Navigate.ILLNESS_DETAIL_SCREEN, {
+                    data: {
+                      mentalHealth: e.mentalHealth,
+                      mentalHealthDesc: e.mentalHealthDesc,
+                      mentalHealthImg: e.mentalHealthImg,
+                    },
+                  });
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignContent: "center",
                   }}
                 >
-                  <View
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    {e.type}
+                  </Text>
+                  <Text
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignContent: "center",
+                      fontSize: 14,
+                      fontWeight: "400",
+                      marginTop: 4,
                     }}
                   >
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      {e.type}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: "400",
-                        marginTop: 4,
-                      }}
-                    >
-                      {e.percentage}%
-                    </Text>
-                  </View>
-                  <View>
-                    <ProgressBar
-                      style={{
-                        height: 20,
-                        borderRadius: 8,
-                        marginTop: 4,
-                      }}
-                      progress={e.value}
-                      color={e.color}
-                    />
-                  </View>
-                  <View style={{ flexDirection: "row", marginTop: 4 }}>
-                    <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                      Degree:
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "600",
-                        fontStyle: "italic",
-                        paddingLeft: 8,
-                        color: e.color,
-                      }}
-                    >
-                      {e.degree}
-                    </Text>
-                  </View>
+                    {e.percentage}%
+                  </Text>
+                </View>
+                <View>
+                  <ProgressBar
+                    style={{
+                      height: 20,
+                      borderRadius: 8,
+                      marginTop: 4,
+                    }}
+                    progress={e.value}
+                    color={e.color}
+                  />
+                </View>
+                <View style={{ flexDirection: "row", marginTop: 4 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                    Degree:
+                  </Text>
                   <Text
                     style={{
                       fontSize: 16,
                       fontWeight: "600",
                       fontStyle: "italic",
-                      paddingTop: 4,
+                      paddingLeft: 8,
                       color: e.color,
                     }}
                   >
-                    Remind: {e.desc}
+                    {e.degree}
                   </Text>
-                </Pressable>
-              ))}
-            </View>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "600",
+                    fontStyle: "italic",
+                    paddingTop: 4,
+                    color: e.color,
+                  }}
+                >
+                  Remind: {e.desc}
+                </Text>
+              </Pressable>
+            ))}
           </View>
         </View>
       </View>
@@ -201,98 +204,98 @@ const ResultScreen = ({ navigation, route }) => {
   };
 
   const onPressHandler = () => {
-    if (isFavoriteExisted.exists === true) {
-      navigation.navigate("BottomTabBar");
-    }
-    if (isFavoriteExisted.exists === false) {
-      navigation.navigate("ChooseMusic");
-    }
+    navigation.push(Navigate.BOTTOM_TAB_BAR);
   };
 
   const quizHistory = () => {
     return (
-      <View
-        style={{
-          backgroundColor: "#eeeeee",
-          borderRadius: 10,
-        }}
-      >
-        <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <View>
-              <Text
-                style={{
-                  ...Fonts.blackColor20SemiBold,
+      <View style={{ paddingHorizontal: 12, paddingBottom: 8 }}>
+        <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+          <View>
+            <Text
+              style={{
+                ...Fonts.blackColor20SemiBold,
 
-                  textAlign: "center",
-                  paddingVertical: 16,
-                  borderColor: "#ddd",
+                textAlign: "center",
+                paddingVertical: 8,
+                borderColor: "#ddd",
+              }}
+            >
+              Survey History
+            </Text>
+          </View>
+
+          {quizResult ? (
+            // Render the list of quizzes if quizResult has data
+            quizResult.slice(0, 3).map((e) => (
+              <TouchableOpacity
+                key={e.quizId}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderColor: "grey",
+                  paddingVertical: 24,
+                  paddingHorizontal: 2,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
+                    e,
+                  });
                 }}
               >
-                Survey History Symptoms
-              </Text>
-            </View>
+                <View style={{}}>
+                  <ImageBackground
+                    source={{ uri: `${e.imgUrl}` }}
+                    style={{
+                      width: 60,
+                      height: 60,
+                      overflow: "hidden",
+                    }}
+                  ></ImageBackground>
+                </View>
 
-            {quizResult ? (
-              // Render the list of quizzes if quizResult has data
-              quizResult.slice(0, 5).map((e) => (
-                <TouchableOpacity
-                  key={e.quizId}
+                <View
                   style={{
-                    borderTopWidth: 0.5,
-                    borderColor: "grey",
-                    paddingVertical: 24,
-                  }}
-                  onPress={() => {
-                    navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
-                      e,
-                    });
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    paddingLeft: 16,
                   }}
                 >
-                  <View
+                  <Text
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      textAlign: "center",
+                      ...Fonts.blackColor14SemiBold,
+                      width: "80%",
                     }}
                   >
-                    <Text
-                      style={{
-                        ...Fonts.blackColor14SemiBold,
-                        textAlign: "center",
-                      }}
-                    >
-                      {e.mentalHealth.toString()}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: "#aaa",
-                        fontStyle: "italic",
-                        textAlign: "center",
-                      }}
-                    >
-                      Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              // Render the "No data" text if quizResult is empty
-              <Text
-                style={{
-                  fontSize: 24,
-                  textAlign: "center",
-                  fontWeight: "400",
-                  paddingVertical: 8,
-                }}
-              >
-                No data
-              </Text>
-            )}
-          </View>
+                    {e.mentalHealth.join(", ")}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      color: "#aaa",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            // Render the "No data" text if quizResult is empty
+            <Text
+              style={{
+                fontSize: 24,
+                textAlign: "center",
+                fontWeight: "400",
+                paddingVertical: 8,
+              }}
+            >
+              No data
+            </Text>
+          )}
         </View>
       </View>
     );
@@ -301,30 +304,30 @@ const ResultScreen = ({ navigation, route }) => {
   function header() {
     return (
       <View style={styles.headerWrapStyle}>
-        <View style={{ flexDirection: "row", width: "33.33%" }}>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => navigation.pop()}
-            style={{ flexDirection: "row" }}
-          >
-            <MaterialIcons
-              name="keyboard-arrow-left"
-              size={24}
-              colors={[
-                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
-                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
-              ]}
-            />
-            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={{ flexDirection: "row", width: "33.33%" }}></View>
 
         <View style={{ width: "33.33%" }}>
           <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
             Settings
           </Text>
         </View>
-        <View style={{ width: "33.33%" }}></View>
+        <View style={{ width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => onPressHandler()}
+            style={{ flexDirection: "row", justifyContent: "flex-end" }}
+          >
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Next</Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -332,23 +335,19 @@ const ResultScreen = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View>
         {header()}
-
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <ScrollView
-            scrollEnabled={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-            }}
-          >
-            {progressQuiz()}
-            {quizHistory()}
-            {doneResultBtn()}
-          </ScrollView>
-        </ScrollView>
+        <FlatList
+          ListHeaderComponent={
+            <LinearGradient
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
+            >
+              {progressQuiz()}
+              {quizHistory()}
+            </LinearGradient>
+          }
+          showsVerticalScrollIndicator={true}
+        />
       </View>
     </SafeAreaView>
   );

@@ -21,6 +21,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { store } from "../../core/store/store";
+import { ImageBackground } from "react-native";
 let profile = [];
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector((state) => state.user.data.id);
@@ -29,7 +30,14 @@ const ProfileScreen = ({ navigation }) => {
     useGetFinishedQuizHistoryApi(userId);
   const username = useSelector((state) => state.user.data.username);
   if (isSuccessQuizHistory) {
-    quizResult = quizHistoryData;
+    quizResult = quizHistoryData.map((e) => {
+      return {
+        id: e.id,
+        mentalHealth: e.mentalHealth,
+        questionBankId: e.questionBankId,
+        imgUrl: "https://cdn-icons-png.flaticon.com/128/3930/3930447.png",
+      };
+    });
   }
 
   const { data, isSuccess } = useGetUserDataByUsernameApi(username);
@@ -71,14 +79,17 @@ const ProfileScreen = ({ navigation }) => {
               </MaskedView>
               {quizResult ? (
                 // Render the list of quizzes if quizResult has data
-                quizResult.slice(0, 5).map((e) => (
+                quizResult.slice(0, 3).map((e) => (
                   <TouchableOpacity
                     key={e.quizId}
                     style={{
                       borderTopWidth: 0.5,
                       borderColor: "grey",
-                      paddingHorizontal: 8,
-                      paddingVertical: 12,
+                      paddingVertical: 24,
+                      paddingHorizontal: 2,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
                     }}
                     onPress={() => {
                       navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
@@ -86,22 +97,32 @@ const ProfileScreen = ({ navigation }) => {
                       });
                     }}
                   >
+                    <View style={{}}>
+                      <ImageBackground
+                        source={{ uri: `${e.imgUrl}` }}
+                        style={{
+                          width: 60,
+                          height: 60,
+                          overflow: "hidden",
+                        }}
+                      ></ImageBackground>
+                    </View>
+
                     <View
                       style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
+                        flexDirection: "column",
+                        justifyContent: "flex-start",
+                        paddingLeft: 16,
                       }}
                     >
-                      <Text style={{ ...Fonts.blackColor16SemiBold }}>
-                        Symptoms:
-                      </Text>
                       <Text
-                        style={{ ...Fonts.blackColor12SemiBold, marginTop: 4 }}
+                        style={{
+                          ...Fonts.blackColor14SemiBold,
+                          width: "80%",
+                        }}
                       >
-                        {e.mentalHealth.toString()}
+                        {e.mentalHealth.join(", ")}
                       </Text>
-                    </View>
-                    <View style={{ marginTop: 4 }}>
                       <Text
                         style={{
                           fontSize: 10,
