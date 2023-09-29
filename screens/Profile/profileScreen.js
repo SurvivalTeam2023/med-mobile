@@ -8,6 +8,8 @@ import {
   Image,
   Text,
   StyleSheet,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -54,101 +56,79 @@ const ProfileScreen = ({ navigation }) => {
 
   const quizHistory = () => {
     return (
-      <View
-        style={{
-          borderRadius: 10,
-        }}
-      >
-        <View style={{ paddingHorizontal: 12 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 16 }}>
-            <View>
-              <MaskedView
-                style={{ flex: 1, height: 28 }}
-                maskElement={
-                  <Text style={{ ...Fonts.bold22, paddingLeft: 8 }}>
-                    Survey History
-                  </Text>
-                }
-              >
-                <LinearGradient
-                  start={{ x: 1, y: 0.2 }}
-                  end={{ x: 1, y: 1 }}
-                  colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
-                  style={{ flex: 1 }}
-                />
-              </MaskedView>
-              {quizResult ? (
-                // Render the list of quizzes if quizResult has data
-                quizResult.slice(0, 3).map((e) => (
-                  <TouchableOpacity
-                    key={e.quizId}
-                    style={{
-                      borderTopWidth: 0.5,
-                      borderColor: "grey",
-                      paddingVertical: 24,
-                      paddingHorizontal: 2,
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                    }}
-                    onPress={() => {
-                      navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
-                        e,
-                      });
-                    }}
-                  >
-                    <View style={{}}>
-                      <ImageBackground
-                        source={{ uri: `${e.imgUrl}` }}
-                        style={{
-                          width: 60,
-                          height: 60,
-                          overflow: "hidden",
-                        }}
-                      ></ImageBackground>
-                    </View>
+      <View style={{ paddingHorizontal: 12, paddingTop: 10 }}>
+        <View style={{ backgroundColor: "white", borderRadius: 16 }}>
+          <View>
+            <Text
+              style={{ ...Fonts.bold22, paddingLeft: 8, textAlign: "center" }}
+            >
+              Survey History
+            </Text>
 
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        justifyContent: "flex-start",
-                        paddingLeft: 16,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...Fonts.blackColor14SemiBold,
-                          width: "80%",
-                        }}
-                      >
-                        {e.mentalHealth.join(", ")}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          color: "#aaa",
-                          fontStyle: "italic",
-                        }}
-                      >
-                        Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))
-              ) : (
-                // Render the "No data" text if quizResult is empty
-                <Text
+            {quizResult ? (
+              // Render the list of quizzes if quizResult has data
+              quizResult.slice(0, 3).map((e) => (
+                <TouchableOpacity
+                  key={e.quizId}
                   style={{
-                    fontSize: 24,
-                    textAlign: "center",
-                    fontWeight: "400",
-                    paddingVertical: 8,
+                    borderTopWidth: 0.5,
+                    borderColor: "grey",
+                    paddingVertical: 12,
+                    paddingHorizontal: 2,
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                  onPress={() => {
+                    navigation.push(Navigate.RESULT_HISTORY_DETAIL, {
+                      e,
+                    });
                   }}
                 >
-                  No data
-                </Text>
-              )}
-            </View>
+                  <View style={{}}>
+                    <ImageBackground
+                      source={{ uri: `${e.imgUrl}` }}
+                      style={{
+                        width: 60,
+                        height: 60,
+                        overflow: "hidden",
+                      }}
+                    ></ImageBackground>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "flex-start",
+                      paddingLeft: 16,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        ...Fonts.blackColor14SemiBold,
+                        width: "80%",
+                      }}
+                    >
+                      {e.mentalHealth.join(", ")}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: "#aaa",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Created At: {moment(e.createdDate).format("DD-MM-YYYY")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              // Render the "No data" text if quizResult is empty
+              <View style={styles.container}>
+                <ActivityIndicatorIndicator size="small" color="#f8b26a" />
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -157,23 +137,19 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.primaryColor} />
       <View style={{ flex: 1 }}>
         {header()}
-
-        <FlatList
-          ListHeaderComponent={
-            <LinearGradient
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
-            >
-              {Profile()}
-              {quizHistory()}
-            </LinearGradient>
-          }
-          showsVerticalScrollIndicator={false}
-        />
+        <LinearGradient
+          start={{ x: 1.1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+          style={styles.startQuizInfo}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {Profile()}
+            {quizHistory()}
+          </ScrollView>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -186,7 +162,7 @@ const ProfileScreen = ({ navigation }) => {
           paddingHorizontal: 16,
         }}
       >
-        <View style={{ paddingVertical: 16 }}>
+        <View>
           <View style={{ backgroundColor: "white", borderRadius: 16 }}>
             <View
               style={{
@@ -209,13 +185,12 @@ const ProfileScreen = ({ navigation }) => {
             <View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
                     Username
                   </Text>
                   <Text
                     style={{
-                      fontSize: 14,
-                      fontWeight: "100",
+                      ...Fonts.grayColor13SemiBold,
                     }}
                   >
                     {profile.username}
@@ -224,11 +199,10 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>Email</Text>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>Email</Text>
                   <Text
                     style={{
-                      fontSize: 14,
-                      fontWeight: "100",
+                      ...Fonts.grayColor13SemiBold,
                     }}
                   >
                     {profile.email}
@@ -237,14 +211,13 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
                     Firstname
                   </Text>
                   {profile.firstName ? (
                     <Text
                       style={{
-                        fontSize: 14,
-                        fontWeight: "100",
+                        ...Fonts.grayColor13SemiBold,
                       }}
                     >
                       {profile.firstName}
@@ -258,14 +231,13 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
                     Lastname
                   </Text>
                   {profile.lastName ? (
                     <Text
                       style={{
-                        fontSize: 14,
-                        fontWeight: "100",
+                        ...Fonts.grayColor13SemiBold,
                       }}
                     >
                       {profile.lastName}
@@ -279,14 +251,11 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                    Gender
-                  </Text>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>Gender</Text>
                   {profile.gender ? (
                     <Text
                       style={{
-                        fontSize: 14,
-                        fontWeight: "100",
+                        ...Fonts.grayColor13SemiBold,
                       }}
                     >
                       {profile.gender}
@@ -298,14 +267,11 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
-                    Address
-                  </Text>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>Address</Text>
                   {profile.address ? (
                     <Text
                       style={{
-                        fontSize: 14,
-                        fontWeight: "100",
+                        ...Fonts.grayColor13SemiBold,
                       }}
                     >
                       {profile.address}
@@ -317,14 +283,13 @@ const ProfileScreen = ({ navigation }) => {
               </View>
               <View style={styles.wrapperUserInfo}>
                 <View style={styles.userInfo}>
-                  <Text style={{ fontSize: 16, fontWeight: "400" }}>
+                  <Text style={{ ...Fonts.blackColor16SemiBold }}>
                     Date of birth
                   </Text>
                   {profile.dob ? (
                     <Text
                       style={{
-                        fontSize: 14,
-                        fontWeight: "100",
+                        ...Fonts.grayColor13SemiBold,
                       }}
                     >
                       {moment(profile.dob).format("DD-MM-YYYY")}
@@ -411,15 +376,12 @@ const styles = StyleSheet.create({
   startQuizInfo: {
     paddingVertical: Sizes.fixPadding + 10,
     paddingBottom: 30,
-    justifyContent: "center",
     height: "100%",
-    alignItems: "center",
   },
   wrapperUserInfo: {
     paddingHorizontal: 8,
-    marginTop: 8,
     marginLeft: 8,
-    paddingVertical: 8,
+    paddingVertical: 4,
   },
   container: {
     flex: 1,
@@ -433,8 +395,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
-    width: 175,
-    height: 175,
+    width: 125,
+    height: 125,
     marginTop: 8,
     borderRadius: 50,
   },
