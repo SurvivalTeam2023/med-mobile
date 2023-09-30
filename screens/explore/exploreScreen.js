@@ -10,23 +10,19 @@ import {
 } from "react-native";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { Navigate } from "../../constants/navigate";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useGetSelectedMentalHealthListAPI } from "../../hooks/mentalHealth";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { styles } from "./style";
 import { mentalHealth } from "./components/mentalHealth";
 import { suggestion } from "./components/suggestion";
-import { exercise } from "./components/exercise";
-import { useEffect } from "react";
-import { useQueryClient } from "react-query";
+import { Exercise } from "./components/exercise";
 
 // getSelectedMentalHealth
 const ExploreScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.user.data);
 
-  const { data: dataSelectedMental, isSuccess: isSuccessSelectedMental } =
-    useGetSelectedMentalHealthListAPI();
-
+  const { data: dataSelectedMental } = useGetSelectedMentalHealthListAPI();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <StatusBar backgroundColor={Colors.primaryColor} />
@@ -37,7 +33,7 @@ const ExploreScreen = ({ navigation }) => {
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         >
           {mentalHealth(dataSelectedMental)}
-          {exercise({ navigation })}
+          <Exercise navigation={navigation} />
           {suggestion({ navigation })}
         </ScrollView>
       </View>

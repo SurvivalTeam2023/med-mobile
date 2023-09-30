@@ -26,6 +26,7 @@ import { store } from "../../core/store/store";
 import { fetchUserData } from "../../redux/auth/auth.action";
 import { userAction } from "../../redux/auth/auth.slice";
 import { useDispatch } from "react-redux";
+import { adsAction } from "../../redux/ads/ads.slice";
 
 const EditUserScreen = ({ navigation, route }) => {
   const profile = route.params.profile;
@@ -127,6 +128,8 @@ const EditUserScreen = ({ navigation, route }) => {
         const userData = await fetchUserData(access_token);
         if (userData) {
           dispatch(userAction.storeUser(userData));
+          const subscriptionStatus = userData?.lastestSub || null;
+          dispatch(adsAction.setSubscription(subscriptionStatus));
           setTimeout(() => {
             navigation.push(Navigate.BOTTOM_TAB_BAR);
           }, 3000);

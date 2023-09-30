@@ -1,38 +1,26 @@
 import { styles } from "../style";
 import { Fonts } from "../../../constants/styles";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import { ImageBackground } from "react-native";
-import { useMemo, useState } from "react";
+import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetExercisesListBySingleMentalIdAPI } from "../../../hooks/exercise.hook";
 import { Navigate } from "../../../constants/navigate";
-import { CHAT_WITH_AI, DEFAULT, MEDITATION } from "../../../constants/keyword";
+import { DEFAULT } from "../../../constants/keyword";
 import { nowPlayingAction } from "../../../redux/audio/nowPlayingList.slice";
-import { useGetAudioRecommendByMentalIdAPI } from "../../../hooks/audio.hook";
 import { getAudioRecommendByMentalIdAPI } from "../../../api/audio.api";
 import { MaterialIcons } from "@expo/vector-icons";
-import { validatePathConfig } from "@react-navigation/native";
-import { useGetSubscriptionByUserId } from "../../../hooks/subscription.hook";
 import { adsAction } from "../../../redux/ads/ads.slice";
-export const exercise = ({ navigation }) => {
+export const Exercise = (props) => {
+  const dispatch = useDispatch();
+  const { navigation } = props;
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
   const trialLeft = useSelector((state) => state.ads.trialTurnLeft);
-  const [isSubscriber, setIsSubscriber] = useState(false);
-  const { data: dataExercises, isSuccess: isSuccessExercises } =
+  const subscriptionData = useSelector((state) => state.ads.subscriptionData);
+
+  const { data: dataExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
-  const {
-    data: subscriptionData,
-    isSuccess: isSuccessSubscription,
-    isError: isErrorSubScription,
-    error: errorSubScription,
-  } = useGetSubscriptionByUserId();
-
-  const dispatch = useDispatch();
-
   const getAudioByMentalHealthId = async () => {
     if (idSelected) {
-      // Assuming getAudioRecommendByMentalIdAPI returns a promise
       const audioList = await getAudioRecommendByMentalIdAPI(idSelected);
       dispatch(
         nowPlayingAction.addListToPlayList({
@@ -41,44 +29,12 @@ export const exercise = ({ navigation }) => {
         })
       );
       navigation.push(Navigate.MEDITATE_SCREEN);
-      // Loop through the 'audios' array and dispatch each audio item
-
-      // Wrap audios in a resolved promise and dispatch the action
     }
   };
-
-  // const getAudioByMentalHealthId = async () => {
-  //   try {
-  //     if (isSuccessSelectedMental) {
-  //       let selectedMentalList = dataSelectedMental;
-  //       let responses = [];
-  //       let audioListMentalId;
-  //       let audioSingleMental;
-  //       let randomAudio;
-  //       if (selectedMentalList) {
-  //         const promises = selectedMentalList.map((item) =>
-  //           getAudioRecommendByMentalIdAPI(item.id)
-  //         );
-
-  //         responses = await Promise.all(promises);
-  //         if (responses) {
-  //           audioListMentalId = responses?.map((e, index) => e.audios);
-  //           randomAudio =
-  //             audioListMentalId[
-  //               Math.floor(Math.random() * audioListMentalId.length)
-  //             ];
-  //         }
-  //         navigation.push(Navigate.MEDITATE_SCREEN, {
-  //           data: audioListMentalId,
-  //         });
-  //       }
-  //     }
-  //   } catch (error) {}
-  // };
   const handleMinuteTurnTrial = () => {
     dispatch(adsAction.minuteOneTurn());
-    console.log(trialLeft);
   };
+
   const handleClickExercise = (exercise) => {
     handleMinuteTurnTrial();
     const { type, content } = exercise;
@@ -91,6 +47,13 @@ export const exercise = ({ navigation }) => {
     } else {
       navigation.push(Navigate.EXERCISE_CONTENT_SCREEN, { data: exercise });
     }
+  };
+
+  const isLockExercise = (item) => {
+    return (
+      (trialLeft < 0 || item.content === "Chat with AI") &&
+      (!subscriptionData || subscriptionData?.status !== "ACTIVE")
+    );
   };
 
   return (
@@ -116,21 +79,13 @@ export const exercise = ({ navigation }) => {
               }}
             >
               <TouchableOpacity
-                onPress={() => {
-                  // Check if the user is a subscriber before allowing access
-                  if (
-                    (trialLeft < 0 && !subscriptionData?.length > 0) ||
-                    (item.content === "Chat with AI" &&
-                      !subscriptionData?.length > 0)
-                  ) {
-                    // Handle non-subscriber action, e.g., show a message
-                    alert(
-                      "You need to be a subscriber to access this exercise."
-                    );
-                  } else {
-                    handleClickExercise(item);
-                  }
-                }}
+                onPress={() =>
+                  isLockExercise(item)
+                    ? alert(
+                        "You need to be a subscriber to access this exercise."
+                      )
+                    : handleClickExercise(item)
+                }
               >
                 <ImageBackground
                   source={{
@@ -146,10 +101,7 @@ export const exercise = ({ navigation }) => {
                     overflow: "hidden", // Clip the image to the rounded border
                   }}
                 >
-                  {(trialLeft < 0 && !subscriptionData?.length > 0) ||
-                  (item.content === "Chat with AI" &&
-                    !subscriptionData?.length > 0) ? (
-                    // Render a lock layer only for "Chat with AI" and non-subscribers
+                  {isLockExercise(item) ? (
                     <View
                       style={{
                         flex: 1,

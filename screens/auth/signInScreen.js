@@ -33,9 +33,8 @@ import { fetchUserData } from "../../redux/auth/auth.action";
 import { Toast } from "toastify-react-native";
 import {
   getDisclaimerFromLocal,
-  getMentalHealthFromLocal,
-  storeDisclaimerToLocal,
 } from "../../utils/app.local_handler";
+import { adsAction } from "../../redux/ads/ads.slice";
 
 const SignInScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -101,8 +100,9 @@ const SignInScreen = ({ navigation }) => {
           dispatch(userAction.storeToken(data));
           const userData = await fetchUserData(access_token);
           if (userData) {
-            console.log(userData);
             dispatch(userAction.storeUser(userData));
+            const subscriptionStatus = userData?.lastestSub || null;
+            dispatch(adsAction.setSubscription(subscriptionStatus));
             initializeIsRead();
             Toast.success("Welcome " + state["userName"]);
           } else {
@@ -171,6 +171,8 @@ const SignInScreen = ({ navigation }) => {
           const userData = await fetchUserData(data["access_token"]);
           if (userData) {
             dispatch(userAction.storeUser(userData));
+            const subscriptionStatus = userData?.lastestSub || null;
+        dispatch(adsAction.setSubscription(subscriptionStatus));
             navigation.push(Navigate.OPTION_SCREEN);
           } else {
             setOtherErrorCode(err);

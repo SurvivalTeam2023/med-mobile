@@ -1,36 +1,27 @@
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   SafeAreaView,
   StyleSheet,
-  Image,
-  Pressable,
-  FlatList,
   Modal,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Alert
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Fonts, Sizes } from "../../constants/styles";
-import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { useIsFavoriteExisted } from "../../hooks/favorite.hook";
 import { Navigate } from "../../constants/navigate";
 import { store } from "../../core/store/store";
 import { fetchUserData } from "../../redux/auth/auth.action";
 
 import { useDispatch, useSelector } from "react-redux";
-import { Picker } from "@react-native-picker/picker";
-import DatePicker from "react-native-modern-datepicker";
-import { getFormatedDate } from "react-native-modern-datepicker";
+import { getFormatedDate, DatePicker } from "react-native-modern-datepicker";
 import moment from "moment";
 import { useUpdateUserAccountDetails } from "../../hooks/user.hook";
-import { Alert } from "react-native";
 import { userAction } from "../../redux/auth/auth.slice";
+import { adsAction } from "../../redux/ads/ads.slice";
 const Separator = () => <View style={styles.separator} />;
 
 let isFavoriteExisted = [];
@@ -81,6 +72,8 @@ const AgeVerifyScreen = ({ navigation }) => {
         const userData = await fetchUserData(access_token);
         if (userData) {
           dispatch(userAction.storeUser(userData));
+          const subscriptionStatus = userData?.lastestSub || null;
+        dispatch(adsAction.setSubscription(subscriptionStatus));
           setTimeout(() => {
             navigation.push(Navigate.CHOOSE_MENTAL_SCREEN);
           }, 1000);
