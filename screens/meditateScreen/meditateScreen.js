@@ -13,8 +13,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Markdown from "react-native-simple-markdown";
 import { LinearGradient } from "expo-linear-gradient";
-import { useDispatch } from "react-redux";
-import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ACTION_TYPE,
+  nowPlayingAction,
+} from "../../redux/audio/nowPlayingList.slice";
 const MeditateScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const header = () => {
@@ -26,6 +29,15 @@ const MeditateScreen = ({ navigation, route }) => {
           </Text>
         </View>
       </View>
+    );
+  };
+
+  const audioPlayer = (audioAction, audioActionVaue) => {
+    dispatch(
+      nowPlayingAction.triggerAudioPlayer({
+        audioAction: audioAction,
+        audioActionVaue: audioActionVaue,
+      })
     );
   };
 
@@ -67,18 +79,22 @@ const MeditateScreen = ({ navigation, route }) => {
       setStartTimerOnMount(true);
       setCountComplete(false);
       setIsRunning(true);
+      audioPlayer(ACTION_TYPE.START, Math.random());
     };
 
     const handleStop = () => {
       setIsRunning(false);
       setCurrentTime(1000 * 60); // Reset the timer to the initial value
       setStartTimerOnMount(false);
+      setCountComplete(true);
+      audioPlayer(ACTION_TYPE.STOP, Math.random());
     };
 
     const handlePause = () => {
       setCurrentTime(secondsRemaining);
       setIsRunning(false);
       setStartTimerOnMount(false);
+      audioPlayer(ACTION_TYPE.PAUSE, Math.random());
     };
 
     const handleResume = () => {
@@ -106,6 +122,7 @@ const MeditateScreen = ({ navigation, route }) => {
               }}
               onComplete={() => {
                 console.log("complete");
+                audioPlayer(ACTION_TYPE.STOP, Math.random());
                 setCountComplete(true);
                 // Stop the timer when it completes
                 handleStop();
@@ -126,22 +143,18 @@ const MeditateScreen = ({ navigation, route }) => {
               style={styles.clockText}
             />
           </View>
-          <Text style={{ ...Fonts.whiteColor20Bold, paddingTop: 36 }}>
-            Mediate Song long AF
-          </Text>
+          {!countComplete ? (
+            <Text style={{ ...Fonts.whiteColor20Bold, paddingTop: 36 }}>
+              Take a breath...
+            </Text>
+          ) : null}
         </View>
         <View style={{ paddingBottom: 20 }}>
           {countComplete ? (
             <View style={styles.completeContainer}>
-              <Text style={{ paddingBottom: 4 }}>
-                Healing complete. Press start to start again
+              <Text style={{ ...Fonts.whiteColor18SemiBold, paddingBottom: 4 }}>
+                Healing complete
               </Text>
-              <AntDesign
-                name="play"
-                size={30}
-                color="#435334"
-                onPress={handleStart}
-              />
             </View>
           ) : (
             <View style={styles.buttonContainer}>
@@ -149,7 +162,7 @@ const MeditateScreen = ({ navigation, route }) => {
                 <AntDesign
                   name="pausecircleo"
                   size={30}
-                  color={Colors.greenDarkColor}
+                  colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                   onPress={handlePause}
                 />
               ) : (
@@ -173,6 +186,7 @@ const MeditateScreen = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 dispatch(nowPlayingAction.resetNowPlayingState());
+                audioPlayer(ACTION_TYPE.STOP, Math.random());
                 console.log("yeh ha");
                 navigation.pop();
               }}

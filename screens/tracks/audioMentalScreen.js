@@ -405,8 +405,8 @@ const AudioMentalScreen = ({ navigation, route }) => {
         </View>
 
         <View style={{ width: "33.33%" }}>
-          <Text style={{ ...Fonts.blackColor18SemiBold }}>
-            {mentalDetail.name} Sound
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            {mentalDetail.name}
           </Text>
         </View>
         <View style={{ width: "33.33%" }}></View>

@@ -36,7 +36,6 @@ const reducer = createSlice({
   reducers: {
     addAudioToPlayList: (state, action) => {
       const playingList = state.playingList;
-      console.log(playingList);
       // Check if the new audio already exists in the playingList
       const isExisted = playingList?.findIndex(
         (audio) => audio?.name === beatifulAudioFormat(action.payload)?.name
@@ -57,7 +56,6 @@ const reducer = createSlice({
       const beatifulData = listPlaylistInput.map((item) => {
         return beatifulAudioFormat(item);
       });
-      console.log("beatifulData", beatifulData);
 
       state.currentPlaying.currentAudioIndex = currentId;
       state.playingList = beatifulData;
@@ -109,6 +107,7 @@ export const nowPlayingListReducer = reducer.reducer;
 export const ACTION_TYPE = {
   START: "START",
   PAUSE: "PAUSE",
+  STOP: "STOP",
   NEXT_SONG: "NEXT_SONG",
   PREV_SONG: "PREV_SONG",
   MINOR_10_SEC: "MINOR_10_SEC",

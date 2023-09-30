@@ -119,6 +119,12 @@ const useAudio = () => {
     setCurrentAudioIndex(nextIndex);
     setSoundStatus((prevStatus) => ({ ...prevStatus, isPlaying: false }));
   }, [audioList, currentAudioIndex, sound]);
+  const stopSound = useCallback(async () => {
+    if (sound) {
+      sound.unloadAsync();
+      console.log("Stop sound");
+    }
+  }, [audioList, currentAudioIndex, sound]);
 
   const playPrevSound = useCallback(() => {
     if (sound) {
@@ -211,6 +217,7 @@ const useAudio = () => {
     currentAudioIndex,
     loadSound,
     playSound,
+    stopSound,
     pauseSound,
     playNextSound,
     playPrevSound,
