@@ -3,7 +3,8 @@ import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../core/store/store";
 import { Linking } from "react-native";
-
+import { Navigate } from "../constants/navigate";
+import * as RootNavigation from "../core/RootNavigation";
 export const removeTokenFromStorage = () => {
   AsyncStorage.removeItem(USER_KEY_STORAGE);
 };
@@ -55,6 +56,8 @@ export const getUserFromDb = () => {
 
 export const handleWebNavigation = async (url) => {
   Linking.openURL(url)
-    .then(() => console.log(`URL '${url}' opened successfully`))
+    .then(() => {
+      RootNavigation.navigate(Navigate.BOTTOM_TAB_BAR, {});
+    })
     .catch((error) => console.log("An error occurred", error));
 };

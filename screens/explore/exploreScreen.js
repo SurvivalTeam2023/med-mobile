@@ -17,7 +17,10 @@ import { styles } from "./style";
 import { mentalHealth } from "./components/mentalHealth";
 import { suggestion } from "./components/suggestion";
 import { exercise } from "./components/exercise";
+import { useEffect } from "react";
+import { useQueryClient } from "react-query";
 
+// getSelectedMentalHealth
 const ExploreScreen = ({ navigation }) => {
   const userData = useSelector((state) => state.user.data);
 

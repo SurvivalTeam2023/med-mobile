@@ -4,7 +4,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import { chatGPTAPI } from "../../api/chat.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors, Fonts } from "../../constants/styles";
-import email from 'react-native-email'
+import email from "react-native-email";
 
 import {
   BackHandler,
@@ -17,7 +17,7 @@ import {
 } from "react-native";
 
 const ChatWithUsScreen = ({ navigation }) => {
-  const navigate = useNavigation()
+  const navigate = useNavigation();
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -41,7 +41,7 @@ const ChatWithUsScreen = ({ navigation }) => {
     const staticMessages = [
       {
         _id: 2,
-        text: "Hi Med Team, I wan't to...",
+        text: "Hi Med Team, I want to...",
         createdAt: new Date(),
         quickReplies: {
           type: "radio", // or 'checkbox',
@@ -54,7 +54,7 @@ const ChatWithUsScreen = ({ navigation }) => {
             {
               title: "Chat with Medy🤖",
               value: "chat-ai",
-            }
+            },
           ],
         },
         user: {
@@ -113,20 +113,19 @@ const ChatWithUsScreen = ({ navigation }) => {
   const image = {
     uri: "https://e1.pxfuel.com/desktop-wallpaper/165/215/desktop-wallpaper-16-ui-gradients-gradient-green-background.jpg",
   };
-  const handleQuizReply = (message) =>{
-    const value = message[0].value
-    if(value == 'send-email'){
-      const to = ['mediataion2022@gmail.com']
+  const handleQuizReply = (message) => {
+    const value = message[0].value;
+    if (value == "send-email") {
+      const to = ["mediatation2022@gmail.com"];
       email(to, {
-        subject: '[MED] User Support',
-        body: 'Some body right here',
-        checkCanOpen: false
-    }).catch(console.error)
+        subject: "[MED] User Support",
+        body: "Some body right here",
+        checkCanOpen: false,
+      }).catch(console.error);
+    } else if (value == "chat-ai") {
+      navigate.navigate("Chat with AI");
     }
-    else if(value =='chat-ai'){
-      navigate.navigate('Chat with AI')
-    }
-  }
+  };
   const header = useMemo(() => {
     return (
       <View style={styles.headerWrapStyle}>
@@ -175,8 +174,8 @@ const ChatWithUsScreen = ({ navigation }) => {
           }}
           isTyping={true}
           alwaysShowSend={true}
-          onQuickReply={(props)=> {
-            handleQuizReply(props)
+          onQuickReply={(props) => {
+            handleQuizReply(props);
           }}
         />
       </ImageBackground>

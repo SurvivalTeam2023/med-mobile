@@ -19,6 +19,7 @@ export const useGetSubscriptionByUserId = (payload) =>
       const data = await getSubscriptionByUserId();
       return data;
     },
+    enabled: true,
   });
 
 export const useCreateSubscriptionApi = (payload) =>

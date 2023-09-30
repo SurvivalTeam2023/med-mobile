@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   idSelected: null,
   dataSelected: null,
+  forceRender: null,
 };
 const reducer = createSlice({
   name: "mentalHealth",
@@ -13,6 +14,9 @@ const reducer = createSlice({
       const { id, data } = payload.payload;
       state.idSelected = id;
       state.dataSelected = data;
+    },
+    setForceRender: (state, payload) => {
+      state.forceRender = Math.random();
     },
   },
 });

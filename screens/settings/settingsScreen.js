@@ -27,6 +27,8 @@ import { SUBSCRIPTION_STATUS } from "../../constants/app";
 import { fetchUserData } from "../../redux/auth/auth.action";
 import { nowPlayingAction } from "../../redux/audio/nowPlayingList.slice";
 import { MaterialIcons } from "@expo/vector-icons";
+import { mentalHealthAction } from "../../redux/mentalHealth/mentalhealth.slice";
+import { useQueryClient } from "react-query";
 const { width } = Dimensions.get("window");
 let userData;
 const SettingsScreen = ({ navigation }) => {
@@ -39,6 +41,8 @@ const SettingsScreen = ({ navigation }) => {
       if (userInfo) {
         userData = userInfo;
         dispatch(userAction.storeUser(userInfo));
+        const queryClient = useQueryClient();
+        queryClient.invalidateQueries("getSubscriptionByUserId");
       }
     } catch (error) {
       const data = useSelector((state) => state.user.data);
