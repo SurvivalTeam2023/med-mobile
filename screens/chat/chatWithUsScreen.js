@@ -1,9 +1,11 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import { chatGPTAPI } from "../../api/chat.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors, Fonts } from "../../constants/styles";
+import email from 'react-native-email'
+
 import {
   BackHandler,
   ImageBackground,
@@ -15,6 +17,7 @@ import {
 } from "react-native";
 
 const ChatWithUsScreen = ({ navigation }) => {
+  const navigate = useNavigation()
   const backAction = () => {
     backClickCount === 1 ? BackHandler.exitApp() : _spring();
     return true;
@@ -37,8 +40,31 @@ const ChatWithUsScreen = ({ navigation }) => {
   const fetchFirstMessages = () => {
     const staticMessages = [
       {
+        _id: 2,
+        text: "Hi Med Team, I wan't to...",
+        createdAt: new Date(),
+        quickReplies: {
+          type: "radio", // or 'checkbox',
+          keepIt: true,
+          values: [
+            {
+              title: "Send the email to Med-Team 🤝",
+              value: "send-email",
+            },
+            {
+              title: "Chat with Medy🤖",
+              value: "chat-ai",
+            }
+          ],
+        },
+        user: {
+          _id: 1,
+          name: "YourSelf",
+        },
+      },
+      {
         _id: 1,
-        text: "We value your feedback and are here to assist you. You can easily get in touch with our support team. Whether you have questions, suggestions, or just want to share your thoughts, we're just a message away. Contact us at mediataion2022@gmail.com",
+        text: "We value your feedback and are here to assist you. You can easily get in touch with our support team. Whether you have questions, suggestions, or just want to share your thoughts.",
         createdAt: new Date(),
         user: {
           _id: 2,
@@ -50,7 +76,6 @@ const ChatWithUsScreen = ({ navigation }) => {
     ];
     setMessages(staticMessages);
   };
-
   const sendMessage = (text) => {
     chatGPTAPI(text)
       .then((res) => {
@@ -88,7 +113,20 @@ const ChatWithUsScreen = ({ navigation }) => {
   const image = {
     uri: "https://e1.pxfuel.com/desktop-wallpaper/165/215/desktop-wallpaper-16-ui-gradients-gradient-green-background.jpg",
   };
-
+  const handleQuizReply = (message) =>{
+    const value = message[0].value
+    if(value == 'send-email'){
+      const to = ['mediataion2022@gmail.com']
+      email(to, {
+        subject: '[MED] User Support',
+        body: 'Some body right here',
+        checkCanOpen: false
+    }).catch(console.error)
+    }
+    else if(value =='chat-ai'){
+      navigate.navigate('Chat with AI')
+    }
+  }
   const header = useMemo(() => {
     return (
       <View style={styles.headerWrapStyle}>
@@ -136,6 +174,10 @@ const ChatWithUsScreen = ({ navigation }) => {
             _id: 1,
           }}
           isTyping={true}
+          alwaysShowSend={true}
+          onQuickReply={(props)=> {
+            handleQuizReply(props)
+          }}
         />
       </ImageBackground>
       {Platform.OS === "android" && <KeyboardAvoidingView behavior="padding" />}
