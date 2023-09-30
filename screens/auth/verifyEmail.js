@@ -45,7 +45,7 @@ const VerifyEmail = ({ navigation }) => {
       <LinearGradient
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 0 }}
-        colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+        colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
         style={styles.resultInfo}
       >
         <Text style={styles.resultInfoStyle}>Please verify your email</Text>
@@ -79,7 +79,7 @@ const VerifyEmail = ({ navigation }) => {
           <LinearGradient
             start={{ x: 1, y: 3 }}
             end={{ x: 0, y: 2 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={styles.doneQuizGradientStyle}
           >
             <Text style={{ ...Fonts.whiteColor16Bold }}>Sign In</Text>

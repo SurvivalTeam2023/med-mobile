@@ -31,7 +31,11 @@ import axios from "axios";
 import { Navigate } from "../../constants/navigate";
 import { fetchUserData } from "../../redux/auth/auth.action";
 import { Toast } from "toastify-react-native";
-import { storeDisclaimerToLocal } from "../../utils/app.local_handler";
+import {
+  getDisclaimerFromLocal,
+  getMentalHealthFromLocal,
+  storeDisclaimerToLocal,
+} from "../../utils/app.local_handler";
 
 const SignInScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -41,6 +45,19 @@ const SignInScreen = ({ navigation }) => {
   const { mutate } = useLogin();
   const { mutate: mutateLoginGoogle } = useLoginWithGmail();
   //State
+
+  const initializeIsRead = async (dob) => {
+    try {
+      const disclaimerValue = await getDisclaimerFromLocal();
+      if (!disclaimerValue) {
+        navigation.push(Navigate.OPTION_SCREEN);
+      } else {
+        navigation.push(Navigate.OPTION_SCREEN);
+      }
+    } catch (error) {
+      console.log("Failed fetching disclaimer:", error);
+    }
+  };
   const [state, setState] = useState({
     showPassword: true,
     userName: null,
@@ -84,10 +101,10 @@ const SignInScreen = ({ navigation }) => {
           dispatch(userAction.storeToken(data));
           const userData = await fetchUserData(access_token);
           if (userData) {
+            console.log(userData);
             dispatch(userAction.storeUser(userData));
-            storeDisclaimerToLocal(false);
+            initializeIsRead();
             Toast.success("Welcome " + state["userName"]);
-            navigation.push(Navigate.OPTION_SCREEN);
           } else {
             setOtherErrorCode(err);
           }

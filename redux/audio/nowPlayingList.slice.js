@@ -54,9 +54,11 @@ const reducer = createSlice({
     addListToPlayList: (state, action) => {
       const currentId = action.payload["currentId"];
       const listPlaylistInput = action.payload["tracklist"];
-      const beatifulData = listPlaylistInput.map((item) =>
-        beatifulAudioFormat(item)
-      );
+      const beatifulData = listPlaylistInput.map((item) => {
+        return beatifulAudioFormat(item);
+      });
+      console.log("beatifulData", beatifulData);
+
       state.currentPlaying.currentAudioIndex = currentId;
       state.playingList = beatifulData;
     },

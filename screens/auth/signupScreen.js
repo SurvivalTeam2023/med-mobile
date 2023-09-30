@@ -72,7 +72,7 @@ const SignupScreen = ({ navigation }) => {
           contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
           ListHeaderComponent={
             <View>
-              {cornerImage()}
+              {header()}
               {signupInfo()}
             </View>
           }
@@ -80,7 +80,36 @@ const SignupScreen = ({ navigation }) => {
       </View>
     </SafeAreaView>
   );
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
 
+        <View style={{ width: "33.33%" }}>
+          <Text
+            style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}
+          ></Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  }
   function signupInfo() {
     return (
       <View style={{ marginTop: Sizes.fixPadding + 5.0 }}>
@@ -95,7 +124,7 @@ const SignupScreen = ({ navigation }) => {
           <LinearGradient
             start={{ x: 1, y: 0.2 }}
             end={{ x: 1, y: 1 }}
-            colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 1)"]}
+            colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
             style={{ flex: 1 }}
           />
         </MaskedView>
@@ -198,11 +227,7 @@ const SignupScreen = ({ navigation }) => {
               <LinearGradient
                 start={{ x: 1, y: 0 }}
                 end={{ x: 0, y: 0 }}
-                colors={[
-                  "rgba(255, 124, 0,1)",
-                  "rgba(255, 124, 0,1)",
-                  "rgba(41, 10, 89, 0.9)",
-                ]}
+                colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
                 style={{ flex: 1 }}
               />
             </MaskedView>
@@ -259,7 +284,7 @@ const SignupScreen = ({ navigation }) => {
         <LinearGradient
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
-          colors={["rgba(255, 124, 0,1)", "rgba(41, 10, 89, 0.9)"]}
+          colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
           style={styles.signupButtonGradientStyle}
         >
           <Text style={{ ...Fonts.whiteColor18Bold }}>SIGN UP</Text>
@@ -408,6 +433,13 @@ const styles = StyleSheet.create({
     marginTop: Sizes.fixPadding + 5.0,
     marginBottom: Sizes.fixPadding,
     marginHorizontal: Sizes.fixPadding * 2.0,
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   socialMediaIconsStyle: {
     width: 32.0,
