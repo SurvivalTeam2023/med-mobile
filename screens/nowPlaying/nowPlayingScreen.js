@@ -12,41 +12,29 @@ import {
 import { Colors, Fonts, Sizes } from "../../constants/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Icon } from "react-native-gradient-icon";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { useDispatch, useSelector } from "react-redux";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import {
   ACTION_TYPE,
   nowPlayingAction,
 } from "../../redux/audio/nowPlayingList.slice";
-import { useGetSubscriptionByUserId } from "../../hooks/subscription.hook";
 import { useLikeAudioAPI } from "../../hooks/audio.hook";
-import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { shareAsync } from "expo-sharing";
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isUpdate, setIsUpdate] = useState(false);
-  const {
-    data: subscriptionData,
-    isSuccess: isSuccessSubscription,
-    isError: isErrorSubScription,
-    error: errorSubScription,
-  } = useGetSubscriptionByUserId();
-
-  {
-    isSuccessSubscription;
-  }
-
+  const subscriptionData = useSelector((state) => state.ads.subscriptionData);
+  const istrialMusic = () => {
+    return !subscriptionData || subscriptionData?.status !== "ACTIVE";
+  };
   const { mutate } = useLikeAudioAPI();
   const likeObj = {
     audioId: null,
     isLiked: null,
   };
-
   const likeAudio = () => {
     mutate(
       { audioId: likeObj.audioId, isLiked: likeObj.isLiked },
@@ -80,33 +68,6 @@ const NowPlayingScreen = ({ navigation }) => {
     (state) => state.nowPlayingList.currentPlaying
   );
   const playingList = useSelector((state) => state.nowPlayingList.playingList);
-  const save = async (uri, filename, mimetype) => {
-    if (Platform.OS === "android") {
-      const permissions =
-        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-      if (permissions.granted) {
-        const base64 = await FileSystem.readAsStringAsync(uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        await FileSystem.StorageAccessFramework.createFileAsync(
-          permissions.directoryUri,
-          filename,
-          mimetype
-        )
-          .then(async (uri) => {
-            await FileSystem.writeAsStringAsync(uri, base64, {
-              encoding: FileSystem.EncodingType.Base64,
-            });
-          })
-          .catch((e) => console.log(e));
-      } else {
-        shareAsync(uri);
-      }
-    } else {
-      shareAsync(uri);
-    }
-  };
-
   const saveFile = async (uri, filename, mimetype) => {
     if (Platform.OS === "android") {
       const permissions =
@@ -237,7 +198,7 @@ const NowPlayingScreen = ({ navigation }) => {
     return (
       <View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {subscriptionData?.length > 0 ? (
+          {istrialMusic ? (
             <TouchableOpacity
               onPress={() => {
                 try {
