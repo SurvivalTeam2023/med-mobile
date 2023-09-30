@@ -41,6 +41,7 @@ export const Navigate = {
   QUIZ_HISTORY_SCREEN: "QuizHistory",
   CHAT: "AI Chat",
   AI_CHAT_SCREEN: "Chat with AI",
+  TRENDING_SCREEN: "Trending",
   CHAT_WITH_SCREEN: "Chat",
   MENTAL_SURVEY_SCREEN: "Mental Survey",
   QUESTION_MENTAL_HEALTH_SCREEN: "Question Mental Health",
