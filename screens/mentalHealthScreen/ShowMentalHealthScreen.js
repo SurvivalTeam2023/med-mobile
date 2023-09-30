@@ -35,20 +35,20 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
   const { mutate } = useSelectUserMentalHealthAPI();
   const [isSelect, setIsSelected] = useState();
 
-  useEffect(() => {
-    const initializeIsRead = async () => {
-      try {
-        const mentalHealthValue = await getMentalHealthFromLocal();
-        if (mentalHealthValue) {
-          navigation.push(Navigate.BOTTOM_TAB_BAR);
-        }
-      } catch (error) {
-        console.log("Failed fetching disclaimer:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const initializeIsRead = async () => {
+  //     try {
+  //       const mentalHealthValue = await getMentalHealthFromLocal();
+  //       if (mentalHealthValue) {
+  //         navigation.push(Navigate.BOTTOM_TAB_BAR);
+  //       }
+  //     } catch (error) {
+  //       console.log("Failed fetching disclaimer:", error);
+  //     }
+  //   };
 
-    initializeIsRead();
-  }, []);
+  //   initializeIsRead();
+  // }, []);
 
   //Get mental health list
   const {
@@ -130,12 +130,27 @@ const ChooseMentalHealthScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
+  const header = () => {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}></View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text
+            style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}
+          ></Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
       <View style={{ flex: 1 }}>
         <FlatList
           ListHeaderComponent={
             <>
+              {header()}
               {chooseMusicTitle()}
               {musics()}
             </>
@@ -274,6 +289,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Sizes.fixPadding * 2.0,
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
   },
   signInButtonStyle: {
     marginBottom: Sizes.fixPadding * 10,

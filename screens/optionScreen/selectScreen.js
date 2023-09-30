@@ -23,8 +23,13 @@ import { FlatList } from "react-native-gesture-handler";
 import { useState } from "react";
 import {
   getDisclaimerFromLocal,
+  getMentalHealthFromLocal,
   storeDisclaimerToLocal,
 } from "../../utils/app.local_handler";
+import { useGetSelectedMentalHealthListAPI } from "../../hooks/mentalHealth";
+import { isRejectedWithValue } from "@reduxjs/toolkit";
+import { ActivityIndicator } from "react-native";
+import { getSelectedMentalHealthList } from "../../api/mentalHealth";
 
 const OptionScreen = ({ navigation }) => {
   const [isRead, setIsRead] = useState();
@@ -32,8 +37,11 @@ const OptionScreen = ({ navigation }) => {
   let isQuestionValid;
   let isFavoriteExisted;
   const userInfo = store.getState().user.data;
-  const hasUserInfoDob = !!userInfo.dob; // Check if userInfo.dob has data
+  const dob = userInfo?.dob;
+  // const { data: dataSelectedMental, isSuccess: isSuccessSelectedMental } =
+  //   useGetSelectedMentalHealthListAPI();
 
+  // let dataMental = [];
   const {
     data: dataIsValidQuiz,
     isSuccess: successIsValidQuiz,
@@ -52,7 +60,10 @@ const OptionScreen = ({ navigation }) => {
     isFavoriteExisted = dataIsFavoriteExisted?.exists;
   } else {
   }
-
+  // if (isSuccessSelectedMental) {
+  //   dataMental = dataSelectedMental;
+  //   console.log(dataMental);
+  // }
   function startQuizTitle() {
     return (
       <LinearGradient
@@ -202,17 +213,19 @@ const OptionScreen = ({ navigation }) => {
   // };
   useEffect(() => {
     const initializeIsRead = async () => {
+      const disclaimer = await getDisclaimerFromLocal();
+      setIsRead(disclaimer);
+      const dataSelectedMental = await getSelectedMentalHealthList();
       try {
-        const disclaimerValue = await getDisclaimerFromLocal();
-        setIsRead(disclaimerValue);
-        if (disclaimerValue) {
-          navigation.push(Navigate.AGE_VERIFY);
+        if (dataSelectedMental?.length > 0) {
+          navigation.push(Navigate.BOTTOM_TAB_BAR);
+        } else if (dataSelectedMental?.length === 0) {
+          navigation.push(Navigate.CHOOSE_MENTAL_SCREEN);
         }
       } catch (error) {
         console.log("Failed fetching disclaimer:", error);
       }
     };
-
     initializeIsRead();
   }, []);
 
@@ -223,7 +236,7 @@ const OptionScreen = ({ navigation }) => {
         activeOpacity={0.9}
         onPress={() => {
           storeDisclaimerToLocal(true);
-          navigation.push(Navigate.AGE_VERIFY);
+          navigation.push(Navigate.CHOOSE_MENTAL_SCREEN);
         }}
       >
         <LinearGradient
@@ -238,7 +251,7 @@ const OptionScreen = ({ navigation }) => {
     );
   }
 
-  function cornerImage() {
+  function loading() {
     return (
       <LinearGradient
         start={{ x: 1, y: 0 }}
@@ -246,16 +259,17 @@ const OptionScreen = ({ navigation }) => {
         colors={["rgb(146,255,192)", "rgb(0,38,97)"]}
         style={styles.startQuizInfo}
       >
-        <Text style={styles.titleInfoStyle}>Loading...</Text>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color={Colors.blackColor} />
+          <Text style={{ ...Fonts.whiteColor16Light }}>Loading</Text>
+        </View>
       </LinearGradient>
     );
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <View style={{ flex: 1 }}>
-        {!isRead ? startQuizTitle() : cornerImage()}
-      </View>
+      <View style={{ flex: 1 }}>{!isRead ? startQuizTitle() : loading()}</View>
     </SafeAreaView>
   );
 };

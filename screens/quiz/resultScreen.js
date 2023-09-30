@@ -308,7 +308,7 @@ const ResultScreen = ({ navigation, route }) => {
 
         <View style={{ width: "33.33%" }}>
           <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
-            Settings
+            Result
           </Text>
         </View>
         <View style={{ width: "33.33%" }}>

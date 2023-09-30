@@ -13,9 +13,11 @@ import { getAudioRecommendByMentalIdAPI } from "../../../api/audio.api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { validatePathConfig } from "@react-navigation/native";
 import { useGetSubscriptionByUserId } from "../../../hooks/subscription.hook";
+import { adsAction } from "../../../redux/ads/ads.slice";
 export const exercise = ({ navigation }) => {
   const idSelected = useSelector((state) => state.mentalHealth.idSelected);
   const dataSelected = useSelector((state) => state.mentalHealth.dataSelected);
+  const trialLeft = useSelector((state) => state.ads.trialTurnLeft);
   const [isSubscriber, setIsSubscriber] = useState(false);
   const { data: dataExercises, isSuccess: isSuccessExercises } =
     useGetExercisesListBySingleMentalIdAPI(idSelected);
@@ -32,8 +34,11 @@ export const exercise = ({ navigation }) => {
     if (idSelected) {
       // Assuming getAudioRecommendByMentalIdAPI returns a promise
       const audioList = await getAudioRecommendByMentalIdAPI(idSelected);
-      const audio = audioList.audios.map((item) =>
-        dispatch(nowPlayingAction.addAudioToPlayList(item))
+      dispatch(
+        nowPlayingAction.addListToPlayList({
+          currentId: 1,
+          tracklist: audioList.audios,
+        })
       );
       navigation.push(Navigate.MEDITATE_SCREEN);
       // Loop through the 'audios' array and dispatch each audio item
@@ -70,8 +75,12 @@ export const exercise = ({ navigation }) => {
   //     }
   //   } catch (error) {}
   // };
-
+  const handleMinuteTurnTrial = () => {
+    dispatch(adsAction.minuteOneTurn());
+    console.log(trialLeft);
+  };
   const handleClickExercise = (exercise) => {
+    handleMinuteTurnTrial();
     const { type, content } = exercise;
     if (type === DEFAULT) {
       if (content === "Meditate") {
@@ -101,18 +110,15 @@ export const exercise = ({ navigation }) => {
             <View
               key={item?.id}
               style={{
-                width: "50%", // This makes each item take up 50% of the row width
-                padding: 8, // Add padding between items
-                alignItems: "center", // Center items horizontally
+                width: "50%",
+                padding: 8,
+                alignItems: "center",
               }}
             >
               <TouchableOpacity
                 onPress={() => {
                   // Check if the user is a subscriber before allowing access
-                  if (
-                    item.content === "Chat with AI" &&
-                    !subscriptionData?.length > 0
-                  ) {
+                  if (trialLeft < 0 && !subscriptionData?.length > 0) {
                     // Handle non-subscriber action, e.g., show a message
                     alert(
                       "You need to be a subscriber to access this exercise."
@@ -136,8 +142,7 @@ export const exercise = ({ navigation }) => {
                     overflow: "hidden", // Clip the image to the rounded border
                   }}
                 >
-                  {item.content === "Chat with AI" &&
-                  !subscriptionData?.length > 0 ? (
+                  {trialLeft < 0 && !subscriptionData?.length > 0 ? (
                     // Render a lock layer only for "Chat with AI" and non-subscribers
                     <View
                       style={{

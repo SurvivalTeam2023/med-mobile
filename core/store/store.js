@@ -10,6 +10,7 @@ import { imageReducer } from "../../redux/other/image.slice";
 import { nowPlayingListReducer } from "../../redux/audio/nowPlayingList.slice";
 import { audioArtistReducer } from "../../redux/audio/audioArtist";
 import { mentalHealthReducer } from "../../redux/mentalHealth/mentalhealth.slice";
+import { adsReducer } from "../../redux/ads/ads.slice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -22,5 +23,6 @@ export const store = configureStore({
     image: imageReducer,
     nowPlayingList: nowPlayingListReducer,
     mentalHealth: mentalHealthReducer,
+    ads: adsReducer,
   },
 });
