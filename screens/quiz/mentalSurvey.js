@@ -20,7 +20,7 @@ import { store } from "../../core/store/store";
 import { ImageBackground } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { useCreateQuestionBankByMentalHealthIdApi } from "../../hooks/question.hook";
-
+import { MaterialIcons } from "@expo/vector-icons";
 const MentalSurveyScreen = ({ navigation, route }) => {
   const mentalHealth = route.params.data;
 
@@ -45,6 +45,7 @@ const MentalSurveyScreen = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
+      {header()}
       <View>
         <LinearGradient
           start={{ x: 1, y: 0 }}
@@ -104,6 +105,36 @@ const MentalSurveyScreen = ({ navigation, route }) => {
             height: 170,
           }}
         />
+      </View>
+    );
+  }
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ width: "33.33%" }}>
+          <Text
+            style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}
+          ></Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
       </View>
     );
   }
@@ -228,6 +259,13 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     height: 50,
     borderRadius: 20,
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   quizInfo: {
     flex: 1,

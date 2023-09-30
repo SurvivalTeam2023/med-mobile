@@ -23,6 +23,7 @@ import {
 import { useLikeAudioAPI } from "../../hooks/audio.hook";
 import * as FileSystem from "expo-file-system";
 import { shareAsync } from "expo-sharing";
+import { useState } from "react";
 const NowPlayingScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isUpdate, setIsUpdate] = useState(false);

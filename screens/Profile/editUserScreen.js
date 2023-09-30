@@ -179,7 +179,7 @@ const EditUserScreen = ({ navigation, route }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          {cornerImage()}
+          {header()}
 
           <ScrollView
             scrollEnabled={false}
@@ -231,7 +231,36 @@ const EditUserScreen = ({ navigation, route }) => {
       </View>
     );
   }
+  function header() {
+    return (
+      <View style={styles.headerWrapStyle}>
+        <View style={{ flexDirection: "row", width: "33.33%" }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.pop()}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              size={24}
+              colors={[
+                { color: Colors.primaryColor, offset: "0.15", opacity: "0.75" },
+                { color: Colors.secondaryColor, offset: "1", opacity: "0.8" },
+              ]}
+            />
+            <Text style={{ ...Fonts.grayColor18SemiBold }}>Back</Text>
+          </TouchableOpacity>
+        </View>
 
+        <View style={{ width: "33.33%" }}>
+          <Text
+            style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}
+          ></Text>
+        </View>
+        <View style={{ width: "33.33%" }}></View>
+      </View>
+    );
+  }
   function updateButton() {
     return (
       <Pressable
@@ -418,6 +447,13 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.fixPadding,
     justifyContent: "center",
     alignItems: "center",
+  },
+  headerWrapStyle: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
   },
   userNameTextFieldWrapStyle: {
     flexDirection: "row",

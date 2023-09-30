@@ -145,7 +145,6 @@ const QuestionMentalHealthScreen = ({ navigation, route }) => {
   const questionBankId = store.getState().question.questionBankId;
 
   const data = route.params.data;
-
   let questionData;
   let totalQuestions;
   let optionIdArr;
