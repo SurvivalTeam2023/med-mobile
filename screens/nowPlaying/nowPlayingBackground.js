@@ -8,7 +8,9 @@ import {
 
 const NowPlayingBackground = ({ navigation }) => {
   const audioAction = useSelector((state) => state.nowPlayingList?.audioAction);
-  const disableAction = useSelector((state)=> state.nowPlayingList.disableAction);
+  const disableAction = useSelector(
+    (state) => state.nowPlayingList.disableAction
+  );
   const audioActionValue = useSelector(
     (state) => state.nowPlayingList?.audioActionValue
   );
@@ -20,6 +22,7 @@ const NowPlayingBackground = ({ navigation }) => {
     currentAudioIndex,
     playSound,
     pauseSound,
+    stopSound,
     playNextSound,
     playPrevSound,
     handleChangeSoundTimeline,
@@ -46,6 +49,9 @@ const NowPlayingBackground = ({ navigation }) => {
           break;
         case ACTION_TYPE.START:
           playSound();
+          break;
+        case ACTION_TYPE.STOP:
+          stopSound();
           break;
         case ACTION_TYPE.PAUSE:
           pauseSound();

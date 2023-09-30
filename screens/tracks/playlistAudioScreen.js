@@ -364,7 +364,7 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
             borderWidth: 1,
           }}
           value={search}
-          placeholder="Search for artist,song or lyrics..."
+          placeholder="Search for songs."
           placeholderTextColor={Colors.whiteColor}
           onChangeText={(text) => updateState({ search: text })}
         />
@@ -393,8 +393,10 @@ const PlaylistAudioScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ width: "33.33%" }}>
-          <Text style={{ ...Fonts.blackColor18SemiBold }}>{playlist.name}</Text>
+        <View style={{ width: "35%" }}>
+          <Text style={{ ...Fonts.blackColor18SemiBold, textAlign: "center" }}>
+            {playlist.name}
+          </Text>
         </View>
         <View style={{ width: "33.33%" }}></View>
       </View>
