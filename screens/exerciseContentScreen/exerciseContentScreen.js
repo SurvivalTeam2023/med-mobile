@@ -19,7 +19,6 @@ const { width } = Dimensions.get("window");
 
 const ExerciseContentScreen = ({ navigation, route }) => {
   const exerciseDetail = route?.params?.data;
-  console.log(exerciseDetail);
 
   const header = () => {
     return (
@@ -67,7 +66,6 @@ const ExerciseContentScreen = ({ navigation, route }) => {
             paddingBottom: Sizes.fixPadding,
             paddingTop: 8,
             paddingHorizontal: 2,
-            borderWidth: 0.5,
           }}
         >
           <View>{exerciseInfo()}</View>
