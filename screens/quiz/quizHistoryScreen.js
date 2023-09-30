@@ -41,7 +41,7 @@ const QuizHistoryScreen = ({ navigation }) => {
           >
             <View
               style={{
-                backgroundColor: Colors.greenLightColor,
+                backgroundColor: Colors.whiteColor,
                 borderRadius: 16,
               }}
             >
@@ -114,18 +114,23 @@ const QuizHistoryScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.backColor }}>
-      <StatusBar backgroundColor={Colors.greenDarkColor} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <View style={{ flex: 1 }}>
+        {header()}
         <FlatList
           ListHeaderComponent={
             <View>
-              {header()}
-              {quizHistory()}
+              <LinearGradient
+                start={{ x: 1.1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                colors={["rgb(120,240,250)", "rgb(3,38,95)"]}
+                style={styles.startQuizInfo}
+              >
+                {quizHistory()}
+              </LinearGradient>
             </View>
           }
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: Sizes.fixPadding * 15.0 }}
         />
       </View>
     </SafeAreaView>
@@ -191,6 +196,11 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     borderRadius: 30,
     borderWidth: 2,
+  },
+  startQuizInfo: {
+    paddingVertical: Sizes.fixPadding + 10,
+    paddingBottom: 30,
+    height: "100%",
   },
   image: {
     width: 175,
