@@ -306,18 +306,6 @@ const TrendingScreen = ({ navigation }) => {
           </Text>
         </View>
         {!value ? (
-          <View style={styles.container}>
-            <ActivityIndicator size="small" color="#f8b26a" />
-          </View>
-        ) : value?.length > 0 ? (
-          <FlatList
-            data={value}
-            keyExtractor={(item) => `${item.mentalHealth}`}
-            renderItem={renderItem}
-            horizontal={false}
-            showsHorizontalScrollIndicator={false}
-          />
-        ) : (
           <Text
             style={{
               ...Fonts.whiteColor18SemiBold,
@@ -327,6 +315,18 @@ const TrendingScreen = ({ navigation }) => {
           >
             Please do a survey to get recommended audio
           </Text>
+        ) : value?.length > 0 ? (
+          <FlatList
+            data={value}
+            keyExtractor={(item) => `${item.mentalHealth}`}
+            renderItem={renderItem}
+            horizontal={false}
+            showsHorizontalScrollIndicator={false}
+          />
+        ) : (
+          <View style={styles.container}>
+            <ActivityIndicator size="small" color="#f8b26a" />
+          </View>
         )}
       </View>
     );

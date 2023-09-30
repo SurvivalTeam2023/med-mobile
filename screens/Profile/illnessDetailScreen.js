@@ -88,7 +88,6 @@ const IllnessDetailScreen = ({ navigation, route }) => {
               paddingBottom: Sizes.fixPadding,
               height: "95%",
               paddingTop: 8,
-              paddingHorizontal: 16,
             }}
           >
             {illnessDetail()}

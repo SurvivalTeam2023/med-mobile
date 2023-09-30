@@ -106,7 +106,7 @@ const ProfileScreen = ({ navigation }) => {
                     <Text
                       style={{
                         ...Fonts.blackColor14SemiBold,
-                        width: "80%",
+                        width: "60%",
                       }}
                     >
                       {e.mentalHealth.join(", ")}
