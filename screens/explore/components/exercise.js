@@ -120,7 +120,8 @@ export const exercise = ({ navigation }) => {
                   // Check if the user is a subscriber before allowing access
                   if (
                     (trialLeft < 0 && !subscriptionData?.length > 0) ||
-                    item.content === "Chat with AI"
+                    (item.content === "Chat with AI" &&
+                      !subscriptionData?.length > 0)
                   ) {
                     // Handle non-subscriber action, e.g., show a message
                     alert(
