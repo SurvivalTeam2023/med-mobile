@@ -67,6 +67,7 @@ import AiChatScreen from "./screens/chat/aiChatScreen";
 import MentalSurveyScreen from "./screens/quiz/mentalSurvey";
 import QuestionMentalHealthScreen from "./screens/quiz/questionMentalHealthScreen";
 import ChatWithUsScreen from "./screens/chat/chatWithUsScreen";
+import TrendingScreen from "./screens/trending/trendingScreen";
 LogBox.ignoreAllLogs();
 
 const Stack = createSharedElementStackNavigator();
@@ -95,6 +96,7 @@ const App = () => {
               component={splashScreen}
               options={{ ...TransitionPresets.DefaultTransition }}
             />
+
             <Stack.Screen
               name="SignIn"
               component={signInScreen}
@@ -105,6 +107,7 @@ const App = () => {
             <Stack.Screen name="Chat with AI" component={AiChatScreen} />
             <Stack.Screen name="Chat" component={ChatWithUsScreen} />
             <Stack.Screen name="QuizHistory" component={QuizHistoryScreen} />
+            <Stack.Screen name="Trending" component={TrendingScreen} />
             <Stack.Screen
               name="Intro Music"
               component={IntroRecAlbumScreen}

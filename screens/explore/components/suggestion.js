@@ -4,7 +4,7 @@ import { View, Text, ImageBackground } from "react-native";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useGetFinishedQuizHistoryApi } from "../../../hooks/question.hook";
-import { QUIZ_RESULT } from "../../../constants/keyword";
+import { QUIZ_RESULT, MUSIC_FOR_YOU } from "../../../constants/keyword";
 import { Navigate } from "../../../constants/navigate";
 import { TouchableOpacity } from "react-native";
 
@@ -19,16 +19,16 @@ const data = [
     notify: "Take Our Survey To Get Your Mental Health Evaluation",
     notify_2: "Press To See Your Survey Result",
   },
-  {
-    id: 1,
-    name: "Music For Today",
-    imageUrl:
-      "https://pub-static.fotor.com/assets/bg/246400f6-8a87-48ad-9698-281d55b388f5.jpg",
-    numOfExercises: 7,
-    desc: "Music For Today",
-    notify: "Take Our Survey To Get Your Sound Reccomendation",
-    notify_2: "Press To Enjoy Sound Recommendation ",
-  },
+  // {
+  //   id: 1,
+  //   name: "Music For Today",
+  //   imageUrl:
+  //     "https://pub-static.fotor.com/assets/bg/246400f6-8a87-48ad-9698-281d55b388f5.jpg",
+  //   numOfExercises: 7,
+  //   desc: "Music For Today",
+  //   notify: "Take Our Survey To Get Your Sound Reccomendation",
+  //   notify_2: "Press To Enjoy Sound Recommendation ",
+  // },
 ];
 
 export const suggestion = ({ navigation }) => {
@@ -54,9 +54,6 @@ export const suggestion = ({ navigation }) => {
     useGetFinishedQuizHistoryApi(id);
   return (
     <View>
-      <View style={styles.titleWrapStyle}>
-        <Text style={styles.titleStyle}>Recommended</Text>
-      </View>
       <View style={{ flexDirection: "column", justifyContent: "center" }}>
         {data.map((item, index) => (
           <TouchableOpacity

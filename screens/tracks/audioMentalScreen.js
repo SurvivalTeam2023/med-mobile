@@ -125,7 +125,7 @@ const AudioMentalScreen = ({ navigation, route }) => {
             textAlign: "center",
           }}
         >
-          Audios based on your mental health degree
+          Audios based on your mental health
         </Text>
       </View>
     );
