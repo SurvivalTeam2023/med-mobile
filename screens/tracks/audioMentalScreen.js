@@ -113,11 +113,6 @@ const AudioMentalScreen = ({ navigation, route }) => {
   const degree = () => {
     return (
       <View style={styles.titleWrapStyle}>
-        {resultDetailData?.map((e) => (
-          <Text style={styles.titleStyle} key={e.degree}>
-            Mental Health Degree: {e.degree}
-          </Text>
-        ))}
         <Text
           style={{
             paddingBottom: 36,

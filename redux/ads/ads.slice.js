@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  trialTurnLeft: 5,
+  trialTurnLeft: 7,
 };
 const reducer = createSlice({
   name: "ads",

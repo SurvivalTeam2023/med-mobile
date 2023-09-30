@@ -324,9 +324,15 @@ const TrendingScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
           />
         ) : (
-          <View style={styles.container}>
-            <ActivityIndicator size="small" color="#f8b26a" />
-          </View>
+          <Text
+            style={{
+              ...Fonts.whiteColor18SemiBold,
+              textAlign: "center",
+              paddingVertical: 8,
+            }}
+          >
+            Please do a survey to get recommended audio
+          </Text>
         )}
       </View>
     );
@@ -644,7 +650,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     marginTop: Sizes.fixPadding - 5.0,
     marginBottom: Sizes.fixPadding,
-    ...Fonts.whiteColor18SemiBold,
+    ...Fonts.whiteColor24Bold,
     textAlign: "center",
   },
   describeQuizText: {
