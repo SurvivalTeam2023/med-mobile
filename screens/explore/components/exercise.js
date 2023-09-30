@@ -118,7 +118,10 @@ export const exercise = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   // Check if the user is a subscriber before allowing access
-                  if (trialLeft < 0 && !subscriptionData?.length > 0) {
+                  if (
+                    (trialLeft < 0 && !subscriptionData?.length > 0) ||
+                    item.content === "Chat with AI"
+                  ) {
                     // Handle non-subscriber action, e.g., show a message
                     alert(
                       "You need to be a subscriber to access this exercise."
@@ -142,7 +145,9 @@ export const exercise = ({ navigation }) => {
                     overflow: "hidden", // Clip the image to the rounded border
                   }}
                 >
-                  {trialLeft < 0 && !subscriptionData?.length > 0 ? (
+                  {(trialLeft < 0 && !subscriptionData?.length > 0) ||
+                  (item.content === "Chat with AI" &&
+                    !subscriptionData?.length > 0) ? (
                     // Render a lock layer only for "Chat with AI" and non-subscribers
                     <View
                       style={{
@@ -155,6 +160,7 @@ export const exercise = ({ navigation }) => {
                       <MaterialIcons name="lock" size={24} color="white" />
                     </View>
                   ) : null}
+
                   <View
                     style={{
                       position: "absolute",
